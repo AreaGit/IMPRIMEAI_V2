@@ -1,0 +1,394 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cadastro</title>
+    <link rel="shortcut icon" href="../images/favicon-imprimeai.png" type="image/x-icon">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,300;1,400;1,500;1,600;1,700;1,800&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter+Tight:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" />
+    <link rel="stylesheet" href="../styles/cadastro.css">
+    <link rel="stylesheet" href="../styles/cadastro-resp.css">
+</head>
+<body>
+    <header>
+        <a href="/"><img src="../images/logo-imprimeai.png" alt="..." id="logo"></a>
+        <h1>Cadastro</h1>
+        <div id="linhaHr"></div>
+        <h2>Prencha os campos abaixo para <br> criar a sua conta</h2>
+    </header>
+    <form>
+        <div id="leftForm">
+            <label for="nomeUser">Nome</label>
+            <br>
+            <input type="text" name="nomeUser" id="nomeUser" placeholder="Digite o seu Nome..." size="35" required minlength="4" class="custom-input">
+            <br>
+            <label for="cepUser">Cep</label>
+            <br>
+            <input type="text" name="cepUser" id="cepUser" placeholder="Digite o seu Cep..." size="35" required class="custom-input" minlength="8">
+            <br>
+            <label for="ruaUser">Rua</label>
+            <br>
+            <input type="text" name="ruaUser" id="ruaUser" placeholder="Digite a sua Rua..." size="35" required minlength="4" class="custom-input">
+            <br>
+            <label for="estadoUser">Estado</label>
+            <br>
+            <input type="text" name="estadoUser" id="estadoUser" placeholder="Digite o seu Estado..." size="35" required class="custom-input">
+            <br>
+            <label for="cidadeUser">Cidade</label>
+            <br>
+            <input type="text" name="cidadeUser" id="cidadeUser" placeholder="Digite a sua Cidade..." size="35" required class="custom-input">
+            <br>
+            <label for="bairroUser">Bairro</label>
+            <br>
+            <input type="text" name="bairroUser" id="bairroUser" placeholder="Digite o seu Bairro..." size="35" required class="custom-input">
+            <br>
+            <label for="numResidenciaUser">Número da Residência</label>
+            <br>
+            <input type="text" name="numResidenciaUser" id="numResidenciaUser" placeholder="Digite o número de sua Residência..." size="35" required class="custom-input">
+            <br>
+            <label for="complementoUser">Complemento</label>
+            <br>
+            <input type="text" name="complementoUser" id="complementoUser" placeholder="Digite seu Complemento..." size="35" class="custom-input">
+            <br>
+        </div>
+        <div id="rightForm">
+            <label for="cpfUser">CPF</label>
+            <br>
+            <input type="text" name="cpfUser" id="cpfUser" placeholder="Digite seu CPF..." size="35" required minlength="11" class="custom-input">
+            <br>
+            <label for="telefoneUser">Telefone</label>
+            <br>
+            <input type="text" name="telefoneUser" id="telefoneUser" placeholder="Digite seu Telefone..." size="35" required minlength="11" class="custom-input">
+            <br>
+            <label for="emailUser">E-mail</label>
+            <br>
+            <input type="email" name="emailUser" id="emailUser" placeholder="Digite seu E-mail" size="35" autocomplete="email" required class="custom-input">
+            <br>
+            <label for="senhaUser">Senha</label>
+            <br>
+            <label class="container">
+                <input type="checkbox" checked="checked">
+                <svg class="eye" xmlns="http://www.w3.org/2000/svg" height="1em" viewBox="0 0 576 512" id="ocultarSenha"><path d="M288 32c-80.8 0-145.5 36.8-192.6 80.6C48.6 156 17.3 208 2.5 243.7c-3.3 7.9-3.3 16.7 0 24.6C17.3 304 48.6 356 95.4 399.4C142.5 443.2 207.2 480 288 480s145.5-36.8 192.6-80.6c46.8-43.5 78.1-95.4 93-131.1c3.3-7.9 3.3-16.7 0-24.6c-14.9-35.7-46.2-87.7-93-131.1C433.5 68.8 368.8 32 288 32zM144 256a144 144 0 1 1 288 0 144 144 0 1 1 -288 0zm144-64c0 35.3-28.7 64-64 64c-7.1 0-13.9-1.2-20.3-3.3c-5.5-1.8-11.9 1.6-11.7 7.4c.3 6.9 1.3 13.8 3.2 20.7c13.7 51.2 66.4 81.6 117.6 67.9s81.6-66.4 67.9-117.6c-11.1-41.5-47.8-69.4-88.6-71.1c-5.8-.2-9.2 6.1-7.4 11.7c2.1 6.4 3.3 13.2 3.3 20.3z"></path></svg>
+                <svg class="eye-slash" xmlns="http://www.w3.org/2000/svg" height="1em" viewBox="0 0 640 512" id="mostrarSenha"><path d="M38.8 5.1C28.4-3.1 13.3-1.2 5.1 9.2S-1.2 34.7 9.2 42.9l592 464c10.4 8.2 25.5 6.3 33.7-4.1s6.3-25.5-4.1-33.7L525.6 386.7c39.6-40.6 66.4-86.1 79.9-118.4c3.3-7.9 3.3-16.7 0-24.6c-14.9-35.7-46.2-87.7-93-131.1C465.5 68.8 400.8 32 320 32c-68.2 0-125 26.3-169.3 60.8L38.8 5.1zM223.1 149.5C248.6 126.2 282.7 112 320 112c79.5 0 144 64.5 144 144c0 24.9-6.3 48.3-17.4 68.7L408 294.5c8.4-19.3 10.6-41.4 4.8-63.3c-11.1-41.5-47.8-69.4-88.6-71.1c-5.8-.2-9.2 6.1-7.4 11.7c2.1 6.4 3.3 13.2 3.3 20.3c0 10.2-2.4 19.8-6.6 28.3l-90.3-70.8zM373 389.9c-16.4 6.5-34.3 10.1-53 10.1c-79.5 0-144-64.5-144-144c0-6.9 .5-13.6 1.4-20.2L83.1 161.5C60.3 191.2 44 220.8 34.5 243.7c-3.3 7.9-3.3 16.7 0 24.6c14.9 35.7 46.2 87.7 93 131.1C174.5 443.2 239.2 480 320 480c47.8 0 89.9-12.9 126.2-32.5L373 389.9z"></path></svg>
+              </label>
+            <input type="password" name="senhaUser" id="senhaUser" placeholder="Digite sua Senha..." size="35" autocomplete="current-password" required minlength="8" class="custom-input">
+            <label class="material-checkbox">
+                <input type="checkbox" required>
+                <span class="checkmark"></span>
+                Li e aceito os <a href="#" id="abrirTermos">termos e condições</a> da Imprimeai
+            </label>
+        </div>
+        <button id="btnCad" type="button">Continuar para o login</button>
+    </form>
+    <div id="popup" style="overflow-y: scroll; height: 550px;">
+        <span class="material-symbols-outlined" id="fechar-menu">close</span>
+        <h2>Termos e Condições da Imprimeai</h2>
+        <ol>
+            <li><strong>Introdução</strong>
+                <p>A Imprimeai é uma plataforma online que oferece serviços de impressão gráfica para clientes profissionais da área gráfica. Estes termos e condições regulam o uso da plataforma e a contratação dos serviços pela Imprimeai.</p>
+            </li>
+            <li><strong>Cadastro e Acesso</strong>
+                <ol>
+                    <li>O cliente precisa se cadastrar e criar uma conta para utilizar a plataforma.</li>
+                    <li>O acesso é gratuito.</li>
+                    <li>O cliente é responsável por fornecer informações verdadeiras e atualizadas.</li>
+                </ol>
+            </li>
+            <li><strong>Contratação de Serviços</strong>
+                <ol>
+                    <li>O cliente pode escolher os serviços desejados na plataforma.</li>
+                    <li>O cliente pode verificar preços e prazos de produção.</li>
+                    <li>O pedido só será confirmado após a aprovação do pagamento e do arquivo enviado.</li>
+                </ol>
+            </li>
+            <li><strong>Arquivos</strong>
+                <ol>
+                    <li>O cliente é responsável por preparar e enviar os arquivos de acordo com as especificações técnicas da Imprimeai.</li>
+                    <li>A Imprimeai não se responsabiliza por erros de conteúdo ou formatação nos arquivos enviados.</li>
+                </ol>
+            </li>
+            <li><strong>Pagamento</strong>
+                <p>O pagamento dos serviços pode ser feito através de: Boleto bancário, Depósito, Transferência bancária, PIX, Cartão de crédito.</p>
+            </li>
+            <li><strong>Prazo de Produção</strong>
+                <ol>
+                    <li>O prazo de produção começa após a aprovação do pagamento e do arquivo.</li>
+                    <li>O prazo varia de acordo com o tipo de serviço e a quantidade solicitada.</li>
+                </ol>
+            </li>
+            <li><strong>Frete e Entrega</strong>
+                <p>O frete é calculado de acordo com: Peso, Dimensão do pedido, Local de entrega. A Imprimeai oferece diversas opções de frete, incluindo retirada em balcão.</p>
+            </li>
+            <li><strong>Garantia</strong>
+                <p>A Imprimeai garante a qualidade dos seus serviços. Em caso de problemas com o material impresso, o cliente pode solicitar reimpressão ou reembolso do valor pago.</p>
+            </li>
+            <li><strong>Responsabilidades</strong>
+                <p>O cliente é responsável pelo conteúdo dos arquivos enviados e pela utilização dos serviços da Imprimeai de acordo com os termos e condições.</p>
+            </li>
+            <li><strong>Propriedade Intelectual</strong>
+                <p>A Imprimeai detém a propriedade intelectual dos seus produtos, serviços e plataforma. O cliente não pode utilizar a marca ou o logotipo da Imprimeai sem autorização prévia.</p>
+            </li>
+            <li><strong>Foro</strong>
+                <p>As partes elegem o Foro da Comarca de São Caetano do Sul, Estado de São Paulo, para dirimir qualquer litígio que possa surgir em relação ao presente contrato.</p>
+            </li>
+            <li><strong>Disposições Gerais</strong>
+                <p>A Imprimeai se reserva o direito de alterar os termos e condições a qualquer momento. O cliente é responsável por se manter atualizado sobre as alterações.</p>
+            </li>
+            <li><strong>Cancelamento de Pedidos</strong>
+                <p>O cliente pode cancelar o pedido antes da aprovação do arquivo. Após a aprovação do arquivo, o cancelamento pode ser feito mediante pagamento de multa.</p>
+            </li>
+            <li><strong>Reembolso</strong>
+                <p>O reembolso do valor pago será feito em caso de cancelamento do pedido ou problemas com o material impresso.</p>
+            </li>
+            <li><strong>Clique Retire</strong>
+                <ol>
+                    <li>O serviço Clique Retire permite que o cliente retire seu pedido em um locker (armário digital) em local e horário convenientes.</li>
+                    <li>O cliente escolhe a opção Clique Retire no momento da compra e informa o locker desejado.</li>
+                    <li>A Imprimeai envia um código de acesso ao locker para o cliente após a produção do pedido.</li>
+                    <li>O cliente tem 72 horas para retirar o pedido do locker.</li>
+                    <li>Em caso de problemas com a retirada do pedido, o cliente deve entrar em contato com a Imprimeai.</li>
+                    <li>O cliente é responsável por quaisquer perdas e danos ao pedido após a retirada do locker.</li>
+                    <li>A Imprimeai se reserva o direito de alterar ou cancelar o serviço Clique Retire a qualquer momento.</li>
+                </ol>
+            </li>
+            <li><strong>Entrega Rápida</strong>
+                <p>O serviço Entrega Rápida oferece entrega em até 24 horas para produtos específicos e para balcões participantes.</p>
+                <p>O prazo de entrega começa após a aprovação do pagamento e do arquivo.</p>
+                <p>A Entrega Rápida está disponível apenas para dias úteis.</p>
+                <p>O cliente deve verificar os horários de atendimento do balcão selecionado.</p>
+                <p>A Imprimeai não se responsabiliza por atrasos na entrega causados por fatores climáticos ou outros eventos.</p>
+            </li>
+        </ol>
+    </div>
+    <div id="avisoUser">
+    <div class="notifications-container">
+        <div class="error-alert">
+          <div class="flex">
+            <div class="flex-shrink-0">
+              
+              <svg aria-hidden="true" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg" class="error-svg">
+                <path clip-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" fill-rule="evenodd"></path>
+              </svg>
+            </div>
+            <div class="error-prompt-container">
+              <p class="error-prompt-heading">Seu nome de usuário está incompleto!
+              </p><div class="error-prompt-wrap">
+                <ul class="error-prompt-list" role="list">
+                  <li>O campo de usuário tem que possuir mais de 4 caracteres</li>
+                </ul>
+            </div>
+            </div>
+          </div>
+        </div>
+      </div> 
+    </div>
+    <div id="avisoCep">
+        <div class="notifications-container">
+            <div class="error-alert">
+              <div class="flex">
+                <div class="flex-shrink-0">
+                  
+                  <svg aria-hidden="true" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg" class="error-svg">
+                    <path clip-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" fill-rule="evenodd"></path>
+                  </svg>
+                </div>
+                <div class="error-prompt-container">
+                  <p class="error-prompt-heading">O CEP está incompleto!
+                  </p><div class="error-prompt-wrap">
+                    <ul class="error-prompt-list" role="list">
+                      <li>O campo de CEP tem que possuir mais de 8 caracteres</li>
+                      <li>Verifique se o Cep realmente existe</li>
+                    </ul>
+                </div>
+                </div>
+              </div>
+            </div>
+          </div>
+    </div>  
+    <div id="avisoEmail">
+        <div class="notifications-container">
+            <div class="error-alert">
+              <div class="flex">
+                <div class="flex-shrink-0">
+                  
+                  <svg aria-hidden="true" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg" class="error-svg">
+                    <path clip-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" fill-rule="evenodd"></path>
+                  </svg>
+                </div>
+                <div class="error-prompt-container">
+                  <p class="error-prompt-heading">O E-mail está incorreto
+                  </p><div class="error-prompt-wrap">
+                    <ul class="error-prompt-list" role="list">
+                      <li>O campo de E-mail tem que possuir alguns caracteres especiais @</li>
+                      <li>O E-mail deve terminar com .com</li>
+                    </ul>
+                </div>
+                </div>
+              </div>
+            </div>
+          </div>
+    </div> 
+    <div id="avisoSenha">
+        <div class="notifications-container">
+            <div class="error-alert">
+              <div class="flex">
+                <div class="flex-shrink-0">
+                  
+                  <svg aria-hidden="true" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg" class="error-svg">
+                    <path clip-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" fill-rule="evenodd"></path>
+                  </svg>
+                </div>
+                <div class="error-prompt-container">
+                  <p class="error-prompt-heading">Sua Senha está fraca
+                  </p><div class="error-prompt-wrap">
+                    <ul class="error-prompt-list" role="list">
+                      <li>A Senha deve ter mais de 8 caracteres</li>
+                    </ul>
+                </div>
+                </div>
+              </div>
+            </div>
+          </div>
+    </div>
+    <div id="avisoTelefone">
+        <div class="notifications-container">
+            <div class="error-alert">
+              <div class="flex">
+                <div class="flex-shrink-0">
+                  
+                  <svg aria-hidden="true" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg" class="error-svg">
+                    <path clip-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" fill-rule="evenodd"></path>
+                  </svg>
+                </div>
+                <div class="error-prompt-container">
+                  <p class="error-prompt-heading">Seu número de telefone está incorreto
+                  </p><div class="error-prompt-wrap">
+                    <ul class="error-prompt-list" role="list">
+                      <li>Verifique se seu número de telefone foi digitado corretamente</li>
+                    </ul>
+                </div>
+                </div>
+              </div>
+            </div>
+          </div>
+    </div>
+    <div id="avisoCpf">
+        <div class="notifications-container">
+            <div class="error-alert">
+              <div class="flex">
+                <div class="flex-shrink-0">
+                  
+                  <svg aria-hidden="true" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg" class="error-svg">
+                    <path clip-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" fill-rule="evenodd"></path>
+                  </svg>
+                </div>
+                <div class="error-prompt-container">
+                  <p class="error-prompt-heading">O CPF digitado é inválido
+                  </p><div class="error-prompt-wrap">
+                    <ul class="error-prompt-list" role="list">
+                      <li>Verifique se o CPF foi digitado corretamente</li>
+                      <li>Verifique se o CPF realmente existe</li>
+                    </ul>
+                </div>
+                </div>
+              </div>
+            </div>
+          </div>
+    </div>
+    <div id="avisoEnderecos">
+        <div class="notifications-container">
+            <div class="error-alert">
+              <div class="flex">
+                <div class="flex-shrink-0">
+                  
+                  <svg aria-hidden="true" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg" class="error-svg">
+                    <path clip-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" fill-rule="evenodd"></path>
+                  </svg>
+                </div>
+                <div class="error-prompt-container">
+                  <p class="error-prompt-heading">Endereços Incorretos
+                  </p><div class="error-prompt-wrap">
+                    <ul class="error-prompt-list" role="list">
+                      <li>Verifique se os campos de Endereços foram preenchidos</li>
+                    </ul>
+                </div>
+                </div>
+              </div>
+            </div>
+          </div>
+    </div>
+    <div id="emailCadastrado">
+        <div class="notifications-container">
+            <div class="error-alert">
+              <div class="flex">
+                <div class="flex-shrink-0">
+                  
+                  <svg aria-hidden="true" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg" class="error-svg">
+                    <path clip-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" fill-rule="evenodd"></path>
+                  </svg>
+                </div>
+                <div class="error-prompt-container">
+                  <p class="error-prompt-heading">Já existe um usuário com este <br> e-mail cadastrado
+                  </p><div class="error-prompt-wrap">
+                    <ul class="error-prompt-list" role="list">
+                      <li>Se cadastre com um novo <br> e-mail</li>
+                    </ul>
+                </div>
+                </div>
+              </div>
+            </div>
+          </div>
+    </div>
+    <div id="erroUsuario">
+        <div class="notifications-container">
+            <div class="error-alert">
+              <div class="flex">
+                <div class="flex-shrink-0">
+                  
+                  <svg aria-hidden="true" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg" class="error-svg">
+                    <path clip-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" fill-rule="evenodd"></path>
+                  </svg>
+                </div>
+                <div class="error-prompt-container">
+                  <p class="error-prompt-heading">Erro ao Cadastrar o Usuário
+                  </p><div class="error-prompt-wrap">
+                    <ul class="error-prompt-list" role="list">
+                      <li>Verifique se você digitou corretamente os campos</li>
+                    </ul>
+                </div>
+                </div>
+              </div>
+            </div>
+          </div>
+    </div>
+    <div id="avisoGeral">
+        <div class="notifications-container">
+            <div class="success">
+              <div class="flex">
+                <div class="flex-shrink-0">
+                  <svg aria-hidden="true" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg" class="succes-svg">
+                    <path clip-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" fill-rule="evenodd"></path>
+                  </svg>
+                </div>
+                <div class="success-prompt-wrap">
+                  <p class="success-prompt-heading">
+                    Usuário cadastrado!
+                  </p>
+                  <div class="success-prompt-prompt">
+                    <p>Redirecionando para a tela <br> de login</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>          
+    </div>
+    <script src="../scripts/cadastro.js"></script>
+</body>
+</html>

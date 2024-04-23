@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pagamento</title>
+    <link rel="shortcut icon" href="../images/favicon-imprimeai.png" type="image/x-icon">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,300;1,400;1,500;1,600;1,700;1,800&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter+Tight:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0"/>
+    <script src="https://assets.pagar.me/pagarme-js/3.0/pagarme.min.js"></script>
+    <link rel="stylesheet" href="../styles/pagamento.css">
+    <link rel="stylesheet" href="../styles/pagamento-resp.css">
+</head>
+<body>
+    <header id="header">
+        <a href="/"><img src="../images/favicon-32x32.png" alt="..." id="logo"></a>      
+        <a href="#" id="menu-icon"><svg width="35" height="50" viewBox="0 0 18 18"><polyline id="globalnav-menutrigger-bread-bottom" class="globalnav-menutrigger-bread globalnav-menutrigger-bread-bottom" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round" points="2 12, 16 12"><animate id="globalnav-anim-menutrigger-bread-bottom-open" attributeName="points" keyTimes="0;0.5;1" dur="0.24s" begin="indefinite" fill="freeze" calcMode="spline" keySplines="0.42, 0, 1, 1;0, 0, 0.58, 1" values=" 2 12, 16 12; 2 9, 16 9; 3.5 15, 15 3.5"></animate><animate id="globalnav-anim-menutrigger-bread-bottom-close" attributeName="points" keyTimes="0;0.5;1" dur="0.24s" begin="indefinite" fill="freeze" calcMode="spline" keySplines="0.42, 0, 1, 1;0, 0, 0.58, 1" values=" 3.5 15, 15 3.5; 2 9, 16 9; 2 12, 16 12"></animate></polyline><polyline id="globalnav-menutrigger-bread-top" class="globalnav-menutrigger-bread globalnav-menutrigger-bread-top" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round" points="2 5, 16 5"><animate id="globalnav-anim-menutrigger-bread-top-open" attributeName="points" keyTimes="0;0.5;1" dur="0.24s" begin="indefinite" fill="freeze" calcMode="spline" keySplines="0.42, 0, 1, 1;0, 0, 0.58, 1" values=" 2 5, 16 5; 2 9, 16 9; 3.5 3.5, 15 15"></animate><animate id="globalnav-anim-menutrigger-bread-top-close" attributeName="points" keyTimes="0;0.5;1" dur="0.24s" begin="indefinite" fill="freeze" calcMode="spline" keySplines="0.42, 0, 1, 1;0, 0, 0.58, 1" values=" 3.5 3.5, 15 15; 2 9, 16 9; 2 5, 16 5"></animate></polyline></svg></a>
+        <div id="icone-pesquisa">
+            <div class="input-wrapper">
+                <button class="icon" id="searchButton"> 
+                  <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" height="22px" width="22px">
+                    <path stroke-linejoin="round" stroke-linecap="round" stroke-width="1.5" stroke="#101011" d="M11.5 21C16.7467 21 21 16.7467 21 11.5C21 6.25329 16.7467 2 11.5 2C6.25329 2 2 6.25329 2 11.5C2 16.7467 6.25329 21 11.5 21Z"></path>
+                    <path stroke-linejoin="round" stroke-linecap="round" stroke-width="1.5" stroke="#101011" d="M22 22L20 20"></path>
+                  </svg>
+                </button>
+                <input placeholder="Pesquisar..." id="searchInput" class="input" name="text" type="text">
+            </div>
+            <div id="sugestoes">
+                
+            </div>
+        </div>
+        <nav id="nav-bar">
+            <a href="/carrinho"><img src="../images/carrinho-compras.png" alt="..." id="carrinho-compras"></a>
+            <span class="material-symbols-outlined" id="fechar-menu">close</span>
+            <li><a href="/">Início</a></li>
+            <li><a href="/comunicacao-visual">Comunicação Visual</a></li>
+            <li><a href="/cartazes">Cartazes</a></li>
+            <li><a href="/papelaria">Papelaria</a></li>
+            <li><a href="/brindes">Brindes</a></li>
+            <li><a href="/adesivos">Adesivos</a></li>
+        </nav>
+    </header>
+    <main>
+        <h1>Pagamento</h1>
+        <div id="linhaHr"></div>
+        <h2>Como você quer pagar?</h2>
+        <p>Pague sua compra usando nossos métodos<br>de pagamento</p>
+        <div id="opcoesPagto">
+            <div id="pix" class="caixas">
+                <svg class="iconePagto" width="36" height="35" viewBox="0 0 36 35" fill="none" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+                    <rect width="36" height="35" fill="url(#pattern0_1_28)"/>
+                    <defs>
+                    <pattern id="pattern0_1_28" patternContentUnits="objectBoundingBox" width="1" height="1">
+                    <use xlink:href="#image0_1_28" transform="scale(0.0277778 0.0285714)"/>
+                    </pattern>
+                    <image id="image0_1_28" width="36" height="35" xlink:href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACQAAAAjCAYAAAD8BaggAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAR3SURBVHgBrVg7T1sxFHaCQIBAuv0Ht1u3phtCgtwMSHQi2ehEGDuRbAw8EkCIjWQqW28nRmBk4gaQ2o2wdSNs3ZqKpeLZ70tsapyb+0g4kuPr1/Hn43M+20mIPqVQKFgjIyMOvwcGBppbW1ue6EMSokchkLGxsaVEIlFA0dKaGg8PD+Xt7W1X9CADogeRYE4AZh7FYaQa0iXK/LaTyWR2enpanJ6e1kRMiW0hDUwKqfH4+Liob9Pa2lrp6elpnd/IS2grixgSy0ImGFgis7GxUdf71Go1z3EcLtRBHyeupSID8gNTKpUafn37ARUJUBwwOqh0On2Nz2wcUKGAlpeXbYT1dyh9xzL8ImduUzcBgPrU1NQfjJ2NCioQEKxgQdE+QLxB3gpt5Pmoq11dXS2gPx18WFa9xVb+hvUuu42JHGUAZ9/f35cwwQLLYRGEaFtnH1l0wU1VcFOoZbsCWllZcRDStpy8iVTf2dlpYNV5VH0NAqWDQV5GnxL9cHR0NKv6QLdHfZEAQeECFLlmvQIQBMoPDLcORW7dC0a/u7vLmKA6fEgO3pNFF0qPkF8jsmzks/QfTFL1iyBjm0iYFdbhewdpGG1V5McY00Q+gbMvOzk5eXR+ft70tZCpcHNz01Vt8KEUzHyAdgKroK1oWMojOH2s0kcAGJvTGR0u4Up/fGGpRBQwGigbik8kKBd9FiVQ1lndwEje6nBogKqgfUm0D+QcnT6hVo+KC7+VhIA6vLm5WbQsy8Z4V1rOheVotbwk0ZwfGM0Q6uxrYOzbhGG+IiorIkR0UIw+0EGOJmckjY+P72pgQhmdggWcIHOgK5OUde/5g1V6IoJwEk5Gi/I4GRwcvILSK4C5iguGAiCKZJ2k3gAllogosFBa85savr+J9r2IE9hw1KyILpYc10xKIAxtoVg4THSeItdgm0mih8gJoih17sIV1sN08azEvHNSl6cA0dsb+MyHKSFPaaRZJPExosApF3Rm6YOLcoGlIH0Eg+2m/9hILqOsRYye5/3NZDI09yxSFqRngeiORadlFMlRGN57Bl2kMNZGfRlkWeNVVkgyNQ9jHQyA17GgT8TxzNQo/AIobl1LCRVDyZEOxuQpWIQRtSyZ97MkxgmOJZtDHxc1b4LSwdD3CAYB0GLrjrPM4JmmTEKu5JnkNK55rjNIUifOA0Mf2y2CAfC8Pr/v4WqAUlLDSgrdwGhj/UAp4kyrfjzXAKZgzt31+sHLmTKjEoP4uh4JJpuDAop+Vw0/Cb2gUfnt7a2Fyed4WxTG1gWN00DxuVSl8yJvBl3UkiJEoCDPkGYIi3Z4Mno+BIGRgBSbN0T78biLdDA0NBQ4X+glX3/SsExg5XI50pMGkdtEdKXwmYpi1UiAfEBl8d0IuqgrCXL+vgD5geLz5uzs7Id4RTCxAJmg+NbyY2BG4szMzBfx/9T/GBVMbEA+oFr3adyLr3kv5ksFTrsvH4bqCvIzjv6e/x/S/+XoUBrzPvQqgCiSgXlTaN2NkPg6cXl7MEk1qvwDc19eWYrMqVAAAAAASUVORK5CYII="/>
+                    </defs>
+                </svg>
+                <h2 class="tltPagto">Pix</h2>
+                <p class="prgPagto">Aprovação em minutos. Ao finalizar sua compra<br>disponibilizaremos o QR Code para pagamento do PIX
+                </p>    
+            </div>
+            <div id="boleto" class="caixas">
+                <svg class="iconePagto" width="35" height="30" viewBox="0 0 35 30" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M5.83333 5.83333H8.75V23.3333H5.83333V5.83333ZM10.2083 5.83333H11.6667V23.3333H10.2083V5.83333ZM13.125 5.83333H17.5V23.3333H13.125V5.83333ZM18.9583 5.83333H20.4167V23.3333H18.9583V5.83333ZM23.3333 5.83333H26.25V23.3333H23.3333V5.83333ZM27.7083 5.83333H29.1667V23.3333H27.7083V5.83333ZM2.91667 2.91666V8.75001H0V2.91666C0 2.14312 0.307291 1.40125 0.854272 0.85427C1.40125 0.30729 2.14312 0 2.91667 0H8.75V2.91666H2.91667ZM32.0833 0C32.8569 0 33.5987 0.30729 34.1457 0.85427C34.6927 1.40125 35 2.14312 35 2.91666V8.75001H32.0833V2.91666H26.25V0H32.0833ZM2.91667 20.4167V26.25H8.75V29.1667H2.91667C2.14312 29.1667 1.40125 28.8594 0.854272 28.3124C0.307291 27.7654 0 27.0235 0 26.25V20.4167H2.91667ZM32.0833 26.25V20.4167H35V26.25C35 27.0235 34.6927 27.7654 34.1457 28.3124C33.5987 28.8594 32.8569 29.1667 32.0833 29.1667H26.25V26.25H32.0833Z" fill="#7D7D7D"/>
+                </svg>
+                <h2 class="tltPagto">Boleto</h2>
+                <p class="prgPagto">O número do boleto será gerado no final da compra</p>    
+            </div>
+            <div id="cartaoCredito" class="caixas">
+                <svg class="iconePagto" width="36" height="35" viewBox="0 0 36 35" fill="none" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+                    <rect width="36" height="35" fill="url(#pattern0_2_8)"/>
+                    <defs>
+                    <pattern id="pattern0_2_8" patternContentUnits="objectBoundingBox" width="1" height="1">
+                    <use xlink:href="#image0_2_8" transform="scale(0.0277778 0.0285714)"/>
+                    </pattern>
+                    <image id="image0_2_8" width="36" height="35" xlink:href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACQAAAAjCAYAAAD8BaggAAAACXBIWXMAAAsTAAALEwEAmpwYAAAB90lEQVR4Ae2WXW6CQBSFr4g+GJO6g9Id1B2wg9oVtF2B9M0YtfgT45t0By6BrsAllK6guAP77F/PJWIAEWjjbZuGLxmZzAzj4cy9F4hycnJkKSRNGoZRY0gA0zRd+oog3FDbbDbv6IoIAks0e7Va9SeTiesPqik3LXa73QedGUVRLrAvP+h9qVTScRJ1y7JYYPKRSYIT0Lbb7RzCNLT+aDQyeVwJLmq329edTsfi2CFhOIYg6IH7hUKh6Y+HjqxYLE5x0SuVioPrDOJ03KSRENib/5O7tVhBQdhSBPV8f8OPkSTIhUPPJJdlHjiuO8oiiEGgGSRMt9sNCVLoj5FWh7xYOjHukgCJDiGGTK7WcY3nSIA0hzT+QeAtkaJexfarLMYu6RcEeazX68fxeDzjPjsDMU/BeS6k1Wo1cwLg4Wzs59B3BaWBQtqIikwCLuu46CQlqFwu23BRy7peVVX75BxlgF8pqBe+A0eFEhnHb2qTzkCiIFjrIoB9EVEhbyRAYtoPBgMT7lzFteFwaJEAIYfgxgLByWl+cEOqADKtVkuLjoUcghAvFXFUzbjF5wZfi9N99+WgIbqo1+u9wqlrdDl+HC6KJEMDjQvsEgbU/ZM4CmpM3uLVwPFxg8UaCYL9Xf6/YFic/KaW/lrkDEY9cvYlIyfn//IJj6LILB4Az8sAAAAASUVORK5CYII="/>
+                    </defs>
+                </svg>
+                <h2 class="tltPagto">Cartão de Credito</h2>
+                <p class="prgPagto">Escolha entre seus cartões de crédito ou cadastre um novo</p>    
+            </div>
+            <div id="carteiraUser" class="caixas">
+                <svg class="iconePagto" width="36" height="35" viewBox="0 0 36 35" fill="none" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+                    <rect width="36" height="35" fill="url(#pattern0_4_2)"/>
+                    <defs>
+                    <pattern id="pattern0_4_2" patternContentUnits="objectBoundingBox" width="1" height="1">
+                    <use xlink:href="#image0_4_2" transform="scale(0.0277778 0.0285714)"/>
+                    </pattern>
+                    <image id="image0_4_2" width="36" height="35" xlink:href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACQAAAAjCAYAAAD8BaggAAAACXBIWXMAAAsTAAALEwEAmpwYAAAC9klEQVR4Ae1Xy3EaQRBtVsCBgiocgSEDiEAQgVAERhGw3Ci+y6eAm1YRCEUgHAEoAnAEWkdgXFw48PF7MCsjvIskWHRw8aqmZnd2pufR/Xp6EDnjjDNOC9++j7quRwk5EQzDsOQjhCqVyjO6mJwOE7TedDqtm6bJZ/G/seD3arX6KR7A5/N9ZW/bU+/0vh4OhxPo0+tx+SRUq9VfIBNFS7daraEaM/Be4/N8Pr/udDp9bXtRsVhMlMtlk9oRj7FcLh/UY80eazQaBrrvfPb7/VfsXxHSNE2HK3OhUCgjHwT0puMHZd2+Y0OTPeynSqWSvvVp+IqDeIfbi4uLe7ePKqPy60017RaRqBUKhdhisZh4SohGYXxgv+N5xDGnuc1m04SH6nxGbwQCgRF+RM1TQjA6YBjQJqolEB5XTynd3KD9kE2WxTwjBG+klMEJwpBkU6RSTBC3dfBUDy0B7ySRZXeeEULmvMR/NputdYINxiQVDAYnb63H/DFsjD0j1G63ubmFxyj1QP2AUB9h+eJUFt6DozWEMKVtUtQPmokj4P5ge3IkkLY1nLJ16CEuG7ESWXgoJgfgKEJKuFmmLkNEsVI//AaSMTkAjsWVBxz0kIPg7tCG3W7XcpoH4VoUNnTDs+gRQ6xVDJ2FCj5225SlCQU1h3lZeW/aUw8kxnPGLYXhFZLJq/kZ+zwCybx9ndgFbUUikREPRnG42jgSgi6ohRsl1hiIuZJimJR+NgY1LY5q3ncjQ1u0CdtjVn5R5WQvIXsjpG8ci1ilozD06HYLUCk+RHui15zmsJzQhmzC+gDbSV5DdmuZo4bwK1+8gTKgIwSX1AniziptiPMPSMsewGZKNp6h+LM743/n7Syy2GPRN7tAKp3Yx/ulHAjYzrGHrbo9xj2w15V6fVrvvb0Im0fhjWdmilrcV2nMd/uO1JPDkN22SY8zcWRzoFo8YBn6f66wPNBAasAF8glQZK5Z19bvbhNxrmRA7GR/gQhKxL5fn3HGf4s/0NJbzIglW94AAAAASUVORK5CYII="/>
+                    </defs>
+                </svg>
+                <h2 class="tltPagto">Minha Carteira</h2>
+                <p class="prgPagto">Efetue o pagamento do seu pedido com o crédito de<br>sua Carteira</p>    
+            </div>
+        </div>
+        <div id="linhaHrFin"></div>
+        <button id="btnContPag">Continuar pagamento</button>
+    </main>
+    <div id="resumoCompra">
+        <p class="prResumo">Total de desconto</p>
+        <p class="prResumo">Subtotal</p>
+        <p class="prResumo">Frete</p>
+        
+        <div id="linhaHR"></div>
+        <h2>Total</h2>
+        <div id="ladoDireito">
+            <span id="totalDesconto">0</span>
+            <br>
+            <span id="subTotal">R$</span>
+            <br>
+            <span id="totalItens">R$ 0.00</span>
+            <br>
+            <p id="totalComp"></p>
+    </div>
+    <div id="divTransferenciaPix" class="card shadow">
+    </div>
+    <div id="avisoUser">
+        <div class="notifications-container">
+            <div class="error-alert">
+              <div class="flex">
+                <div class="flex-shrink-0">
+                  
+                  <svg aria-hidden="true" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg" class="error-svg">
+                    <path clip-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" fill-rule="evenodd"></path>
+                  </svg>
+                </div>
+                <div class="error-prompt-container">
+                  <p class="error-prompt-heading">Erro ao pagar!
+                  </p><div class="error-prompt-wrap">
+                    <ul class="error-prompt-list" role="list">
+                      <li>Escolha pelo menos uma forma de pagamento!</li>
+                    </ul>
+                </div>
+                </div>
+              </div>
+            </div>
+          </div> 
+        </div>
+    <script src="../scripts/pagina-inicial.js"></script>
+    <script src="../scripts/pagamento.js"></script>
+</body>
+</html>

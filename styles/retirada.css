@@ -1,0 +1,148 @@
+:root {
+    --branco:#ffff;
+    --coral:#F37160;
+    --flamingo:#F69896;
+    --concreto:#A7A9AC;
+    --preto:#000000;
+    --vermelho:#EF4126;
+    --font-padrao:'Open Sans';
+}
+* {
+    margin: 0px;
+    padding: 0px;
+    box-sizing: border-box;
+}
+body {
+    font-family: 'Inter Tight';
+    background-color: #F5F5F7;
+}
+header {
+    height: 42px;
+    width: 714px;
+    position: fixed;
+    left: 50%;
+    transform: translate(-50%);
+    top: 1%;
+    background-color: transparent;
+    transition: 2s;
+    width: 100%;
+}
+header.scrolled {
+    position: fixed;
+    top: 0%;
+    transition: 2s;
+    border-bottom: 1px solid #434344;
+    background-image: linear-gradient(to right, #bec0c3, rgba(31, 29, 29, 0.658));
+    color: white;
+    width: 100%;
+    z-index: 1000;
+}
+header.scrolled > #nav-bar > li > a {
+    color: white;
+}
+header.scrolled > #nav-bar > li > a:hover {
+    color: #020202;
+}
+#logo {
+    position: fixed;
+    left: 32%;
+    transform: translate(-32%);
+    top: 1px;
+}
+li {
+    list-style: none;
+}
+a {
+    text-decoration: none;
+    color: black;
+}
+#nav-bar {
+    position: relative;
+    left: 50%;
+    top: 15%;
+    width: 568px;
+    transform: translate(-63%);
+}
+#nav-bar > li {
+    display: inline;
+    position: relative;
+    left: 10%;
+    padding-right: 24px;
+}
+#nav-bar > li > a {
+    font-weight: 500;
+    font-size: 14px;
+    color: #6E6E73;
+}
+#nav-bar > li > a:hover {
+    transition: 1s;
+    color: #000000;
+}
+#icone-pesquisa {
+    width: 22px;
+    height: 24px;
+    position: fixed;
+    left: 64%;
+    transform: translate(-64%);
+    top: 7px;
+}
+#carrinho-compras {
+    width: 32px;
+    height: 34px;
+    position: fixed;
+    left: 120%;
+    transform: translate(-120%);
+    top: -15%;
+}
+#menu-icon {
+    display: none;
+}
+#fechar-menu {
+    display: none;
+    cursor: pointer;
+}
+main > h1 {
+    font-weight: 500;
+    font-size: 24px;
+    position: absolute;
+    left: 15%;
+    top: 80px;
+}
+#linhaHr {
+    border: 1px solid black;
+    width: 90vw;
+    position: absolute;
+    top: 125px;
+    left: 50%;
+    transform: translate(-50%);
+}
+main > h2 {
+    font-weight: 700;
+    font-size: 40px;
+    line-height: 61px;
+    position: absolute;
+    top: 150px;
+    left: 20%;
+    transform: translate(-20%);
+}
+div#lista-graficas {
+    width: 843px;
+    height: 587px;
+    position: absolute;
+    left: 30%;
+    transform: translate(-30%);
+    top: 300px;
+}
+.caixa {
+    width: 391px;
+    height: 76px;
+    margin: 40px;
+    box-shadow: -1px -1px 6px black;
+    border-radius: 5px;
+    padding: 8px;
+    transition: 0.8s;
+}
+.caixa:hover {
+    transition: 0.8s;
+    box-shadow: -1px -1px 6px #F37160;
+}

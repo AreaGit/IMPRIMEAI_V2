@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cadastro de Produtos</title>
+    <link rel="shortcut icon" href="../images/favicon-imprimeai.png" type="image/x-icon">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,300;1,400;1,500;1,600;1,700;1,800&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter+Tight:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" />
+    <link rel="stylesheet" href="../styles/cad-prods.css">
+</head>
+<body>
+    <form action="/cadastrar-produto" method="POST" enctype="multipart/form-data">
+        <div class="logo">
+            <img src="../images/logo-imprimeai.png" alt="...">
+        </div>
+
+        <h1>Cadastro de Produtos</h1>
+    <label for="nomeProd">Nome do Produto</label>
+    <input type="text" name="nomeProd" id="nomeProd" required>
+    <br>
+    <label for="descProd">Descrição do Produto</label>
+    <input type="text" name="descProd" id="descProd" required>
+    <br>
+    <label for="valorProd">Valor do Produto</label>
+    <input type="number" name="valorProd" id="valorProd" required step="0.1">
+    <br>
+    <label for="imgProd">Imagem do Produto</label>
+    <input type="file" name="imgProd" id="imgProd" required>
+    <br>
+    <label for="categoriaProd">Categoria do Produto</label>
+    <input type="text" name="categoriaProd" id="categoriaProd" required>
+    <br>
+    <label for="raioProd">Raio do Produto</label>
+    <input type="number" name="raioProd" id="raioProd" required>
+    <br>
+    <!-- Campos para variações -->
+    <label for="material">Material (separar por vírgulas)</label>
+    <input type="text" name="material" id="material" required>
+    
+    <label for="formato">Formato (separar por vírgulas)</label>
+    <input type="text" name="formato" id="formato" required>
+    
+    <label for="enobrecimento">Enobrecimento (separar por vírgulas)</label>
+    <input type="text" name="enobrecimento" id="enobrecimento" required>
+    
+    <label for="cor">Cor (separar por vírgulas)</label>
+    <input type="text" name="cor" id="cor" required>
+    
+    <label for="acabamento">Acabamento (separar por vírgulas)</label>
+    <input type="text" name="acabamento" id="acabamento" required>
+    
+    <button type="submit" id="btnCadProd">Cadastrar Produto</button>
+  </form>
+  <script src="../scripts/cad-prods.js"></script>
+</body>
+</html>

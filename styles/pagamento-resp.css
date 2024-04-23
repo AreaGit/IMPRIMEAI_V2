@@ -1,0 +1,174 @@
+@media screen and (min-width:320px) and (max-width:767px) {
+    header {
+        z-index: 999;
+        position: absolute;
+        width: 99%;
+        left: 50%;
+    }
+    header.scrolled {
+        position: inherit;
+        top: 0%;
+        border-bottom: 0px solid transparent;
+        color: white;
+        width: 0%;
+        z-index: -1;
+    }
+    #nav-bar {
+        display: none;
+        width: 80%;
+        padding: 15px;
+        position: absolute;
+        left: 60%;
+        top: 5px;
+        box-shadow: -1px -3px 20px black;
+        border-radius: 5px;
+        height: 495px;
+        opacity: 0;
+        z-index: 1000;
+        background-color: white;
+    }
+    #nav-bar > li {
+        display: block;
+        padding-top: 14px;
+        position: relative;
+        top: 65px;
+    }
+    #nav-bar > li > a  {
+        font-size: 28px;
+    }
+    #fechar-menu {
+        display: none;
+        cursor: pointer;
+        width: fit-content;
+        font-size: 40px;
+        position: absolute;
+        left: 72%;
+    }
+    #menu-icon {
+        display: block;
+        position: absolute;
+        left: 80%;
+        top: -10%;
+    }
+    #logo {
+        position: absolute;
+        left: 0%;
+        transform: translate(-5%);
+        top: -5px;
+        width: 13%;
+    }
+    #icone-pesquisa {
+        width: 34px;
+        height: 36px;
+        position: absolute;
+        left: 15%;
+        transform: translate(-15%);
+        top: 3px;
+    }
+    #carrinho-compras {
+        width: 44px;
+        height: 46px;
+        position: absolute;
+        left: 33%;
+        transform: translate(-120%);
+        top: 6%;
+    }
+    .caixas {
+        width: 94vw;
+        position: relative;
+        left: -2%;
+        height: 150px;
+    }
+    p.prgPagto {
+        width: 68%;
+    }
+    .caixas {
+        width: 94vw;
+        position: relative;
+        left: -2%;
+        height: 127px;
+    }
+    h2.tltPagto {
+        font-weight: 700;
+        font-size: 17px;
+        position: relative;
+        left: 40%;
+        top: -15px;
+        width: fit-content;
+        transform: translate(-40%);
+    }
+    #linhaHrFin {
+        border: 1px solid black;
+        width: 90vw;
+        position: absolute;
+        top: 1050px;
+        left: 50%;
+        transform: translate(-50%);
+    }
+    #btnContPag {
+        width: 99vw;
+        height: 51px;
+        font-size: 17px;
+        font-weight: 600;
+        color: #EF4126;
+        border: 1px solid #EF4126;
+        background-color: white;
+        cursor: pointer;
+        border-radius: 5px;
+        position: absolute;
+        left: 25%;
+        transform: translate(-25%);
+        top: 1100px;
+        transition: 0.8s;
+    }
+    #opcoesPagto {
+        position: absolute;
+        top: 350px;
+        left: 20%;
+        width: 100%;
+    }
+    main > p {
+        line-height: 25px;
+        font-size: 17px;
+        font-weight: 400;
+        position: absolute;
+        left: 20%;
+        transform: translate(-20%);
+        top: 285px;
+    }
+}
+@media screen and (min-width:768px) and (max-width:1440px) {
+    #logo {
+        position: fixed;
+        left: 5%;
+        transform: translate(-5%);
+        top: 1px;
+    }
+    header {
+        height: 42px;
+        width: 714px;
+        position: fixed;
+        left: 50%;
+        transform: translate(-50%);
+        top: 1%;
+        background-color: transparent;
+        transition: 2s;
+        width: 99%;
+    }
+    #icone-pesquisa {
+        width: 22px;
+        height: 24px;
+        position: fixed;
+        left: 80%;
+        transform: translate(-80%);
+        top: 7px;
+    }
+    #carrinho-vazio {
+        height: 165px;
+        width: 57%;
+        position: absolute;
+        left: 50%;
+        transform: translate(-50%);
+        top: 35px;
+    }
+}

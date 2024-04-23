@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Detalhes do Produto</title>
+    <link rel="shortcut icon" href="../images/favicon-imprimeai.png" type="image/x-icon">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,300;1,400;1,500;1,600;1,700;1,800&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter+Tight:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0"/>
+    <link rel="stylesheet" href="../styles/detalhes-produtos.css">
+    <link rel="stylesheet" href="../styles/detalhes-produtos-resp.css">
+</head>
+<body>
+    <header id="header">
+        <a href="/"><img src="../images/favicon-32x32.png" alt="..." id="logo"></a>      
+        <a href="#" id="menu-icon"><svg width="35" height="50" viewBox="0 0 18 18"><polyline id="globalnav-menutrigger-bread-bottom" class="globalnav-menutrigger-bread globalnav-menutrigger-bread-bottom" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round" points="2 12, 16 12"><animate id="globalnav-anim-menutrigger-bread-bottom-open" attributeName="points" keyTimes="0;0.5;1" dur="0.24s" begin="indefinite" fill="freeze" calcMode="spline" keySplines="0.42, 0, 1, 1;0, 0, 0.58, 1" values=" 2 12, 16 12; 2 9, 16 9; 3.5 15, 15 3.5"></animate><animate id="globalnav-anim-menutrigger-bread-bottom-close" attributeName="points" keyTimes="0;0.5;1" dur="0.24s" begin="indefinite" fill="freeze" calcMode="spline" keySplines="0.42, 0, 1, 1;0, 0, 0.58, 1" values=" 3.5 15, 15 3.5; 2 9, 16 9; 2 12, 16 12"></animate></polyline><polyline id="globalnav-menutrigger-bread-top" class="globalnav-menutrigger-bread globalnav-menutrigger-bread-top" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round" points="2 5, 16 5"><animate id="globalnav-anim-menutrigger-bread-top-open" attributeName="points" keyTimes="0;0.5;1" dur="0.24s" begin="indefinite" fill="freeze" calcMode="spline" keySplines="0.42, 0, 1, 1;0, 0, 0.58, 1" values=" 2 5, 16 5; 2 9, 16 9; 3.5 3.5, 15 15"></animate><animate id="globalnav-anim-menutrigger-bread-top-close" attributeName="points" keyTimes="0;0.5;1" dur="0.24s" begin="indefinite" fill="freeze" calcMode="spline" keySplines="0.42, 0, 1, 1;0, 0, 0.58, 1" values=" 3.5 3.5, 15 15; 2 9, 16 9; 2 5, 16 5"></animate></polyline></svg></a>
+        <div id="icone-pesquisa">
+          <div class="input-wrapper">
+              <button class="icon" id="searchButton"> 
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" height="22px" width="22px">
+                  <path stroke-linejoin="round" stroke-linecap="round" stroke-width="1.5" stroke="#101011" d="M11.5 21C16.7467 21 21 16.7467 21 11.5C21 6.25329 16.7467 2 11.5 2C6.25329 2 2 6.25329 2 11.5C2 16.7467 6.25329 21 11.5 21Z"></path>
+                  <path stroke-linejoin="round" stroke-linecap="round" stroke-width="1.5" stroke="#101011" d="M22 22L20 20"></path>
+                </svg>
+              </button>
+              <input placeholder="Pesquisar..." id="searchInput" class="input" name="text" type="text">
+          </div>
+          <div id="sugestoes">
+              
+          </div>
+      </div>
+        <nav id="nav-bar">
+            <a href="/carrinho"><img src="../images/carrinho-compras.png" alt="..." id="carrinho-compras"></a>
+            <span class="material-symbols-outlined" id="fechar-menu">close</span>
+            <li><a href="/">Início</a></li>
+            <li><a href="/comunicacao-visual">Comunicação Visual</a></li>
+            <li><a href="/cartazes">Cartazes</a></li>
+            <li><a href="/papelaria">Papelaria</a></li>
+            <li><a href="/brindes">Brindes</a></li>
+            <li><a href="/adesivos">Adesivos</a></li>
+        </nav>
+    </header>
+    <main>
+        <section id="detalhes-produto">
+            <h1>Nome do Produto</h1>
+            <p>R$ 35,90</p>
+            <div id="variacoes">
+
+            </div>
+            <br>
+            <label for="quantidade">Quantidade:</label>
+            <br>
+            <input type="number" name="quantidade" id="quantidade" value="1">
+            <br>
+            <button id="adicionarAoCarrinhoBtn">Adicionar ao Carrinho</button>
+            <a href="#" id="lnk-comp">Comprar</a>
+            <br>
+            <a href="/" id="cont-comp">Continuar comprando</a>
+        </section>
+        <section id="img-produto">
+            <img src="../images/prod1-ex.png" alt="...">
+            <div id="gabarito">
+                <h2>Gabarito do Produto</h2>
+                <a href="#"><img src="../images/icone-adobe.png" alt=".." id="icone-adobe"></a>
+            </div>
+        </section>
+        <section id="descricao-produto">
+            <h2>Descrição do Produto</h2>
+            <p>	Lorem ipsum congue litora proin dapibus quam, sapien ut posuere ornare elit et, integer taciti duis ut dui  sit tempus placerat maecenas posuere nibh praesent augue sapien, purus sagittis dui suscipit hendrerit ac venenatis, donec aenean euismod class neque netus lorem. in nullam quisque placerat molestie ut lorem pharetra placerat nostra, nullam inceptos pulvinar lectus luctus neque conubia aliquam mauris, convalli eu vulputate himenaeos platea gravida suscipit dui. non pulvinar cubilia integer a ipsum est porta, aenean lacinia diam nullam elit a phasellus, proin porta varius nulla et egestas. porttitor lobortis praesent class primis non faucibus metus porta, vitae turpis consectetur ipsum libero vestibulum mauris, velit gravida curae ac non urna duis. </p>
+        </section>
+        <div id="avisoGeral">
+            <div class="notifications-container">
+                <div class="success">
+                  <div class="flex">
+                    <div class="flex-shrink-0">
+                      <svg aria-hidden="true" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg" class="succes-svg">
+                        <path clip-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" fill-rule="evenodd"></path>
+                      </svg>
+                    </div>
+                    <div class="success-prompt-wrap">
+                      <p class="success-prompt-heading">
+                        Produto adicionado ao carrinho!
+                      </p>
+                      <div class="success-prompt-prompt">
+                        <p>Seu produto foi adicionado <br> ao carrinho com sucesso!</p>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>          
+        </div>
+        <div id="erroCarrinho">
+            <div class="notifications-container">
+                <div class="error-alert">
+                  <div class="flex">
+                    <div class="flex-shrink-0">
+                      
+                      <svg aria-hidden="true" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg" class="error-svg">
+                        <path clip-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" fill-rule="evenodd"></path>
+                      </svg>
+                    </div>
+                    <div class="error-prompt-container">
+                      <p class="error-prompt-heading">Erro ao adicionar ao Carrinho
+                      </p><div class="error-prompt-wrap">
+                        <ul class="error-prompt-list" role="list">
+                          <li>Erro ao adicionar ao carrinho, tente novamente mais tarde!</li>
+                        </ul>
+                    </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+        </div>
+    </main>
+    <script src="../scripts/pagina-inicial.js"></script>
+    <script src="../scripts/detalhes-produtos.js"></script>
+</body>
+</html>

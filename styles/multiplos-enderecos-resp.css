@@ -1,0 +1,140 @@
+@media screen and (min-width:320px) and (max-width:767px) {
+    header {
+        z-index: 999;
+        position: absolute;
+        width: 99%;
+        left: 50%;
+    }
+    header.scrolled {
+        position: inherit;
+        top: 0%;
+        border-bottom: 0px solid transparent;
+        color: white;
+        width: 0%;
+        z-index: -1;
+    }
+    #nav-bar {
+        display: none;
+        width: 80%;
+        padding: 15px;
+        position: absolute;
+        left: 60%;
+        top: 5px;
+        box-shadow: -1px -3px 20px black;
+        border-radius: 5px;
+        height: 495px;
+        opacity: 0;
+        z-index: 1000;
+        background-color: white;
+    }
+    #nav-bar > li {
+        display: block;
+        padding-top: 14px;
+        position: relative;
+        top: 65px;
+    }
+    #nav-bar > li > a  {
+        font-size: 28px;
+    }
+    #fechar-menu {
+        display: none;
+        cursor: pointer;
+        width: fit-content;
+        font-size: 40px;
+        position: absolute;
+        left: 72%;
+    }
+    #menu-icon {
+        display: block;
+        position: absolute;
+        left: 80%;
+        top: -10%;
+    }
+    #logo {
+        position: absolute;
+        left: 0%;
+        transform: translate(-5%);
+        top: -5px;
+        width: 13%;
+    }
+    #icone-pesquisa {
+        width: 34px;
+        height: 36px;
+        position: absolute;
+        left: 15%;
+        transform: translate(-15%);
+        top: 3px;
+    }
+    #carrinho-compras {
+        width: 44px;
+        height: 46px;
+        position: absolute;
+        left: 33%;
+        transform: translate(-120%);
+        top: 6%;
+    }
+    #container {
+        position: absolute;
+        top: 400px;
+        display: flex;
+        width: 96%;
+    }
+    #enviar-planilha {
+        position: absolute;
+        left: 60%;
+        transform: translate(-60%);
+        top: 395px;
+    }
+    #baixar-planilha > p {
+        font-size: 20px;
+        font-weight: 300;
+        text-decoration: underline;
+        color: #F37160;
+        position: relative;
+        left: 50%;
+        transform: translate(-50%);
+        top: 100px;
+        transition: 0.8s;
+        width: fit-content;
+    }
+}
+@media screen and (min-width:768px) and (max-width:1440px){
+    #logo {
+        position: fixed;
+        left: 5%;
+        transform: translate(-5%);
+        top: 1px;
+    }
+    header {
+        height: 42px;
+        width: 714px;
+        position: fixed;
+        left: 50%;
+        transform: translate(-50%);
+        top: 1%;
+        background-color: transparent;
+        transition: 2s;
+        width: 99%;
+    }
+    #icone-pesquisa {
+        width: 22px;
+        height: 24px;
+        position: fixed;
+        left: 86%;
+        transform: translate(-86%);
+        top: 7px;
+    }
+    #enviar-planilha {
+        position: absolute;
+        left: 60%;
+        transform: translate(-60%);
+        top: 65px;
+        margin-left: 165px;
+    }
+    #baixar-planilha {
+        position: absolute;
+        left: 20%;
+        transform: translate(-40%);
+        top: 65px;
+    }
+}

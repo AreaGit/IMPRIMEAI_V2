@@ -1,0 +1,1262 @@
+@media screen and (min-width:320px) and (max-width:863px){
+    header {
+        z-index: 999;
+        position: absolute;
+        width: 99%;
+        left: 50%;
+    }
+    header.scrolled {
+        position: inherit;
+        top: 0%;
+        border-bottom: 0px solid transparent;
+        color: white;
+        width: 0%;
+        z-index: -1;
+    }
+    div#lg {
+        width: 50px;
+        height: 50px;
+        position: absolute;
+        left: 0%;
+        top: 0px;
+        z-index: 999;
+    }
+    #nav-bar {
+        display: none;
+        width: 80%;
+        padding: 15px;
+        position: absolute;
+        left: 60%;
+        top: 5px;
+        box-shadow: -1px -3px 20px black;
+        border-radius: 5px;
+        height: 495px;
+        opacity: 0;
+        z-index: 1000;
+        background-color: white;
+    }
+    #nav-bar > li {
+        display: block;
+        padding-top: 14px;
+        position: relative;
+        top: 65px;
+    }
+    #nav-bar > li > a  {
+        font-size: 28px;
+    }
+    #fechar-menu {
+        display: none;
+        cursor: pointer;
+        width: fit-content;
+        font-size: 40px;
+        position: absolute;
+        left: 72%;
+    }
+    #menu-icon {
+        display: block;
+        position: absolute;
+        left: 80%;
+        top: -10%;
+    }
+    #logo {
+        position: absolute;
+        left: 0%;
+        transform: translate(-5%);
+        top: -5px;
+        width: 16%;
+    }    
+    #icone-pesquisa {
+        width: 34px;
+        height: 36px;
+        position: absolute;
+        left: 15%;
+        transform: translate(-15%);
+        top: 3px;
+    }
+    #carrinho-compras {
+        width: 44px;
+        height: 46px;
+        position: absolute;
+        left: 33%;
+        transform: translate(-120%);
+        top: 6%;
+    }
+    #prods-header {
+        z-index: -1;
+        width: 130%;
+        height: 418px;
+        position: absolute;
+        top: 46%;
+        left: -17%;
+    }
+    footer {
+        position: absolute;
+        top: 650%;
+        width: 100%;
+        height: 25px;
+    }    
+    footer > a {
+        font-size: 17px;
+        width: 82%;
+    }
+    #linksRapidos {
+        position: absolute;
+        top: 255%;
+        width: 120%;
+        height: 108px;
+        padding: 10px;
+        left: -13%;
+    }
+    #linksRapidos > h2 {
+        font-size: 36px;
+        position: relative;
+        left: 12%;
+        width: 57%;
+    }
+    #meus-pedidos {
+        position: relative;
+        top: 15px;
+        width: 45vw;
+    }
+    #meus-pedidos > h3 {
+        font-size: 20px;
+    }
+    #minha-carteira {
+        position: relative;
+        top: -32px;
+        left: 52%;
+        width: 45vw;
+    }
+    #minha-carteira > h3 {
+        font-size: 20px;
+    }
+    #meu-perfil {
+        position: relative;
+        top: -20px;
+        left: 32%;
+        width: 45vw;
+    }    
+    #meu-perfil > h3 {
+        font-size: 20px;
+    }
+    #mot1 {
+        width: 250px;
+        height: 194px;
+        box-shadow: -1px -1px 8px #434344;
+        border-radius: 5px;
+        position: absolute;
+        top: 50%;
+        transition: 1s;
+        left: 13%;
+    }
+    #mot2 {
+        width: 250px;
+        height: 194px;
+        box-shadow: -1px -1px 8px #434344;
+        border-radius: 5px;
+        position: absolute;
+        top: 117%;
+        left: 13%;
+        transition: 1s;
+    }
+    #mot3 {
+        width: 250px;
+        height: 194px;
+        box-shadow: -1px -1px 8px #434344;
+        border-radius: 5px;
+        position: absolute;
+        top: 184%;
+        left: 13%;
+        transition: 1s;
+    }
+    #motivosCompra {
+        width: 100%;
+        height: 315px;
+        position: absolute;
+        top: 195%;
+        padding: 15px;
+        left: -5%;
+    }
+    #motivosCompra > h2 {
+        font-size: 27px;
+        font-weight: 600;
+        color: #A7A9AC;
+        width: 100%;
+    }
+    #novidades > h2 {
+        font-size: 28px;
+        font-weight: 600;
+        color: #A7A9AC;
+        width: fit-content;
+        position: absolute;
+        left: 3%;
+        width: 92%;
+    }
+    #prevButton {
+        cursor: pointer;
+        width: 5%;
+        height: 70px;
+        border-radius: 100%;
+        background-color: #78777769;
+        font-size: 48px;
+        border: 0;
+        position: absolute;
+        left: -3%;
+        top: 30%;
+        z-index: 1;
+    }
+    #nextButton {
+        cursor: pointer;
+        width: 5%;
+        height: 70px;
+        border-radius: 100%;
+        background-color: #78777769;
+        font-size: 48px;
+        border: 0;
+        position: absolute;
+        left: 50%;
+        top: 30%;
+        z-index: 1;
+    }
+    ::-webkit-scrollbar {
+        display: none;
+    }
+    #novidades-container {
+        overflow-x: hidden;
+        white-space: nowrap;
+    }
+    #sec-header {
+        width: 94vw;
+        height: 342px;
+        position: absolute;
+        left: 4%;
+        top: 16%;
+    }
+    #prod3 {
+        cursor: pointer;
+        width: 179px;
+        height: 129px;
+        position: absolute;
+        top: 50%;
+        left: 5%;
+    }
+    #prod4 {
+        cursor: pointer;
+        width: 179px;
+        height: 129px;
+        position: absolute;
+        top: 50%;
+        left: 47%;
+    }
+    #sec-header > h1 {
+        font-weight: lighter;
+        font-size: 43px;
+        color: #020202;
+        line-height: 62px;
+    }
+    #prod1 > h2 {
+        font-weight: 600;
+        font-size: 12px;
+        position: absolute;
+        left: 17%;
+        transform: translate(-6%);
+    }
+    #prod2 > h2 {
+        font-weight: 600;
+        font-size: 12px;
+        position: absolute;
+        left: 17%;
+        transform: translate(-6%);
+    }
+    #prod2 {
+        cursor: pointer;
+        width: 179px;
+        height: 129px;
+        position: absolute;
+        top: 20px;
+        left: 47%;
+    }
+    #prod3 > h2 {
+        font-weight: 600;
+        font-size: 12px;
+        position: absolute;
+        left: 20%;
+        transform: translate(-10%);
+    }
+    #prod4 > h2 {
+        width: max-content;
+        font-weight: 600;
+        font-size: 12px;
+        position: absolute;
+        left: 10%;
+        transform: translate(-10%);
+    }
+    #cx1 {
+        box-shadow: -1px -1px 8px #434344;
+        border-radius: 5px;
+        width: 96vw;
+        height: 456px;
+        position: absolute;
+        top: 12%;
+        left: -5%;
+        transition: transform 0.8s;
+    }
+    #cx2 {
+        box-shadow: -1px -1px 8px #434344;
+        border-radius: 5px;
+        width: 96vw;
+        height: 456px;
+        position: absolute;
+        top: 58%;
+        left: -5%;
+        transition: transform 0.8s;
+    }
+    #cx3 {
+        box-shadow: -1px -1px 8px #434344;
+        border-radius: 5px;
+        width: 96vw;
+        height: 456px;
+        position: absolute;
+        top: 104%;
+        left: -3%;
+        transition: transform 0.8s;
+        overflow-x: hidden;
+        transform: translate(-7%);
+    }
+    #cx4 {
+        box-shadow: -1px -1px 8px #434344;
+        border-radius: 5px;
+        width: 96vw;
+        height: 456px;
+        position: absolute;
+        top: 150%;
+        left: -5%;
+        transition: transform 0.8s;
+        overflow-x: hidden;
+    }
+    main {
+        position: relative;
+        top: 700px;
+        width: 100%;
+        height: 1550px;
+        left: 5%;
+        padding: 15px;
+    }
+    .input-wrapper {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 15px;
+        position: absolute;
+        left: 25%;
+        top: -4px;
+    }
+    .input {
+        border-style: none;
+        height: 40px;
+        width: 40px;
+        padding: 10px;
+        outline: none;
+        border-radius: 50%;
+        transition: .5s ease-in-out;
+        background-color: transparent;
+        box-shadow: 0px 0px 3px transparent;
+        padding-right: 40px;
+        color: #020202;
+      }
+      .icon:focus ~ .input,
+      .input:focus {
+        box-shadow: none;
+        width: 150px;
+        border-radius: 0px;
+        background-color: transparent;
+        border-bottom: 2px solid #020202;
+        transition: all 500ms cubic-bezier(0, 0.110, 0.35, 2);
+      }
+      #sugestoes {
+        background-color: white;
+      }
+}
+@media screen and (min-width:1024px) and (max-width:1300px) {
+    footer {
+        position: absolute;
+        top: 290%;
+        width: 100%;
+        height: 25px;
+        left: 0%;
+    } 
+    #nav-bar {
+        position: relative;
+        left: 50%;
+        top: 8px;
+        width: 568px;
+        transform: translate(-50%);
+    }
+    #logo {
+        position: fixed;
+        left: 27%;
+        transform: translate(-27%);
+        top: 1px;
+    }
+    #icone-pesquisa {
+        width: 22px;
+        height: 24px;
+        position: fixed;
+        left: 80%;
+        transform: translate(-80%);
+        top: 9px;
+    }
+    #sec-header {
+        width: 712px;
+        height: 342px;
+        position: absolute;
+        left: 17%;
+        top: 16%;
+    }
+    main {
+        position: relative;
+        top: 700px;
+        width: 812px;
+        height: 1109px;
+        left: 18%;
+        padding: 15px;
+    }
+    #sec-header > h1 {
+        font-weight: lighter;
+        font-size: 49px;
+        color: #020202;
+        line-height: 62px;
+        width: 49%;
+        position: absolute;
+        left: -10%;
+    }
+    #prods-header {
+        width: 849px;
+        height: 184px;
+        position: absolute;
+        top: 46%;
+        left: -17%;
+    }
+    #novidades > h2 {
+        font-size: 28px;
+        font-weight: 600;
+        color: #A7A9AC;
+        position: absolute;
+        left: -11%;
+    }
+    #cx1 {
+        box-shadow: -1px -1px 8px #434344;
+        border-radius: 5px;
+        width: 360px;
+        height: 456px;
+        position: absolute;
+        top: 12%;
+        left: 3%;
+        transition: transform 0.8s;
+    }
+    #cx2 {
+        box-shadow: -1px -1px 8px #434344;
+        border-radius: 5px;
+        width: 360px;
+        height: 456px;
+        position: absolute;
+        top: 12%;
+        left: 53%;
+        transition: transform 0.8s;
+    }    
+    #cx3 {
+        box-shadow: -1px -1px 8px #434344;
+        border-radius: 5px;
+        width: 360px;
+        height: 456px;
+        position: absolute;
+        top: 57%;
+        left: 6%;
+        transition: transform 0.8s;
+        overflow-x: hidden;
+        transform: translate(-7%);
+    }
+    #cx4 {
+        box-shadow: -1px -1px 8px #434344;
+        border-radius: 5px;
+        width: 360px;
+        height: 456px;
+        position: absolute;
+        top: 57%;
+        left: 53%;
+        transition: transform 0.8s;
+        overflow-x: hidden;
+    }
+    #motivosCompra > h2 {
+        font-size: 28px;
+        font-weight: 600;
+        color: #A7A9AC;
+        position: absolute;
+        left: -15%;
+    }
+    #mot1 {
+        width: 313px;
+        height: 194px;
+        box-shadow: -1px -1px 8px #434344;
+        border-radius: 5px;
+        position: absolute;
+        top: 35%;
+        transition: 1s;
+        left: -17%;
+    }
+    #mot2 {
+        width: 313px;
+        height: 194px;
+        box-shadow: -1px -1px 8px #434344;
+        border-radius: 5px;
+        position: absolute;
+        top: 33%;
+        left: 15%;
+        transition: 1s;
+    }
+    #mot3 {
+        width: 313px;
+        height: 194px;
+        box-shadow: -1px -1px 8px #434344;
+        border-radius: 5px;
+        position: absolute;
+        top: 35%;
+        left: 47%;
+        transition: 1s;
+    }
+    #linksRapidos {
+        position: absolute;
+        top: 140%;
+        width: 420px;
+        height: 108px;
+        padding: 10px;
+        left: -10%;
+    }
+    #linksRapidos > h2 {
+        font-size: 28px;
+        font-weight: 600;
+    }
+    #meus-pedidos {
+        width: 162px;
+        height: 48px;
+        box-shadow: -1px -1px 8px #434344;
+        border-radius: 5px;
+        position: absolute;
+        left: 10%;
+        top: 50%;
+    }
+    #minha-carteira {
+        width: 162px;
+        height: 48px;
+        box-shadow: -1px -1px 8px #434344;
+        border-radius: 5px;
+        position: absolute;
+        left: 50%;
+        top: 50%;
+    }
+    #meu-perfil {
+        width: 162px;
+        height: 48px;
+        box-shadow: -1px -1px 8px #434344;
+        border-radius: 5px;
+        position: absolute;
+        left: 90%;
+        top: 50%;
+    }
+    footer {
+        position: absolute;
+        top: 290%;
+        width: 100%;
+        height: 25px;
+        left: 0%;
+    }
+}
+@media screen and (min-width:1301px) and (max-width:1440px) {
+    footer {
+        position: absolute;
+        top: 290%;
+        width: 100%;
+        height: 25px;
+        left: 0%;
+    } 
+    #nav-bar {
+        position: relative;
+        left: 50%;
+        top: 8px;
+        width: 568px;
+        transform: translate(-50%);
+    }
+    #logo {
+        position: fixed;
+        left: 28%;
+        transform: translate(-28%);
+        top: 1px;
+    }
+    #icone-pesquisa {
+        width: 22px;
+        height: 24px;
+        position: fixed;
+        left: 77%;
+        transform: translate(-77%);
+        top: 11px;
+    }
+    #carrinho-compras {
+        width: 32px;
+        height: 34px;
+        position: fixed;
+        left: 112%;
+        transform: translate(-112%);
+        top: -15%;
+    }
+    #sec-header {
+        width: 712px;
+        height: 342px;
+        position: absolute;
+        left: 17%;
+        top: 16%;
+    }
+    main {
+        position: relative;
+        top: 700px;
+        width: 812px;
+        height: 1109px;
+        left: 18%;
+        padding: 15px;
+    }
+    #sec-header > h1 {
+        font-weight: lighter;
+        font-size: 49px;
+        color: #020202;
+        line-height: 62px;
+        width: 49%;
+        position: absolute;
+        left: -10%;
+    }
+    #prods-header {
+        width: 849px;
+        height: 184px;
+        position: absolute;
+        top: 46%;
+        left: -17%;
+    }
+    #novidades > h2 {
+        font-size: 28px;
+        font-weight: 600;
+        color: #A7A9AC;
+        position: absolute;
+        left: -11%;
+    }
+    #cx1 {
+        box-shadow: -1px -1px 8px #434344;
+        border-radius: 5px;
+        width: 360px;
+        height: 456px;
+        position: absolute;
+        top: 12%;
+        left: 3%;
+        transition: transform 0.8s;
+    }
+    #cx2 {
+        box-shadow: -1px -1px 8px #434344;
+        border-radius: 5px;
+        width: 360px;
+        height: 456px;
+        position: absolute;
+        top: 12%;
+        left: 53%;
+        transition: transform 0.8s;
+    }    
+    #cx3 {
+        box-shadow: -1px -1px 8px #434344;
+        border-radius: 5px;
+        width: 360px;
+        height: 456px;
+        position: absolute;
+        top: 57%;
+        left: 6%;
+        transition: transform 0.8s;
+        overflow-x: hidden;
+        transform: translate(-7%);
+    }
+    #cx4 {
+        box-shadow: -1px -1px 8px #434344;
+        border-radius: 5px;
+        width: 360px;
+        height: 456px;
+        position: absolute;
+        top: 57%;
+        left: 53%;
+        transition: transform 0.8s;
+        overflow-x: hidden;
+    }
+    #motivosCompra > h2 {
+        font-size: 28px;
+        font-weight: 600;
+        color: #A7A9AC;
+        position: absolute;
+        left: -15%;
+    }
+    #mot1 {
+        width: 313px;
+        height: 194px;
+        box-shadow: -1px -1px 8px #434344;
+        border-radius: 5px;
+        position: absolute;
+        top: 35%;
+        transition: 1s;
+        left: -17%;
+    }
+    #mot2 {
+        width: 313px;
+        height: 194px;
+        box-shadow: -1px -1px 8px #434344;
+        border-radius: 5px;
+        position: absolute;
+        top: 33%;
+        left: 15%;
+        transition: 1s;
+    }
+    #mot3 {
+        width: 313px;
+        height: 194px;
+        box-shadow: -1px -1px 8px #434344;
+        border-radius: 5px;
+        position: absolute;
+        top: 35%;
+        left: 47%;
+        transition: 1s;
+    }
+    #linksRapidos {
+        position: absolute;
+        top: 140%;
+        width: 420px;
+        height: 108px;
+        padding: 10px;
+        left: -10%;
+    }
+    #linksRapidos > h2 {
+        font-size: 28px;
+        font-weight: 600;
+    }
+    #meus-pedidos {
+        width: 162px;
+        height: 48px;
+        box-shadow: -1px -1px 8px #434344;
+        border-radius: 5px;
+        position: absolute;
+        left: 10%;
+        top: 50%;
+    }
+    #minha-carteira {
+        width: 162px;
+        height: 48px;
+        box-shadow: -1px -1px 8px #434344;
+        border-radius: 5px;
+        position: absolute;
+        left: 50%;
+        top: 50%;
+    }
+    #meu-perfil {
+        width: 162px;
+        height: 48px;
+        box-shadow: -1px -1px 8px #434344;
+        border-radius: 5px;
+        position: absolute;
+        left: 90%;
+        top: 50%;
+    }
+    footer {
+        position: absolute;
+        top: 290%;
+        width: 100%;
+        height: 25px;
+        left: 0%;
+    }
+}
+@media screen and (min-width:1441px) and (max-width:1635px) {
+    footer {
+        position: absolute;
+        top: 290%;
+        width: 90%;
+        height: 25px;
+        left: 0%;
+    }
+    #nav-bar {
+        position: relative;
+        left: 50%;
+        top: 8px;
+        width: 568px;
+        transform: translate(-50%);
+    }
+    #logo {
+        position: fixed;
+        left: 30%;
+        transform: translate(-30%);
+        top: 1px;
+    }
+    #icone-pesquisa {
+        width: 22px;
+        height: 24px;
+        position: fixed;
+        left: 77%;
+        transform: translate(-77%);
+        top: 11px;
+    }
+    #carrinho-compras {
+        width: 32px;
+        height: 34px;
+        position: fixed;
+        left: 112%;
+        transform: translate(-112%);
+        top: -15%;
+    }
+    #sec-header {
+        width: 712px;
+        height: 342px;
+        position: absolute;
+        left: 17%;
+        top: 16%;
+    }
+    main {
+        position: relative;
+        top: 700px;
+        width: 812px;
+        height: 1109px;
+        left: 18%;
+        padding: 15px;
+    }
+    #sec-header > h1 {
+        font-weight: lighter;
+        font-size: 49px;
+        color: #020202;
+        line-height: 62px;
+        width: 49%;
+        position: absolute;
+        left: -10%;
+    }
+    #prods-header {
+        width: 849px;
+        height: 184px;
+        position: absolute;
+        top: 46%;
+        left: -17%;
+    }
+    #novidades > h2 {
+        font-size: 28px;
+        font-weight: 600;
+        color: #A7A9AC;
+        position: absolute;
+        left: -11%;
+    }
+    #cx1 {
+        box-shadow: -1px -1px 8px #434344;
+        border-radius: 5px;
+        width: 360px;
+        height: 456px;
+        position: absolute;
+        top: 12%;
+        left: 3%;
+        transition: transform 0.8s;
+    }
+    #cx2 {
+        box-shadow: -1px -1px 8px #434344;
+        border-radius: 5px;
+        width: 360px;
+        height: 456px;
+        position: absolute;
+        top: 12%;
+        left: 53%;
+        transition: transform 0.8s;
+    }    
+    #cx3 {
+        box-shadow: -1px -1px 8px #434344;
+        border-radius: 5px;
+        width: 360px;
+        height: 456px;
+        position: absolute;
+        top: 57%;
+        left: 6%;
+        transition: transform 0.8s;
+        overflow-x: hidden;
+        transform: translate(-7%);
+    }
+    #cx4 {
+        box-shadow: -1px -1px 8px #434344;
+        border-radius: 5px;
+        width: 360px;
+        height: 456px;
+        position: absolute;
+        top: 57%;
+        left: 53%;
+        transition: transform 0.8s;
+        overflow-x: hidden;
+    }
+    #motivosCompra > h2 {
+        font-size: 28px;
+        font-weight: 600;
+        color: #A7A9AC;
+        position: absolute;
+        left: -15%;
+    }
+    #mot1 {
+        width: 313px;
+        height: 194px;
+        box-shadow: -1px -1px 8px #434344;
+        border-radius: 5px;
+        position: absolute;
+        top: 35%;
+        transition: 1s;
+        left: -17%;
+    }
+    #mot2 {
+        width: 313px;
+        height: 194px;
+        box-shadow: -1px -1px 8px #434344;
+        border-radius: 5px;
+        position: absolute;
+        top: 33%;
+        left: 15%;
+        transition: 1s;
+    }
+    #mot3 {
+        width: 313px;
+        height: 194px;
+        box-shadow: -1px -1px 8px #434344;
+        border-radius: 5px;
+        position: absolute;
+        top: 35%;
+        left: 47%;
+        transition: 1s;
+    }
+    #linksRapidos {
+        position: absolute;
+        top: 140%;
+        width: 420px;
+        height: 108px;
+        padding: 10px;
+        left: -10%;
+    }
+    #linksRapidos > h2 {
+        font-size: 28px;
+        font-weight: 600;
+    }
+    #meus-pedidos {
+        width: 162px;
+        height: 48px;
+        box-shadow: -1px -1px 8px #434344;
+        border-radius: 5px;
+        position: absolute;
+        left: 10%;
+        top: 50%;
+    }
+    #minha-carteira {
+        width: 162px;
+        height: 48px;
+        box-shadow: -1px -1px 8px #434344;
+        border-radius: 5px;
+        position: absolute;
+        left: 50%;
+        top: 50%;
+    }
+    #meu-perfil {
+        width: 162px;
+        height: 48px;
+        box-shadow: -1px -1px 8px #434344;
+        border-radius: 5px;
+        position: absolute;
+        left: 90%;
+        top: 50%;
+    }
+}
+@media screen and (min-width:1635px) and (max-width:1789px) {
+    footer {
+        position: absolute;
+        top: 290%;
+        width: 90%;
+        height: 25px;
+        left: 45%;
+        transform: translate(-49%);
+    }
+    #nav-bar {
+        position: relative;
+        left: 50%;
+        top: 8px;
+        width: 568px;
+        transform: translate(-50%);
+    }
+    #logo {
+        position: fixed;
+        left: 32%;
+        transform: translate(-32%);
+        top: 1px;
+    }
+    #icone-pesquisa {
+        width: 22px;
+        height: 24px;
+        position: fixed;
+        left: 71%;
+        transform: translate(-71%);
+        top: 11px;
+    }
+    #carrinho-compras {
+        width: 32px;
+        height: 34px;
+        position: fixed;
+        left: 112%;
+        transform: translate(-112%);
+        top: -15%;
+    }
+    #sec-header {
+        width: 712px;
+        height: 342px;
+        position: absolute;
+        left: 17%;
+        top: 16%;
+    }
+    main {
+        position: relative;
+        top: 700px;
+        width: 812px;
+        height: 1109px;
+        left: 18%;
+        padding: 15px;
+    }
+    #sec-header > h1 {
+        font-weight: lighter;
+        font-size: 49px;
+        color: #020202;
+        line-height: 62px;
+        width: 49%;
+        position: absolute;
+        left: -10%;
+    }
+    #prods-header {
+        width: 849px;
+        height: 184px;
+        position: absolute;
+        top: 46%;
+        left: -17%;
+    }
+    #novidades > h2 {
+        font-size: 28px;
+        font-weight: 600;
+        color: #A7A9AC;
+        position: absolute;
+        left: -11%;
+    }
+    #cx1 {
+        box-shadow: -1px -1px 8px #434344;
+        border-radius: 5px;
+        width: 360px;
+        height: 456px;
+        position: absolute;
+        top: 12%;
+        left: 3%;
+        transition: transform 0.8s;
+    }
+    #cx2 {
+        box-shadow: -1px -1px 8px #434344;
+        border-radius: 5px;
+        width: 360px;
+        height: 456px;
+        position: absolute;
+        top: 12%;
+        left: 53%;
+        transition: transform 0.8s;
+    }    
+    #cx3 {
+        box-shadow: -1px -1px 8px #434344;
+        border-radius: 5px;
+        width: 360px;
+        height: 456px;
+        position: absolute;
+        top: 57%;
+        left: 6%;
+        transition: transform 0.8s;
+        overflow-x: hidden;
+        transform: translate(-7%);
+    }
+    #cx4 {
+        box-shadow: -1px -1px 8px #434344;
+        border-radius: 5px;
+        width: 360px;
+        height: 456px;
+        position: absolute;
+        top: 57%;
+        left: 53%;
+        transition: transform 0.8s;
+        overflow-x: hidden;
+    }
+    #motivosCompra > h2 {
+        font-size: 28px;
+        font-weight: 600;
+        color: #A7A9AC;
+        position: absolute;
+        left: -15%;
+    }
+    #mot1 {
+        width: 313px;
+        height: 194px;
+        box-shadow: -1px -1px 8px #434344;
+        border-radius: 5px;
+        position: absolute;
+        top: 35%;
+        transition: 1s;
+        left: -17%;
+    }
+    #mot2 {
+        width: 313px;
+        height: 194px;
+        box-shadow: -1px -1px 8px #434344;
+        border-radius: 5px;
+        position: absolute;
+        top: 33%;
+        left: 15%;
+        transition: 1s;
+    }
+    #mot3 {
+        width: 313px;
+        height: 194px;
+        box-shadow: -1px -1px 8px #434344;
+        border-radius: 5px;
+        position: absolute;
+        top: 35%;
+        left: 47%;
+        transition: 1s;
+    }
+    #linksRapidos {
+        position: absolute;
+        top: 140%;
+        width: 420px;
+        height: 108px;
+        padding: 10px;
+        left: -10%;
+    }
+    #linksRapidos > h2 {
+        font-size: 28px;
+        font-weight: 600;
+    }
+    #meus-pedidos {
+        width: 162px;
+        height: 48px;
+        box-shadow: -1px -1px 8px #434344;
+        border-radius: 5px;
+        position: absolute;
+        left: 10%;
+        top: 50%;
+    }
+    #minha-carteira {
+        width: 162px;
+        height: 48px;
+        box-shadow: -1px -1px 8px #434344;
+        border-radius: 5px;
+        position: absolute;
+        left: 50%;
+        top: 50%;
+    }
+    #meu-perfil {
+        width: 162px;
+        height: 48px;
+        box-shadow: -1px -1px 8px #434344;
+        border-radius: 5px;
+        position: absolute;
+        left: 90%;
+        top: 50%;
+    }
+}
+@media screen and (min-width:2560px) {
+    header {
+        height: 42px;
+        width: 714px;
+        position: fixed;
+        left: 50%;
+        transform: translate(-50%);
+        top: 1%;
+        background-color: transparent;
+        transition: 2s;
+    }
+    header.scrolled {
+        position: fixed;
+        top: 0%;
+        transition: 2s;
+        color: white;
+        width: 714px;
+        z-index: 1000;
+    }
+    header.scrolled > #nav-bar > li > a {
+        color: #6E6E73;
+    }
+    header.scrolled > #nav-bar > li > a:hover {
+        color: #020202;
+    }
+    #logo {
+        position: fixed;
+        left: -4%;
+        transform: translate(-4%);
+        top: 1px;
+    }
+    li {
+        list-style: none;
+    }
+    a {
+        text-decoration: none;
+        color: black;
+    }
+    #nav-bar {
+        position: relative;
+        left: 50%;
+        top: 15%;
+        width: 568px;
+        transform: translate(-63%);
+    }
+    #nav-bar > li {
+        display: inline;
+        position: relative;
+        left: 10%;
+        padding-right: 24px;
+    }
+    #nav-bar > li > a {
+        font-weight: 500;
+        font-size: 14px;
+        color: #6E6E73;
+    }
+    #nav-bar > li > a:hover {
+        transition: 1s;
+        color: #000000;
+    }
+    #icone-pesquisa {
+        width: 22px;
+        height: 24px;
+        position: fixed;
+        left: 92%;
+        transform: translate(-92%);
+        top: 11px;
+    }
+    #carrinho-compras {
+        width: 32px;
+        height: 34px;
+        position: fixed;
+        left: 112%;
+        transform: translate(-112%);
+        top: -15%;
+    }
+    footer {
+        position: absolute;
+        top: 280%;
+        width: 520px;
+        height: 25px;
+        left: 50%;
+        transform: translate(-50%);
+    }
+    footer > a {
+        color: #6E6E73;
+        font-size: 12px;
+        position: absolute;
+        left: 39%;
+        transform: translate(-50%);
+        transition: 1s;
+    }
+    ::-webkit-scrollbar {
+        display: none;
+    }
+}

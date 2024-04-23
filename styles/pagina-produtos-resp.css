@@ -1,0 +1,158 @@
+@media screen and (min-width:320px) and (max-width:579px) {
+    .cxProd {
+        padding: 15px;
+        display: inline-flex;
+        box-shadow: -1px -1px 8px #434344;
+        border-radius: 5px;
+        width: calc(24% - 20px);
+        overflow: hidden;
+        height: 456px;
+        position: relative;
+        top: 12%;
+        left: -6%;
+        transition: transform 0.8s;
+        margin: 20px;
+        transition: 0.8s;
+        width: 118%;
+    }
+    main > h1 {
+        font-size: 40px;
+        font-weight: 600;
+        width: 82%;
+        position: relative;
+        left: 38%;
+        transform: translate(-30%);
+        /* border: 1px solid; */
+    }
+    header {
+        z-index: 999;
+        position: absolute;
+        width: 286%;
+        left: 145%;
+    }
+    header.scrolled {
+        position: inherit;
+        top: 0%;
+        border-bottom: 0px solid transparent;
+        color: white;
+        width: 0%;
+        z-index: -1;
+    }
+    #nav-bar {
+        display: none;
+        width: 30%;
+        padding: 15px;
+        position: absolute;
+        left: 21%;
+        top: 5px;
+        box-shadow: -1px -3px 20px black;
+        border-radius: 5px;
+        height: 495px;
+        opacity: 0;
+        z-index: 1000;
+        background-color: white;
+    }
+    #nav-bar > li {
+        display: block;
+        padding-top: 14px;
+        position: relative;
+        top: 65px;
+    }
+    #nav-bar > li > a  {
+        font-size: 28px;
+    }
+    #fechar-menu {
+        display: none;
+        cursor: pointer;
+        width: fit-content;
+        font-size: 40px;
+        position: absolute;
+        left: 72%;
+    }
+    #menu-icon {
+        display: block;
+        position: absolute;
+        left: 30%;
+        top: -10%;
+    }
+    #logo {
+        position: absolute;
+        left: 2%;
+        transform: translate(-5%);
+        top: 1px;
+        width: 4%;
+    }
+    #icone-pesquisa {
+        width: 34px;
+        height: 36px;
+        position: absolute;
+        left: 8%;
+        transform: translate(-15%);
+        top: 3px;
+    }
+    #carrinho-compras {
+        width: 44px;
+        height: 46px;
+        position: absolute;
+        left: 33%;
+        transform: translate(-120%);
+        top: 6%;
+    }
+    #produtos {
+        position: relative;
+        top: 80px;
+        flex-wrap: nowrap;
+        justify-content: space-between;
+        width: 80%;
+    }
+    .cxProd > a {
+        position: absolute;
+        top: 89%;
+        left: 65%;
+        background-color: #F37160;
+        color: white;
+        padding: 8px 18px 8px 18px;
+        font-size: 14px;
+        font-weight: 400;
+        border-radius: 2px;
+    }
+    .input-wrapper {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 15px;
+        position: absolute;
+        left: 25%;
+        top: -4px;
+    }
+    .input {
+        border-style: none;
+        height: 40px;
+        width: 40px;
+        padding: 10px;
+        outline: none;
+        border-radius: 50%;
+        transition: .5s ease-in-out;
+        background-color: transparent;
+        box-shadow: 0px 0px 3px transparent;
+        padding-right: 40px;
+        color: #020202;
+      }
+      .icon:focus ~ .input,
+      .input:focus {
+        box-shadow: none;
+        width: 150px;
+        border-radius: 0px;
+        background-color: transparent;
+        border-bottom: 2px solid #020202;
+        transition: all 500ms cubic-bezier(0, 0.110, 0.35, 2);
+      }
+      #sugestoes {
+        background-color: white;
+      }
+}
+@media screen and (min-width:2560px) {
+    .cxProd {
+        margin: 30px;
+    }
+}

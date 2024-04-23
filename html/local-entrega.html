@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Local de Entrega</title>
+    <link rel="shortcut icon" href="../images/favicon-imprimeai.png" type="image/x-icon">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,300;1,400;1,500;1,600;1,700;1,800&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter+Tight:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0"/>
+    <link rel="stylesheet" href="../styles/local-entrega.css">
+    <link rel="stylesheet" href="../styles/local-entrega-resp.css">
+</head>
+<body>
+    <header id="header">
+        <a href="/"><img src="../images/favicon-32x32.png" alt="..." id="logo"></a>      
+        <a href="#" id="menu-icon"><svg width="35" height="50" viewBox="0 0 18 18"><polyline id="globalnav-menutrigger-bread-bottom" class="globalnav-menutrigger-bread globalnav-menutrigger-bread-bottom" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round" points="2 12, 16 12"><animate id="globalnav-anim-menutrigger-bread-bottom-open" attributeName="points" keyTimes="0;0.5;1" dur="0.24s" begin="indefinite" fill="freeze" calcMode="spline" keySplines="0.42, 0, 1, 1;0, 0, 0.58, 1" values=" 2 12, 16 12; 2 9, 16 9; 3.5 15, 15 3.5"></animate><animate id="globalnav-anim-menutrigger-bread-bottom-close" attributeName="points" keyTimes="0;0.5;1" dur="0.24s" begin="indefinite" fill="freeze" calcMode="spline" keySplines="0.42, 0, 1, 1;0, 0, 0.58, 1" values=" 3.5 15, 15 3.5; 2 9, 16 9; 2 12, 16 12"></animate></polyline><polyline id="globalnav-menutrigger-bread-top" class="globalnav-menutrigger-bread globalnav-menutrigger-bread-top" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round" points="2 5, 16 5"><animate id="globalnav-anim-menutrigger-bread-top-open" attributeName="points" keyTimes="0;0.5;1" dur="0.24s" begin="indefinite" fill="freeze" calcMode="spline" keySplines="0.42, 0, 1, 1;0, 0, 0.58, 1" values=" 2 5, 16 5; 2 9, 16 9; 3.5 3.5, 15 15"></animate><animate id="globalnav-anim-menutrigger-bread-top-close" attributeName="points" keyTimes="0;0.5;1" dur="0.24s" begin="indefinite" fill="freeze" calcMode="spline" keySplines="0.42, 0, 1, 1;0, 0, 0.58, 1" values=" 3.5 3.5, 15 15; 2 9, 16 9; 2 5, 16 5"></animate></polyline></svg></a>
+        <div id="icone-pesquisa">
+          <div class="input-wrapper">
+              <button class="icon" id="searchButton"> 
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" height="22px" width="22px">
+                  <path stroke-linejoin="round" stroke-linecap="round" stroke-width="1.5" stroke="#101011" d="M11.5 21C16.7467 21 21 16.7467 21 11.5C21 6.25329 16.7467 2 11.5 2C6.25329 2 2 6.25329 2 11.5C2 16.7467 6.25329 21 11.5 21Z"></path>
+                  <path stroke-linejoin="round" stroke-linecap="round" stroke-width="1.5" stroke="#101011" d="M22 22L20 20"></path>
+                </svg>
+              </button>
+              <input placeholder="Pesquisar..." id="searchInput" class="input" name="text" type="text">
+          </div>
+          <div id="sugestoes">
+              
+          </div>
+        </div>
+        <nav id="nav-bar">
+            <a href="/carrinho"><img src="../images/carrinho-compras.png" alt="..." id="carrinho-compras"></a>
+            <span class="material-symbols-outlined" id="fechar-menu">close</span>
+            <li><a href="/">Início</a></li>
+            <li><a href="/comunicacao-visual">Comunicação Visual</a></li>
+            <li><a href="/cartazes">Cartazes</a></li>
+            <li><a href="/papelaria">Papelaria</a></li>
+            <li><a href="/brindes">Brindes</a></li>
+            <li><a href="/adesivos">Adesivos</a></li>
+        </nav>
+    </header>
+    <main>
+        <h1>Dados da Entrega</h1>
+        <div id="linhaHr"></div>
+        <h2>Onde devemos entregar seu pedido?</h2>
+        <div id="container">
+            <div id="nomeEndereco">
+                <h2>Digite seu nome e o endereço:</h2>
+                <input type="text" name="nomeCliente" id="nomeCliente" placeholder="Nome do Destinatário..." required> 
+                <br>
+                <input type="text" name="rua" id="rua" placeholder="Endereço da Rua..." required>
+                <br>
+                <input type="text" name="numeroRua" id="numeroRua" placeholder="Número da Residência..." required>
+                <br>
+                <input type="text" name="complemento" id="complemento" placeholder="Digite o Complemento...">
+                <br>
+                <input type="text" name="cep" id="cep" class="inpRed" placeholder="Digite o CEP..." required>
+                <input type="text" name="estado" id="estado" class="inpRed" placeholder="Digite o Estado..." required>
+                <br>
+                <input type="text" name="cidade" id="cidade" placeholder="Digite a Cidade..." required>
+                <br>
+                <input type="text" name="bairro" id="bairro" placeholder="Digite o Bairro..." required>
+            </div>
+            <div id="infoContato">
+                <h2>Quais são suas informações de contato?</h2>
+                <input type="email" name="email" id="email" autocomplete="email" required placeholder="Digite seu e-mail...">
+                <br>
+                <input type="text" name="telefone" id="telefone" required placeholder="Digite seu telefone...">
+            </div>
+            <button id="btnEnviar">Continuar para o upload</button>
+        </div>
+        <div id="instrucoes">
+            <p>Enviaremos atualizações sobre seu pedido por e-mail <br> e via whatsapp.</p>
+            <p>O número de telefone e e-mail inserido não pode ser alterado depois <br> de fazer seu pedido, portanto, certifique-se de que esteja correto.
+            </p>
+        </div>
+    </main>
+    <div id="avisoGeral">
+        <div class="notifications-container">
+            <div class="success">
+              <div class="flex">
+                <div class="flex-shrink-0">
+                  <svg aria-hidden="true" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg" class="succes-svg">
+                    <path clip-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" fill-rule="evenodd"></path>
+                  </svg>
+                </div>
+                <div class="success-prompt-wrap">
+                  <p class="success-prompt-heading">
+                    Endereço de entrega foi salvo!
+                  </p>
+                  <div class="success-prompt-prompt">
+                    <p>O endereço de entrega foi salvo com sucesso iremos calcular o frete da entrega.</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>          
+    </div>
+    <div id="erroEndereco">
+        <div class="notifications-container">
+            <div class="error-alert">
+              <div class="flex">
+                <div class="flex-shrink-0">
+                  
+                  <svg aria-hidden="true" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg" class="error-svg">
+                    <path clip-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" fill-rule="evenodd"></path>
+                  </svg>
+                </div>
+                <div class="error-prompt-container">
+                  <p class="error-prompt-heading">Erro ao salvar o endereço!
+                  </p><div class="error-prompt-wrap">
+                    <ul class="error-prompt-list" role="list">
+                      <li>Verifique se foi digitado corretamente o endereço de entrega!</li>
+                    </ul>
+                </div>
+                </div>
+              </div>
+            </div>
+          </div>
+    </div>
+    <script src="../scripts/pagina-inicial.js"></script>
+    <script src="../scripts/local-entrega.js"></script>
+</body>
+</html>
