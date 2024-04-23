@@ -20,7 +20,12 @@ const textFrete = document.getElementById('totalItens');
     try {
         const response = await fetch('/api/endereco');
         const endereco = await response.json();
-        textFrete.innerText = `R$ ${endereco.frete}`
+        if(endereco.frete == undefined) {
+          textFrete.innerText = `R$ 0.00`
+        } else {
+          textFrete.innerText = `R$ ${endereco.frete}`
+        }
+        
     } catch (error) {
       console.log('erro')
     }
@@ -56,17 +61,17 @@ function atualizarTotalAPagar() {
           valorDescontoElement.textContent = "R$ 0.00";
         }
 
-              // Obtenha o valor do frete
-      const frete = parseFloat(totalFrete.textContent.replace('R$ ', '')); // Remove o "R$ " e converte para float
-      if (!isNaN(frete)) {
-        // Se o valor do frete for válido, adicione-o ao subtotal
-        const totalAPagar = subtotal + frete;
-        totalAPagarElement.textContent = "R$ " + totalAPagar.toFixed(2);
-      } else {
-        // Caso contrário, exiba apenas o subtotal
-        totalAPagarElement.textContent = "R$ " + subtotal.toFixed(2);
-      }
-      valorAtual = totalAPagarElement.textContent
+        // Obtenha o valor do frete
+        const frete = parseFloat(totalFrete.textContent.replace('R$ ', '')); // Remove o "R$ " e converte para float
+        if (!isNaN(frete)) {
+          // Se o valor do frete for válido, adicione-o ao subtotal
+          const totalAPagar = subtotal + frete;
+          totalAPagarElement.textContent = "R$ " + totalAPagar.toFixed(2);
+        } else {
+          // Caso contrário, exiba apenas o subtotal
+          totalAPagarElement.textContent = "R$ " + subtotal.toFixed(2);
+        }
+        valorAtual = totalAPagarElement.textContent
       
       })
       .catch(error => {
