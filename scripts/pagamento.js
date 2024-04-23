@@ -15,72 +15,87 @@ let valorAtual
 const erroFormaPagamento = document.getElementById('avisoUser');
 const textFrete = document.getElementById('totalItens');
 
-   // Função para fazer o fetch do endereço
-   async function fetchEndereco() {
-    try {
-        const response = await fetch('/api/endereco');
-        const endereco = await response.json();
-        if(endereco.frete == undefined) {
-          textFrete.innerText = `R$ 0.00`
-        } else {
-          textFrete.innerText = `R$ ${endereco.frete}`
-        }
-        
-    } catch (error) {
-      console.log('erro')
-    }
-  }
+// Função para fazer o fetch do endereço
+async function fetchEndereco() {
+  try {
+    const response = await fetch('/api/endereco');
+    const endereco = await response.json();
+    if (endereco.frete == undefined) {
+      fetch('/api/carrinho')
+        .then(response => response.json())
+        .then(data => {
+          let totalFretes = 0;
+          // Iterar sobre os produtos do carrinho
+          data.forEach(produto => {
+            totalFretes += produto.frete || 0; // Adicionar o valor do frete do produto ao total
+          });
 
-  fetchEndereco();
+          // Exibir o total dos fretes no console
+          textFrete.innerText = `R$ ${totalFretes.toFixed(2)}`;
+          // Atualizar o total a pagar após obter os valores dos fretes
+          atualizarTotalAPagar(totalFretes);
+        })
+        .catch(error => console.error('Erro ao obter os dados do carrinho:', error));
+    } else {
+      textFrete.innerText = `R$ ${endereco.frete}`;
+      // Atualizar o total a pagar com o valor do frete
+      atualizarTotalAPagar(parseFloat(endereco.frete));
+    }
+  } catch (error) {
+    console.log('erro');
+  }
+}
+
+fetchEndereco();
 
 function atualizarTotalAPagar() {
-    const totalAPagarElement = document.getElementById('totalComp');
-    const totalAPagarElement3 = document.getElementById('subTotal');
-    const valorDescontoElement = document.getElementById('totalDesconto');
-    const totalFrete = document.getElementById('totalItens');
-    // Faça uma solicitação AJAX para obter os produtos do carrinho
-    fetch('/api/carrinho')
-      .then(response => response.json())
-      .then(produtos => {
-        // Verifique se algum produto possui desconto aplicado
-        const descontoAplicado = produtos.some(produto => produto.descontado === true);
-        // Calcule a soma dos valores dos produtos no carrinho
-        const totalAPagar = produtos.reduce((total, produto) => total + (produto.quantidade * produto.valorUnitario), 0);
-        const subtotal = produtos.reduce((total, produto) => total + (produto.quantidade * produto.valorUnitario), 0);
-        // Se algum produto tiver desconto aplicado, exiba o novo total considerando o desconto
-        if (descontoAplicado) {
-          const novoTotalAPagar = totalAPagar * 0.95; // Aplicar desconto de 5%
-          const desconto = totalAPagar - novoTotalAPagar; // Calcular o valor do desconto
-          totalAPagarElement.innerText = `R$ ${novoTotalAPagar.toFixed(2)}`;
-          totalAPagarElement3.textContent = "R$ " + totalAPagar.toFixed(2);
-          valorDescontoElement.textContent = "R$ " + desconto.toFixed(2); // Exibir o valor do desconto em reais
-        } else {
-          // Caso contrário, exiba o total sem desconto
-          totalAPagarElement.textContent = "R$ " + totalAPagar.toFixed(2);
-          totalAPagarElement3.textContent = "R$ " + totalAPagar.toFixed(2);
-          valorDescontoElement.textContent = "R$ 0.00";
-        }
+  const totalAPagarElement = document.getElementById('totalComp');
+  const totalAPagarElement3 = document.getElementById('subTotal');
+  const valorDescontoElement = document.getElementById('totalDesconto');
+  const totalFrete = document.getElementById('totalItens');
+  // Faça uma solicitação AJAX para obter os produtos do carrinho
+  fetch('/api/carrinho')
+    .then(response => response.json())
+    .then(produtos => {
+      // Verifique se algum produto possui desconto aplicado
+      const descontoAplicado = produtos.some(produto => produto.descontado === true);
+      // Calcule a soma dos valores dos produtos no carrinho
+      const totalAPagar = produtos.reduce((total, produto) => total + (produto.quantidade * produto.valorUnitario), 0);
+      const subtotal = produtos.reduce((total, produto) => total + (produto.quantidade * produto.valorUnitario), 0);
+      // Se algum produto tiver desconto aplicado, exiba o novo total considerando o desconto
+      if (descontoAplicado) {
+        const novoTotalAPagar = totalAPagar * 0.95; // Aplicar desconto de 5%
+        const desconto = totalAPagar - novoTotalAPagar; // Calcular o valor do desconto
+        totalAPagarElement.innerText = `R$ ${novoTotalAPagar.toFixed(2)}`;
+        totalAPagarElement3.textContent = "R$ " + totalAPagar.toFixed(2);
+        valorDescontoElement.textContent = "R$ " + desconto.toFixed(2); // Exibir o valor do desconto em reais
+      } else {
+        // Caso contrário, exiba o total sem desconto
+        totalAPagarElement.textContent = "R$ " + totalAPagar.toFixed(2);
+        totalAPagarElement3.textContent = "R$ " + totalAPagar.toFixed(2);
+        valorDescontoElement.textContent = "R$ 0.00";
+      }
 
-        // Obtenha o valor do frete
-        const frete = parseFloat(totalFrete.textContent.replace('R$ ', '')); // Remove o "R$ " e converte para float
-        if (!isNaN(frete)) {
-          // Se o valor do frete for válido, adicione-o ao subtotal
-          const totalAPagar = subtotal + frete;
-          totalAPagarElement.textContent = "R$ " + totalAPagar.toFixed(2);
-        } else {
-          // Caso contrário, exiba apenas o subtotal
-          totalAPagarElement.textContent = "R$ " + subtotal.toFixed(2);
-        }
-        valorAtual = totalAPagarElement.textContent
-      
-      })
-      .catch(error => {
-        console.error('Erro ao calcular o total a pagar:', error);
-      });
+      // Obtenha o valor do frete
+      const frete = parseFloat(totalFrete.textContent.replace('R$ ', '')); // Remove o "R$ " e converte para float
+      if (!isNaN(frete)) {
+        // Se o valor do frete for válido, adicione-o ao subtotal
+        const totalAPagar = subtotal + frete;
+        totalAPagarElement.textContent = "R$ " + totalAPagar.toFixed(2);
+      } else {
+        // Caso contrário, exiba apenas o subtotal
+        totalAPagarElement.textContent = "R$ " + subtotal.toFixed(2);
+      }
+      valorAtual = totalAPagarElement.textContent
+    
+    })
+    .catch(error => {
+      console.error('Erro ao calcular o total a pagar:', error);
+    });
 }
-  // Chame a função para calcular e atualizar o total a pagar quando necessário
-  // Por exemplo, após adicionar ou remover um produto do carrinho
-  atualizarTotalAPagar();
+// Chame a função para calcular e atualizar o total a pagar quando necessário
+// Por exemplo, após adicionar ou remover um produto do carrinho
+atualizarTotalAPagar();
 // Função para desativar todas as divs, exceto a div ativa
 function desativarOutrasDivs(divAtiva) {
     const divs = [divPix, divBoleto, divCartaoCredito, divMinhaCarteira];

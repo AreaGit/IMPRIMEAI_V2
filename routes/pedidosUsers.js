@@ -465,7 +465,74 @@ async function encontrarGraficaMaisProxima(endereco) {
     console.error('Erro ao encontrar a gráfica mais próxima:', err);
   }
 }
+async function encontrarGraficaMaisProxima2(enderecosSalvos) {
+  try {
+    const apiKey = 'Ao6IBGy_Nf0u4t9E88BYDytyK5mK3kObchF4R0NV5h--iZ6YgwXPMJEckhAEaKlH';
 
+    const resultadosFrete = [];
+    let somaDosFretes = 0;
+
+    for (let endereco of enderecosSalvos) {
+      const enderecoDoFrete = {
+        rua: endereco.rua,
+        bairro: endereco.bairro,
+        cep: endereco.cep,
+        cidade: endereco.cidade,
+        estado: endereco.estado,
+      };
+
+      const coordinatesEnd = await getCoordinatesFromAddress(enderecoDoFrete, apiKey);
+      if (coordinatesEnd.latitude !== null && coordinatesEnd.longitude !== null) {
+        console.log(`Latitude do Endereço de Entrega:`, coordinatesEnd.latitude);
+        console.log(`Longitude do Endereço de Entrega:`, coordinatesEnd.longitude);
+
+        const graficas = await Graficas.findAll();
+
+        let distanciaMinima = Infinity;
+        let graficaMaisProxima = null;
+
+        for (let graficaAtual of graficas) {
+          const graficaCoordinates = await getCoordinatesFromAddress({
+            endereco: graficaAtual.enderecoCad,
+            cep: graficaAtual.cepCad,
+            cidade: graficaAtual.cidadeCad,
+            estado: graficaAtual.estadoCad,
+          }, apiKey);
+
+          const distanceToGrafica = haversineDistance(graficaCoordinates.latitude, graficaCoordinates.longitude, coordinatesEnd.latitude, coordinatesEnd.longitude);
+
+          if (distanceToGrafica < distanciaMinima) {
+            distanciaMinima = distanceToGrafica;
+            graficaMaisProxima = graficaAtual;
+          }
+        }
+
+        console.log('Gráfica mais próxima:', graficaMaisProxima);
+        console.log('Distância mínima:', distanciaMinima);
+        
+        // Calcular o custo do frete com base na distância e arredondar para duas casas decimais
+        const custoDoFrete = parseFloat((distanciaMinima * 2).toFixed(2)); // 2 reais por quilômetro
+        
+        somaDosFretes += custoDoFrete; // Adicionar o custo do frete ao total de fretes
+
+        resultadosFrete.push({
+          endereco,
+          graficaMaisProxima,
+          distanciaMinima,
+          custoDoFrete
+        });
+      }
+    }
+
+    // Retornar a soma total dos fretes junto com os resultados de frete
+    return {
+      resultadosFrete,
+      somaDosFretes
+    };
+  } catch (err) {
+    console.error('Erro ao encontrar as gráficas mais próximas:', err);
+  }
+}
 app.post('/upload', upload.single('filePlanilha'), async (req, res) => {
   if (req.file) {
     const workbook = XLSX.read(req.file.buffer, { type: 'buffer' });
@@ -473,7 +540,6 @@ app.post('/upload', upload.single('filePlanilha'), async (req, res) => {
     const sheet = XLSX.utils.sheet_to_json(workbook.Sheets[sheetName], { header: 1 });
 
     try {
-      const resultadosFrete = [];
       const carrinho = req.session.carrinho || [];
       const enderecosSalvos = [];
 
@@ -506,16 +572,20 @@ app.post('/upload', upload.single('filePlanilha'), async (req, res) => {
       if (carrinho.length === 0) {
         return res.status(400).send('O carrinho está vazio. Adicione produtos antes de usar a planilha.');
       }
+      // Encontrar os fretes para todos os endereços salvos e calcular a soma total dos fretes
+      const { resultadosFrete, somaDosFretes } = await encontrarGraficaMaisProxima2(enderecosSalvos);
+      
       // Quebrar produtos com base nos endereços salvos
       const carrinhoQuebrado = [];
       let enderecoIndex = 0; // Índice para rastrear os endereços
-
+      
       carrinho.forEach((produto, produtoIndex) => {
         const produtoId = produto.produtoId;
         const quantidade = produto.quantidade;
 
         for (let i = 0; i < quantidade; i++) {
           const endereco = enderecosSalvos[enderecoIndex];
+          const frete = resultadosFrete[enderecoIndex].custoDoFrete; // Pegar o custo do frete correspondente ao endereço
           enderecoIndex = (enderecoIndex + 1) % enderecosSalvos.length; // Avança para o próximo endereço
 
           carrinhoQuebrado.push({
@@ -535,6 +605,7 @@ app.post('/upload', upload.single('filePlanilha'), async (req, res) => {
             downloadLink: produto.downloadLink,
             tipoEntrega: 'Múltiplos Enderecos',
             endereco: endereco,
+            frete: frete, // Adicionar o custo do frete ao produto
           });
         }
       });
@@ -542,6 +613,7 @@ app.post('/upload', upload.single('filePlanilha'), async (req, res) => {
       req.session.carrinho = carrinhoQuebrado;
 
       console.log('Carrinho Quebrado:', carrinhoQuebrado);
+      console.log('Soma dos Fretes:', somaDosFretes);
 
       res.send('Planilha enviada e dados salvos no carrinho com sucesso.');
     } catch (error) {
