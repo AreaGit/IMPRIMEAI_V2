@@ -35,6 +35,7 @@ async function carregarInfoUsers() {
         cidadeUser.placeholder = `${data.cidadeCad}`
     } catch (error) {
         console.log("erro")
+        window.location.href = '/cadastro'
     }
 }
 
