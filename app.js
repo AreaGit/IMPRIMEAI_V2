@@ -366,6 +366,16 @@ app.get('/perfil', (req, res) => {
     res.status(500).send("Erro interno do servidor");
   }
 });
+//Rota get para a página de carteira do usuário
+app.get('/carteira', (req, res) => {
+  try {
+    const carteiraContentHtml = fs.readFileSync(path.join(__dirname, "html", "carteira.html"), "utf-8");
+    res.send(carteiraContentHtml);
+  } catch (err) {
+    console.log("Erro ao ler o arquivo carteira.html: ", err);
+    res.status(500).send("Erro interno do servidor");
+  }
+});
 app.listen(PORT, () => {
     console.log(`Servidor rodando na porta ${PORT} http://localhost:8082`);
 });
