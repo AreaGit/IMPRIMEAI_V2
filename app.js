@@ -356,7 +356,16 @@ app.post('/pesquisar-produtos', async (req, res) => {
     res.status(500).json({ error: 'Erro na pesquisa de produtos', message: error.message });
   }
 });
-
+//Rota get para a página de perfil
+app.get('/perfil', (req, res) => {
+  try {
+    const perfilContentHtml = fs.readFileSync(path.join(__dirname, "html", "perfil.html"), "utf-8");
+    res.send(perfilContentHtml);
+  } catch (err) {
+    console.log("Erro ao ler o arquivo perfil.html: ", err);
+    res.status(500).send("Erro interno do servidor");
+  }
+});
 app.listen(PORT, () => {
     console.log(`Servidor rodando na porta ${PORT} http://localhost:8082`);
 });

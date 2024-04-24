@@ -9,7 +9,7 @@
         position: inherit;
         top: 0%;
         border-bottom: 0px solid transparent;
-        color: white;
+        color: black;
         width: 0%;
         z-index: -1;
     }
@@ -73,75 +73,33 @@
         transform: translate(-120%);
         top: 6%;
     }
-    .caixas {
-        width: 94vw;
-        position: relative;
-        left: -2%;
-        height: 150px;
-    }
-    p.prgPagto {
-        width: 68%;
-    }
-    .caixas {
-        width: 94vw;
-        position: relative;
-        left: -2%;
-        height: 127px;
-    }
-    h2.tltPagto {
-        font-weight: 700;
-        font-size: 17px;
-        position: relative;
-        left: 40%;
-        top: -15px;
-        width: fit-content;
-        transform: translate(-40%);
-    }
-    #linhaHrFin {
-        border: 1px solid black;
-        width: 90vw;
+    #ladoDireito {
         position: absolute;
-        top: 1050px;
-        left: 50%;
-        transform: translate(-50%);
+        width: 16%;
+        left: 1%;
+        top: 970px;
+        padding: 15px;
     }
-    #btnContPag {
-        width: 99vw;
-        height: 51px;
-        font-size: 17px;
-        font-weight: 600;
-        color: #EF4126;
-        border: 1px solid #EF4126;
-        background-color: white;
-        cursor: pointer;
-        border-radius: 5px;
+    #ladoEsquerdo {
+        width: 16%;
         position: absolute;
-        left: 25%;
-        transform: translate(-25%);
-        top: 1100px;
-        transition: 0.8s;
+        left: 1%;
+        transform: translate(-1%);
+        top: 330px;
+        padding: 15px;
     }
-    #opcoesPagto {
-        position: absolute;
-        top: 350px;
-        left: 20%;
-        width: 100%;
+    #ladoEsquerdo > input {
+        width: 80vw;
     }
-    main > p {
-        line-height: 25px;
-        font-size: 17px;
-        font-weight: 400;
-        position: absolute;
-        left: 20%;
-        transform: translate(-20%);
-        top: 285px;
+    #ladoDireito > input {
+        width: 80vw;
     }
 }
-@media screen and (min-width:768px) and (max-width:1440px) {
+@media screen and (min-width:768px) and (max-width:1440px){
     #logo {
         position: fixed;
-        left: 5%;
-        transform: translate(-5%);
+        left: 20%;
+        transform: translate(-20%);
         top: 1px;
     }
     header {
@@ -159,17 +117,25 @@
         width: 22px;
         height: 24px;
         position: fixed;
-        left: 80%;
-        transform: translate(-80%);
+        left: 86%;
+        transform: translate(-86%);
         top: 7px;
     }
-    #carrinho-vazio {
-        height: 165px;
-        width: 57%;
+    #ladoEsquerdo {
+        width: 16%;
         position: absolute;
-        left: 50%;
-        transform: translate(-50%);
-        top: 35px;
+        left: 15%;
+        transform: translate(-15%);
+        top: 330px;
+        padding: 15px;
+    }
+    #icone-pesquisa {
+        width: 22px;
+        height: 24px;
+        position: fixed;
+        left: 72%;
+        transform: translate(-72%);
+        top: 7px;
     }
 }
 @media screen and (min-width:2560px) {

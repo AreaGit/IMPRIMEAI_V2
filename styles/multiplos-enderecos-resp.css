@@ -138,3 +138,80 @@
         top: 65px;
     }
 }
+@media screen and (min-width:2560px) {
+    header {
+        height: 42px;
+        width: 714px;
+        position: fixed;
+        left: 50%;
+        transform: translate(-50%);
+        top: 1%;
+        background-color: transparent;
+        transition: 2s;
+    }
+    header.scrolled {
+        position: fixed;
+        top: 0%;
+        transition: 2s;
+        color: white;
+        width: 714px;
+        z-index: 1000;
+    }
+    header.scrolled > #nav-bar > li > a {
+        color: #6E6E73;
+    }
+    header.scrolled > #nav-bar > li > a:hover {
+        color: #020202;
+    }
+    #logo {
+        position: fixed;
+        left: -4%;
+        transform: translate(-4%);
+        top: 1px;
+    }
+    li {
+        list-style: none;
+    }
+    a {
+        text-decoration: none;
+        color: black;
+    }
+    #nav-bar {
+        position: relative;
+        left: 50%;
+        top: 15%;
+        width: 568px;
+        transform: translate(-63%);
+    }
+    #nav-bar > li {
+        display: inline;
+        position: relative;
+        left: 10%;
+        padding-right: 24px;
+    }
+    #nav-bar > li > a {
+        font-weight: 500;
+        font-size: 14px;
+        color: #6E6E73;
+    }
+    #nav-bar > li > a:hover {
+        transition: 1s;
+        color: #000000;
+    }
+    #icone-pesquisa {
+        width: 22px;
+        height: 24px;
+        position: fixed;
+        left: 92%;
+        transform: translate(-92%);
+        top: 11px;
+    }
+    #carrinho-compras {
+        width: 32px;
+        height: 34px;
+        position: fixed;
+        left: 112%;
+        transform: translate(-112%);
+        top: -15%;
+    }
+}
