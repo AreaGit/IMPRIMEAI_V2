@@ -82,3 +82,38 @@ function formatarSaldo(saldo) {
  
 // Chame a função para exibir o saldo do usuário quando a página for carregada
 exibirSaldoUsuario();
+
+function getCookie(name) {
+    const value = `; ${document.cookie}`;
+    const parts = value.split(`; ${name}=`);
+    if (parts.length === 2) return parts.pop().split(';').shift();
+ };
+ let userId = getCookie('userId');
+
+document.addEventListener('DOMContentLoaded', async () => {
+    try {
+        const response = await fetch(`/transacoesUsuario/${userId}`);
+        const data = await response.json();
+
+        const transacoes = data.transacoes;
+        const tabelaTransacoes = document.getElementById('tabelaTransacoes');
+        const tbody = tabelaTransacoes.querySelector('tbody');
+
+        // Limpa o conteúdo atual da tabela
+        tbody.innerHTML = '';
+
+        // Loop sobre as transações e cria uma linha na tabela para cada uma
+        transacoes.forEach(transacao => {
+            const row = document.createElement('tr');
+            row.innerHTML = `
+                <td>${transacao.id}</td>
+                <td>R$ ${transacao.valor}</td>
+                <td>${transacao.tipo}</td>
+            `;
+            tbody.appendChild(row);
+        });
+
+    } catch (error) {
+        console.error('Erro ao buscar e exibir transações do usuário:', error);
+    }
+});

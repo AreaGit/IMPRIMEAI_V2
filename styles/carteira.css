@@ -283,7 +283,7 @@ caption {
     cursor: pointer;
     position: relative;
     left: 50%;
-    top: 10px;
+    top: 1px;
 }
 #saldo > button:hover {
     transition: 0.8s;
