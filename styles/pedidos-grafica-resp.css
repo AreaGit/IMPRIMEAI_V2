@@ -1,0 +1,14 @@
+@media screen and (min-width:320px) and (max-width:767px) {
+    .container {
+        display: block;
+        margin-bottom: 10px;
+    }
+    header > img {
+        width: 24%;
+        position: relative;
+        top: -10px;
+    }
+    .statusPedidos {
+        width: 80vw;
+    }
+}

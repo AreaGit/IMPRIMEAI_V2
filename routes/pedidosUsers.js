@@ -3,6 +3,7 @@ const app = express();
 const Produtos = require('../models/Produtos');
 const Graficas = require('../models/Graficas');
 const User = require('../models/User');
+const Carteira = require('../models/Carteira');
 const VariacoesProduto = require('../models/VariacoesProduto');
 const {Op} = require('sequelize');
 const multer = require('multer');

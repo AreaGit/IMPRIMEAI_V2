@@ -60,3 +60,25 @@ abrirMetodos.addEventListener('click', () => {
 fecharRecarga.addEventListener('click', () => {
     metodosRecarga.style.display = 'none'
 });
+
+// Solicitação AJAX para buscar e exibir o saldo do usuário na página HTML
+async function exibirSaldoUsuario() {
+    try {
+        const response = await fetch('/saldoUsuario');
+        const data = await response.json();
+        const saldoFormatado = formatarSaldo(data.saldo); // Formate o saldo se necessário
+
+        // Atualize o elemento HTML com o saldo do usuário
+        document.getElementById('saldoUser').textContent = saldoFormatado;
+    } catch (error) {
+        console.error('Erro ao buscar saldo do usuário:', error);
+    }
+}
+
+// Função para formatar o saldo (adicione R$ e formate para duas casas decimais)
+function formatarSaldo(saldo) {
+    return `${saldo.toFixed(2)}`;
+}
+ 
+// Chame a função para exibir o saldo do usuário quando a página for carregada
+exibirSaldoUsuario();
