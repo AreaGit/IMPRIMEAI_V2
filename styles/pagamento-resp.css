@@ -118,7 +118,7 @@
         position: absolute;
         left: 25%;
         transform: translate(-25%);
-        top: 1100px;
+        top: 1320px;
         transition: 0.8s;
     }
     #opcoesPagto {
@@ -135,6 +135,23 @@
         left: 20%;
         transform: translate(-20%);
         top: 285px;
+    }
+    #resumoCompra {
+        display: block;
+        width: 99%;
+        height: 271px;
+        position: relative;
+        top: 980px;
+        left: 90%;
+        transform: translate(-90%);
+        padding: 15px;
+    }
+    #totalComp {
+        position: relative;
+        top: 43px;
+        font-size: 20px;
+        font-weight: bold;
+        left: -8px;
     }
 }
 @media screen and (min-width:768px) and (max-width:1440px) {
