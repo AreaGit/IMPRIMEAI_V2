@@ -153,6 +153,44 @@
         font-weight: bold;
         left: -8px;
     }
+    #qrCodeContainer {
+        display: none;
+        width: 98vw;
+        height: 500px;
+        box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+        background-color: #fff;
+        border-radius: 0.5rem;
+        position: absolute;
+        left: 0%;
+        /* transform: translate(-50%); */
+        top: -586px;
+    }
+    #qrCodeContainer > button {
+        position: absolute;
+        left: 50%;
+        transform: translate(-50%);
+        top: 360px;
+        padding: 12px 25px 12px 25px;
+        font-size: 17px;
+        color: white;
+        background-color: #EF4126;
+        border: none;
+        border-radius: 5px;
+        font-weight: 600;
+        transition: 0.8s;
+        cursor: pointer;
+    }
+    #pedidoCriado {
+        width: 97vw;
+        height: 500px;
+        box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+        background-color: #fff;
+        border-radius: 0.5rem;
+        position: absolute;
+        left: 0%;
+        /* transform: translate(-50%); */
+        top: -645px;
+    }
 }
 @media screen and (min-width:768px) and (max-width:1440px) {
     #logo {
@@ -187,6 +225,56 @@
         left: 50%;
         transform: translate(-50%);
         top: 35px;
+    }
+    #resumoCompra {
+        display: block;
+        width: 90vw;
+        height: 271px;
+        position: relative;
+        top: 882px;
+        left: 90%;
+        transform: translate(-90%);
+        padding: 15px;
+    }
+    #btnContPag {
+        width: 295px;
+        height: 51px;
+        font-size: 17px;
+        font-weight: 600;
+        color: #EF4126;
+        border: 1px solid #EF4126;
+        background-color: white;
+        cursor: pointer;
+        border-radius: 5px;
+        position: absolute;
+        left: 25%;
+        transform: translate(-25%);
+        top: 1160px;
+        transition: 0.8s;
+    }
+    #qrCodeContainer {
+        display: none;
+        width: 590px;
+        height: 500px;
+        box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+        background-color: #fff;
+        border-radius: 0.5rem;
+        position: absolute;
+        left: 50%;
+        transform: translate(-50%);
+        top: -567px;
+    }
+    #pedidoCriado {
+        display: none;
+        width: 590px;
+        height: 500px;
+        box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+        background-color: #fff;
+        border-radius: 0.5rem;
+        position: absolute;
+        left: 50%;
+        transform: translate(-50%);
+        top: -585px;
     }
 }
 @media screen and (min-width:2560px) {
