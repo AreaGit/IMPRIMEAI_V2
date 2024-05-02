@@ -1743,7 +1743,7 @@ app.post('/processarPagamento-pix', (req, res) => {
     method: 'POST',
     uri: 'https://api.pagar.me/core/v5/orders',
     headers: {
-      'Authorization': 'Basic ' + Buffer.from('sk_test_05ddc95c6ce442a796c7ebbe2376185d:').toString('base64'),
+      'Authorization': 'Basic ' + Buffer.from('sk_e74e3fe1ccbe4ae080f70d85d94e2c68:').toString('base64'),
       'Content-Type': 'application/json'
     },
     body: body,
@@ -1764,6 +1764,37 @@ app.post('/processarPagamento-pix', (req, res) => {
       }
       res.status(500).send("Transação falhada!");
     });
+});
+
+
+// Rota GET para obter informações sobre uma cobrança específica
+app.get('/charges/:chargeId', (req, res) => {
+  const chargeId = req.params.chargeId;
+
+  // URL da API Pagar.me para obter informações sobre uma cobrança específica
+  const apiUrl = `https://api.pagar.me/core/v5/charges/${chargeId}`;
+
+  // Opções para a solicitação GET
+  const options = {
+      method: 'GET',
+      uri: apiUrl,
+      headers: {
+          'Authorization': 'Basic ' + Buffer.from('sk_e74e3fe1ccbe4ae080f70d85d94e2c68:').toString('base64')
+      },
+      json: true
+  };
+
+  // Faça a solicitação GET para a API Pagar.me
+  rp(options)
+      .then(response => {
+          // Envie os detalhes da cobrança como resposta
+          res.status(200).json(response);
+      })
+      .catch(error => {
+          // Se ocorrer um erro ao fazer a solicitação, envie uma resposta de erro
+          console.error('Erro ao obter informações da cobrança:', error);
+          res.status(500).send('Erro ao obter informações da cobrança');
+      });
 });
 
 module.exports = app;

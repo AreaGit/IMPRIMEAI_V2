@@ -311,7 +311,7 @@ const cpfCliente = cpf;
 
   // Extrair o idTransacao da resposta
   const responseData = await response2.json();
-  const dadosTransacao = responseData;
+  const chargeId = responseData[0].id
   const qrPix = responseData[0].last_transaction.qr_code_url;
   const expiracao = responseData[0].last_transaction.expires_at;
   const expiracaoDate = new Date(expiracao);
@@ -331,7 +331,36 @@ const cpfCliente = cpf;
     }, 5000);
   });
 
+  verificarStatusTransacao(chargeId);
 }catch (error) {
   console.log(error)
 }
+}
+
+async function verificarStatusTransacao(chargeId) {
+  try {
+    // Faça uma solicitação fetch para a rota que criamos no servidor para obter informações sobre a cobrança
+    const response = await fetch(`/charges/${chargeId}`);
+    if (!response.ok) {
+      throw new Error('Erro ao obter informações da cobrança');
+    }
+    
+    // Extrair o status da resposta
+    const { status } = await response.json();
+    
+    // Se o status for "paid", pare de verificar e execute a próxima etapa
+    if (status === 'paid') {
+      qrCodeContainer.style.display = 'none'
+      console.log('A transação foi paga com sucesso!');
+      criarPedido(); // Chame a função criarPedido quando a transação for paga
+      return;
+    }
+    
+    // Se o status não for "paid", aguarde um curto período e, em seguida, verifique novamente
+    setTimeout(() => {
+      verificarStatusTransacao(chargeId);
+    }, 5000); // Verifique a cada 5 segundos (5000 milissegundos)
+  } catch (error) {
+    console.error('Erro:', error);
+  }
 }
