@@ -17,6 +17,7 @@ const textFrete = document.getElementById('totalItens');
 const pedidoCriado = document.getElementById('pedidoCriado');
 const qrCodeContainer = document.getElementById('qrCodeContainer');
 const divCodigoPix = document.getElementById('codigoPix');
+const divBoletoContainer = document.getElementById('boletoContainer');
 
 // Função para fazer o fetch do endereço
 async function fetchEndereco() {
@@ -161,9 +162,8 @@ btnContPag.addEventListener('click', () => {
     });
     if (divAtiva === "pix") {
         pagamentoPix();
-        //criarPedido();
     } else if (divAtiva === "boleto") {
-        alert("A div ativa é boleto");
+        pagamentoBoleto();
     } else if (divAtiva === "cartaoCredito") {
         alert("A div ativa é cartão de crédito");
     } else if (divAtiva === "carteiraUser") {
@@ -364,3 +364,102 @@ async function verificarStatusTransacao(chargeId) {
     console.error('Erro:', error);
   }
 }
+
+async function pagamentoBoleto() {
+  // Fetch para obter os dados do perfil do usuário
+  try {
+    const response = await fetch('/perfil/dados');
+    if (!response.ok) {
+        throw new Error('Erro ao obter dados do perfil');
+    }
+    const perfilData = await response.json();
+  
+    function formatarTelefone(numero) {
+      // Remove todos os caracteres não numéricos
+      const numeroLimpo = numero.replace(/\D/g, '');
+  
+      // Extrai o DDD (dois primeiros dígitos) e o número do telefone
+      const ddd = numeroLimpo.substring(0, 2);
+      const numeroTelefone = numeroLimpo.substring(2);
+  
+      // Retorna um objeto com as partes do número formatado
+      return {
+          ddd: ddd,
+          numeroTelefone: numeroTelefone
+      };
+  }
+  
+    const telefoneFormatado = formatarTelefone(perfilData.telefoneCad);
+  
+    // Agora você pode acessar as partes formatadas do número de telefone
+    const codPaisCliente = "55";
+    const dddCliente = telefoneFormatado.ddd;
+    const numeroTelefoneCliente = telefoneFormatado.numeroTelefone;
+  
+  // Remove non-digit characters from CPF and format it
+  const cpf = perfilData.cpfCad.replace(/\D/g, ''); // Remove non-digit characters
+  
+  const cpfCliente = cpf;
+  
+  
+    const emailCliente = perfilData.emailCad;
+    const cepCliente = perfilData.cepCad;
+    const cidadeCliente = perfilData.cidadeCad;
+    const ruaCliente = perfilData.endereçoCad;
+    const numeroResidenciaCliente = perfilData.numCad;
+    const bairroCliente = perfilData.bairroCad;
+    const numeroDocumento = perfilData.cpfCad;
+    const nomeCliente = perfilData.userCad;
+    const paisCliente = "BR";
+    const idCliente = perfilData.userId;
+    const estadoCliente = perfilData.estadoCad;
+    const complementoCliente = perfilData.compCad
+    
+    // Crie um objeto para armazenar os dados do perfil do usuário
+    const perfilUsuario = {
+        emailCliente: emailCliente,
+        cpfCliente: cpfCliente,
+        cepCliente: cepCliente,
+        cidadeCliente: cidadeCliente,
+        estadoCliente: estadoCliente,
+        ruaCliente: ruaCliente,
+        complementoCliente: complementoCliente,
+        numeroResidenciaCliente: numeroResidenciaCliente,
+        bairroCliente: bairroCliente,
+        numeroDocumento: numeroDocumento,
+        nomeCliente: nomeCliente,
+        paisCliente: paisCliente,
+        codPaisCliente: codPaisCliente,
+        dddCliente: dddCliente,
+        numeroTelefoneCliente: numeroTelefoneCliente,
+        userId: idCliente,
+        totalCompra:  valorAtualGlobal,
+    };
+  
+    // Envie os dados do formulário e do perfil do usuário para o backend
+    const response2 = await fetch('/processarPagamento-boleto', {
+      method: 'POST',
+      headers: {
+          'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({ perfilData: perfilUsuario })
+    });
+  
+    if (!response2.ok) {
+        throw new Error('Erro ao processar pagamento');
+    }
+  
+    // Extrair o idTransacao da resposta
+    const responseData = await response2.json();
+    const qrCodeBoleto = responseData[0].last_transaction.qr_code;
+    const pdfBoleto = responseData[0].last_transaction.pdf;
+    divBoletoContainer.style.display = 'block';
+    divBoletoContainer.innerHTML = `
+      <img src="${qrCodeBoleto}">
+      <a href="${pdfBoleto}" target="_blank">Acesse o pdf</a>
+      <p>O boleto expira em 1 dia</p>
+    `
+  }catch (error) {
+    console.log(error)
+  }
+  }

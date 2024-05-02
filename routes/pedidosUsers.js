@@ -1797,4 +1797,69 @@ app.get('/charges/:chargeId', (req, res) => {
       });
 });
 
+app.post('/processarPagamento-boleto', (req, res) => {
+  const perfilData = req.body.perfilData;
+  const carrinho = req.session.carrinho;
+  // Define the request payload
+  const body = {
+    "items": carrinho.map(item => ({
+      "id": item.produtoId,
+      "amount": item.subtotal * 100,
+      "description": item.nomeProd,
+      "quantity": item.quantidade,
+      "code": item.produtoId
+  })),
+    "customer": {
+      "name": perfilData.nomeCliente,
+      "email": perfilData.emailCliente,
+      "document_type": "CPF",
+      "document": perfilData.cpfCliente,
+      "type": "individual",
+      "address": {
+          "line_1": perfilData.ruaCliente,
+          "line_2": perfilData.complementoCliente,
+          "zip_code": perfilData.cepCliente,
+          "city": perfilData.cidadeCliente,
+          "state": perfilData.estadoCliente,
+          "country": "BR",
+      },
+    },
+    "payments": [
+        {
+            "payment_method": "boleto",
+            "boleto" : {
+              "instructions": "Pagar até o vencimento",
+              "document_number": "123",
+              "type": "DM"
+            }
+        }
+    ]
+  };
+  const options = {
+    method: 'POST',
+    uri: 'https://api.pagar.me/core/v5/orders',
+    headers: {
+      'Authorization': 'Basic ' + Buffer.from('sk_e74e3fe1ccbe4ae080f70d85d94e2c68:').toString('base64'),
+      'Content-Type': 'application/json'
+    },
+    body: body,
+    json: true
+  };
+
+  rp(options)
+  .then(response => {
+    console.log(response.charges);
+    res.status(200).send(response.charges);
+  })
+  .catch(error => {
+      // Handle error response
+      console.error('Error:', error.message);
+      if (error.response) {
+        console.error('Request failed with status code', error.response.statusCode);
+        console.error('Response body:', error.response.body);
+      }
+      res.status(500).send("Transação falhada!");
+    });
+});
+
 module.exports = app;
