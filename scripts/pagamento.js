@@ -11,9 +11,12 @@ const totalComp = document.getElementById('totalComp');
 const totalFrete = document.getElementById('totalItens');
 const totalDesconto = document.getElementById('totalDesconto');
 const totalAPagarElement = document.getElementById('totalComp');
-let valorAtual
+let valorAtualGlobal = 0;
 const erroFormaPagamento = document.getElementById('avisoUser');
 const textFrete = document.getElementById('totalItens');
+const pedidoCriado = document.getElementById('pedidoCriado');
+const qrCodeContainer = document.getElementById('qrCodeContainer');
+const divCodigoPix = document.getElementById('codigoPix');
 
 // Função para fazer o fetch do endereço
 async function fetchEndereco() {
@@ -53,48 +56,44 @@ function atualizarTotalAPagar() {
   const totalAPagarElement3 = document.getElementById('subTotal');
   const valorDescontoElement = document.getElementById('totalDesconto');
   const totalFrete = document.getElementById('totalItens');
+
   // Faça uma solicitação AJAX para obter os produtos do carrinho
   fetch('/api/carrinho')
     .then(response => response.json())
     .then(produtos => {
-      // Verifique se algum produto possui desconto aplicado
       const descontoAplicado = produtos.some(produto => produto.descontado === true);
-      // Calcule a soma dos valores dos produtos no carrinho
-      const totalAPagar = produtos.reduce((total, produto) => total + (produto.quantidade * produto.valorUnitario), 0);
       const subtotal = produtos.reduce((total, produto) => total + (produto.quantidade * produto.valorUnitario), 0);
-      // Se algum produto tiver desconto aplicado, exiba o novo total considerando o desconto
+      let totalAPagar = subtotal;
+
       if (descontoAplicado) {
-        const novoTotalAPagar = totalAPagar * 0.95; // Aplicar desconto de 5%
-        const desconto = totalAPagar - novoTotalAPagar; // Calcular o valor do desconto
+        const novoTotalAPagar = subtotal * 0.95; // Aplicar desconto de 5%
+        const desconto = subtotal - novoTotalAPagar;
         totalAPagarElement.innerText = `R$ ${novoTotalAPagar.toFixed(2)}`;
-        totalAPagarElement3.textContent = "R$ " + totalAPagar.toFixed(2);
-        valorDescontoElement.textContent = "R$ " + desconto.toFixed(2); // Exibir o valor do desconto em reais
+        valorDescontoElement.textContent = "R$ " + desconto.toFixed(2);
       } else {
-        // Caso contrário, exiba o total sem desconto
-        totalAPagarElement.textContent = "R$ " + totalAPagar.toFixed(2);
-        totalAPagarElement3.textContent = "R$ " + totalAPagar.toFixed(2);
+        totalAPagarElement.textContent = "R$ " + subtotal.toFixed(2);
         valorDescontoElement.textContent = "R$ 0.00";
       }
 
-      // Obtenha o valor do frete
-      const frete = parseFloat(totalFrete.textContent.replace('R$ ', '')); // Remove o "R$ " e converte para float
+      totalAPagarElement3.textContent = "R$ " + subtotal.toFixed(2);
+
+      const frete = parseFloat(totalFrete.textContent.replace('R$ ', ''));
       if (!isNaN(frete)) {
-        // Se o valor do frete for válido, adicione-o ao subtotal
-        const totalAPagar = subtotal + frete;
-        totalAPagarElement.textContent = "R$ " + totalAPagar.toFixed(2);
-      } else {
-        // Caso contrário, exiba apenas o subtotal
-        totalAPagarElement.textContent = "R$ " + subtotal.toFixed(2);
+        totalAPagar += frete;
       }
-      valorAtual = totalAPagarElement.textContent
-    
+
+      totalAPagarElement.textContent = "R$ " + totalAPagar.toFixed(2);
+      valorAtualGlobal = totalAPagar; // Atualizando a variável global
+
+      // Agora você pode usar o valor atualizado aqui dentro
+       // Isso mostrará o valor correto após a atualização
     })
     .catch(error => {
       console.error('Erro ao calcular o total a pagar:', error);
     });
 }
+
 // Chame a função para calcular e atualizar o total a pagar quando necessário
-// Por exemplo, após adicionar ou remover um produto do carrinho
 atualizarTotalAPagar();
 // Função para desativar todas as divs, exceto a div ativa
 function desativarOutrasDivs(divAtiva) {
@@ -162,6 +161,7 @@ btnContPag.addEventListener('click', () => {
     });
     if (divAtiva === "pix") {
         pagamentoPix();
+        //criarPedido();
     } else if (divAtiva === "boleto") {
         alert("A div ativa é boleto");
     } else if (divAtiva === "cartaoCredito") {
@@ -177,154 +177,161 @@ btnContPag.addEventListener('click', () => {
     }
 });
 
+async function criarPedido() {
+  try {
+        const totalAPagar = valorAtualGlobal;  
+        const metodPag = 'Pix';
 
-async function pagamentoPix () {
-    try {
-        const totalAPagar = valorAtual;
-        const valor = 0.1;
-        const descricao = 'pedido'
-        console.log(valor)
-    
-        const response = await fetch('/gerarQRPix', {
-                method: 'POST',
-                headers: {
-                  'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({ valor, descricao })
-              });
-    
-    if (!response.ok) {
-                throw new Error('Erro ao gerar QR Code PIX');
-              }
-              
-            const { qrDataURL, pixPayload, idPix, expirationDatePix } = await response.json();
-              console.log('PIX ID:', idPix)
-            // Exibir o QR Code na página
-              qrCodeContainer.style.display = 'block'
-              const qrCodeImg = document.createElement('img');
-              qrCodeImg.src = qrDataURL;
-              qrCodeImg.id = 'imgPix'
-              document.getElementById('qrCodeContainer').innerHTML = '';
-              document.getElementById('qrCodeContainer').appendChild(qrCodeImg);
-              const copiarPayloadBtn = document.createElement('button');
-              copiarPayloadBtn.id = 'copiarPayloadBtn';
-              copiarPayloadBtn.innerText = 'PIX Copia e Cola';
-              copiarPayloadBtn.addEventListener('click', async() => {
-                // Copiar o payload PIX para a área de transferência
-                await navigator.clipboard.writeText(pixPayload);
-                alert('Código PIX copiado com sucesso!');
-    
-              })
-              qrCodeContainer.appendChild(copiarPayloadBtn);
-              
-              const h2Container = document.createElement('h2');
-              h2Container.innerText = 'Pagamento Pix';
-              h2Container.id = 'h2Container';
-              qrCodeContainer.appendChild(h2Container);
-    
-              // Exibir a data de expiração do PIX formatada
-              const expirationDateFormatted = new Date(expirationDatePix).toLocaleString('pt-BR', { timeZone: 'UTC' });
-              const expirationDateParagraph = document.createElement('p');
-              expirationDateParagraph.id = 'expirationDateParagraph';
-              expirationDateParagraph.innerText = `O PIX irá expirar em ${expirationDateFormatted}`;
-              qrCodeContainer.appendChild(expirationDateParagraph);
-    
-            monitorarStatusPix(idPix);
-          } catch (error) {
-            console.error('Erro ao gerar o código PIX:', error);
-            alert('Erro ao gerar o código PIX. Por favor, tente novamente mais tarde.');
+        // Crie um objeto XMLHttpRequest
+        const xhr = new XMLHttpRequest();
+
+        // Configure a solicitação POST
+        xhr.open('POST', '/criar-pedidos', true);
+        xhr.setRequestHeader('Content-Type', 'application/json');
+
+        // Defina o manipulador de eventos para a resposta da solicitação
+        xhr.onload = function () {
+          if (xhr.status === 200) {
+            // A solicitação foi bem-sucedida, você pode processar a resposta aqui
+            const response = JSON.parse(xhr.responseText);
+            pedidoCriado.style.display = 'block';
+            setTimeout(() => {
+              pedidoCriado.style.display = 'none';
+              window.location.reload();
+            }, 10000);
+          } else {
+            // A solicitação não foi bem-sucedida, trate o erro aqui
+            console.error('Erro ao finalizar a compra:', xhr.statusText);
+            alert('Erro ao finalizar a compra');
           }
+        };
+
+        // Trate erros de rede
+        xhr.onerror = function () {
+          console.error('Erro de rede ao finalizar a compra');
+          alert('Erro de rede ao finalizar a compra');
+        };
+
+        // Crie um objeto com os dados do pedido, incluindo o valor total do carrinho
+        const pedidoData = {
+          valorPed: totalAPagar, // Atualize valorPed com o valor total do carrinho
+          metodPag,
+          //idTransacao: idPix,
+        };
+        console.log('PEDIDO CRIADO')
+        // Envie os dados como JSON
+        const requestData = JSON.stringify(pedidoData);
+        xhr.send(requestData);
+  } catch (error) {
+    console.error('Erro ao monitorar o status do PIX:', error);
+  }
 };
 
-async function verificarStatusPix(idPix) {
-    try {
-      // Inicialize o cliente Pagarme com sua chave de API
-      const client = await pagarme.client.connect({ api_key: 'ak_live_Gelm3adxJjY9G3cOGcZ8bPrL1596k2' });
-  
-      // Consulte a transação PIX usando o ID do PIX
-      const transaction = await client.transactions.find({ id: idPix });
-  
-      // Verifique o status da transação
-      const status = transaction.status;
-      
-      // Retorna o status da transação PIX
-      return status;
-    } catch (error) {
-      console.error('Erro ao verificar o status do PIX pelo Pagarme:', error);
-  
-      if (error.response && error.response.errors) {
-        console.error('Detalhes do erro:', error.response.errors);
-      }
-  
-      throw new Error('Erro ao verificar o status do PIX pelo Pagarme');
-    }
+async function pagamentoPix() {
+// Fetch para obter os dados do perfil do usuário
+try {
+  const response = await fetch('/perfil/dados');
+  if (!response.ok) {
+      throw new Error('Erro ao obter dados do perfil');
   }
-  // Função para verificar continuamente o status do PIX
-  async function monitorarStatusPix(idPix) {
-    try {
-      // Definir um intervalo de polling (em milissegundos)
-      const pollingInterval = 5000; // 5 segundos
+  const perfilData = await response.json();
+
+  function formatarTelefone(numero) {
+    // Remove todos os caracteres não numéricos
+    const numeroLimpo = numero.replace(/\D/g, '');
+
+    // Extrai o DDD (dois primeiros dígitos) e o número do telefone
+    const ddd = numeroLimpo.substring(0, 2);
+    const numeroTelefone = numeroLimpo.substring(2);
+
+    // Retorna um objeto com as partes do número formatado
+    return {
+        ddd: ddd,
+        numeroTelefone: numeroTelefone
+    };
+}
+
+  const telefoneFormatado = formatarTelefone(perfilData.telefoneCad);
+
+  // Agora você pode acessar as partes formatadas do número de telefone
+  const codPaisCliente = "55";
+  const dddCliente = telefoneFormatado.ddd;
+  const numeroTelefoneCliente = telefoneFormatado.numeroTelefone;
+
+// Remove non-digit characters from CPF and format it
+const cpf = perfilData.cpfCad.replace(/\D/g, ''); // Remove non-digit characters
+
+const cpfCliente = cpf;
+
+
+  const emailCliente = perfilData.emailCad;
+  const cepCliente = perfilData.cepCad;
+  const cidadeCliente = perfilData.cidadeCad;
+  const ruaCliente = perfilData.endereçoCad;
+  const numeroResidenciaCliente = perfilData.numCad;
+  const bairroCliente = perfilData.bairroCad;
+  const numeroDocumento = perfilData.cpfCad;
+  const nomeCliente = perfilData.userCad;
+  const paisCliente = "BR";
+  const idCliente = perfilData.userId;
+  const estadoCliente = perfilData.estadoCad;
   
-      while (true) {
-        // Verificar o status do PIX
-        const status = await verificarStatusPix(idPix);
-        console.log('Status do PIX:', status);
-  
-        if (status === 'paid') {
-          qrCodeContainer.style.display = 'none'
-          // Se o PIX estiver pago, sair do loop de polling
-          console.log('O PIX foi pago!, CRIANDO O PEDIDO');
-          const totalItens = document.getElementById('totalItensCarrinho').textContent;
-          const totalAPagar = 0.1;
-          const metodPag = 'Pix';
-  
-          // Crie um objeto XMLHttpRequest
-          const xhr = new XMLHttpRequest();
-  
-          // Configure a solicitação POST
-          xhr.open('POST', '/criar-pedidos', true);
-          xhr.setRequestHeader('Content-Type', 'application/json');
-  
-          // Defina o manipulador de eventos para a resposta da solicitação
-          xhr.onload = function () {
-            if (xhr.status === 200) {
-              // A solicitação foi bem-sucedida, você pode processar a resposta aqui
-              const response = JSON.parse(xhr.responseText);
-              alert(response.message);
-  
-              // Exiba a mensagem de confirmação
-              document.getElementById('confirmacaoCompra').style.display = 'block';
-            } else {
-              // A solicitação não foi bem-sucedida, trate o erro aqui
-              console.error('Erro ao finalizar a compra:', xhr.statusText);
-              alert('Erro ao finalizar a compra');
-            }
-          };
-  
-          // Trate erros de rede
-          xhr.onerror = function () {
-            console.error('Erro de rede ao finalizar a compra');
-            alert('Erro de rede ao finalizar a compra');
-          };
-  
-          // Crie um objeto com os dados do pedido, incluindo o valor total do carrinho
-          const pedidoData = {
-            totalItens,
-            valorPed: totalAPagar, // Atualize valorPed com o valor total do carrinho
-            metodPag,
-            idTransacao: idPix,
-          };
-          console.log('PEDIDO CRIADO')
-          // Envie os dados como JSON
-          const requestData = JSON.stringify(pedidoData);
-          xhr.send(requestData);
-          break;
-        }
-  
-        // Aguardar o intervalo de polling antes de fazer a próxima verificação
-        await new Promise(resolve => setTimeout(resolve, pollingInterval));
-      }
-    } catch (error) {
-      console.error('Erro ao monitorar o status do PIX:', error);
-    }
+  // Crie um objeto para armazenar os dados do perfil do usuário
+  const perfilUsuario = {
+      emailCliente: emailCliente,
+      cpfCliente: cpfCliente,
+      cepCliente: cepCliente,
+      cidadeCliente: cidadeCliente,
+      estadoCliente: estadoCliente,
+      ruaCliente: ruaCliente,
+      numeroResidenciaCliente: numeroResidenciaCliente,
+      bairroCliente: bairroCliente,
+      numeroDocumento: numeroDocumento,
+      nomeCliente: nomeCliente,
+      paisCliente: paisCliente,
+      codPaisCliente: codPaisCliente,
+      dddCliente: dddCliente,
+      numeroTelefoneCliente: numeroTelefoneCliente,
+      userId: idCliente,
+      totalCompra:  valorAtualGlobal,
+  };
+
+  // Envie os dados do formulário e do perfil do usuário para o backend
+  const response2 = await fetch('/processarPagamento-pix', {
+    method: 'POST',
+    headers: {
+        'Content-Type': 'application/json'
+    },
+    body: JSON.stringify({ perfilData: perfilUsuario })
+  });
+
+  if (!response2.ok) {
+      throw new Error('Erro ao processar pagamento');
   }
+
+  // Extrair o idTransacao da resposta
+  const responseData = await response2.json();
+  const dadosTransacao = responseData;
+  const qrPix = responseData[0].last_transaction.qr_code_url;
+  const expiracao = responseData[0].last_transaction.expires_at;
+  const expiracaoDate = new Date(expiracao);
+  const formattedExpiracao = expiracaoDate.toLocaleString('pt-BR', { timeZone: 'UTC' });
+  qrCodeContainer.style.display = 'block'
+  qrCodeContainer.innerHTML = `
+    <img src="${qrPix}">
+    <button id="copiarCodigo">Copiar código</button>
+    <p>Expira em ${formattedExpiracao}</p>
+  `;
+  const copiarCodigoPix = document.getElementById('copiarCodigo');
+  copiarCodigoPix.addEventListener('click', async() => {
+    await navigator.clipboard.writeText(responseData[0].last_transaction.qr_code);
+    divCodigoPix.style.display = 'block';
+    window.setTimeout(() => {
+      divCodigoPix.style.display = 'none';
+    }, 5000);
+  });
+
+}catch (error) {
+  console.log(error)
+}
+}

@@ -1,0 +1,133 @@
+@media screen and (min-width:320px) and (max-width:767px) {
+    header {
+        z-index: 999;
+        position: absolute;
+        width: 99%;
+        left: 50%;
+    }
+    header.scrolled {
+        position: inherit;
+        top: 0%;
+        border-bottom: 0px solid transparent;
+        color: black;
+        width: 0%;
+        z-index: -1;
+    }
+    #nav-bar {
+        display: none;
+        width: 80%;
+        padding: 15px;
+        position: absolute;
+        left: 60%;
+        top: 5px;
+        box-shadow: -1px -3px 20px black;
+        border-radius: 5px;
+        height: 495px;
+        opacity: 0;
+        z-index: 1000;
+        background-color: white;
+    }
+    #nav-bar > li {
+        display: block;
+        padding-top: 14px;
+        position: relative;
+        top: 65px;
+    }
+    #nav-bar > li > a  {
+        font-size: 28px;
+    }
+    #fechar-menu {
+        display: none;
+        cursor: pointer;
+        width: fit-content;
+        font-size: 40px;
+        position: absolute;
+        left: 72%;
+    }
+    #menu-icon {
+        display: block;
+        position: absolute;
+        left: 80%;
+        top: -10%;
+    }
+    #logo {
+        position: absolute;
+        left: 0%;
+        transform: translate(-5%);
+        top: -5px;
+        width: 13%;
+    }
+    #icone-pesquisa {
+        width: 34px;
+        height: 36px;
+        position: absolute;
+        left: 15%;
+        transform: translate(-15%);
+        top: 3px;
+    }
+    #carrinho-compras {
+        width: 44px;
+        height: 46px;
+        position: absolute;
+        left: 33%;
+        transform: translate(-120%);
+        top: 6%;
+    }
+    #listaDePedidos {
+        position: absolute;
+        left: 10%;
+        transform: translate(-10%);
+        top: 400px;
+    }
+    .pedido {
+        width: 95vw;
+        height: 165px;
+        background-color: white;
+        border-radius: 5px;
+        box-shadow: -1px 3px 8px black;
+        padding: 25px;
+        margin-bottom: 20px;
+        cursor: pointer;
+        transition: 0.8s;
+    }
+    .pedido > a {
+        padding: 11px;
+        font-size: 15px;
+        font-weight: 600;
+        color: white;
+        background-color: #F37160;
+        border: 1px solid white;
+        border-radius: 5px;
+        cursor: pointer;
+        transition: 0.8s;
+        position: relative;
+        left: 35%;
+        transform: translate(-35%);
+        top: 52px;
+    }
+    .pedido > img {
+        width: 30%;
+        position: absolute;
+        left: 5%;
+        transform: translate(-5%);
+    }
+    .pedido > p {
+        display: inline;
+        padding: 10px;
+        font-size: 15px;
+        font-weight: 500;
+        color: #6E6E73;
+        position: relative;
+        left: 22%;
+        top: 32px;
+        transform: translate(-22%);
+    }
+    .pedido > h2 {
+        font-size: 20px;
+        font-weight: 400;
+        position: relative;
+        left: 30%;
+        top: 25px;
+        width: fit-content;
+    }
+}

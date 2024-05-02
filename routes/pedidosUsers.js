@@ -5,6 +5,9 @@ const Graficas = require('../models/Graficas');
 const User = require('../models/User');
 const Carteira = require('../models/Carteira');
 const VariacoesProduto = require('../models/VariacoesProduto');
+const Pedidos = require('../models/Pedidos');
+const ItensPedido = require('../models/ItensPedido');
+const Enderecos = require('../models/Enderecos');
 const {Op} = require('sequelize');
 const multer = require('multer');
 const cookieParser = require('cookie-parser');
@@ -26,6 +29,7 @@ const qr = require('qrcode');
 const cron = require('node-cron');
 const request = require('request');
 const nodemailer = require('nodemailer');
+const rp = require('request-promise');
 app.use(express.json());
 app.use(cookieParser());
 app.use(express.urlencoded({ extended: true }));
@@ -34,6 +38,20 @@ app.use(session({
   resave: false,
   saveUninitialized: true
 }));
+const os = require('os');
+
+// Obtém os detalhes da rede da máquina
+const interfaces = os.networkInterfaces();
+
+// Itera sobre os interfaces de rede
+Object.keys(interfaces).forEach((iface) => {
+    interfaces[iface].forEach((details) => {
+        // Verifica se o endereço é IPv4 e não é um endereço interno
+        if (details.family === 'IPv4' && !details.internal) {
+            console.log('Endereço IP da máquina:', details.address);
+        }
+    });
+});
 
 app.get('/api/carrinho', (req, res) => {
   try {
@@ -222,8 +240,15 @@ app.post('/salvar-endereco-no-carrinho', async (req, res) => {
     // Defina o frete na sessão
     req.session.frete = custoDoFrete;
     endereco.frete = custoDoFrete;
+
+    // Atualize o endereço de cada produto no carrinho com o endereço do usuário
+    if (req.session.carrinho && req.session.carrinho.length > 0) {
+      req.session.carrinho.forEach((produto) => {
+        produto.endereco = { ...endereco }; // Copia o endereço do usuário para cada produto no carrinho
+      });
+    }
     // Agora podemos enviar a resposta ao cliente com os dados da gráfica mais próxima e o custo do frete
-    console.log(endereco)
+    console.log(endereco);
     res.json({
       success: true,
       graficaMaisProxima,
@@ -772,6 +797,7 @@ app.post('/criar-pedidos', async (req, res) => {
     const idTransacao = req.body.idTransacao;
     console.log(idTransacao);
     console.log(metodPag);
+    console.log(req.session.endereco)
     const carrinhoQuebrado = req.session.carrinho || [];
     const enderecoDaSessao = req.session.endereco;
     if (carrinhoQuebrado.length > 0 && carrinhoQuebrado[0].tipoEntrega === 'Múltiplos Enderecos') {
@@ -787,7 +813,7 @@ app.post('/criar-pedidos', async (req, res) => {
         valorPed: totalAPagar,
         statusPed: metodPag === 'Boleto' ? 'Esperando Pagamento' : 'Pago',
         metodPag: metodPag,
-        idTransacao: idTransacao
+        //idTransacao: idTransacao
         // ... outros campos relevantes ...
       });
 
@@ -823,20 +849,21 @@ app.post('/criar-pedidos', async (req, res) => {
       const enderecosPromises = carrinhoQuebrado.map(async (produtoQuebrado) => {
         return Enderecos.create({
           idPed: pedido.id,
-          rua: produtoQuebrado.endereco.enderecoCad,
-          cep: produtoQuebrado.endereco.cepCad,
-          cidade: produtoQuebrado.endereco.cidadeCad,
-          numero: produtoQuebrado.endereco.numCad,
-          complemento: produtoQuebrado.endereco.compCad,
-          bairro: produtoQuebrado.endereco.bairroCad,
+          rua: produtoQuebrado.endereco.rua,
+          cep: produtoQuebrado.endereco.cep,
+          cidade: produtoQuebrado.endereco.cidade,
+          numero: produtoQuebrado.endereco.numeroRua,
+          complemento: produtoQuebrado.endereco.complemento,
+          bairro: produtoQuebrado.endereco.bairro,
           quantidade: produtoQuebrado.quantidade,
-          celular: produtoQuebrado.endereco.telefoneCad,
-          estado: produtoQuebrado.endereco.estadoCad,
-          cuidados: produtoQuebrado.endereco.cuidadosCad,
+          celular: produtoQuebrado.endereco.telefone,
+          estado: produtoQuebrado.endereco.estado,
+          cuidados: produtoQuebrado.endereco.cuidados,
           raio: produtoQuebrado.raioProd,
           produtos: produtoQuebrado.produtoId,
           idProduto: produtoQuebrado.produtoId,
-          tipoEntrega: produtoQuebrado.endereco.tipoEntrega,
+          tipoEntrega: produtoQuebrado.tipoEntrega,
+          frete: produtoQuebrado.frete
           // ... outros campos relevantes ...
         });
       });
@@ -861,7 +888,7 @@ app.post('/criar-pedidos', async (req, res) => {
         valorPed: totalAPagar,
         statusPed: metodPag === 'Boleto' ? 'Esperando Pagamento' : 'Pago',
         metodPag: metodPag,
-        idTransacao: idTransacao,
+        //idTransacao: idTransacao,
         //raio: produto.raioProd,
       });
 
@@ -869,27 +896,28 @@ app.post('/criar-pedidos', async (req, res) => {
         const produto = await Produtos.findByPk(produtoNoCarrinho.produtoId);
         const enderecoQuebrado = {
           idPed: pedido.id,
-          rua: produtoNoCarrinho.endereco.enderecoCad,
-          cep: produtoNoCarrinho.endereco.cepCad,
-          cidade: produtoNoCarrinho.endereco.cidadeCad,
-          numero: produtoNoCarrinho.endereco.numCad,
-          complemento: produtoNoCarrinho.endereco.compCad,
-          bairro: produtoNoCarrinho.endereco.bairroCad,
+          rua: produtoNoCarrinho.endereco ? produtoNoCarrinho.endereco.rua : null,
+          cep: produtoNoCarrinho.endereco ? produtoNoCarrinho.endereco.cep : null,
+          cidade: produtoNoCarrinho.endereco ? produtoNoCarrinho.endereco.cidade : null,
+          numero: produtoNoCarrinho.endereco ? produtoNoCarrinho.endereco.numeroRua : null,
+          complemento: produtoNoCarrinho.endereco ? produtoNoCarrinho.endereco.complemento : null,
+          bairro: produtoNoCarrinho.endereco ? produtoNoCarrinho.endereco.bairro : null,
           quantidade: produtoNoCarrinho.quantidade,
-          celular: produtoNoCarrinho.endereco.telefoneCad,
-          estado: produtoNoCarrinho.endereco.estadoCad,
-          cuidados: produtoNoCarrinho.endereco.cuidadosCad,
+          celular: produtoNoCarrinho.endereco ? produtoNoCarrinho.endereco.telefone : null,
+          estado: produtoNoCarrinho.endereco ? produtoNoCarrinho.endereco.estado : null,
+          cuidados: produtoNoCarrinho.endereco ? produtoNoCarrinho.endereco.nomeCliente : null,
           raio: produtoNoCarrinho.raioProd,
           idProduto: produtoNoCarrinho.produtoId,
-          tipoEntrega: produtoNoCarrinho.endereco.tipoEntrega,
+          tipoEntrega: produtoNoCarrinho.endereco ? produtoNoCarrinho.endereco.tipoEntrega : null,
+          frete: produtoNoCarrinho.endereco ? produtoNoCarrinho.endereco.frete : null,
         };
-
+      
         const enderecoCriado = await Enderecos.create(enderecoQuebrado);
-
+      
         return enderecoCriado;
       });
-
-      const enderecosQuebrados = await Promise.all(enderecosQuebradosPromises);
+      
+      const enderecosQuebrados = await Promise.all(enderecosQuebradosPromises);      
 
       const itensPedidoPromises = carrinhoQuebrado.map(async (produtoNoCarrinho, index) => {
         const produto = await Produtos.findByPk(produtoNoCarrinho.produtoId);
@@ -1114,7 +1142,7 @@ app.post('/criar-pedidos', async (req, res) => {
       const descricaoLimitada = descricao.substring(0, 200);
   
       // Inicialize o cliente Pagarme com sua chave de API
-      const client = await pagarme.client.connect({ api_key: 'ak_live_Gelm3adxJjY9G3cOGcZ8bPrL1596k2' });
+      const client = await pagarme.client.connect({ api_key: 'sk_34a31b18f0db49cd82be2a285152e1b2' });
   
       // Crie uma transação PIX no Pagarme com os detalhes fornecidos
       const transaction = await client.transactions.create({
@@ -1468,7 +1496,7 @@ app.post('/criar-pedidos', async (req, res) => {
   }
   
   // Exemplo de uso:
-  const apiKey = 'sk_5956e31434bb4c618a346da1cf6c107b';
+  const apiKey = 'sk_34a31b18f0db49cd82be2a285152e1b2';
   conectarPagarme(apiKey)
     .then(conexaoBemSucedida => {
         if (conexaoBemSucedida) {
@@ -1614,5 +1642,128 @@ app.post('/criar-pedidos', async (req, res) => {
         res.status(500).send('Erro ao verificar o status da transação');
     }
   });
+
+  app.get('/pedidos-usuario/:userId', async (req, res) => {
+    const userId = req.cookies.userId;
+  
+    try {
+      // Consulte o banco de dados para buscar os pedidos do usuário com base no userId
+      const pedidosDoUsuario = await Pedidos.findAll({
+        where: {
+          idUserPed: userId,
+        },
+        include: [
+          {
+            model: ItensPedido,
+            attributes: ['statusPed', 'nomeProd', 'idProduto'], // Inclua apenas a coluna 'statusPed'
+          }
+        ],
+      });
+  
+      // Renderize a página HTML de pedidos-usuario e passe os pedidos como JSON
+      res.json({ pedidos: pedidosDoUsuario });
+    } catch (error) {
+      console.error('Erro ao buscar pedidos do usuário:', error);
+      res.status(500).json({ error: 'Erro ao buscar pedidos do usuário', message: error.message });
+    }
+  });
+  
+  app.get('/imagens/:id', async (req, res) => {
+    try {
+      const idDoProduto = req.params.id;
+  
+      // Consulta o banco de dados para obter a imagem do produto pelo ID
+      const produto = await Produtos.findByPk(idDoProduto);
+  
+      if (!produto || !produto.imgProd) {
+        // Se o produto não for encontrado ou não houver imagem, envie uma resposta de erro 404
+        return res.status(404).send('Imagem não encontrada');
+      }
+  
+      const imgBuffer = produto.imgProd;
+  
+      // Detecta a extensão da imagem com base no tipo de arquivo
+      let extensao = 'jpg'; // Default para JPEG
+      if (imgBuffer[0] === 0x89 && imgBuffer[1] === 0x50 && imgBuffer[2] === 0x4E && imgBuffer[3] === 0x47) {
+        extensao = 'png'; // Se os primeiros bytes correspondem a PNG, use PNG
+      }
+  
+      // Define o cabeçalho da resposta com base na extensão
+      res.setHeader('Content-Type', `image/${extensao}`);
+  
+      // Envie a imagem como resposta
+      res.end(imgBuffer);
+    } catch (error) {
+      console.error('Erro ao buscar imagem do produto:', error);
+      res.status(500).send('Erro interno do servidor');
+    }
+  });
+
+app.post('/processarPagamento-pix', (req, res) => {
+  const perfilData = req.body.perfilData;
+  const carrinho = req.session.carrinho;
+  // Define the request payload
+  const body = {
+    "items": carrinho.map(item => ({
+        "id": item.produtoId,
+        "amount": item.subtotal * 100,
+        "description": item.nomeProd,
+        "quantity": item.quantidade,
+        "code": item.produtoId
+    })),
+    "customer": {
+        "name": perfilData.nomeCliente,
+        "email": perfilData.emailCliente,
+        "type": "individual",
+        "document": perfilData.cpfCliente,
+        "phones": {
+            "home_phone": {
+                "country_code": "55",
+                "number": perfilData.numeroTelefoneCliente,
+                "area_code": perfilData.dddCliente,
+            }
+        }
+    },
+    "payments": [
+        {
+            "payment_method": "pix",
+            "pix" : {
+              "expires_in": "175",
+              "additional_information" : [
+                {
+                  "name" : "PEDIDO IMPRIMEAI",
+                  "value" : "1"
+                }
+              ]
+            }
+        }
+    ]
+  };
+  const options = {
+    method: 'POST',
+    uri: 'https://api.pagar.me/core/v5/orders',
+    headers: {
+      'Authorization': 'Basic ' + Buffer.from('sk_test_05ddc95c6ce442a796c7ebbe2376185d:').toString('base64'),
+      'Content-Type': 'application/json'
+    },
+    body: body,
+    json: true
+  };
+
+  rp(options)
+  .then(response => {
+    console.log(response.charges);
+    res.status(200).send(response.charges);
+  })
+  .catch(error => {
+      // Handle error response
+      console.error('Error:', error.message);
+      if (error.response) {
+        console.error('Request failed with status code', error.response.statusCode);
+        console.error('Response body:', error.response.body);
+      }
+      res.status(500).send("Transação falhada!");
+    });
+});
 
 module.exports = app;

@@ -376,6 +376,16 @@ app.get('/carteira', (req, res) => {
     res.status(500).send("Erro interno do servidor");
   }
 });
+//Rota get para a página de pedidos do usuário
+app.get('/pedidosUsuario', (req, res) => {
+  try {
+    const pedidosUsuarioContentHtml = fs.readFileSync(path.join(__dirname, "html", "pedidosUsuario.html"), "utf-8");
+    res.send(pedidosUsuarioContentHtml);
+  } catch (err) {
+    console.log("Erro ao ler o arquivo pedidosUsuario.html: ", err);
+    res.status(500).send("Erro interno do servidor");
+  }
+});
 app.listen(PORT, () => {
     console.log(`Servidor rodando na porta ${PORT} http://localhost:8082`);
 });

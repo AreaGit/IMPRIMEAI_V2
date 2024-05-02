@@ -215,3 +215,69 @@ main > h2 {
     left: 20%;
     transform: translate(-20%);
 }
+#listaDePedidos {
+    position: absolute;
+    left: 50%;
+    transform: translate(-50%);
+    top: 400px;
+}
+.pedido {
+    width: 839px;
+    height: 165px;
+    background-color: white;
+    border-radius: 5px;
+    box-shadow: -1px 3px 8px black;
+    padding: 25px;
+    margin-bottom: 20px;
+    cursor: pointer;
+    transition: 0.8s;
+}
+.pedido:hover {
+    transition: 0.8s;
+    box-shadow: -1px 3px 8px #F69896;
+}
+.pedido > h2 {
+    font-size: 20px;
+    font-weight: 400;
+    position: relative;
+    left: 22%;
+    top: 25px;
+}
+.pedido > p {
+    display: inline;
+    padding: 10px;
+    font-size: 17px;
+    font-weight: 500;
+    color: #6E6E73;
+    position: relative;
+    left: 22%;
+    top: 32px;
+    transform: translate(-22%);
+}
+.pedido > img {
+    width: 15%;
+    position: absolute;
+    left: 5%;
+    transform: translate(-5%);
+}
+.pedido > a {
+    padding: 18px 28px 18px 28px;
+    font-size: 17px;
+    font-weight: 600;
+    color: white;
+    background-color: #F37160;
+    border: 1px solid white;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: 0.8s;
+    position: relative;
+    left: 40%;
+    transform: translate(-40%);
+    top: 10px;
+}
+.pedido > a:hover {
+    transition: 0.8s;
+    background-color: white;
+    color: #EF4126;
+    border: 1px solid #EF4126;
+}

@@ -266,6 +266,9 @@ span#totalItens {
 #avisoUser {
     display: none;
 }
+#codigoPix {
+  display: none;
+}
 .notifications-container {
     transition: 0.8s;
     width: 320px;
@@ -464,4 +467,119 @@ span#totalItens {
   #sugestoes li:hover {
     background-color: #f0f0f0; /* Mude a cor de fundo ao passar o mouse sobre os itens */
   }
-  
+  #pedidoCriado {
+    display: none;
+    width: 590px;
+    height: 500px;
+    box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+    background-color: #fff;
+    border-radius: 0.5rem;
+    position: absolute;
+    left: -40%;
+    transform: translate(-50%);
+    top: -250px;
+  }
+  #faixa {
+    background: #47c9a2;
+    border-bottom: none;
+    position: relative;
+    text-align: center;
+    margin: -20px 0px 0;
+    border-radius: 5px 5px 0 0;
+    padding: 40px;
+}
+.image {
+  display: flex;
+  margin-left: auto;
+  margin-right: auto;
+  background-color: #e2feee;
+  flex-shrink: 0;
+  justify-content: center;
+  align-items: center;
+  width: 5rem;
+  height: 5rem;
+  border-radius: 9999px;
+  animation: animate .6s linear alternate-reverse infinite;
+  transition: .6s ease;
+}
+.image svg {
+  color: #0afa2a;
+  width: 3rem;
+  height: 3rem;
+}
+.content {
+  margin-top: 0.75rem;
+  text-align: center;
+}
+.title {
+  color: #066e29;
+  font-size: 1.5rem;
+  font-weight: 600;
+  line-height: 1.5rem;
+}
+.message {
+  margin-top: 0.5rem;
+  color: #595b5f;
+  font-size: 0.960rem;
+  line-height: 1.25rem;
+}
+.image-content {
+  width: 50%;
+  position: relative;
+  top: 50px;
+}
+@keyframes animate {
+  from {
+    transform: scale(1);
+  }
+
+  to {
+    transform: scale(1.09);
+  }
+}
+#qrCodeContainer {
+  display: none;
+  width: 590px;
+  height: 500px;
+  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+  background-color: #fff;
+  border-radius: 0.5rem;
+  position: absolute;
+  left: -40%;
+  transform: translate(-50%);
+  top: -250px;
+}
+#qrCodeContainer > img {
+  position: absolute;
+  left: 50%;
+  transform: translate(-50%);
+  top: 50px;
+}
+#qrCodeContainer > button {
+  position: absolute;
+  left: 50%;
+  transform: translate(-50%);
+  top: 360px;
+  padding: 22px 35px 22px 35px;
+  font-size: 17px;
+  color: white;
+  background-color: #EF4126;
+  border: none;
+  border-radius: 5px;
+  font-weight: 600;
+  transition: 0.8s;
+  cursor: pointer;
+}
+#qrCodeContainer > button:hover {
+  transition: 0.8s;
+  background-color: white;
+  color: #EF4126;
+  border: 1px solid #EF4126;
+}
+#qrCodeContainer > p {
+  width: fit-content;
+  position: absolute;
+  left: 50%;
+  transform: translate(-50%);
+  top: 310px;
+}
