@@ -30,6 +30,7 @@ const cron = require('node-cron');
 const request = require('request');
 const nodemailer = require('nodemailer');
 const rp = require('request-promise');
+const Sequelize = require('sequelize');
 app.use(express.json());
 app.use(cookieParser());
 app.use(express.urlencoded({ extended: true }));
@@ -1252,7 +1253,7 @@ app.post('/criar-pedidos', async (req, res) => {
   // Função para conectar ao cliente Pagarme
   async function connectPagarme() {
     try {
-        const pag = await pagarme.client.connect({ api_key: 'ak_live_Gelm3adxJjY9G3cOGcZ8bPrL1596k2' });
+        const pag = await pagarme.client.connect({ api_key: `${pagarmeKeyProd}` });
         return pag;
     } catch (error) {
         console.error('Erro ao conectar ao Pagarme:', error);
@@ -1475,10 +1476,10 @@ app.post('/criar-pedidos', async (req, res) => {
   async function conectarPagarme(apiKey) {
     return new Promise((resolve, reject) => {
         const options = {
-            method: 'GET',
+            method: 'POST',
             uri: 'https://api.pagar.me/core/v5/orders',
             headers: {
-                'Authorization': 'Basic ' + Buffer.from(apiKey + ':').toString('base64'),
+                'Authorization': 'Basic ' + Buffer.from(`${pagarmeKeyProd}:`).toString('base64'),
                 'Content-Type': 'application/json'
             }
         };
@@ -2082,5 +2083,185 @@ app.post('/processarPagamento-pix-carteira', (req, res) => {
       res.status(500).send("Transação falhada!");
     });
 });
+
+app.post('/processarPagamento-boleto-carteira', (req, res) => {
+  const perfilData = req.body.perfilData;
+  const carrinho = req.session.carrinho;
+  // Define the request payload
+  const body = {
+    "items": [
+      {
+          "amount": Math.max(Math.round(parseFloat(perfilData.totalCompra) * 100), 1),
+          "description": "CARTEIRA",
+          "quantity": 1
+      }
+    ],
+    "customer": {
+      "name": perfilData.nomeCliente,
+      "email": perfilData.emailCliente,
+      "document_type": "CPF",
+      "document": perfilData.cpfCliente,
+      "type": "individual",
+      "address": {
+          "line_1": perfilData.ruaCliente,
+          "line_2": perfilData.complementoCliente,
+          "zip_code": perfilData.cepCliente,
+          "city": perfilData.cidadeCliente,
+          "state": perfilData.estadoCliente,
+          "country": "BR",
+      },
+    },
+    "payments": [
+        {
+            "payment_method": "boleto",
+            "boleto" : {
+              "instructions": "Pagar até o vencimento",
+              "document_number": "123",
+              "type": "DM"
+            }
+        }
+    ]
+  };
+  const options = {
+    method: 'POST',
+    uri: 'https://api.pagar.me/core/v5/orders',
+    headers: {
+      'Authorization': 'Basic ' + Buffer.from(`${pagarmeKeyProd}:`).toString('base64'),
+      'Content-Type': 'application/json'
+    },
+    body: body,
+    json: true
+  };
+
+  rp(options)
+  .then(response => {
+    console.log(response.charges);
+    res.status(200).send(response.charges);
+  })
+  .catch(error => {
+      // Handle error response
+      console.error('Error:', error.message);
+      if (error.response) {
+        console.error('Request failed with status code', error.response.statusCode);
+        console.error('Response body:', error.response.body);
+      }
+      res.status(500).send("Transação falhada!");
+    });
+});
+
+
+app.post('/uploadGoogleDrive', upload.single('file'), async (req, res) => {
+  const file = req.file;
+  const idProduto = req.body.idProduto;
+
+  if (!file || !idProduto) {
+    return res.status(400).send('No file or idProduto provided.');
+  }
+
+  try {
+    const result = await uploadFile(file);
+    const pedidoId = req.body.pedidoId;
+    // Atualize o produto no banco de dados com o downloadLink
+    await atualizarProduto(idProduto, result.webViewLink, pedidoId, result.nomeArquivo);
+    // Verifique se todos os produtos do pedido têm linkDownload diferente de "Enviar Arte Depois"
+    const todosProdutosEnviados = await verificarTodosProdutosEnviados(pedidoId);
+
+    // Se todos os produtos foram enviados, atualize o status do pedido para "Aguardando"
+    if (todosProdutosEnviados) {
+      await atualizarStatusPedido(pedidoId, 'Aguardando');
+    }
+
+    res.json(result);
+  } catch (error) {
+    console.error('Error during file upload:', error);
+    res.status(500).send('Internal Server Error');
+  }
+});
+
+async function atualizarProduto(idProduto, webViewLink, pedidoId, nomeArquivo) {
+  await ItensPedidos.update({ linkDownload: webViewLink, nomeArquivo: nomeArquivo }, { where: { idPed: pedidoId, idProduto: idProduto } });
+}
+// Função para obter o ID do pedido por ID do produto
+async function obterPedidoIdPorIdProduto(idProduto) {
+  const itemPedido = await ItensPedidos.findOne({ where: { idProduto: idProduto } });
+  if (itemPedido) {
+    return itemPedido.idPed;
+  }
+  throw new Error(`Produto com idProduto ${idProduto} não encontrado.`);
+}
+
+async function notificarGrafica(pedidoId) {
+  try {
+    const pedido = await ItensPedidos.findByPk(pedidoId);
+    if (pedido) {
+      const graficaId = pedido.getDataValue('graficaAtend');
+
+      if (graficaId) {
+        const grafica = await Graficas.findByPk(graficaId);
+
+        if (grafica) {
+          console.log(`Notificando a gráfica com ID ${grafica.id} sobre o pedido com ID ${pedidoId}.`);
+
+          // Sua lógica de notificação aqui
+          const destinatarioEmail = grafica.emailCad;
+          const destinatarioWhatsapp = grafica.telefoneCad;
+
+          // Exemplo de notificação por e-mail
+          await enviarEmailNotificacao(destinatarioEmail, 'Novo Pedido a ser Atendido', 'Novo Pedido a ser Atendido - Um pedido acabou de ser liberado, abra seu painel da gráfica.');
+
+          // Exemplo de notificação por WhatsApp
+          await enviarNotificacaoWhatsapp(destinatarioWhatsapp, 'Novo Pedido a ser Atendido - Um pedido acabou de ser liberado, abra seu painel da gráfica.');
+        } else {
+          console.log(`Gráfica com ID ${graficaId} não encontrada.`);
+        }
+      } else {
+        console.log(`Pedido com ID ${pedidoId} não possui gráfica associada.`);
+      }
+    } else {
+      console.log(`Pedido com ID ${pedidoId} não encontrado.`);
+    }
+  } catch (error) {
+    console.error('Erro ao notificar a gráfica:', error);
+  }
+}
+// Função para verificar se todos os produtos do pedido foram enviados
+async function verificarTodosProdutosEnviados(idPedido) {
+  const produtosEnviarArteDepois = await ItensPedidos.findAll({
+    where: {
+      idPed: idPedido,
+      linkDownload: 'Enviar Arte Depois',
+    },
+  });
+
+  // Se há produtos com "Enviar Arte Depois", não atualize o status do pedido
+  if (produtosEnviarArteDepois.length > 0) {
+    return false;
+  }
+
+  const todosEnviados = await ItensPedidos.findAll({
+    where: {
+      idPed: idPedido,
+      linkDownload: {
+        [Sequelize.Op.ne]: 'Enviar Arte Depois',
+      },
+    },
+  });
+
+  // Se todos os produtos foram enviados, atualize o status do pedido para 'Aguardando'
+  if (todosEnviados.length > 0) {
+    await atualizarStatusPedido(idPedido, 'Aguardando');
+    console.log('Notificando a Gráfica!')
+    await notificarGrafica(idPedido);  // Adiciona a notificação para a gráfica
+    return true;
+  }
+
+  return false;
+}
+
+// Função para atualizar o status do pedido
+async function atualizarStatusPedido(pedidoId, novoStatus) {
+  await Pedidos.update({ statusPed: novoStatus }, { where: { id: pedidoId } });
+  await ItensPedidos.update({ statusPed: novoStatus }, { where: { idPed: pedidoId } });
+}
 
 module.exports = app;

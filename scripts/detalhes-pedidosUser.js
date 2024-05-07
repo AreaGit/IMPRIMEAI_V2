@@ -50,14 +50,16 @@ fetch(`/detalhes-pedidoUser/${idPedido}`)
     }
         
         // Exibir detalhes dos itens do pedido
-        data.itens.forEach((item) => {
+        data.itens.forEach(async (item) => {
+            let idProduto = item.idProduto
+            const imgUrl = await pegarImagemProduto(idProduto);
             const div = document.createElement('div');
+            if(item.nomeArquivo == null) {
+                item.nomeArquivo = ""
+            }
             div.id = `divItem`
-            const imgSrc = `data:image/png;base64,${btoa(
-                String.fromCharCode.apply(null, new Uint8Array(item.imgProd.data))
-                )}`;
                 div.innerHTML += `
-                <img src=${imgSrc}>
+                <img src="${imgUrl}">
                 <p><strong>ID do Produto:</strong> ${item.idProduto}</p>
                 <p><strong>Nome do Produto:</strong> ${item.nomeProd}</p>
                 <p><strong>Quantidade:</strong> ${item.quantidade}</p>
@@ -118,3 +120,19 @@ fetch(`/detalhes-pedidoUser/${idPedido}`)
             });
       })
       .catch((error) => console.error('Erro ao buscar detalhes do pedido:', error));
+
+      // Function to fetch the image URL for a product
+async function pegarImagemProduto(idProduto) {
+    try {
+      const response = await fetch(`/imagens/${idProduto}`);
+      if (!response.ok) {
+        throw new Error('Imagem não encontrada');
+      }
+      const blob = await response.blob();
+      return URL.createObjectURL(blob);
+    } catch (error) {
+      console.error('Erro ao buscar imagem do produto:', error);
+      // Handle error, e.g., return a placeholder image URL
+      return 'placeholder_image_url'; // Replace 'placeholder_image_url' with the actual URL of a placeholder image
+    }
+  }

@@ -1,5 +1,6 @@
 const nomeUser = document.getElementById('nomeUser');
 const qrCodeContainer = document.getElementById('qrCodeContainer');
+const divBoletoContainer = document.getElementById('boletoContainer');
 
 async function carregarInfoUsers() {
     try {
@@ -286,3 +287,142 @@ async function registrarPagamento(detalhesPagamento) {
         console.error('Erro ao registrar o pagamento:', error);
     }
 }
+
+const boleto = document.getElementById('boleto');
+
+boleto.addEventListener('click', async() => {
+    // Fetch para obter os dados do perfil do usuário
+  try {
+    const response = await fetch('/perfil/dados');
+    if (!response.ok) {
+        throw new Error('Erro ao obter dados do perfil');
+    }
+    const perfilData = await response.json();
+  
+    function formatarTelefone(numero) {
+      // Remove todos os caracteres não numéricos
+      const numeroLimpo = numero.replace(/\D/g, '');
+  
+      // Extrai o DDD (dois primeiros dígitos) e o número do telefone
+      const ddd = numeroLimpo.substring(0, 2);
+      const numeroTelefone = numeroLimpo.substring(2);
+  
+      // Retorna um objeto com as partes do número formatado
+      return {
+          ddd: ddd,
+          numeroTelefone: numeroTelefone
+      };
+  }
+  
+    const telefoneFormatado = formatarTelefone(perfilData.telefoneCad);
+  
+    // Agora você pode acessar as partes formatadas do número de telefone
+    const codPaisCliente = "55";
+    const dddCliente = telefoneFormatado.ddd;
+    const numeroTelefoneCliente = telefoneFormatado.numeroTelefone;
+  
+  // Remove non-digit characters from CPF and format it
+  const cpf = perfilData.cpfCad.replace(/\D/g, ''); // Remove non-digit characters
+  
+  const cpfCliente = cpf;
+  
+  
+    const emailCliente = perfilData.emailCad;
+    const cepCliente = perfilData.cepCad;
+    const cidadeCliente = perfilData.cidadeCad;
+    const ruaCliente = perfilData.endereçoCad;
+    const numeroResidenciaCliente = perfilData.numCad;
+    const bairroCliente = perfilData.bairroCad;
+    const numeroDocumento = perfilData.cpfCad;
+    const nomeCliente = perfilData.userCad;
+    const paisCliente = "BR";
+    const idCliente = perfilData.userId;
+    const estadoCliente = perfilData.estadoCad;
+    const complementoCliente = perfilData.compCad
+    
+    // Crie um objeto para armazenar os dados do perfil do usuário
+    const perfilUsuario = {
+        emailCliente: emailCliente,
+        cpfCliente: cpfCliente,
+        cepCliente: cepCliente,
+        cidadeCliente: cidadeCliente,
+        estadoCliente: estadoCliente,
+        ruaCliente: ruaCliente,
+        complementoCliente: complementoCliente,
+        numeroResidenciaCliente: numeroResidenciaCliente,
+        bairroCliente: bairroCliente,
+        numeroDocumento: numeroDocumento,
+        nomeCliente: nomeCliente,
+        paisCliente: paisCliente,
+        codPaisCliente: codPaisCliente,
+        dddCliente: dddCliente,
+        numeroTelefoneCliente: numeroTelefoneCliente,
+        userId: idCliente,
+        totalCompra:  valorSelecionado,
+    };
+  
+    // Envie os dados do formulário e do perfil do usuário para o backend
+    const response2 = await fetch('/processarPagamento-boleto-carteira', {
+      method: 'POST',
+      headers: {
+          'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({ perfilData: perfilUsuario })
+    });
+  
+    if (!response2.ok) {
+        throw new Error('Erro ao processar pagamento');
+    }
+  
+    // Extrair o idTransacao da resposta
+    const responseData = await response2.json();
+    const chargeId = responseData[0].id;
+    const qrCodeBoleto = responseData[0].last_transaction.qr_code;
+    const pdfBoleto = responseData[0].last_transaction.pdf;
+    divBoletoContainer.style.display = 'block';
+    divBoletoContainer.innerHTML = `
+      <img src="${qrCodeBoleto}">
+      <a href="${pdfBoleto}" target="_blank">Acesse o pdf</a>
+      <p>O boleto expira em 1 dia</p>
+    `
+    verificarStatusTransacaoBoleto(chargeId);
+  }catch (error) {
+    console.log(error)
+  }
+});
+async function verificarStatusTransacaoBoleto(chargeId) {
+    try {
+      // Faça uma solicitação fetch para a rota que criamos no servidor para obter informações sobre a cobrança
+      const response = await fetch(`/charges/${chargeId}`);
+      if (!response.ok) {
+        throw new Error('Erro ao obter informações da cobrança');
+      }
+      
+      // Extrair o status da resposta
+      const { status } = await response.json();
+      
+      // Se o status for "paid", pare de verificar e execute a próxima etapa
+      if (status === 'pending') {
+        window.setTimeout(() => {
+          divBoletoContainer.style.display = 'none'
+          console.log('A transação foi paga com sucesso!');
+          const detalhesPagamento = {
+            userId: userId,
+            valor: valorSelecionado,
+            idTransacao: chargeId,
+            metodoPagamento: "BOLETO",
+            status: "ESPERANDO PAGAMENTO"
+        };
+          registrarPagamento(detalhesPagamento);
+          return;
+        }, 15000)
+      }
+      
+      // Se o status não for "paid", aguarde um curto período e, em seguida, verifique novamente
+      setTimeout(() => {
+        verificarStatusTransacaoBoleto(chargeId);
+      }, 5000); // Verifique a cada 5 segundos (5000 milissegundos)
+    } catch (error) {
+      console.error('Erro:', error);
+    }
+} 
