@@ -1,5 +1,7 @@
 const avisoAdicionadoaoCarrinho = document.getElementById('avisoGeral');
 const erroCarrinho = document.getElementById('erroCarrinho');
+const avancarSlides = document.getElementById('avancarSlides');
+const retrocederSlides = document.getElementById('retrocederSlides');
 document.addEventListener('DOMContentLoaded', function() {
     // Obtenha o ID do produto da URL atual (por exemplo, /detalhes-produtos.html?id=1)
     const params = new URLSearchParams(window.location.search);
@@ -14,6 +16,7 @@ document.addEventListener('DOMContentLoaded', function() {
             return response.json();
         })
         .then(data => {
+                console.log(data)
                 // Atualizar o DOM com os detalhes do produto
                 const nomeProdutoElement = document.querySelector('#detalhes-produto h1');
                 const precoProdutoElement = document.querySelector('#detalhes-produto p');
@@ -24,6 +27,82 @@ document.addEventListener('DOMContentLoaded', function() {
                 precoProdutoElement.textContent = `R$ ${data.valorProd.toFixed(2)}`;
                 descricaoProdutoElement.textContent = data.descProd;
                 imagemProdutoElement.src = `/imagens/${data.id}`;
+                  // Update slideshow images
+                  const slideshowImages = [
+                    data.imgProd,
+                    data.imgProd2,
+                    data.imgProd3,
+                    data.imgProd4
+                ];
+
+                const imgElements = document.querySelectorAll('.slides img');
+                slideshowImages.forEach((imgData, index) => {
+                    if (imgData && typeof imgData === 'object') {
+                        const base64String = arrayBufferToBase64(imgData.data);
+                        imgElements[index].src = `data:image/png;base64,${base64String}`;
+                    }
+                });
+                
+                // Function to convert ArrayBuffer to Base64
+                function arrayBufferToBase64(buffer) {
+                    let binary = '';
+                    const bytes = new Uint8Array(buffer);
+                    for (let i = 0; i < bytes.byteLength; i++) {
+                        binary += String.fromCharCode(bytes[i]);
+                    }
+                    return btoa(binary);
+                }
+                 // Function to convert ArrayBuffer to Base64
+            function arrayBufferToBase64(buffer) {
+              let binary = '';
+              const bytes = new Uint8Array(buffer);
+              for (let i = 0; i < bytes.byteLength; i++) {
+                  binary += String.fromCharCode(bytes[i]);
+              }
+              return btoa(binary);
+          }
+
+          // Start slideshow
+          let slideIndex = 1;
+          showSlides(slideIndex);
+
+          avancarSlides.addEventListener('click', () => {
+            plusSlides(1); // Call the plusSlides function when the button is clicked to advance the slides
+        });
+
+        retrocederSlides.addEventListener('click', () => {
+          plusSlides(-1); // Call the plusSlides function when the button is clicked to advance the slides
+        });
+
+
+        function plusSlides(n) {
+          let nextIndex = slideIndex + n;
+          if (nextIndex > slideshowImages.length || !slideshowImages[nextIndex - 1]) {
+              nextIndex = 1; // Go back to the first slide if the next image is null or exceeds the number of slides
+          } else if (nextIndex < 1) {
+              nextIndex = slideshowImages.length; // Go to the last slide if going backwards from the first slide
+          }
+          slideIndex = nextIndex;
+          showSlides(slideIndex);
+        }
+          function currentSlide(n) {
+              showSlides(slideIndex = n);
+          }
+
+          function showSlides(n) {
+            let i;
+            const slides = document.getElementsByClassName("slides");
+            if (n > slides.length) {
+                slideIndex = 1; // If index exceeds the number of slides, go back to the first slide
+            }
+            if (n < 1) {
+                slideIndex = slides.length; // If index is less than 1, go to the last slide
+            }
+            for (i = 0; i < slides.length; i++) {
+                slides[i].style.display = "none";
+            }
+            slides[slideIndex-1].style.display = "block";
+        }
         })
         .catch(error => {
             console.error('Erro ao carregar detalhes do produto:', error);

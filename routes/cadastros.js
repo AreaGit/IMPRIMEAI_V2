@@ -102,7 +102,12 @@ app.get("/logout", (req, res) => {
   res.redirect("/");
 });
 
-app.post('/cadastrar-produto', upload.single('imgProd'), async (req, res) => {
+app.post('/cadastrar-produto', upload.fields([
+  { name: 'imgProd', maxCount: 1 },
+  { name: 'imgProd2', maxCount: 1 },
+  { name: 'imgProd3', maxCount: 1 },
+  { name: 'imgProd4', maxCount: 1 }
+]), async (req, res) => {
   try {
     const {
       nomeProd,
@@ -116,7 +121,12 @@ app.post('/cadastrar-produto', upload.single('imgProd'), async (req, res) => {
       cor,
       acabamento
     } = req.body;
-    const imgProd = req.file;
+    const imgProd = req.files['imgProd'] ? req.files['imgProd'][0] : null; // Main product image
+    const imgProd2 = req.files['imgProd2'] ? req.files['imgProd2'][0] : null; // Additional image 1
+    const imgProd3 = req.files['imgProd3'] ? req.files['imgProd3'][0] : null; // Additional image 2
+    const imgProd4 = req.files['imgProd4'] ? req.files['imgProd4'][0] : null; // Additional image 3
+
+    console.log(imgProd2, imgProd3, imgProd4);
 
     // Insira os dados na tabela Produtos
     const novoProduto = await Produtos.create({
@@ -126,6 +136,9 @@ app.post('/cadastrar-produto', upload.single('imgProd'), async (req, res) => {
       categProd: categoriaProd,
       raioProd: raioProd,
       imgProd: imgProd ? imgProd.buffer : null,
+      imgProd2: imgProd2 ? imgProd2.buffer : null,
+      imgProd3: imgProd3 ? imgProd3.buffer : null,
+      imgProd4: imgProd4 ? imgProd4.buffer : null,
     });
 
     // Converte arrays para strings JSON

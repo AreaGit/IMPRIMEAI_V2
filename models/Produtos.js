@@ -27,6 +27,18 @@ const Produtos = db.define('produtos', {
     type: Sequelize.BLOB('long'), // Use BLOB para armazenar imagens
     allowNull: true, // Alterado para não permitir valores nulos, se as imagens forem obrigatórias.
   },
+  imgProd2: {
+    type: Sequelize.BLOB('long'), // Use BLOB para armazenar imagens
+    allowNull: true, // Alterado para não permitir valores nulos, se as imagens forem obrigatórias.
+  },
+  imgProd3: {
+    type: Sequelize.BLOB('long'), // Use BLOB para armazenar imagens
+    allowNull: true, // Alterado para não permitir valores nulos, se as imagens forem obrigatórias.
+  },
+  imgProd4: {
+    type: Sequelize.BLOB('long'), // Use BLOB para armazenar imagens
+    allowNull: true, // Alterado para não permitir valores nulos, se as imagens forem obrigatórias.
+  },
 });
 
 Produtos.hasMany(VariacoesProduto, { foreignKey: 'idProduto' }); // Adicione esta linha para configurar a associação

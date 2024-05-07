@@ -3,6 +3,9 @@ document.addEventListener('DOMContentLoaded', () => {
     const descProd = document.getElementById('descProd');
     const valorProd = document.getElementById('valorProd');
     const imgProd = document.getElementById('imgProd');
+    const imgProd2 = document.getElementById('imgProd2');
+    const imgProd3 = document.getElementById('imgProd3');
+    const imgProd4 = document.getElementById('imgProd4');
     const categoriaProd = document.getElementById('categoriaProd');
     const raioProd = document.getElementById('raioProd');
     const materialInput = document.getElementById('material');
@@ -24,6 +27,9 @@ document.addEventListener('DOMContentLoaded', () => {
             categoriaProd: categoriaProd.value,
             raioProd: parseInt(raioProd.value),
             imgProd: imgProd.files[0],
+            imgProd2: imgProd2.files[0],
+            imgProd3: imgProd3.files[0],
+            imgProd4: imgProd4.files[0],
             // Coleta os valores dos campos de entrada
             material: materialInput.value,
             formato: formatoInput.value,
@@ -61,6 +67,9 @@ document.addEventListener('DOMContentLoaded', () => {
             descProd.value = '';
             valorProd.value = '';
             imgProd.value = '';
+            imgProd2.value = '';
+            imgProd3.value = '';
+            imgProd4.value = '';
             categoriaProd.value = '';
             raioProd.value = '';
             materialInput.value = '';

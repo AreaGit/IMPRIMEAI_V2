@@ -39,6 +39,9 @@ app.use(session({
   saveUninitialized: true
 }));
 const os = require('os');
+const ItensPedidos = require('../models/ItensPedido');
+const pagarmeKeyProd = "sk_e74e3fe1ccbe4ae080f70d85d94e2c68";
+const pagarmeKeyTest = "sk_test_05ddc95c6ce442a796c7ebbe2376185d";
 
 // Obtém os detalhes da rede da máquina
 const interfaces = os.networkInterfaces();
@@ -1699,6 +1702,61 @@ app.post('/criar-pedidos', async (req, res) => {
     }
   });
 
+  app.get('/detalhes-pedidoUser/:idPedido', async (req, res) => {
+    try {
+      const idPedido = req.params.idPedido;
+  
+      // Consulte o banco de dados para buscar os detalhes do pedido com base no idPedido
+      const detalhesPedido = await Pedidos.findByPk(idPedido, {
+        include: [
+          {
+            model: ItensPedidos,
+            include: [
+              {
+                model: Produtos,
+                attributes: ['imgProd'], // Inclua apenas a coluna imgProd da tabela Produtos
+              },
+            ],
+          },
+          { model: Enderecos },
+        ],
+      });
+  
+      if (!detalhesPedido) {
+        // Se o pedido não for encontrado, retorne um erro 404
+        return res.status(404).json({ error: 'Pedido não encontrado' });
+      }
+  
+      // Filtrar apenas os endereços associados ao pedido
+      const enderecosDoPedido = detalhesPedido.enderecos;
+  
+      // Filtrar apenas os itens pedidos associados ao pedido
+      const itensDoPedido = detalhesPedido.itenspedidos.map((item) => ({
+        id: item.id,
+        idProduto: item.idProduto,
+        nomeProd: item.nomeProd,
+        quantidade: item.quantidade,
+        valorProd: item.valorProd,
+        acabamento: item.acabamento,
+        cor: item.cor,
+        enobrecimento: item.enobrecimento,
+        formato: item.formato,
+        material: item.material,
+        linkDownload: item.linkDownload,
+        nomeArquivo: item.nomeArquivo,
+        imgProd: item.produto.imgProd,
+      }));
+  
+      // Enviar para o cliente os endereços e itens associados ao pedido
+      res.json({ enderecos: enderecosDoPedido, itens: itensDoPedido });
+    } catch (error) {
+      console.error('Erro ao buscar detalhes do pedido:', error);
+      res
+        .status(500)
+        .json({ error: 'Erro ao buscar detalhes do pedido', message: error.message });
+    }
+  });
+
 app.post('/processarPagamento-pix', (req, res) => {
   const perfilData = req.body.perfilData;
   const carrinho = req.session.carrinho;
@@ -1743,7 +1801,7 @@ app.post('/processarPagamento-pix', (req, res) => {
     method: 'POST',
     uri: 'https://api.pagar.me/core/v5/orders',
     headers: {
-      'Authorization': 'Basic ' + Buffer.from('sk_e74e3fe1ccbe4ae080f70d85d94e2c68:').toString('base64'),
+      'Authorization': 'Basic ' + Buffer.from(`${pagarmeKeyProd}:`).toString('base64'),
       'Content-Type': 'application/json'
     },
     body: body,
@@ -1779,7 +1837,7 @@ app.get('/charges/:chargeId', (req, res) => {
       method: 'GET',
       uri: apiUrl,
       headers: {
-          'Authorization': 'Basic ' + Buffer.from('sk_e74e3fe1ccbe4ae080f70d85d94e2c68:').toString('base64')
+          'Authorization': 'Basic ' + Buffer.from(`${pagarmeKeyProd}:`).toString('base64')
       },
       json: true
   };
@@ -1839,7 +1897,170 @@ app.post('/processarPagamento-boleto', (req, res) => {
     method: 'POST',
     uri: 'https://api.pagar.me/core/v5/orders',
     headers: {
-      'Authorization': 'Basic ' + Buffer.from('sk_e74e3fe1ccbe4ae080f70d85d94e2c68:').toString('base64'),
+      'Authorization': 'Basic ' + Buffer.from(`${pagarmeKeyProd}:`).toString('base64'),
+      'Content-Type': 'application/json'
+    },
+    body: body,
+    json: true
+  };
+
+  rp(options)
+  .then(response => {
+    console.log(response.charges);
+    res.status(200).send(response.charges);
+  })
+  .catch(error => {
+      // Handle error response
+      console.error('Error:', error.message);
+      if (error.response) {
+        console.error('Request failed with status code', error.response.statusCode);
+        console.error('Response body:', error.response.body);
+      }
+      res.status(500).send("Transação falhada!");
+    });
+});
+
+app.post('/processarPagamento-cartao', (req ,res) => {
+  const formData = req.body.formData;
+  const perfilData = req.body.perfilData;
+  const carrinho = req.session.carrinho;
+
+  // Monte o body com os dados do usuário e do carrinho
+  const body = {
+    "items": carrinho.map(item => ({
+        "id": item.produtoId,
+        "amount": Math.max(Math.round(parseFloat(item.subtotal) * 100), 1),
+        "description": item.nomeProd,
+        "quantity": item.quantidade,
+        "code": item.produtoId
+    })),
+    "customer": {
+        "name": perfilData.nomeCliente,
+        "email": perfilData.emailCliente,
+        "code": perfilData.userId,
+        "type": "individual",
+        "document": perfilData.cpfCliente,
+        "document_type": "CPF",
+        "gender": "male",
+        "address": {
+          "street": perfilData.ruaCliente,
+          "city": perfilData.cidadeCliente,
+          "state": perfilData.estadoCliente,
+          "country": "BR",
+          "zip_code": perfilData.cepCliente,
+          "neighborhood": perfilData.bairroCliente
+        },
+        "phones": {
+          "home_phone": {
+            "country_code": "55",
+            "number": perfilData.numeroTelefoneCliente,
+            "area_code": perfilData.dddCliente,
+          },
+          "mobile_phone": {
+            "country_code": "55",
+            "number": perfilData.numeroTelefoneCliente,
+            "area_code": perfilData.dddCliente,
+          }
+        },
+          "metadata": {} // Metadados do cliente
+      },
+      "payments": [
+          {
+            "payment_method": "credit_card",
+            "credit_card": {
+              "recurrence": false,
+              "installments": 1,
+              "statement_descriptor": "Pedido",
+              "card": {
+                "number": formData.numCar,
+                "holder_name": formData.nomeTitular,
+                "exp_month": formData.mesExp,
+                "exp_year": formData.anoExp,
+                "cvv": formData.cvvCard,
+                "billing_address": {
+                  "line_1": perfilData.ruaCliente,
+                  "zip_code": perfilData.cepCliente,
+                  "city": perfilData.cidadeCliente,
+                  "state": perfilData.estadoCliente,
+                  "country": "BR"
+                }
+              }
+            }
+          }
+        ]
+      };
+
+      const options = {
+        method: 'POST',
+        uri: 'https://api.pagar.me/core/v5/orders',
+        headers: {
+          'Authorization': 'Basic ' + Buffer.from(`${pagarmeKeyTest}:`).toString('base64'),
+          'Content-Type': 'application/json'
+        },
+        body: body,
+        json: true
+      };
+      rp(options)
+      .then(response => {
+        console.log(response);
+        res.status(200).send(response.charges);
+      })
+      .catch(error => {
+        // Handle error response
+        console.error('Error:', error.message);
+        if (error.response) {
+          console.error('Request failed with status code', error.response.statusCode);
+          console.error('Response body:', error.response.body);
+        }
+        res.status(500).send("Transação falhada!");
+      });
+});
+
+app.post('/processarPagamento-pix-carteira', (req, res) => {
+  const perfilData = req.body.perfilData;
+  const carrinho = req.session.carrinho;
+  // Define the request payload
+  const body = {
+    "items": [
+      {
+          "amount": Math.max(Math.round(parseFloat(perfilData.totalCompra) * 100), 1),
+          "description": "CARTEIRA",
+          "quantity": 1
+      }
+    ],
+    "customer": {
+        "name": perfilData.nomeCliente,
+        "email": perfilData.emailCliente,
+        "type": "individual",
+        "document": perfilData.cpfCliente,
+        "phones": {
+            "home_phone": {
+                "country_code": "55",
+                "number": perfilData.numeroTelefoneCliente,
+                "area_code": perfilData.dddCliente,
+            }
+        }
+    },
+    "payments": [
+        {
+            "payment_method": "pix",
+            "pix" : {
+              "expires_in": "175",
+              "additional_information" : [
+                {
+                  "name" : "PEDIDO IMPRIMEAI",
+                  "value" : "1"
+                }
+              ]
+            }
+        }
+    ]
+  };
+  const options = {
+    method: 'POST',
+    uri: 'https://api.pagar.me/core/v5/orders',
+    headers: {
+      'Authorization': 'Basic ' + Buffer.from(`${pagarmeKeyProd}:`).toString('base64'),
       'Content-Type': 'application/json'
     },
     body: body,

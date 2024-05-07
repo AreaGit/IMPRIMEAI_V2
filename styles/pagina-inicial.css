@@ -230,6 +230,9 @@ main {
 }
 #novidades {
     overflow-x: auto;
+    position: relative;
+    left: 15px;
+    height: 1095px;
 }
 #novidades > h2 {
     font-size: 28px;
@@ -239,76 +242,19 @@ main {
 #novidades > h2 > strong {
     color: #EF4126;
 }
-#cx1 {
+.box {
+    display: inline-flex;
     box-shadow: -1px -1px 8px #434344;
     border-radius: 5px;
     width: 388px;
     height: 456px;
-    position: absolute;
-    top: 12%;
-    left: 5%;
     transition: transform 0.8s;
+    margin: 25px;
+    position: relative;
+    top: 20px;
+    left: 15px;
 }
-#cx1:hover {
-    box-shadow: -1px 1px 8px #ef41266c;
-    transform: scale(1.1);
-}
-#cx2 {
-    box-shadow: -1px -1px 8px #434344;
-    border-radius: 5px;
-    width: 388px;
-    height: 456px;
-    position: absolute;
-    top: 12%;
-    left: 40%;
-    transition: transform 0.8s;
-}
-#cx2:hover {
-    box-shadow: -1px 1px 8px #ef41266c;
-    transform: scale(1.1);
-}
-#cx3 {
-    box-shadow: -1px -1px 8px #434344;
-    border-radius: 5px;
-    width: 388px;
-    height: 456px;
-    position: absolute;
-    top: 57%;
-    left: 7%;
-    transition: transform 0.8s;
-    overflow-x: hidden;
-    transform: translate(-7%);
-}
-#cx3:hover {
-    box-shadow: -1px 1px 8px #ef41266c;
-    transform: scale(1.1);
-}
-#cx4 {
-    box-shadow: -1px -1px 8px #434344;
-    border-radius: 5px;
-    width: 388px;
-    height: 456px;
-    position: absolute;
-    top: 57%;
-    left: 40%;
-    transition: transform 0.8s;
-    overflow-x: hidden;
-}
-#cx4:hover {
-    box-shadow: -1px 1px 8px #ef41266c;
-    transform: scale(1.1);
-}
-#cx5 {
-    box-shadow: -1px -1px 8px #434344;
-    border-radius: 5px;
-    width: 388px;
-    height: 456px;
-    position: absolute;
-    top: 12%;
-    left: 145%;  
-    transition: transform 0.8s;
-}
-#cx5:hover {
+.box:hover {
     box-shadow: -1px 1px 8px #ef41266c;
     transform: scale(1.1);
 }
@@ -472,7 +418,7 @@ main {
     border-radius: 5px;
     position: absolute;
     left: 10%;
-    top: 50%;
+    top: 90%;
 }
 #meus-pedidos > h3 {
     font-size: 14px;
@@ -495,7 +441,7 @@ main {
     border-radius: 5px;
     position: absolute;
     left: 50%;
-    top: 50%;
+    top: 90%;
 }
 #minha-carteira > h3 {
     font-size: 14px;
@@ -518,7 +464,7 @@ main {
     border-radius: 5px;
     position: absolute;
     left: 90%;
-    top: 50%;
+    top: 90%;
 }
 #meu-perfil > h3 {
     font-size: 14px;

@@ -215,220 +215,28 @@ main > h2 {
     left: 20%;
     transform: translate(-20%);
 }
-table {
-    width: 100%;
-    border-collapse: collapse;
-  }
-  
-  th, td {
-    padding: 40px;
-    text-align: left;
-    border-bottom: 1px solid black; /* Removendo as bordas */
-  }
-  
-  th {
-    background-color: #F5F5F7; /* Fundo branco para cabeçalho */
-  }
-  
-  tr {
-    background-color: #F5F5F7; /* Fundo branco para todas as linhas */
-  }
-  
-  tbody tr:nth-child(even) {
-    background-color: #F5F5F7;
-  }
-#tabelaTransacoes {
-    position: absolute;
-    top: 980px;
-    left: 50%;
-    transform: translate(-50%);
-    width: 50%;
-}  
-caption {
-    font-size: 32px;
-    font-weight: 600;
-}
-#saldo {
-    width: 365px;
-    height: 176px;
-    background-color: white;
-    border-radius: 5px;
-    box-shadow: -1px 3px 5px black;
-    position: absolute;
-    top: 340px;
-    left: 20%;
-    transform: translate(-20%);
-    padding: 15px;
-}
-#saldo > h2 {
-    font-size: 28px;
-    font-weight: bold;
-}
-#saldo > p {
-    font-size: 26px;
-    font-weight: bold;
-    position: relative;
-    top: 40px;
-}
-#saldo > button {
-    width: 150px;
-    height: 43px;
-    font-size: 17px;
-    font-weight: 600;
-    border: none;
-    background-color: #EF4126;
-    color: white;
-    transition: 0.8s;
-    border-radius: 5px;
-    cursor: pointer;
-    position: relative;
-    left: 50%;
-    top: 1px;
-}
-#saldo > button:hover {
-    transition: 0.8s;
-    background-color: white;
-    color: #EF4126;
-    border: 1px solid #EF4126;
-}
-#valoresRecarga {
-    display: none;
-    background-color: white;
-    border-radius: 5px;
-    box-shadow: -1px 3px 5px black;
-    width: 20%;
-    position: absolute;
-    left: 50%;
-    transform: translate(-50%);
-    top: 240px;
-    padding: 25px;
-}
-#valoresRecarga > ul {
-    position: relative;
-    top: -10px;
-}
-#valoresRecarga > ul > li {
-    border-radius: 5px;
-    border: 1px solid #929090;
-    padding: 18px;
-    font-weight: 500;
-    font-size: 22px;
-    margin-top: 10px;
-    cursor: pointer;
-    transition: 0.8s;
-}
-#valoresRecarga > ul > li:hover {
-    transition: 0.8s;
-    border: none;
-    box-shadow: 1px 1px 6px #ef412693; 
-}
-#valoresRecarga > h2 {
-    font-size: 27px;
-    margin-bottom: 15px;
-}
-#valoresRecarga > #fechar-valores {
-    position: relative;
-    left: 90%;
-    cursor: pointer;
-}
-#valoresRecarga ul li.selecionado {
-    transition: 0.8s;
-    border: none;
-    box-shadow: 1px 1px 6px #ef412693; 
-}
-#valoresRecarga > button {
-    width: 150px;
-    height: 43px;
-    font-size: 17px;
-    font-weight: 600;
-    border: none;
-    background-color: #EF4126;
-    color: white;
-    transition: 0.8s;
-    border-radius: 5px;
-    cursor: pointer;
-    position: relative;
-    left: 50%;
-    top: 10px;
-}
-#metodosRecarga {
-    display: none;
-    background-color: white;
-    border-radius: 5px;
-    box-shadow: -1px 3px 5px black;
-    width: 20%;
-    position: absolute;
-    left: 50%;
-    transform: translate(-50%);
-    top: 240px;
-    padding: 25px;
-}
-#metodosRecarga > h2 {
-    font-size: 27px;
-    margin-bottom: 15px;
-}
-.caixas {
-    border-bottom: 1px solid;
-    padding: 15px;
-    cursor: pointer;
-}
-.caixas > svg {
-    position: relative;
-    top: 15px;
-}
-.caixas > p {
-    position: relative;
-    left: 20%;
-    top: -15px;
-}
-#fechar-recarga {
-    position: relative;
-    left: 90%;
-    cursor: pointer;
-}
-#qrCodeContainer {
-    display: none;
-    width: 590px;
-    height: 500px;
-    box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
-    background-color: #fff;
-    border-radius: 0.5rem;
-    position: absolute;
-    left: 50%;
-    transform: translate(-50%);
-    top: 245px;
-}
-  #qrCodeContainer > img {
-    position: absolute;
-    left: 50%;
-    transform: translate(-50%);
-    top: 50px;
-  }
-  #qrCodeContainer > button {
-    position: absolute;
-    left: 50%;
-    transform: translate(-50%);
-    top: 360px;
-    padding: 22px 35px 22px 35px;
-    font-size: 17px;
-    color: white;
-    background-color: #EF4126;
-    border: none;
-    border-radius: 5px;
-    font-weight: 600;
-    transition: 0.8s;
-    cursor: pointer;
-  }
-  #qrCodeContainer > button:hover {
-    transition: 0.8s;
-    background-color: white;
-    color: #EF4126;
-    border: 1px solid #EF4126;
-  }
-  #qrCodeContainer > p {
+p {
     width: fit-content;
+}
+h1 {
+    width: fit-content;
+}
+div#detalhes-pedido {
     position: absolute;
-    left: 50%;
-    transform: translate(-50%);
-    top: 310px;
-  }
+    top: 260px;
+    left: 10%;
+    transform: translate(-10%);
+}
+div#endereco-list {
+    background-color: white;
+    border-radius: 5px;
+    padding: 30px;
+    box-shadow: -1px 3px 5px black;
+    margin-bottom: 20px;
+}
+div#itens-pedido-list {
+    background-color: white;
+    border-radius: 5px;
+    padding: 30px;
+    box-shadow: -1px 3px 5px black;
+}

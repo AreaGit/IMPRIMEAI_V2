@@ -18,6 +18,14 @@ const pedidoCriado = document.getElementById('pedidoCriado');
 const qrCodeContainer = document.getElementById('qrCodeContainer');
 const divCodigoPix = document.getElementById('codigoPix');
 const divBoletoContainer = document.getElementById('boletoContainer');
+const formCartao = document.getElementById('formCartao');
+const btnCartaoCredito = document.getElementById('btnCartaoCredito');
+
+function getCookie(name) {
+  const value = `; ${document.cookie}`;
+  const parts = value.split(`; ${name}=`);
+  if (parts.length === 2) return parts.pop().split(';').shift();
+};
 
 // Função para fazer o fetch do endereço
 async function fetchEndereco() {
@@ -165,9 +173,9 @@ btnContPag.addEventListener('click', () => {
     } else if (divAtiva === "boleto") {
         pagamentoBoleto();
     } else if (divAtiva === "cartaoCredito") {
-        alert("A div ativa é cartão de crédito");
+        formCartao.style.display = 'block'
     } else if (divAtiva === "carteiraUser") {
-        alert("A div ativa é carteira do usuário");
+        pagamentoCarteira();
     } else {
         erroFormaPagamento.style.display = 'block';
         window.setTimeout(() => {
@@ -197,7 +205,7 @@ async function criarPedido() {
             pedidoCriado.style.display = 'block';
             setTimeout(() => {
               pedidoCriado.style.display = 'none';
-              window.location.reload();
+              window.location.href = 'pedidosUsuario';
             }, 10000);
           } else {
             // A solicitação não foi bem-sucedida, trate o erro aqui
@@ -451,6 +459,7 @@ async function pagamentoBoleto() {
   
     // Extrair o idTransacao da resposta
     const responseData = await response2.json();
+    const chargeId = responseData[0].id;
     const qrCodeBoleto = responseData[0].last_transaction.qr_code;
     const pdfBoleto = responseData[0].last_transaction.pdf;
     divBoletoContainer.style.display = 'block';
@@ -459,7 +468,218 @@ async function pagamentoBoleto() {
       <a href="${pdfBoleto}" target="_blank">Acesse o pdf</a>
       <p>O boleto expira em 1 dia</p>
     `
+    verificarStatusTransacaoBoleto(chargeId);
   }catch (error) {
     console.log(error)
   }
   }
+
+  async function verificarStatusTransacaoBoleto(chargeId) {
+    try {
+      // Faça uma solicitação fetch para a rota que criamos no servidor para obter informações sobre a cobrança
+      const response = await fetch(`/charges/${chargeId}`);
+      if (!response.ok) {
+        throw new Error('Erro ao obter informações da cobrança');
+      }
+      
+      // Extrair o status da resposta
+      const { status } = await response.json();
+      
+      // Se o status for "paid", pare de verificar e execute a próxima etapa
+      if (status === 'pending') {
+        window.setTimeout(() => {
+          divBoletoContainer.style.display = 'none'
+          console.log('A transação foi paga com sucesso!');
+          criarPedido(); // Chame a função criarPedido quando a transação for paga
+          return;
+        }, 15000)
+      }
+      
+      // Se o status não for "paid", aguarde um curto período e, em seguida, verifique novamente
+      setTimeout(() => {
+        verificarStatusTransacaoBoleto(chargeId);
+      }, 5000); // Verifique a cada 5 segundos (5000 milissegundos)
+    } catch (error) {
+      console.error('Erro:', error);
+    }
+  } 
+
+  const expiryDateField = document.getElementById('expiry_date_field');
+  expiryDateField.addEventListener('input', function(event) {
+    const input = event.target;
+    const trimmedValue = input.value.replace(/[^0-9]/g, '').slice(0, 4);
+    const formattedValue = trimmedValue.replace(/(\d{2})(\d{2})/, '$1/$2');
+    input.value = formattedValue;
+  });
+  const cardNumberField = document.getElementById('card_number_field');
+  
+  cardNumberField.addEventListener('input', function(event) {
+    const input = event.target;
+    const trimmedValue = input.value.replace(/[^0-9]/g, '').slice(0, 16);
+    const formattedValue = trimmedValue.replace(/(\d{4})(\d{4})(\d{4})(\d{4})/, '$1 $2 $3 $4');
+    input.value = formattedValue;
+  });
+
+  btnCartaoCredito.addEventListener('click', () => {
+    const nomeTitular = document.getElementById('name_field');
+  });
+
+  async function pagamentoCartao() {
+    // Fetch para obter os dados do perfil do usuário
+    try {
+      const response = await fetch('/perfil/dados');
+      if (!response.ok) {
+          throw new Error('Erro ao obter dados do perfil');
+      }
+      const perfilData = await response.json();
+    
+      function formatarTelefone(numero) {
+        // Remove todos os caracteres não numéricos
+        const numeroLimpo = numero.replace(/\D/g, '');
+    
+        // Extrai o DDD (dois primeiros dígitos) e o número do telefone
+        const ddd = numeroLimpo.substring(0, 2);
+        const numeroTelefone = numeroLimpo.substring(2);
+    
+        // Retorna um objeto com as partes do número formatado
+        return {
+            ddd: ddd,
+            numeroTelefone: numeroTelefone
+        };
+    }
+    
+      const telefoneFormatado = formatarTelefone(perfilData.telefoneCad);
+    
+      // Agora você pode acessar as partes formatadas do número de telefone
+      const codPaisCliente = "55";
+      const dddCliente = telefoneFormatado.ddd;
+      const numeroTelefoneCliente = telefoneFormatado.numeroTelefone;
+    
+    // Remove non-digit characters from CPF and format it
+    const cpf = perfilData.cpfCad.replace(/\D/g, ''); // Remove non-digit characters
+    
+    const cpfCliente = cpf;
+    
+    
+      const emailCliente = perfilData.emailCad;
+      const cepCliente = perfilData.cepCad;
+      const cidadeCliente = perfilData.cidadeCad;
+      const ruaCliente = perfilData.endereçoCad;
+      const numeroResidenciaCliente = perfilData.numCad;
+      const bairroCliente = perfilData.bairroCad;
+      const numeroDocumento = perfilData.cpfCad;
+      const nomeCliente = perfilData.userCad;
+      const paisCliente = "BR";
+      const idCliente = perfilData.userId;
+      const estadoCliente = perfilData.estadoCad;
+      const complementoCliente = perfilData.compCad
+      
+      // Crie um objeto para armazenar os dados do perfil do usuário
+      const perfilUsuario = {
+          emailCliente: emailCliente,
+          cpfCliente: cpfCliente,
+          cepCliente: cepCliente,
+          cidadeCliente: cidadeCliente,
+          estadoCliente: estadoCliente,
+          ruaCliente: ruaCliente,
+          complementoCliente: complementoCliente,
+          numeroResidenciaCliente: numeroResidenciaCliente,
+          bairroCliente: bairroCliente,
+          numeroDocumento: numeroDocumento,
+          nomeCliente: nomeCliente,
+          paisCliente: paisCliente,
+          codPaisCliente: codPaisCliente,
+          dddCliente: dddCliente,
+          numeroTelefoneCliente: numeroTelefoneCliente,
+          userId: idCliente,
+          totalCompra:  valorAtualGlobal,
+      };
+
+      const formData = {
+        numCar: "5441869362075784",
+        nomeTitular: "Gabriel",
+        mesExp: "07",
+        anoExp: "25",
+        cvvCard: "650"
+      };      
+    
+      // Envie os dados do formulário e do perfil do usuário para o backend
+      const response2 = await fetch('/processarPagamento-cartao', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ formData: formData, perfilData: perfilUsuario })
+      });
+    
+      if (!response2.ok) {
+          throw new Error('Erro ao processar pagamento');
+      }
+    
+      // Extrair o idTransacao da resposta
+      const responseData = await response2.json();
+      console.log(responseData);
+    }catch (error) {
+      console.log(error)
+    }
+    }
+
+
+async function pagamentoCarteira() {
+  const totalAPagar = valorAtualGlobal;
+  const metodPag = 'Carteira Usuário';
+  const userId = getCookie('userId');
+  // Verifique o saldo da carteira do usuário
+  const xhr = new XMLHttpRequest();
+  xhr.open('GET', '/saldoUsuario', true);
+  xhr.setRequestHeader('Content-Type', 'application/json');
+  xhr.onload = function () {
+    if (xhr.status === 200) {
+      const saldo = JSON.parse(xhr.responseText).saldo;
+
+      // Verifique se o saldo é suficiente para a compra
+      if (saldo >= totalAPagar) {
+        const descontoData = {
+          valorPed: totalAPagar,
+          metodPag: metodPag
+        };
+
+        // Faça uma solicitação para descontar o valor da compra do saldo da carteira
+        const descontoRequest = new XMLHttpRequest();
+        descontoRequest.open('POST', '/descontarSaldo', true);
+        descontoRequest.setRequestHeader('Content-Type', 'application/json');
+        descontoRequest.onload = function () {
+          if (descontoRequest.status === 200) {
+            // O desconto foi aplicado com sucesso, crie o pedido
+            const pedidoData = {
+              totalItens,
+              valorPed: totalAPagar,
+              metodPag
+            };
+            criarPedido();
+          } else {
+            console.error('Erro ao descontar o saldo:', descontoRequest.statusText);
+            alert('Erro ao descontar o saldo');
+          }
+        };
+        descontoRequest.onerror = function () {
+          console.error('Erro de rede ao descontar o saldo');
+          alert('Erro de rede ao descontar o saldo');
+        };
+        descontoRequest.send(JSON.stringify(descontoData));
+      } else {
+        // Saldo insuficiente, redirecione o usuário para recarregar a carteira
+        alert('Saldo insuficiente. Por favor, recarregue sua carteira.');
+        window.location.href = '/carteira';
+      }
+    } else {
+      console.error('Erro ao verificar o saldo da carteira:', xhr.statusText);
+      alert('Erro ao verificar o saldo da carteira');
+    }
+  };
+  xhr.onerror = function () {
+    console.error('Erro de rede ao verificar o saldo da carteira');
+    alert('Erro de rede ao verificar o saldo da carteira');
+  };
+  xhr.send();
+}

@@ -252,6 +252,10 @@ app.get('/produto/:id', async (req, res) => {
         descProd: produto.descProd,
         valorProd: produto.valorProd,
         raioProd: produto.raioProd,
+        imgProd: produto.imgProd, // Include the main product image
+        imgProd2: produto.imgProd2, // Include additional image 1
+        imgProd3: produto.imgProd3, // Include additional image 2
+        imgProd4: produto.imgProd4, // Include additional image 3
         // Adicione outras propriedades do produto conforme necessário
       });
     }
@@ -383,6 +387,16 @@ app.get('/pedidosUsuario', (req, res) => {
     res.send(pedidosUsuarioContentHtml);
   } catch (err) {
     console.log("Erro ao ler o arquivo pedidosUsuario.html: ", err);
+    res.status(500).send("Erro interno do servidor");
+  }
+});
+//Rota get para a página de detalhes dos pedidos do usuário
+app.get('/detalhesPedidosUser', (req, res) => {
+  try {
+    const detalhesPedidosUserContentHtml = fs.readFileSync(path.join(__dirname, "html", "detalhes-pedidosUser.html"), "utf-8");
+    res.send(detalhesPedidosUserContentHtml);
+  } catch (err) {
+    console.log("Erro ao ler o arquivo detalhes-pedidosUser.html: ", err);
     res.status(500).send("Erro interno do servidor");
   }
 });

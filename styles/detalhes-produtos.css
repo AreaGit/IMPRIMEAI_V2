@@ -193,6 +193,19 @@ a {
     transform: translate(-80%);
     top: 200px;
 }
+#image-container {
+  position: absolute;
+  left: 50%;
+  transform: translate(-50%);
+}
+#avancarSlides {
+  position: relative;
+  left: 56%;
+}
+#retrocederSlides {
+  position: relative;
+  left: 20%;
+}
 #img-produto > img {
     width: 380px;
     height: 380px;
@@ -454,3 +467,30 @@ a {
 #sugestoes li:hover {
     background-color: #f0f0f0; /* Mude a cor de fundo ao passar o mouse sobre os itens */
 }   
+.button {
+  background-color: #F37160;
+  color: #fff;
+  height: 2.9em;
+  border: #F69896 0.2em solid;
+  border-radius: 11px;
+  text-align: right;
+  transition: all 0.6s ease;
+}
+
+.button:hover {
+  background-color: #EF4126;
+  cursor: pointer;
+}
+
+.button svg {
+  width: 1.6em;
+  position: relative;
+  display: flex;
+  transition: all 0.6s ease;
+  left: 50%;
+  transform: translate(-50%)
+}
+
+.text {
+  margin: 0 1.5em
+}

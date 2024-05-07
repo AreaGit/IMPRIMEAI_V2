@@ -161,8 +161,8 @@
         background-color: #fff;
         border-radius: 0.5rem;
         position: absolute;
-        left: 0%;
-        /* transform: translate(-50%); */
+        left: 50%;
+        transform: translate(-50%);
         top: -586px;
     }
     #qrCodeContainer > button {
@@ -190,6 +190,33 @@
         left: 0%;
         /* transform: translate(-50%); */
         top: -645px;
+    }
+    #boletoContainer {
+        display: none;
+        width: 98vw;
+        height: 500px;
+        box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+        background-color: #fff;
+        border-radius: 0.5rem;
+        position: absolute;
+        left: 50%;
+        transform: translate(-50%);
+        top: -586px;
+    }
+    #boletoContainer > a {
+        position: absolute;
+        left: 50%;
+        transform: translate(-50%);
+        top: 360px;
+        padding: 12px 25px 12px 25px;
+        font-size: 17px;
+        color: white;
+        background-color: #EF4126;
+        border: none;
+        border-radius: 5px;
+        font-weight: 600;
+        transition: 0.8s;
+        cursor: pointer;
     }
 }
 @media screen and (min-width:768px) and (max-width:1440px) {
@@ -275,6 +302,18 @@
         left: 50%;
         transform: translate(-50%);
         top: -585px;
+    }
+    #boletoContainer {
+        display: none;
+        width: 590px;
+        height: 500px;
+        box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+        background-color: #fff;
+        border-radius: 0.5rem;
+        position: absolute;
+        left: 50%;
+        transform: translate(-50%);
+        top: -567px;
     }
 }
 @media screen and (min-width:2560px) {

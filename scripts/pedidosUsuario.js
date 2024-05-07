@@ -35,7 +35,7 @@ fetch(`/pedidos-usuario/${userId}`)
                 <p>ID ${pedidos.id}</p>
                 <p>R$ ${pedidos.valorPed.toFixed(2)}</p>
                 <p>${pedidos.quantPed} unidade</p>
-                <a href="detalhes-pedidosUser.html?idPedido=${pedidos.id}">Detalhes do pedido</a>
+                <a href="detalhesPedidosUser?idPedido=${pedidos.id}">Detalhes do pedido</a>
             `
             listaDePedidos.appendChild(divPedido);
         })
