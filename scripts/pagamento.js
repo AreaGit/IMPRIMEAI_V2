@@ -20,6 +20,12 @@ const divCodigoPix = document.getElementById('codigoPix');
 const divBoletoContainer = document.getElementById('boletoContainer');
 const formCartao = document.getElementById('formCartao');
 const btnCartaoCredito = document.getElementById('btnCartaoCredito');
+const avisoNaoAutorizado = document.getElementById('avisoNaoAutorizado');
+const avisoEstorno = document.getElementById('avisoEstorno');
+const avisoCancelado = document.getElementById('avisoCancelado');
+const avisoAguardeCancelamento = document.getElementById('avisoAguardeCancelamento');
+const avisoTransacaoErro = document.getElementById('avisoTransacaoErro');
+const avisoFalhaTransacao = document.getElementById('avisoFalhaTransacao');
 
 function getCookie(name) {
   const value = `; ${document.cookie}`;
@@ -519,12 +525,16 @@ async function pagamentoBoleto() {
     const formattedValue = trimmedValue.replace(/(\d{4})(\d{4})(\d{4})(\d{4})/, '$1 $2 $3 $4');
     input.value = formattedValue;
   });
-
-  btnCartaoCredito.addEventListener('click', () => {
-    const nomeTitular = document.getElementById('name_field');
-  });
-
-  async function pagamentoCartao() {
+  
+btnCartaoCredito.addEventListener('click', async() => {
+    const nomeTitular = document.getElementById('name_field').value;
+    const numCarElement = document.getElementById('card_number_field');
+    let numCar = numCarElement.value.replace(/\s/g, ''); // Remove all spaces
+    const cvvCard = document.getElementById('cvv_field').value;
+    // Get the expiration date input field value
+    const expiryDate = document.getElementById('expiry_date_field').value;
+    // Split the expiration date into month and year
+    const [month, year] = expiryDate.split('/').map(str => parseInt(str));    
     // Fetch para obter os dados do perfil do usuário
     try {
       const response = await fetch('/perfil/dados');
@@ -596,13 +606,12 @@ async function pagamentoBoleto() {
       };
 
       const formData = {
-        numCar: "5441869362075784",
-        nomeTitular: "Gabriel",
-        mesExp: "07",
-        anoExp: "25",
-        cvvCard: "650"
-      };      
-    
+        numCar: numCar,
+        nomeTitular: nomeTitular,
+        mesExp: month,
+        anoExp: year,
+        cvvCard: cvvCard
+      };
       // Envie os dados do formulário e do perfil do usuário para o backend
       const response2 = await fetch('/processarPagamento-cartao', {
         method: 'POST',
@@ -618,12 +627,67 @@ async function pagamentoBoleto() {
     
       // Extrair o idTransacao da resposta
       const responseData = await response2.json();
-      console.log(responseData);
+      const dadosTransacao = responseData
+      monitorarTransacaoCartao(dadosTransacao);
     }catch (error) {
       console.log(error)
     }
-    }
+});
 
+async function monitorarTransacaoCartao(dadosTransacao) {
+  const chargeId = dadosTransacao[0].id
+  try {
+    // Faça uma solicitação fetch para a rota que criamos no servidor para obter informações sobre a cobrança
+    const response = await fetch(`/charges/${chargeId}`);
+    if (!response.ok) {
+      throw new Error('Erro ao obter informações da cobrança');
+    }
+    
+    // Extrair o status da resposta
+    const { status } = await response.json();
+    
+    if (status === 'waiting_capture') {
+      setTimeout(() => {
+        monitorarTransacaoCartao(dadosTransacao);
+      }, 5000);
+    } else if(status === 'paid') {
+      formCartao.style.display = 'none';
+      criarPedido();
+    }else if(status === "not_authorized") {
+        avisoNaoAutorizado.style.display = 'none';
+        setTimeout(() => {
+          window.location.reload();
+        }, 5000);
+    }else if (status === "refunded") {
+      avisoEstorno.style.display = 'none';
+      setTimeout(() => {
+        window.location.reload();
+      }, 5000);
+    }else if(status === "voided") {
+      avisoCancelado.style.display = 'none';
+      setTimeout(() => {
+        window.location.reload();
+      }, 5000);
+    }else if(status === "waiting_cancellation") {
+      avisoAguardeCancelamento.style.display = 'none';
+      setTimeout(() => {
+        window.location.reload();
+      }, 5000);
+    }else if(status === "with_error") {
+      avisoTransacaoErro.style.display = 'none';
+      setTimeout(() => {
+        window.location.reload();
+      }, 5000);
+    }else if(status === "failed") {
+      avisoFalhaTransacao.style.display = 'none';
+      setTimeout(() => {
+        window.location.reload();
+      }, 5000);
+    }
+  } catch (error) {
+    console.error('Erro:', error);
+  }
+}
 
 async function pagamentoCarteira() {
   const totalAPagar = valorAtualGlobal;

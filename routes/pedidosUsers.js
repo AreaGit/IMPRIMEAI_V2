@@ -1925,17 +1925,17 @@ app.post('/processarPagamento-cartao', (req ,res) => {
   const formData = req.body.formData;
   const perfilData = req.body.perfilData;
   const carrinho = req.session.carrinho;
-
+  console.log(formData)
   // Monte o body com os dados do usuário e do carrinho
   const body = {
     "items": carrinho.map(item => ({
-        "id": item.produtoId,
-        "amount": Math.max(Math.round(parseFloat(item.subtotal) * 100), 1),
+      "id": item.produtoId,
+        "amount": Math.max(Math.round(parseFloat(perfilData.totalCompra) * 100), 1),
         "description": item.nomeProd,
         "quantity": item.quantidade,
         "code": item.produtoId
-    })),
-    "customer": {
+      })),
+      "customer": {
         "name": perfilData.nomeCliente,
         "email": perfilData.emailCliente,
         "code": perfilData.userId,
@@ -1947,31 +1947,31 @@ app.post('/processarPagamento-cartao', (req ,res) => {
           "street": perfilData.ruaCliente,
           "city": perfilData.cidadeCliente,
           "state": perfilData.estadoCliente,
-          "country": "BR",
-          "zip_code": perfilData.cepCliente,
-          "neighborhood": perfilData.bairroCliente
-        },
-        "phones": {
-          "home_phone": {
-            "country_code": "55",
-            "number": perfilData.numeroTelefoneCliente,
-            "area_code": perfilData.dddCliente,
+            "country": "BR",
+            "zip_code": perfilData.cepCliente,
+            "neighborhood": perfilData.bairroCliente
           },
-          "mobile_phone": {
-            "country_code": "55",
-            "number": perfilData.numeroTelefoneCliente,
-            "area_code": perfilData.dddCliente,
-          }
+          "phones": {
+            "home_phone": {
+              "country_code": "55",
+              "number": perfilData.numeroTelefoneCliente,
+              "area_code": perfilData.dddCliente,
+          },
+            "mobile_phone": {
+              "country_code": "55",
+              "number": perfilData.numeroTelefoneCliente,
+              "area_code": perfilData.dddCliente,
+            }
+          },
+            "metadata": {} // Metadados do cliente
         },
-          "metadata": {} // Metadados do cliente
-      },
-      "payments": [
+        "payments": [
           {
             "payment_method": "credit_card",
             "credit_card": {
               "recurrence": false,
               "installments": 1,
-              "statement_descriptor": "Pedido",
+              "statement_descriptor": "IMPRIMEAI",
               "card": {
                 "number": formData.numCar,
                 "holder_name": formData.nomeTitular,
@@ -1995,7 +1995,7 @@ app.post('/processarPagamento-cartao', (req ,res) => {
         method: 'POST',
         uri: 'https://api.pagar.me/core/v5/orders',
         headers: {
-          'Authorization': 'Basic ' + Buffer.from(`${pagarmeKeyTest}:`).toString('base64'),
+          'Authorization': 'Basic ' + Buffer.from(`${pagarmeKeyProd}:`).toString('base64'),
           'Content-Type': 'application/json'
         },
         body: body,
