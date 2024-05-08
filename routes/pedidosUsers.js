@@ -31,6 +31,7 @@ const request = require('request');
 const nodemailer = require('nodemailer');
 const rp = require('request-promise');
 const Sequelize = require('sequelize');
+const fs = require('fs');
 app.use(express.json());
 app.use(cookieParser());
 app.use(express.urlencoded({ extended: true }));
@@ -1252,13 +1253,28 @@ app.post('/criar-pedidos', async (req, res) => {
   
   // Função para conectar ao cliente Pagarme
   async function connectPagarme() {
-    try {
-        const pag = await pagarme.client.connect({ api_key: `${pagarmeKeyProd}` });
-        return pag;
-    } catch (error) {
-        console.error('Erro ao conectar ao Pagarme:', error);
-        throw error;
-    }
+    // Read the JSON body from file
+    // Set up options for the GET request
+    const options = {
+      method: 'GET',
+      uri: 'https://api.pagar.me/core/v5/orders',
+      headers: {
+        'Authorization': 'Basic ' + Buffer.from(`${pagarmeKeyProd}:`).toString('base64')
+      },
+      json: true
+    };
+    
+    // Make the GET request to the Pagar.me API
+    rp(options)
+    .then(response => {
+      // If the request is successful, send the charge details as a response
+      console.log(response);
+    })
+    .catch(error => {
+      // If an error occurs during the request, send an error response
+      console.error('Error retrieving charge information:', error);
+      console.log('Error retrieving charge information');
+    });
   }
   
   async function verificarPagamentosPendentes() {
@@ -1271,6 +1287,7 @@ app.post('/criar-pedidos', async (req, res) => {
         for (const pedido of pedidosAguardandoPagamento) {
             // Verificar o status do pagamento no Pagarme usando o ID da transação
             const transactionId = pedido.idTransacao;
+            console.log(transactionId);
             try {
                 const transaction = await pag.transactions.find({ id: transactionId });
                 // Verificar se a transação está paga
@@ -1310,36 +1327,42 @@ app.post('/criar-pedidos', async (req, res) => {
   
   async function verificarPagamentosPendentesCarteira() {
     try {
-      const pag = await connectPagarme();
-      // Consultar transações pendentes na tabela de Carteiras
-      const transacoesPendentes = await Carteira.findAll({ where: { statusPag: 'ESPERANDO PAGAMENTO' } });
-  
-      // Iterar sobre as transações pendentes encontradas
-      for (const transacao of transacoesPendentes) {
-        // Verificar o status do pagamento no Pagarme usando o ID da transação
-        const transactionId = transacao.idTransacao;
-        try {
-          const transaction = await pag.transactions.find({ id: transactionId });
-          // Verificar se a transação está paga
-          if (transaction.status === 'paid') {
-            // Atualizar o status da transação para 'PAGO'
-            transacao.statusPag = 'PAGO';
-            await transacao.save();
+    const transacoesPendentes = await Carteira.findAll({ where: { statusPag: 'ESPERANDO PAGAMENTO' } });
+    console.log('Transações pendentes:', transacoesPendentes); 
+    
+    // Iterar sobre as transações pendentes encontradas
+    for (const transacao of transacoesPendentes) {
+      // Verificar o status do pagamento no Pagarme usando o ID da transação
+      const transactionId = transacao.idTransacao;
+      console.log('Transaction ID:', transactionId); // Check if transactionId is defined
+      try {
+        const response = await axios.get(`https://api.pagar.me/core/v5/charges/${transactionId}`, {
+        headers: {
+          'Authorization': `Basic ${Buffer.from(`${pagarmeKeyProd}:`).toString('base64')}`
           }
-        } catch (error) {
+        });
+        console.log('Transaction found:', response); // Check if transaction is defined
+        const charge = response.data;
+        // Verificar se a transação está paga
+        if (charge.status === 'paid') {
+          // Atualizar o status da transação para 'PAGO'
+          transacao.statusPag = 'PAGO';
+          await transacao.save();
+        }
+      } catch (error) {
           // Verificar se o erro é de transação não encontrada
           if (error.response && error.response.status === 404) {
             console.error(`Transação não encontrada para a transação ${transacao.id}:`, error);
           } else {
-            throw error; // Rejeitar erro para tratamento superior
+              throw error; // Rejeitar erro para tratamento superior
           }
-        }
       }
-    } catch (error) {
+    }
+    } catch(error) {
       console.error('Erro ao verificar pagamentos pendentes:', error);
     }
   }
-  
+
   app.post('/registrarPagamento', async (req, res) => {
     const { userId, valor, metodoPagamento, status, idTransacao } = req.body;
     console.log("REGISTRANDO NA CARTEIRA", userId, valor, metodoPagamento, status)
@@ -2093,7 +2116,8 @@ app.post('/processarPagamento-boleto-carteira', (req, res) => {
       {
           "amount": Math.max(Math.round(parseFloat(perfilData.totalCompra) * 100), 1),
           "description": "CARTEIRA",
-          "quantity": 1
+          "quantity": 1,
+          "code": "123"
       }
     ],
     "customer": {

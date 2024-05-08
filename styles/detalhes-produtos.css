@@ -139,6 +139,7 @@ a {
     font-weight: 400;
     border: none;
     box-shadow: -1px -1px 3px black;
+    padding: 15px;
 }
 #detalhes-produto > input[type="number"] {
     width: 50px;
