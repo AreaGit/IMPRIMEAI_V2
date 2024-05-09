@@ -514,6 +514,18 @@ span#totalItens {
   #sugestoes li:hover {
     background-color: #f0f0f0; /* Mude a cor de fundo ao passar o mouse sobre os itens */
   }
+  #criacaoBoleto {
+    display: none;
+    width: 590px;
+    height: 500px;
+    box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+    background-color: #fff;
+    border-radius: 0.5rem;
+    position: absolute;
+    left: -40%;
+    transform: translate(-50%);
+    top: -250px;
+  }
   #pedidoCriado {
     display: none;
     width: 590px;

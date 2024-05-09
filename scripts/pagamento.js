@@ -26,7 +26,7 @@ const avisoCancelado = document.getElementById('avisoCancelado');
 const avisoAguardeCancelamento = document.getElementById('avisoAguardeCancelamento');
 const avisoTransacaoErro = document.getElementById('avisoTransacaoErro');
 const avisoFalhaTransacao = document.getElementById('avisoFalhaTransacao');
-
+const criacaoBoleto = document.getElementById('criacaoBoleto');
 function getCookie(name) {
   const value = `; ${document.cookie}`;
   const parts = value.split(`; ${name}=`);
@@ -191,10 +191,10 @@ btnContPag.addEventListener('click', () => {
     }
 });
 
-async function criarPedido() {
+async function criarPedido(metodoPag) {
   try {
         const totalAPagar = valorAtualGlobal;  
-        const metodPag = 'Pix';
+        const metodPag = metodoPag;
 
         // Crie um objeto XMLHttpRequest
         const xhr = new XMLHttpRequest();
@@ -231,6 +231,56 @@ async function criarPedido() {
           valorPed: totalAPagar, // Atualize valorPed com o valor total do carrinho
           metodPag,
           //idTransacao: idPix,
+        };
+        console.log('PEDIDO CRIADO')
+        // Envie os dados como JSON
+        const requestData = JSON.stringify(pedidoData);
+        xhr.send(requestData);
+  } catch (error) {
+    console.error('Erro ao monitorar o status do PIX:', error);
+  }
+};
+
+async function criarPedidoBoleto(metodoPag, chargeId) {
+  try {
+        const totalAPagar = valorAtualGlobal;  
+        const metodPag = metodoPag;
+
+        // Crie um objeto XMLHttpRequest
+        const xhr = new XMLHttpRequest();
+
+        // Configure a solicitação POST
+        xhr.open('POST', '/criar-pedidos', true);
+        xhr.setRequestHeader('Content-Type', 'application/json');
+
+        // Defina o manipulador de eventos para a resposta da solicitação
+        xhr.onload = function () {
+          if (xhr.status === 200) {
+            // A solicitação foi bem-sucedida, você pode processar a resposta aqui
+            const response = JSON.parse(xhr.responseText);
+            criacaoBoleto.style.display = 'block'
+            setTimeout(() => {
+              criacaoBoleto.style.display = 'none'
+              window.location.href = 'pedidosUsuario';
+            }, 15000);
+          } else {
+            // A solicitação não foi bem-sucedida, trate o erro aqui
+            console.error('Erro ao finalizar a compra:', xhr.statusText);
+            alert('Erro ao finalizar a compra');
+          }
+        };
+
+        // Trate erros de rede
+        xhr.onerror = function () {
+          console.error('Erro de rede ao finalizar a compra');
+          alert('Erro de rede ao finalizar a compra');
+        };
+
+        // Crie um objeto com os dados do pedido, incluindo o valor total do carrinho
+        const pedidoData = {
+          valorPed: totalAPagar, // Atualize valorPed com o valor total do carrinho
+          metodPag,
+          idTransacao: chargeId,
         };
         console.log('PEDIDO CRIADO')
         // Envie os dados como JSON
@@ -361,12 +411,12 @@ async function verificarStatusTransacao(chargeId) {
     
     // Extrair o status da resposta
     const { status } = await response.json();
-    
+    const metodoPag = "Pix"
     // Se o status for "paid", pare de verificar e execute a próxima etapa
     if (status === 'paid') {
       qrCodeContainer.style.display = 'none'
       console.log('A transação foi paga com sucesso!');
-      criarPedido(); // Chame a função criarPedido quando a transação for paga
+      criarPedido(metodoPag); // Chame a função criarPedido quando a transação for paga
       return;
     }
     
@@ -482,33 +532,34 @@ async function pagamentoBoleto() {
 
   async function verificarStatusTransacaoBoleto(chargeId) {
     try {
-      // Faça uma solicitação fetch para a rota que criamos no servidor para obter informações sobre a cobrança
-      const response = await fetch(`/charges/${chargeId}`);
-      if (!response.ok) {
-        throw new Error('Erro ao obter informações da cobrança');
-      }
-      
-      // Extrair o status da resposta
-      const { status } = await response.json();
-      
-      // Se o status for "paid", pare de verificar e execute a próxima etapa
-      if (status === 'pending') {
-        window.setTimeout(() => {
-          divBoletoContainer.style.display = 'none'
-          console.log('A transação foi paga com sucesso!');
-          criarPedido(); // Chame a função criarPedido quando a transação for paga
+        // Faça uma solicitação fetch para a rota que criamos no servidor para obter informações sobre a cobrança
+        const response = await fetch(`/charges/${chargeId}`);
+        if (!response.ok) {
+            throw new Error('Erro ao obter informações da cobrança');
+        }
+        
+        // Extrair o status da resposta
+        const { status } = await response.json();
+        const metodoPag = "Boleto";
+
+        // Se o status for "paid", pare de verificar e execute a próxima etapa
+        if (status === 'pending') {
+          setTimeout(() => {
+            divBoletoContainer.style.display = 'none';
+              criarPedidoBoleto(metodoPag, chargeId); // Chame a função criarPedido quando a transação for paga
+          }, 15000); // Aguarde 15 segundos antes de chamar a função
           return;
-        }, 15000)
-      }
-      
-      // Se o status não for "paid", aguarde um curto período e, em seguida, verifique novamente
-      setTimeout(() => {
-        verificarStatusTransacaoBoleto(chargeId);
-      }, 5000); // Verifique a cada 5 segundos (5000 milissegundos)
+        }
+        
+        // Se o status não for "paid", aguarde um curto período e, em seguida, verifique novamente
+        // Verifique a cada 5 segundos (5000 milissegundos)
+        setTimeout(() => {
+            verificarStatusTransacaoBoleto(chargeId);
+        }, 5000);
     } catch (error) {
-      console.error('Erro:', error);
+        console.error('Erro:', error);
     }
-  } 
+}
 
   const expiryDateField = document.getElementById('expiry_date_field');
   expiryDateField.addEventListener('input', function(event) {
@@ -645,14 +696,14 @@ async function monitorarTransacaoCartao(dadosTransacao) {
     
     // Extrair o status da resposta
     const { status } = await response.json();
-    
+    const metodoPag = "Cartão de Crédito"
     if (status === 'waiting_capture') {
       setTimeout(() => {
         monitorarTransacaoCartao(dadosTransacao);
       }, 5000);
     } else if(status === 'paid') {
       formCartao.style.display = 'none';
-      criarPedido();
+      criarPedido(metodoPag);
     }else if(status === "not_authorized") {
         avisoNaoAutorizado.style.display = 'none';
         setTimeout(() => {
@@ -707,7 +758,7 @@ async function pagamentoCarteira() {
           valorPed: totalAPagar,
           metodPag: metodPag
         };
-
+        const metodoPag = "Carteira Usuário"
         // Faça uma solicitação para descontar o valor da compra do saldo da carteira
         const descontoRequest = new XMLHttpRequest();
         descontoRequest.open('POST', '/descontarSaldo', true);
@@ -720,7 +771,7 @@ async function pagamentoCarteira() {
               valorPed: totalAPagar,
               metodPag
             };
-            criarPedido();
+            criarPedido(metodoPag);
           } else {
             console.error('Erro ao descontar o saldo:', descontoRequest.statusText);
             alert('Erro ao descontar o saldo');

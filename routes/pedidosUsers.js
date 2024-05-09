@@ -818,7 +818,7 @@ app.post('/criar-pedidos', async (req, res) => {
         valorPed: totalAPagar,
         statusPed: metodPag === 'Boleto' ? 'Esperando Pagamento' : 'Pago',
         metodPag: metodPag,
-        //idTransacao: idTransacao
+        idTransacao: idTransacao
         // ... outros campos relevantes ...
       });
 
@@ -893,7 +893,7 @@ app.post('/criar-pedidos', async (req, res) => {
         valorPed: totalAPagar,
         statusPed: metodPag === 'Boleto' ? 'Esperando Pagamento' : 'Pago',
         metodPag: metodPag,
-        //idTransacao: idTransacao,
+        idTransacao: idTransacao,
         //raio: produto.raioProd,
       });
 
@@ -1279,29 +1279,35 @@ app.post('/criar-pedidos', async (req, res) => {
   
   async function verificarPagamentosPendentes() {
     try {
-        const pag = await connectPagarme();
         // Consultar pedidos com status 'Esperando Pagamento' no seu banco de dados
         const pedidosAguardandoPagamento = await Pedidos.findAll({ where: { statusPed: 'Esperando Pagamento' } });
-  
+
         // Iterar sobre os pedidos encontrados
         for (const pedido of pedidosAguardandoPagamento) {
             // Verificar o status do pagamento no Pagarme usando o ID da transação
-            const transactionId = pedido.idTransacao;
-            console.log(transactionId);
+            const chargeId = pedido.idTransacao;
+            console.log('Charge ID:', chargeId);
             try {
-                const transaction = await pag.transactions.find({ id: transactionId });
+                // Fetch the charge details directly from the Pagarme API
+                const response = await axios.get(`https://api.pagar.me/core/v5/charges/${chargeId}`, {
+                    headers: {
+                        'Authorization': `Basic ${Buffer.from(`${pagarmeKeyProd}:`).toString('base64')}`
+                    }
+                });
+                const charge = response.data;
+                //console.log('Charge found:', charge); // Check if charge is defined
                 // Verificar se a transação está paga
-                if (transaction.status === 'paid') {
+                if (charge.status === 'pending') {
                     // Atualizar o status do pedido para 'Pago'
                     pedido.statusPed = 'Pago';
                     await pedido.save();
-  
+
                     await ItensPedido.update({ statusPag: 'Pago' }, { where: { idPed: pedido.id } });
                 }
             } catch (error) {
-                // Verificar se o erro é de transação não encontrada
+                // Verificar se o erro é de cobrança não encontrada
                 if (error.response && error.response.status === 404) {
-                    console.error(`Transação não encontrada para o pedido ${pedido.id}:`, error);
+                    console.error(`Cobrança não encontrada para o pedido ${pedido.id}:`, error);
                 } else {
                     throw error; // Rejeitar erro para tratamento superior
                 }
@@ -1310,7 +1316,7 @@ app.post('/criar-pedidos', async (req, res) => {
     } catch (error) {
         console.error('Erro ao verificar pagamentos pendentes:', error);
     }
-  }
+}
   
   // Agendar a tarefa para ser executada a cada 5 segundos
   cron.schedule('0 * * * *', async () => {
@@ -1341,7 +1347,7 @@ app.post('/criar-pedidos', async (req, res) => {
           'Authorization': `Basic ${Buffer.from(`${pagarmeKeyProd}:`).toString('base64')}`
           }
         });
-        console.log('Transaction found:', response); // Check if transaction is defined
+        //console.log('Transaction found:', response); // Check if transaction is defined
         const charge = response.data;
         // Verificar se a transação está paga
         if (charge.status === 'paid') {
