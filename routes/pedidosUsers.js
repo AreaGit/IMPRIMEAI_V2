@@ -635,8 +635,10 @@ app.post('/upload', upload.single('filePlanilha'), async (req, res) => {
             arquivo: produto.nomeArquivo,
             downloadLink: produto.downloadLink,
             tipoEntrega: 'Múltiplos Enderecos',
-            endereco: endereco,
-            frete: frete, // Adicionar o custo do frete ao produto
+            endereco: {
+              ...endereco, // Copy existing address properties
+              frete: frete, // Add shipping cost to the address object
+            },
           });
         }
       });
@@ -1133,149 +1135,6 @@ app.post('/criar-pedidos', async (req, res) => {
       pass: "vavk ljzo hrpn vzoh"
     }
   })
-
-  async function gerarQRPixPagarme(valor, descricao) {
-    try {
-      const currentDate = new Date();
-      
-      // Adiciona 3 horas à data atual
-      const expirationDate = new Date(currentDate.getTime() + (3 * 3600000)); // 3 horas em milissegundos
-      
-      // Formata a data de expiração no formato esperado (YYYY-MM-DDTHH:MM:SSZ)
-      const formattedExpirationDate = expirationDate.toISOString().split('.')[0];
-      // Limita a descrição a no máximo 200 caracteres
-      const descricaoLimitada = descricao.substring(0, 200);
-  
-      // Inicialize o cliente Pagarme com sua chave de API
-      const client = await pagarme.client.connect({ api_key: 'sk_34a31b18f0db49cd82be2a285152e1b2' });
-  
-      // Crie uma transação PIX no Pagarme com os detalhes fornecidos
-      const transaction = await client.transactions.create({
-        amount: valor * 100, // Valor em centavos
-        payment_method: 'pix',
-        pix_expiration_date: formattedExpirationDate,
-        pix_additional_fields: [
-          { name: 'custom_label', value: descricaoLimitada }
-        ]
-      });
-  
-      console.log(transaction)
-      const pixPayload = transaction.pix_qr_code;
-      console.log(pixPayload)
-  
-      // Transforma o pixPayload em um código QR
-      const qrDataURL = await qr.toDataURL(pixPayload);
-      const idPix = transaction.id
-      
-      const expirationDatePix = transaction.pix_expiration_date;
-      console.log('DATA DE EXPIRAÇÃO DO PIX', expirationDatePix)
-      // Retorna o código QR em formato de dados de URL
-      return { qrDataURL, pixPayload, idPix, expirationDatePix };
-    } catch (error) {
-      console.error('Erro ao gerar QR Code PIX pelo Pagarme:', error);
-  
-      if (error.response && error.response.errors) {
-        console.error('Detalhes do erro:', error.response.errors);
-      }
-  
-      throw new Error('Erro ao gerar QR Code PIX pelo Pagarme');
-    }
-  }
-  
-  app.post('/gerarQRPix', async (req, res) => {
-    const { valor, descricao } = req.body;
-  
-    try {
-      const { qrDataURL, pixPayload, idPix, expirationDatePix } = await gerarQRPixPagarme(valor, descricao);
-      res.send({ qrDataURL, pixPayload, idPix, expirationDatePix });
-    } catch (error) {
-      console.error('Erro ao gerar QR Code PIX pelo Pagarme:', error);
-      
-      if (error.response && error.response.errors) {
-          console.error('Detalhes do erro:', error.response.errors);
-      }
-      
-      res.status(500).send('Erro ao gerar QR Code PIX pelo Pagarme');
-    }
-  });
-  
-  async function gerarBoletoPagarme(valor, descricao, nomeCliente, numeroDocumento) {
-    try {
-      // Inicialize o cliente Pagarme com sua chave de API
-      const client = await pagarme.client.connect({ api_key: 'ak_live_Gelm3adxJjY9G3cOGcZ8bPrL1596k2' });
-  
-      // Calcular a data de vencimento como 1 dia a partir da data de criação da transação
-      const dataAtual = new Date();
-      const umDiaEmMilissegundos = 24 * 60 * 60 * 1000; // 1 dia em milissegundos
-      const dataVencimento = new Date(dataAtual.getTime() + umDiaEmMilissegundos).toISOString();
-      const transaction = await client.transactions.create({
-        amount: valor * 100, 
-        payment_method: 'boleto',
-        boleto_expiration_date: dataVencimento,
-        customer: {
-            type: 'individual',
-            country: 'br',
-            name: nomeCliente,
-            documents: [
-                {
-                    type: 'cpf',
-                    number: numeroDocumento,
-                },
-            ],
-        },
-    });
-    console.log('Transação de boleto criada:', transaction);
-    
-    // Extrair a URL do boleto e a data de vencimento
-    const boletoURL = transaction.boleto_url;
-    const boletoExpirationDate = transaction.boleto_expiration_date;
-    const boletoCod = transaction.boleto_barcode
-    const idBoleto = transaction.id
-    return { boletoURL, boletoExpirationDate, boletoCod, idBoleto };  
-  
-    } catch (error) {
-      console.error('Erro ao gerar o boleto pelo Pagarme:', error);
-      throw new Error('Erro ao gerar o boleto pelo Pagarme');
-    }
-  }
-  
-  app.post('/gerarBoleto', async (req, res) => {
-    const { valor, descricao, nomeCliente, numeroDocumento } = req.body;
-    console.log(valor, descricao, nomeCliente, numeroDocumento,)
-    try {
-      const { boletoURL, boletoExpirationDate, boletoCod, idBoleto } = await gerarBoletoPagarme(valor, descricao, nomeCliente, numeroDocumento);
-      res.status(200).send({ boletoURL, boletoExpirationDate, boletoCod, idBoleto }); // Correção aqui
-    } catch (error) {
-      console.error('Erro ao gerar o boleto:', error);
-      res.status(500).send('Erro ao gerar o boleto');
-    }
-  });
-  
-  // Função para conectar ao cliente Pagarme
-  async function connectPagarme() {
-    // Read the JSON body from file
-    // Set up options for the GET request
-    const options = {
-      method: 'GET',
-      uri: 'https://api.pagar.me/core/v5/orders',
-      headers: {
-        'Authorization': 'Basic ' + Buffer.from(`${pagarmeKeyProd}:`).toString('base64')
-      },
-      json: true
-    };
-    
-    // Make the GET request to the Pagar.me API
-    rp(options)
-    .then(response => {
-      // If the request is successful, send the charge details as a response
-      console.log(response);
-    })
-    .catch(error => {
-      // If an error occurs during the request, send an error response
-      console.error('Error retrieving charge information:', error);
-      console.log('Error retrieving charge information');
-    });
-  }
   
   async function verificarPagamentosPendentes() {
     try {
@@ -1542,112 +1401,6 @@ app.post('/criar-pedidos', async (req, res) => {
         console.error('Erro ao conectar ao Pagar.me:', error);
     });
   
-    app.post('/processarPagamento', (req, res) => {
-      // Obtenha os dados do formulário e do perfil do usuário do corpo da requisição
-      const formData = req.body.formData;
-      const perfilData = req.body.perfilData;
-      const carrinho = req.session.carrinho;
-  
-          // Monte o body com os dados do usuário e do carrinho
-          const body = {
-            "items": carrinho.map(item => ({
-                "id": item.produtoId,
-                "amount": item.subtotal,
-                "description": item.nomeProd,
-                "quantity": item.quantidade,
-                "code": item.produtoId
-            })),
-            "customer": {
-                "name": perfilData.nomeCliente,
-                "email": perfilData.emailCliente,
-                "code": perfilData.userId,
-                "type": "individual",
-                "document": perfilData.cpfCliente,
-                "document_type": "CPF",
-                "gender": "male",
-                "address": {
-                    "street": perfilData.ruaCliente,
-                    "city": perfilData.cidadeCliente,
-                    "state": perfilData.estadoCliente,
-                    "country": "BR",
-                    "zip_code": perfilData.cepCliente,
-                    "neighborhood": perfilData.bairroCliente
-                },
-                "phones": {
-                    "home_phone": {
-                        "country_code": "55",
-                        "number": perfilData.numeroTelefoneCliente,
-                        "area_code": perfilData.dddCliente,
-                    },
-                    "mobile_phone": {
-                      "country_code": "55",
-                      "number": perfilData.numeroTelefoneCliente,
-                      "area_code": perfilData.dddCliente,
-                    }
-                },
-                "metadata": {} // Metadados do cliente
-            },
-            "payments": [
-                {
-                    "payment_method": "credit_card",
-                    "credit_card": {
-                        "recurrence": false,
-                        "installments": 1,
-                        "statement_descriptor": "Pedido IMPRIMEAI",
-                        "card": {
-                            "number": formData.numCar,
-                            "holder_name": formData.nomeTitular,
-                            "exp_month": formData.mesExp,
-                            "exp_year": formData.anoExp,
-                            "cvv": formData.cvvCard,
-                            "billing_address": {
-                                "line_1": perfilData.ruaCliente,
-                                "zip_code": perfilData.cepCliente,
-                                "city": perfilData.cidadeCliente,
-                                "state": perfilData.estadoCliente,
-                                "country": "BR"
-                            }
-                        }
-                    }
-                }
-            ]
-        };
-    
-  
-        console.log("BODY PARA A TRANSAÇÃO", body);
-  
-        // Configuração das opções para a requisição
-        const options = {
-          method: 'POST',
-          uri: 'https://api.pagar.me/core/v5/orders',
-          headers: {
-              'Authorization': 'Basic ' + Buffer.from("sk_5956e31434bb4c618a346da1cf6c107b:").toString('base64'),
-              'Content-Type': 'application/json'
-          },
-          json: body // Corpo da requisição em formato JSON
-        };
-  
-        // Fazendo a requisição usando a biblioteca 'request'
-        request(options, function(error, response, responseBody) {
-          if (error) {
-              console.error('Erro ao fazer a requisição:', error);
-              return;
-          }
-          console.log("ID DA TRANSAÇÃO", responseBody.id);
-          const idTransacao = responseBody.charges.map(charge => charge.id);
-          // Verificando se a requisição foi bem-sucedida (código de status 2xx)
-          if (response.statusCode >= 200 && response.statusCode < 300) {
-              console.log('Resposta da API:', responseBody, idTransacao);
-              // Envie o ID da transação de volta para o cliente
-              res.status(200).send({ idTransacao: idTransacao });
-          } else {
-              console.error('Erro na resposta da API:', responseBody);
-              // Em caso de erro, envie uma mensagem de erro para o cliente
-              res.status(500).send('Erro ao processar o pagamento');
-          }
-        });
-    });
-  
     // Defina a rota para verificar o status da transação do cartão de crédito no Pagarme
   app.get('/verificarStatusTransacao', async (req, res) => {
     try {
@@ -1790,11 +1543,23 @@ app.post('/criar-pedidos', async (req, res) => {
 app.post('/processarPagamento-pix', (req, res) => {
   const perfilData = req.body.perfilData;
   const carrinho = req.session.carrinho;
-  // Define the request payload
+  const totalAmount = carrinho.reduce((total, item) => {
+    console.log(item.endereco.frete);
+    console.log(item.valorUnitario);
+    const subtotalComFrete = item.valorUnitario + item.endereco.frete;
+    return total + subtotalComFrete * item.quantidade * 100; // Multiplicando pelo número de itens
+  }, 0);
+  console.log(totalAmount);
+
+  // Define o payload da requisição
   const body = {
     "items": carrinho.map(item => ({
         "id": item.produtoId,
-        "amount": item.subtotal * 100,
+        "amount": item.endereco.tipoEntrega === "Único Endereço" ?
+        Math.round((item.subtotal + item.endereco.frete) * 100) :
+        item.endereco.tipoEntrega === "Entrega a Retirar na Loja" ?
+        item.subtotal * 100 :
+        Math.round((item.valorUnitario + item.endereco.frete) * 100),
         "description": item.nomeProd,
         "quantity": item.quantidade,
         "code": item.produtoId
@@ -1867,7 +1632,7 @@ app.get('/charges/:chargeId', (req, res) => {
       method: 'GET',
       uri: apiUrl,
       headers: {
-          'Authorization': 'Basic ' + Buffer.from(`${pagarmeKeyProd}:`).toString('base64')
+          'Authorization': 'Basic ' + Buffer.from(`${pagarmeKeyTest}:`).toString('base64')
       },
       json: true
   };
@@ -1892,7 +1657,11 @@ app.post('/processarPagamento-boleto', (req, res) => {
   const body = {
     "items": carrinho.map(item => ({
       "id": item.produtoId,
-      "amount": item.subtotal * 100,
+      "amount": item.endereco.tipoEntrega === "Único Endereço" ?
+      Math.round((item.subtotal + item.endereco.frete) * 100) :
+      item.endereco.tipoEntrega === "Entrega a Retirar na Loja" ?
+      item.subtotal * 100 :
+      Math.round((item.valorUnitario + item.endereco.frete) * 100),
       "description": item.nomeProd,
       "quantity": item.quantidade,
       "code": item.produtoId
@@ -1959,7 +1728,12 @@ app.post('/processarPagamento-cartao', (req ,res) => {
   const body = {
     "items": carrinho.map(item => ({
       "id": item.produtoId,
-        "amount": Math.max(Math.round(parseFloat(perfilData.totalCompra) * 100), 1),
+        //"amount": Math.max(Math.round(parseFloat(perfilData.totalCompra) * 100), 1),
+        "amount": item.endereco.tipoEntrega === "Único Endereço" ?
+        Math.round((item.subtotal + item.endereco.frete) * 100) :
+        item.endereco.tipoEntrega === "Entrega a Retirar na Loja" ?
+        item.subtotal * 100 :
+        Math.round((item.valorUnitario + item.endereco.frete) * 100),
         "description": item.nomeProd,
         "quantity": item.quantidade,
         "code": item.produtoId
@@ -2024,7 +1798,7 @@ app.post('/processarPagamento-cartao', (req ,res) => {
         method: 'POST',
         uri: 'https://api.pagar.me/core/v5/orders',
         headers: {
-          'Authorization': 'Basic ' + Buffer.from(`${pagarmeKeyProd}:`).toString('base64'),
+          'Authorization': 'Basic ' + Buffer.from(`${pagarmeKeyTest}:`).toString('base64'),
           'Content-Type': 'application/json'
         },
         body: body,

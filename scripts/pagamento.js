@@ -45,7 +45,7 @@ async function fetchEndereco() {
           let totalFretes = 0;
           // Iterar sobre os produtos do carrinho
           data.forEach(produto => {
-            totalFretes += produto.frete || 0; // Adicionar o valor do frete do produto ao total
+            totalFretes += produto.endereco.frete || 0; // Adicionar o valor do frete do produto ao total
           });
 
           // Exibir o total dos fretes no console
