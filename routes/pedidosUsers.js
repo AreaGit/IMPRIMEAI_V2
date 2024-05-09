@@ -1632,7 +1632,7 @@ app.get('/charges/:chargeId', (req, res) => {
       method: 'GET',
       uri: apiUrl,
       headers: {
-          'Authorization': 'Basic ' + Buffer.from(`${pagarmeKeyTest}:`).toString('base64')
+          'Authorization': 'Basic ' + Buffer.from(`${pagarmeKeyProd}:`).toString('base64')
       },
       json: true
   };
@@ -1798,7 +1798,7 @@ app.post('/processarPagamento-cartao', (req ,res) => {
         method: 'POST',
         uri: 'https://api.pagar.me/core/v5/orders',
         headers: {
-          'Authorization': 'Basic ' + Buffer.from(`${pagarmeKeyTest}:`).toString('base64'),
+          'Authorization': 'Basic ' + Buffer.from(`${pagarmeKeyProd}:`).toString('base64'),
           'Content-Type': 'application/json'
         },
         body: body,
