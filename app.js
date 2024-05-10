@@ -400,6 +400,16 @@ app.get('/detalhesPedidosUser', (req, res) => {
     res.status(500).send("Erro interno do servidor");
   }
 });
+//Rota get para a página de detalhes dos pedidos do usuário
+app.get('/cadastro-graficas', (req, res) => {
+  try {
+    const cadastroGraficasContentHtml = fs.readFileSync(path.join(__dirname, "html", "cadastro-graficas.html"), "utf-8");
+    res.send(cadastroGraficasContentHtml);
+  } catch (err) {
+    console.log("Erro ao ler o arquivo cadastro-graficas.html: ", err);
+    res.status(500).send("Erro interno do servidor");
+  }
+});
 app.listen(PORT, () => {
     console.log(`Servidor rodando na porta ${PORT} http://localhost:8082`);
 });
