@@ -28,6 +28,12 @@ const bairroUser = document.getElementById('bairroUser');
 let validBairroUser = false
 const complementoUser = document.getElementById('complementoUser');
 let validComplementoUser = false;
+const bancoUser = document.getElementById('bancoUser');
+let validBancoUser = false;
+const contaUser = document.getElementById('contaUser');
+let validContaUser = false;
+const agenciaUser = document.getElementById('agenciaUser');
+let validAgenciaUser = false;
 const cnpjUser = document.getElementById('cnpjUser');
 let validCnpjUser = false;
 const telefoneUser = document.getElementById('telefoneUser');
@@ -105,6 +111,60 @@ cepUser.addEventListener('input', () => {
         cepUser.style.color = 'red';
         validCepUser = false
     }
+});
+bancoUser.addEventListener('input', () => {
+    if(bancoUser.value.length <= 3) {
+        bancoUser.style.color = 'red';
+        bancoUser.style.borderColor = 'red';
+        validBancoUser = false;
+    } else {
+        bancoUser.style.color = 'black';
+        bancoUser.style.borderColor = 'green';
+        validBancoUser = true;
+    }
+});
+
+contaUser.addEventListener('input', () => {
+    let contaValue = contaUser.value.replace(/\D/g, ''); // Remove todos os caracteres não numéricos
+    if (contaValue.length > 8) {
+        contaValue = contaValue.slice(0, 8); // Limite o comprimento a 8 caracteres
+    }
+
+    if(contaUser.value.length <= 7) {
+        contaUser.style.color = 'red';
+        contaUser.style.borderColor = 'red';
+        validContaUser = false;
+    } else {
+        contaUser.style.color = 'black';
+        contaUser.style.borderColor = 'green';
+        validContaUser = true;
+    }
+
+    // Formata a conta corrente com traço
+    contaValue = contaValue.replace(/^(\d{7})(\d{1})$/, '$1-$2');
+
+    contaUser.value = contaValue; // Define o valor formatado de volta no campo
+});
+
+agenciaUser.addEventListener('input', () => {
+    let agenciaValue = agenciaUser.value.replace(/\D/g, ''); // Remove todos os caracteres não numéricos
+    if (agenciaValue.length > 4) {
+        agenciaValue = agenciaValue.slice(0, 4); // Limite o comprimento a 4 caracteres
+    }
+
+    if(agenciaUser.value.length <= 3) {
+        agenciaUser.style.color = 'red';
+        agenciaUser.style.borderColor = 'red';
+        validAgenciaUser = false;
+    } else {
+        agenciaUser.style.color = 'black';
+        agenciaUser.style.borderColor = 'green';
+        validAgenciaUser = true;
+    }
+    // Formata a agência com ponto
+    agenciaValue = agenciaValue.replace(/^(\d{4})$/, '$1');
+
+    agenciaUser.value = agenciaValue; // Define o valor formatado de volta no campo
 });
 //Formatando campo de CPF do usuário
 cnpjUser.addEventListener('input', () => {
