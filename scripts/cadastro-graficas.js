@@ -55,6 +55,9 @@ const avisoEnderecos = document.getElementById('avisoEnderecos');
 const emailCadastrado = document.getElementById('emailCadastrado');
 const erroUsuario = document.getElementById('erroUsuario');
 const avisoGeral = document.getElementById('avisoGeral');
+const avisoConta = document.getElementById('avisoConta');
+const avisoBanco = document.getElementById('avisoBanco');
+const avisoAgencia = document.getElementById('avisoAgencia');
 //Formatando campos
 nomeUser.addEventListener('keyup', () => {
     if(nomeUser.value.length <= 4) {
@@ -246,4 +249,86 @@ mostrarSenha.addEventListener("click", () => {
 //Ocultar a senha
 ocultarSenha.addEventListener("click", () => {
     senhaUser.setAttribute("type", "password");
+});
+
+btnCad.addEventListener('click', async() => {
+    const nomeUser = document.getElementById('nomeUser').value;
+    const cepUser = document.getElementById('cepUser').value;
+    const ruaUser = document.getElementById('ruaUser').value;
+    const numResidenciaUser = document.getElementById('numResidenciaUser').value;
+    const estadoUser = document.getElementById('estadoUser').value;
+    const cidadeUser = document.getElementById('cidadeUser').value;
+    const bairroUser = document.getElementById('bairroUser').value;
+    const bancoUser = document.getElementById('bancoUser').value;
+    const contaUser = document.getElementById('contaUser').value;
+    const complementoUser = document.getElementById('complementoUser').value;
+    const cnpjUser = document.getElementById('cnpjUser').value;
+    const telefoneUser = document.getElementById('telefoneUser').value;
+    const emailUser = document.getElementById('emailUser').value;
+    const senhaUser = document.getElementById('senhaUser').value;
+    
+    if(nomeUser.length <= 4) {
+        avisoUser.style.display = 'block'
+        setTimeout(() => {
+            avisoUser.style.display = 'none'
+        }, 5000);
+    } else if(cepUser.length <= 8) {
+        avisoCep.style.display = 'block'
+        setTimeout(() => {
+            avisoCep.style.display = 'none'
+        }, 5000);
+    } else if(validEmailUser === false) {
+        avisoEmail.style.display = 'block'
+        setTimeout(() => {
+            avisoEmail.style.display = 'none'
+        }, 5000);
+    } else if(validSenhaUser === false) {
+        avisoSenha.style.display = 'block'
+        setTimeout(() => {
+            avisoSenha.style.display = 'none'
+        }, 5000);
+    } else if(validTelefoneUser === false) {
+        avisoTelefone.style.display = 'block'
+        setTimeout(() => {
+            avisoTelefone.style.display = 'none'
+        }, 5000);
+    }else if(validCpfUser === false) {
+        avisoCpf.style.display = 'block'
+        setTimeout(() => {
+            avisoCpf.style.display = 'none'
+        }, 5000);
+    }else if(validAgenciaUser === false) {
+        avisoAgencia.style.display = 'block'
+        setTimeout(() =>  {
+            avisoAgencia.style.display = 'none'
+        }, 5000);
+    }else if(validBancoUser === false) {
+        avisoBanco.style.display = 'block'
+        setTimeout(() => {
+            avisoBanco.style.display = 'none'
+        }, 5000);
+    }else if(validContaUser === false) {
+        avisoConta.style.display = 'block'
+        setTimeout(() => {
+            avisoConta.style.display = 'none'
+        }, 5000)
+    }else {
+        const userData = {
+            userCad : nomeUser,
+            endereçoCad : ruaUser,
+            cepCad : cepUser,
+            estadoCad : estadoUser,
+            cidadeCad : cidadeUser,
+            bairroCad : bairroUser,
+            numCad : numResidenciaUser,
+            compCad : complementoUser,
+            cnpjCad : cnpjUser,
+            agenciaCad: agenciaUser,
+            bancoCad: bancoUser,
+            contaCad: contaUser,
+            telefoneCad : telefoneUser,
+            emailCad : emailUser,
+            passCad : senhaUser
+        }
+    }
 });

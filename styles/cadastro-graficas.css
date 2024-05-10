@@ -280,6 +280,15 @@ label > a {
   #erroUsuario {
     display: none;
   }
+  #avisoBanco {
+    display: none;
+  }
+  #avisoAgencia {
+    display: none;
+  }
+  #avisoConta {
+    display: none;
+  }
   .notifications-container {
     width: 320px;
     height: auto;
