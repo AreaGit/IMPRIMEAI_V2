@@ -1,6 +1,12 @@
 const nomeUser = document.getElementById('nomeUser');
 const qrCodeContainer = document.getElementById('qrCodeContainer');
 const divBoletoContainer = document.getElementById('boletoContainer');
+const avisoNaoAutorizado = document.getElementById('avisoNaoAutorizado');
+const avisoEstorno = document.getElementById('avisoEstorno');
+const avisoCancelado = document.getElementById('avisoCancelado');
+const avisoAguardeCancelamento = document.getElementById('avisoAguardeCancelamento');
+const avisoTransacaoErro = document.getElementById('avisoTransacaoErro');
+const avisoFalhaTransacao = document.getElementById('avisoFalhaTransacao');
 
 async function carregarInfoUsers() {
     try {
@@ -426,3 +432,199 @@ async function verificarStatusTransacaoBoleto(chargeId) {
       console.error('Erro:', error);
     }
 } 
+
+const cartaoDeCredito = document.getElementById('cartaoCredito');
+const formCartao = document.getElementById('formCartao');
+
+const expiryDateField = document.getElementById('expiry_date_field');
+expiryDateField.addEventListener('input', function(event) {
+  const input = event.target;
+  const trimmedValue = input.value.replace(/[^0-9]/g, '').slice(0, 4);
+  const formattedValue = trimmedValue.replace(/(\d{2})(\d{2})/, '$1/$2');
+  input.value = formattedValue;
+});
+const cardNumberField = document.getElementById('card_number_field');
+
+cardNumberField.addEventListener('input', function(event) {
+  const input = event.target;
+  const trimmedValue = input.value.replace(/[^0-9]/g, '').slice(0, 16);
+  const formattedValue = trimmedValue.replace(/(\d{4})(\d{4})(\d{4})(\d{4})/, '$1 $2 $3 $4');
+  input.value = formattedValue;
+});
+
+const btnCartaoCredito = document.getElementById('btnCartaoCredito');
+
+cartaoDeCredito.addEventListener('click', () => {
+  formCartao.style.display = 'block';
+  metodosRecarga.style.display = 'none';
+});
+
+btnCartaoCredito.addEventListener('click', async() => {
+  const nomeTitular = document.getElementById('name_field').value;
+  const numCarElement = document.getElementById('card_number_field');
+  let numCar = numCarElement.value.replace(/\s/g, ''); // Remove all spaces
+  const cvvCard = document.getElementById('cvv_field').value;
+  // Get the expiration date input field value
+  const expiryDate = document.getElementById('expiry_date_field').value;
+  // Split the expiration date into month and year
+  const [month, year] = expiryDate.split('/').map(str => parseInt(str));    
+  // Fetch para obter os dados do perfil do usuário
+  try {
+    const response = await fetch('/perfil/dados');
+    if (!response.ok) {
+        throw new Error('Erro ao obter dados do perfil');
+    }
+    const perfilData = await response.json();
+  
+    function formatarTelefone(numero) {
+      // Remove todos os caracteres não numéricos
+      const numeroLimpo = numero.replace(/\D/g, '');
+  
+      // Extrai o DDD (dois primeiros dígitos) e o número do telefone
+      const ddd = numeroLimpo.substring(0, 2);
+      const numeroTelefone = numeroLimpo.substring(2);
+  
+      // Retorna um objeto com as partes do número formatado
+      return {
+          ddd: ddd,
+          numeroTelefone: numeroTelefone
+      };
+  }
+  
+    const telefoneFormatado = formatarTelefone(perfilData.telefoneCad);
+  
+    // Agora você pode acessar as partes formatadas do número de telefone
+    const codPaisCliente = "55";
+    const dddCliente = telefoneFormatado.ddd;
+    const numeroTelefoneCliente = telefoneFormatado.numeroTelefone;
+  
+  // Remove non-digit characters from CPF and format it
+  const cpf = perfilData.cpfCad.replace(/\D/g, ''); // Remove non-digit characters
+  
+  const cpfCliente = cpf;
+  
+  
+    const emailCliente = perfilData.emailCad;
+    const cepCliente = perfilData.cepCad;
+    const cidadeCliente = perfilData.cidadeCad;
+    const ruaCliente = perfilData.endereçoCad;
+    const numeroResidenciaCliente = perfilData.numCad;
+    const bairroCliente = perfilData.bairroCad;
+    const numeroDocumento = perfilData.cpfCad;
+    const nomeCliente = perfilData.userCad;
+    const paisCliente = "BR";
+    const idCliente = perfilData.userId;
+    const estadoCliente = perfilData.estadoCad;
+    const complementoCliente = perfilData.compCad
+    
+    // Crie um objeto para armazenar os dados do perfil do usuário
+    const perfilUsuario = {
+        emailCliente: emailCliente,
+        cpfCliente: cpfCliente,
+        cepCliente: cepCliente,
+        cidadeCliente: cidadeCliente,
+        estadoCliente: estadoCliente,
+        ruaCliente: ruaCliente,
+        complementoCliente: complementoCliente,
+        numeroResidenciaCliente: numeroResidenciaCliente,
+        bairroCliente: bairroCliente,
+        numeroDocumento: numeroDocumento,
+        nomeCliente: nomeCliente,
+        paisCliente: paisCliente,
+        codPaisCliente: codPaisCliente,
+        dddCliente: dddCliente,
+        numeroTelefoneCliente: numeroTelefoneCliente,
+        userId: idCliente,
+        totalCompra:  valorSelecionado,
+    };
+
+    const formData = {
+      numCar: numCar,
+      nomeTitular: nomeTitular,
+      mesExp: month,
+      anoExp: year,
+      cvvCard: cvvCard
+    };
+    // Envie os dados do formulário e do perfil do usuário para o backend
+    const response2 = await fetch('/processarPagamento-cartao-carteira', {
+      method: 'POST',
+      headers: {
+          'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({ formData: formData, perfilData: perfilUsuario })
+    });
+  
+    if (!response2.ok) {
+        throw new Error('Erro ao processar pagamento');
+    }
+  
+    // Extrair o idTransacao da resposta
+    const responseData = await response2.json();
+    const dadosTransacao = responseData
+    monitorarTransacaoCartao(dadosTransacao);
+  }catch (error) {
+    console.log(error)
+  }
+})
+
+async function monitorarTransacaoCartao(dadosTransacao) {
+  const chargeId = dadosTransacao[0].id
+  try {
+    // Faça uma solicitação fetch para a rota que criamos no servidor para obter informações sobre a cobrança
+    const response = await fetch(`/charges/${chargeId}`);
+    if (!response.ok) {
+      throw new Error('Erro ao obter informações da cobrança');
+    }
+    
+    // Extrair o status da resposta
+    const { status } = await response.json();
+    const metodoPag = "Cartão de Crédito"
+    if (status === 'waiting_capture') {
+      setTimeout(() => {
+        monitorarTransacaoCartao(dadosTransacao);
+      }, 5000);
+    } else if(status === 'paid') {
+      formCartao.style.display = 'none';
+      const detalhesPagamento = {
+        userId: userId,
+        valor: valorSelecionado,
+        idTransacao: chargeId,
+        metodoPagamento: "Cartão de Crédito",
+        status: "PAGO"
+      }
+      registrarPagamento(detalhesPagamento);
+    }else if(status === "not_authorized") {
+        avisoNaoAutorizado.style.display = 'none';
+        setTimeout(() => {
+          window.location.reload();
+        }, 5000);
+    }else if (status === "refunded") {
+      avisoEstorno.style.display = 'none';
+      setTimeout(() => {
+        window.location.reload();
+      }, 5000);
+    }else if(status === "voided") {
+      avisoCancelado.style.display = 'none';
+      setTimeout(() => {
+        window.location.reload();
+      }, 5000);
+    }else if(status === "waiting_cancellation") {
+      avisoAguardeCancelamento.style.display = 'none';
+      setTimeout(() => {
+        window.location.reload();
+      }, 5000);
+    }else if(status === "with_error") {
+      avisoTransacaoErro.style.display = 'none';
+      setTimeout(() => {
+        window.location.reload();
+      }, 5000);
+    }else if(status === "failed") {
+      avisoFalhaTransacao.style.display = 'none';
+      setTimeout(() => {
+        window.location.reload();
+      }, 5000);
+    }
+  } catch (error) {
+    console.error('Erro:', error);
+  }
+}

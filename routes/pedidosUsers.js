@@ -1953,6 +1953,102 @@ app.post('/processarPagamento-boleto-carteira', (req, res) => {
     });
 });
 
+app.post('/processarPagamento-cartao-carteira', (req ,res) => {
+  const formData = req.body.formData;
+  const perfilData = req.body.perfilData;
+  const carrinho = req.session.carrinho;
+  console.log(formData)
+  // Monte o body com os dados do usuário e do carrinho
+  const body = {
+    "items": [
+      {
+          "amount": Math.max(Math.round(parseFloat(perfilData.totalCompra) * 100), 1),
+          "description": "CARTEIRA",
+          "quantity": 1,
+          "code": "123"
+      }
+    ],
+      "customer": {
+        "name": perfilData.nomeCliente,
+        "email": perfilData.emailCliente,
+        "code": perfilData.userId,
+        "type": "individual",
+        "document": perfilData.cpfCliente,
+        "document_type": "CPF",
+        "gender": "male",
+        "address": {
+          "street": perfilData.ruaCliente,
+          "city": perfilData.cidadeCliente,
+          "state": perfilData.estadoCliente,
+            "country": "BR",
+            "zip_code": perfilData.cepCliente,
+            "neighborhood": perfilData.bairroCliente
+          },
+          "phones": {
+            "home_phone": {
+              "country_code": "55",
+              "number": perfilData.numeroTelefoneCliente,
+              "area_code": perfilData.dddCliente,
+          },
+            "mobile_phone": {
+              "country_code": "55",
+              "number": perfilData.numeroTelefoneCliente,
+              "area_code": perfilData.dddCliente,
+            }
+          },
+            "metadata": {} // Metadados do cliente
+        },
+        "payments": [
+          {
+            "payment_method": "credit_card",
+            "credit_card": {
+              "recurrence": false,
+              "installments": 1,
+              "statement_descriptor": "IMPRIMEAI",
+              "card": {
+                "number": formData.numCar,
+                "holder_name": formData.nomeTitular,
+                "exp_month": formData.mesExp,
+                "exp_year": formData.anoExp,
+                "cvv": formData.cvvCard,
+                "billing_address": {
+                  "line_1": perfilData.ruaCliente,
+                  "zip_code": perfilData.cepCliente,
+                  "city": perfilData.cidadeCliente,
+                  "state": perfilData.estadoCliente,
+                  "country": "BR"
+                }
+              }
+            }
+          }
+        ]
+      };
+
+      const options = {
+        method: 'POST',
+        uri: 'https://api.pagar.me/core/v5/orders',
+        headers: {
+          'Authorization': 'Basic ' + Buffer.from(`${pagarmeKeyProd}:`).toString('base64'),
+          'Content-Type': 'application/json'
+        },
+        body: body,
+        json: true
+      };
+      rp(options)
+      .then(response => {
+        console.log(response);
+        res.status(200).send(response.charges);
+      })
+      .catch(error => {
+        // Handle error response
+        console.error('Error:', error.message);
+        if (error.response) {
+          console.error('Request failed with status code', error.response.statusCode);
+          console.error('Response body:', error.response.body);
+        }
+        res.status(500).send("Transação falhada!");
+      });
+});
 
 app.post('/uploadGoogleDrive', upload.single('file'), async (req, res) => {
   const file = req.file;
