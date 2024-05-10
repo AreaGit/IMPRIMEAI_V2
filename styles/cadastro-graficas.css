@@ -98,7 +98,7 @@ form > button {
     position: absolute;
     left: 90%;
     transform: translate(-90%);
-    top: 80%;
+    top: 117%;
     border-radius: 5px;
     transition: 0.8s;
 }
@@ -207,7 +207,7 @@ label > a {
     position: absolute;
     left: 93%;
     transform: translate(-93%);
-    top: 78%;
+    top: 87%;
   }
   
   .container .eye {
