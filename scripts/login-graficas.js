@@ -40,7 +40,7 @@ btnCad.addEventListener('click', () => {
           avisoSucesso.style.display = 'block';
           setTimeout(() => {
             avisoSucesso.style.display = 'none';
-            window.location.href = '/';
+            window.location.href = '/pedidos';
           }, 3000);
         } else {
           // Exibir mensagem de erro

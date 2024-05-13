@@ -5,12 +5,14 @@ const fs = require('fs');
 const path = require('path');
 const cadastros = require('./routes/cadastros');
 const pedidosUsers = require('./routes/pedidosUsers');
+const graficasServer = require('./routes/graficasServer')
 const Produtos = require('./models/Produtos');
 const VariacoesProduto = require('./models/VariacoesProduto');
 const { Op } = require('sequelize');
 app.use(express.static(path.join(__dirname)));
 app.use('/', cadastros);
 app.use('/', pedidosUsers);
+app.use('/', graficasServer);
 //Rota get de início
 app.get('/', (req, res) => {
     try {
@@ -417,6 +419,16 @@ app.get('/login-graficas', (req, res) => {
     res.send(loginGraficasContentHtml);
   } catch (err) {
     console.log("Erro ao ler o arquivo login-graficas.html: ", err);
+    res.status(500).send("Erro interno do servidor");
+  }
+});
+//Rota get para a página de pedidos das gráficas
+app.get('/pedidos', (req, res) => {
+  try {
+    const pedidosGraficasContentHtml = fs.readFileSync(path.join(__dirname, "html", "pedidos-grafica.html"), "utf-8");
+    res.send(pedidosGraficasContentHtml);
+  } catch (err) {
+    console.log("Erro ao ler o arquivo pedidos-grafica.html: ", err);
     res.status(500).send("Erro interno do servidor");
   }
 });
