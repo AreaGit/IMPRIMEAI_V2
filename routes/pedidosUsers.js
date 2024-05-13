@@ -1101,7 +1101,7 @@ app.post('/criar-pedidos', async (req, res) => {
         secure: true,
         auth: {
           user: "gabrieldiastrin63@gmail.com",
-          pass: "vavk ljzo hrpn vzoh"
+          pass: "bwep pyqq zocy ljsi"
         }
       })
 
