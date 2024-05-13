@@ -256,3 +256,61 @@ main > h2 {
     position: relative;
     top: 10px;
 }
+div#pedidos-list {
+    position: absolute;
+    width: 80%;
+    top: 65%;
+    left: 50%;
+    transform: translate(-50%);
+}
+.cxPedido {
+    box-shadow: -1px 3px 5px black;
+    background-color: white;
+    border-radius: 5px;
+    margin: 5px;
+    padding: 25px;
+    transition: 0.8s;
+    cursor: pointer;
+    width: 70%;
+    position: absolute;
+    left: 50%;
+    transform: translate(-50%);
+    height: 165px;
+    width: 839px;
+}
+.cxPedido:hover {
+    transition: 0.8s;
+    box-shadow: -1px 3px 5px #F69896;
+}
+.cxPedido > h2 {
+    position: relative;
+    left: 19%;
+    top: -94px;
+    width: fit-content;
+}
+.cxPedido > a {
+    background-color: #F37160;
+    color: white;
+    font-weight: 500;
+    font-size: 17px;
+    padding: 16px;
+    border-radius: 5px;
+    position: relative;
+    left: 25%;
+    top: -110px;
+}
+.cxPedido > p {
+    display: inline;
+    color: #6E6E73;
+    font-size: 17px;
+    font-weight: 500;
+    position: relative;
+    top: -71px;
+    left: 18%;
+    padding: 8px;
+}
+.cxPedido > img {
+    position: relative;
+    width: 96px;
+    height: 120px;
+}

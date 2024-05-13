@@ -25,22 +25,25 @@
         <div id="linhaHr"></div>
         <h2>Visualize os pedidos e seus status</h2>
         <div class="container">
-            <div class="statusPedidos">
+            <div class="statusPedidos" id="pedidosAguardando">
                 <h2>Pedidos a fazer</h2>
                 <p><span id="totalPedidosFazer">0</span> pedidos</p>
             </div>
-            <div class="statusPedidos">
+            <div class="statusPedidos" id="pedidosAceitos">
                 <h2>Pedidos aceitos</h2>
                 <p><span id="totalPedidosAceitos">0</span> pedidos</p>
             </div>
-            <div class="statusPedidos">
+            <div class="statusPedidos" id="pedidosFinalizados">
                 <h2>Pedidos finalizados</h2>
                 <p><span id="totalPedidosFinalizados">0</span> pedidos</p>
             </div>
-            <div class="statusPedidos">
+            <div class="statusPedidos" id="pedidosEntregues">
                 <h2>Pedidos entregues</h2>
                 <p><span id="totalPedidosEntregues">0</span> pedidos</p>
             </div>
+        </div>
+        <div id="pedidos-list">
+            <!--Aqui irá ficar os pedidos para a gráfica atender-->
         </div>
     </main> 
     <script src="../scripts/pedidosGrafica.js"></script>   
