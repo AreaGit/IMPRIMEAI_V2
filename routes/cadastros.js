@@ -222,4 +222,36 @@ app.post("/cadastro-graficas", async (req, res) => {
   }
 });
 
+app.post("/login-graficas", async (req, res) => {
+  try {
+    const { emailCad, passCad } = req.body;
+
+    // Verifique se o usuário existe no banco de dados
+    const grafica = await Graficas.findOne({ where: { emailCad: emailCad} });
+
+    if (!grafica) {
+      return res.status(401).json({ message: "Grafica não encontrada" });
+    }
+
+    const passwordMatch = await bcrypt.compare(passCad, grafica.passCad);
+
+    // Verifique se a senha está correta
+    if (!passwordMatch) {
+      return res.status(401).json({ message: "Senha incorreta" });
+    }
+
+    res.cookie('graficaUserCad', grafica.userCad);
+    res.cookie('userId', grafica.id)
+
+    // Gere um token de autenticação (exemplo simples)
+    const token = Math.random().toString(16).substring(2);
+
+    res.json({ message: "Login bem-sucedido", token: token });
+  } catch (error) {
+    console.error("Erro ao fazer login:", error);
+    res.status(500).json({ message: "Erro ao Fazer o Login <br> Preencha os Campos Corretamente" });
+  }
+});
+
+
 module.exports = app;

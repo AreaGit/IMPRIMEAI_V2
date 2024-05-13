@@ -400,13 +400,23 @@ app.get('/detalhesPedidosUser', (req, res) => {
     res.status(500).send("Erro interno do servidor");
   }
 });
-//Rota get para a página de detalhes dos pedidos do usuário
+//Rota get para a página de cadastro das gráficas
 app.get('/cadastro-graficas', (req, res) => {
   try {
     const cadastroGraficasContentHtml = fs.readFileSync(path.join(__dirname, "html", "cadastro-graficas.html"), "utf-8");
     res.send(cadastroGraficasContentHtml);
   } catch (err) {
     console.log("Erro ao ler o arquivo cadastro-graficas.html: ", err);
+    res.status(500).send("Erro interno do servidor");
+  }
+});
+//Rota get para a página de login das gráficas
+app.get('/login-graficas', (req, res) => {
+  try {
+    const loginGraficasContentHtml = fs.readFileSync(path.join(__dirname, "html", "login-graficas.html"), "utf-8");
+    res.send(loginGraficasContentHtml);
+  } catch (err) {
+    console.log("Erro ao ler o arquivo login-graficas.html: ", err);
     res.status(500).send("Erro interno do servidor");
   }
 });
