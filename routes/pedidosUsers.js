@@ -21,8 +21,8 @@ const {google} = require('googleapis');
 const GOOGLE_API_FOLDER_ID = '1F7sQzOnnbqn0EnUeT4kWrNOzsVFP-bG1';
 const stream = require('stream');
 const ultramsg = require('ultramsg-whatsapp-api');
-const instance_id = "instance74906";
-const ultramsg_token = "sltm2rrl2h6j9r2j";
+const instance_id = "instance75591";
+const ultramsg_token = "voqt7bp0dfrdvgd4";
 const api = new ultramsg(instance_id, ultramsg_token);
 const pagarme = require('pagarme');
 const qr = require('qrcode');
@@ -1132,7 +1132,7 @@ app.post('/criar-pedidos', async (req, res) => {
     secure: true,
     auth: {
       user: "gabrieldiastrin63@gmail.com",
-      pass: "vavk ljzo hrpn vzoh"
+      pass: "bwep pyqq zocy ljsi"
     }
   })
   

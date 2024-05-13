@@ -272,7 +272,7 @@ div#pedidos-list {
     transition: 0.8s;
     cursor: pointer;
     width: 70%;
-    position: absolute;
+    position: relative;
     left: 50%;
     transform: translate(-50%);
     height: 165px;

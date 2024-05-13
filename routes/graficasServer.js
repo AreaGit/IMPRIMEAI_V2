@@ -345,4 +345,79 @@ async function getCoordinatesFromAddressEnd(enderecoEntregaInfo, apiKey) {
     }
   });
 
+  app.get('/detalhes-pedido/:idPedido/:idProduto', async (req, res) => {
+    try {
+      const { idPedido, idProduto } = req.params;
+  
+      // Buscar detalhes do pedido
+      const pedido = await Pedidos.findByPk(idPedido, {
+        include: [
+          {
+            model: ItensPedido,
+            where: { idPed: idPedido, idProduto: idProduto },
+            include: [
+              {
+                model: Produtos,
+                attributes: ['id', 'nomeProd', 'descProd', 'valorProd', 'categProd', 'raioProd', 'imgProd'],
+              },
+            ],
+          },
+          {
+            model: Enderecos,
+            where: { idPed: idPedido, idProduto: idProduto },
+            include: [
+              {
+                model: Produtos,
+                attributes: ['id'], // Adicione outros atributos do Produto conforme necessário
+              },
+            ],
+            distinct: true, // Garante endereços distintos
+          },
+          // ... outras associações necessárias
+        ],
+      });
+  
+      if (!pedido) {
+        return res.status(404).json({ error: 'Pedido não encontrado' });
+      }
+  
+      // Agora que temos o pedido, buscamos o usuário correspondente
+      const { idUserPed } = pedido;
+      const usuario = await User.findByPk(idUserPed);
+  
+      if (!usuario) {
+        return res.status(404).json({ error: 'Usuário não encontrado' });
+      }
+  
+      // Respondendo com os detalhes do pedido e informações do usuário
+      res.json({ pedido, usuario });
+  
+    } catch (error) {
+      console.error('Erro ao buscar detalhes do pedido:', error);
+      res.status(500).json({ error: 'Erro ao buscar detalhes do pedido' });
+    }
+  });
+  
+  app.get('/imagem-produto/:id', async (req, res) => {
+    try {
+      const idProduto = req.params.id;
+      
+      // Busca o produto no banco de dados pelo ID
+      const produto = await Produtos.findByPk(idProduto);
+  
+      if (!produto || !produto.imgProd) {
+        // Se o produto ou a imagem não existir, envie uma imagem padrão ou retorne um erro
+        return res.status(404).sendFile('caminho/para/imagem_padrao.jpg', { root: __dirname });
+      }
+  
+      // Converte o BLOB para uma URL de imagem e envia como resposta
+      const imagemBuffer = Buffer.from(produto.imgProd, 'binary');
+      res.set('Content-Type', 'image/jpeg'); // Altere conforme o tipo de imagem que você está armazenando
+      res.send(imagemBuffer);
+    } catch (error) {
+      console.error('Erro ao buscar imagem do produto:', error);
+      res.status(500).send('Erro ao buscar imagem do produto');
+    }
+  });
+
   module.exports = app;

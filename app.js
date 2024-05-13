@@ -432,6 +432,16 @@ app.get('/pedidos', (req, res) => {
     res.status(500).send("Erro interno do servidor");
   }
 });
+//Rota get para a página de detalhes dos pedidos das gráficas
+app.get('/detalhes-pedidos', (req, res) => {
+  try {
+    const detalhesPedidosGraficasContentHtml = fs.readFileSync(path.join(__dirname, "html", "detalhesPedidosGrafica.html"), "utf-8");
+    res.send(detalhesPedidosGraficasContentHtml);
+  } catch (err) {
+    console.log("Erro ao ler o arquivo detalhesPedidosGrafica.html: ", err);
+    res.status(500).send("Erro interno do servidor");
+  }
+});
 app.listen(PORT, () => {
     console.log(`Servidor rodando na porta ${PORT} http://localhost:8082`);
 });
