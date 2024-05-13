@@ -297,7 +297,7 @@ label > a {
     display: flex;
     flex-direction: column;
     gap: 1rem;
-    position: absolute;
+    position: fixed;
     left: 90%;
     transform: translate(-90%);
     top: 60px;

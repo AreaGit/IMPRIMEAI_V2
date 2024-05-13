@@ -5,6 +5,7 @@ const {Op} = require('sequelize');
 const User = require('../models/User');
 const Produtos = require('../models/Produtos');
 const VariacoesProduto = require('../models/VariacoesProduto');
+const Graficas = require('../models/Graficas');
 const multer = require('multer');
 const storage = multer.memoryStorage();
 const upload = multer({ storage: storage });
@@ -172,6 +173,52 @@ app.post('/cadastrar-produto', upload.fields([
       error: 'Erro ao cadastrar o produto',
       message: error.message,
     });
+  }
+});
+
+app.post("/cadastro-graficas", async (req, res) => { 
+ 
+  try {
+      const { userCad, cnpjCad, endereçoCad, cepCad, cidadeCad, estadoCad, inscricaoEstadualCad, telefoneCad, bancoCad, agenciaCad, contaCorrenteCad,produtos, emailCad, passCad } = req.body;
+      const hashedPassword = await bcrypt.hash(passCad, 10);
+
+      const existingGrafica = await Graficas.findOne({
+        where: {
+          [Op.or]: [
+            { emailCad: emailCad },
+          ],
+        },
+      });
+  
+      if (existingGrafica) {
+        return res.status(400).json({
+          message: "Já existe uma Gráfica com este e-mail cadastrado",
+        });
+      }
+
+      const newGrafica = await Graficas.create({
+          userCad: userCad,
+          cnpjCad: cnpjCad,
+          enderecoCad: endereçoCad,
+          cepCad: cepCad,
+          cidadeCad: cidadeCad,
+          estadoCad: estadoCad,
+          inscricaoEstadualCad: inscricaoEstadualCad,
+          telefoneCad: telefoneCad,
+          bancoCad: bancoCad,
+          agenciaCad: agenciaCad,
+          contaCorrenteCad: contaCorrenteCad,
+          produtos: produtos,
+          emailCad: emailCad,
+          passCad: hashedPassword
+      });
+
+      console.log(newGrafica)
+      res.json({ message: 'Gráfica cadastrada com sucesso!', Graficas: newGrafica });
+      
+  } catch (error) {
+      console.error('Erro ao cadastrar grafica:', error);
+      res.status(500).json({ message: 'Erro ao cadastrar grafica' });
   }
 });
 

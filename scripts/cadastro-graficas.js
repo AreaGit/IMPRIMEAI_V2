@@ -261,13 +261,23 @@ btnCad.addEventListener('click', async() => {
     const bairroUser = document.getElementById('bairroUser').value;
     const bancoUser = document.getElementById('bancoUser').value;
     const contaUser = document.getElementById('contaUser').value;
+    const agenciaUser = document.getElementById('agenciaUser').value;
     const complementoUser = document.getElementById('complementoUser').value;
     const cnpjUser = document.getElementById('cnpjUser').value;
     const telefoneUser = document.getElementById('telefoneUser').value;
     const emailUser = document.getElementById('emailUser').value;
-    const senhaUser = document.getElementById('senhaUser').value;
-    
-    if(nomeUser.length <= 4) {
+    const senhaUser = document.getElementById('senhaUser').value;        
+    const checkboxElements = document.querySelectorAll('#checkboxProdutos input[type="checkbox"]:checked');
+    const produtosMarcados = Array.from(checkboxElements).map(checkbox => checkbox.id.replace('check', ''));
+
+    const jsonData = {
+        produtos: produtosMarcados.reduce((acc, produto) => {
+            acc[produto] = true;
+            return acc;
+        }, {}),
+    };
+
+    if(validNomeUser === false) {
         avisoUser.style.display = 'block'
         setTimeout(() => {
             avisoUser.style.display = 'none'
@@ -292,7 +302,7 @@ btnCad.addEventListener('click', async() => {
         setTimeout(() => {
             avisoTelefone.style.display = 'none'
         }, 5000);
-    }else if(validCpfUser === false) {
+    }else if(validCnpjUser === false) {
         avisoCpf.style.display = 'block'
         setTimeout(() => {
             avisoCpf.style.display = 'none'
@@ -313,7 +323,7 @@ btnCad.addEventListener('click', async() => {
             avisoConta.style.display = 'none'
         }, 5000)
     }else {
-        const userData = {
+        const graficaData = {
             userCad : nomeUser,
             endereçoCad : ruaUser,
             cepCad : cepUser,
@@ -325,10 +335,46 @@ btnCad.addEventListener('click', async() => {
             cnpjCad : cnpjUser,
             agenciaCad: agenciaUser,
             bancoCad: bancoUser,
-            contaCad: contaUser,
+            contaCorrenteCad: contaUser,
             telefoneCad : telefoneUser,
             emailCad : emailUser,
-            passCad : senhaUser
+            passCad : senhaUser,
         }
+
+        fetch('/cadastro-graficas', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ ...graficaData, ...jsonData }),
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.message === 'Gráfica cadastrada com sucesso!') {
+                avisoGeral.style.display = 'block'
+                setTimeout(() => {
+                    avisoGeral.style.display = 'none'
+                    window.location.href = "/login-graficas"
+                }, 5000);
+            }else if (data.message === 'Já existe uma Gráfica com este e-mail cadastrado') {
+                emailCadastrado.style.display = 'block'
+                setTimeout(() => {
+                    emailCadastrado.style.display = 'none'
+                }, 5000);
+            } else {
+            // Erro no cadastro
+            erroUsuario.style.display = 'block'
+            setTimeout(() => {
+                erroUsuario.style.display = 'none'
+            }, 5000);
+            }
+        })
+        .catch(error => {
+            erroUsuario.style.display = 'block'
+            setTimeout(() => {
+                erroUsuario.style.display = 'none'
+            }, 5000);
+
+        });
     }
 });
