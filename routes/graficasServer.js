@@ -36,6 +36,17 @@ app.use(session({
   saveUninitialized: true
 }));
 
+async function enviarNotificacaoWhatsapp(destinatario, corpo) {
+  try {
+      const response = await api.sendChatMessage(destinatario, corpo);
+      console.log(`Mensagem enviada com sucesso para a gráfica ${destinatario}:`, response);
+      return response;
+  } catch (error) {
+      console.error(`Erro ao enviar mensagem para a gráfica ${destinatario}:`, error);
+      throw error;
+  }
+}
+
 async function getCoordinatesFromAddressEnd(enderecoEntregaInfo, apiKey) {
     const {rua, cep, estado, cidade} = enderecoEntregaInfo;
     const formattedAddressEnd = `${rua}, ${cep}, ${cidade}, ${estado}`;

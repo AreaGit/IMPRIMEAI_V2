@@ -36,6 +36,10 @@ function atualizarListaPedidos(status) {
 }
 
 // Adicionar eventos de clique para cada divisão de status
+document.addEventListener('DOMContentLoaded', () => {
+    atualizarListaPedidos('Aguardando');
+});
+
 document.getElementById('pedidosAguardando').addEventListener('click', () => {
     atualizarListaPedidos('Aguardando');
 });

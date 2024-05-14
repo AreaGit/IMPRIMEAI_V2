@@ -644,7 +644,7 @@
         font-weight: 600;
         color: #A7A9AC;
         position: absolute;
-        left: -11%;
+        left: 0%;
     }
     #cx1 {
         box-shadow: -1px -1px 8px #434344;
@@ -688,6 +688,14 @@
         left: 53%;
         transition: transform 0.8s;
         overflow-x: hidden;
+    }
+    #novidades {
+        overflow-x: auto;
+        position: relative;
+        left: -87px;
+        height: 1195px;
+        width: 110%;
+        top: -60px;
     }
     #motivosCompra > h2 {
         font-size: 28px;
