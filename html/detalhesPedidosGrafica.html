@@ -14,15 +14,19 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter+Tight:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0"/>
     <link rel="stylesheet" href="../styles/detalhes-pedidosGrafica.css">
+    <link rel="stylesheet" href="../styles/detalhes-pedidosGrafica-resp.css">
 </head>
 <body>
     <header>
-        <a href="/"><img src="../images/logo-imprimeai.png" alt="..." id="logo"></a>
+        <a href="/pedidos"><img src="../images/logo-imprimeai.png" alt="..." id="logo"></a>
         <h1>Detalhes do pedido</h1>
         <div id="linhaHr"></div>
     </header>
     <main>
-        
+        <div id="produto-info" class="infoProd">
+            <a id="btnCancelarPedido" href="#">Cancelar Pedido</a>
+            <button id="btnAceitarPedido" class="aceitPed">Aceitar Pedido</button>
+        </div>
     </main>
     <script src="../scripts/detalhesPedidosGrafica.js"></script>
 </body>

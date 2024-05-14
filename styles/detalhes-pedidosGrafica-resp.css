@@ -1,0 +1,45 @@
+@media screen and (min-width:320px) and (max-width:767px) {
+    .itensProduto > img {
+        width: 90%;
+    }
+    .detalhesEntrega {
+        position: relative;
+        left: 0%;
+        width: 90%;
+        top: 40px;
+        padding: 15px;
+    }    
+    div#produto-info {
+        position: absolute;
+        top: 171px;
+        left: 0%;
+        transform: translate(-0%);
+        width: 96vw;
+        border-radius: 5px;
+        padding: 15px;
+        background-color: white;
+        box-shadow: -1px 1px 12px black;
+        height: 1100px;
+    }
+    .infoProd > button {
+        width: 185px;
+        height: 51px;
+        font-weight: 600;
+        font-size: 17px;
+        color: white;
+        background-color: #EF4126;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        transition: 0.8s;
+        position: relative;
+        left: 33%;
+        top: 990px;
+    }
+    .infoProd > a {
+        color: #EF4126;
+        position: relative;
+        left: -5%;
+        top: 1024px;
+    }    
+}

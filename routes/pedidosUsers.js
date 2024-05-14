@@ -805,6 +805,7 @@ app.post('/criar-pedidos', async (req, res) => {
     console.log(idTransacao);
     console.log(metodPag);
     console.log(req.session.endereco)
+    const valorPedido = req.body.valorPed
     const carrinhoQuebrado = req.session.carrinho || [];
     const enderecoDaSessao = req.session.endereco;
     if (carrinhoQuebrado.length > 0 && carrinhoQuebrado[0].tipoEntrega === 'Múltiplos Enderecos') {

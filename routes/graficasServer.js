@@ -123,7 +123,7 @@ async function getCoordinatesFromAddressEnd(enderecoEntregaInfo, apiKey) {
   
       const pedidosCadastrados = await ItensPedido.findAll({
         where: {
-          statusPed: 'Aguardando',
+          statusPed: ['Aguardando', 'Pedido Aceito Pela Gráfica', 'Finalizado', 'Pedido Entrgue pela Gráfica'],
           statusPag: 'Pago'
         },
       });
@@ -420,4 +420,72 @@ async function getCoordinatesFromAddressEnd(enderecoEntregaInfo, apiKey) {
     }
   });
 
+  app.post('/atualizar-status-pedido', async (req, res) => {
+    try {
+      const { pedidoId, novoStatus } = req.body;
+  
+      // Atualize o status do pedido na tabela Pedidos
+      const graficaId = req.cookies.userId; // Assuming the graphics company's ID is stored in a cookie
+      console.log(graficaId)
+      const pedido = await ItensPedido.findByPk(pedidoId);
+      if (!pedido) {
+        return res.json({ success: false, message: 'Pedido não encontrado.' });
+      }
+  
+      pedido.statusPed = novoStatus;
+      pedido.graficaAtend = graficaId; // Save the graphics company's ID
+      await pedido.save();
+  
+      if(novoStatus === "Pedido Entregue pela Gráfica") {
+        pedido.statusPed = novoStatus;
+        pedido.graficaAtend = graficaId; // Save the graphics company's ID
+        pedido.graficaFin = graficaId;
+        await pedido.save();
+      }
+  
+      return res.json({ success: true, graficaAtend: graficaId, /*itensPedidos*/ });
+    } catch (error) {
+      console.error('Erro ao atualizar o status do pedido:', error);
+      return res.json({ success: false, message: 'Erro ao atualizar o status do pedido.' });
+    }
+  });
+
+  app.post('/cancelar-pedido/:idPedido/:idGrafica', async (req, res) => {
+    try {
+      const graficaId = req.params.idGrafica;
+      const idPedido = req.body.idPedido;
+  
+      console.log('Grafica ID', graficaId, 'Pedido ID', idPedido);
+  
+      // Atualize o pedido
+      const pedido = await ItensPedido.findByPk(idPedido);
+  
+      if (!pedido) {
+        return res.status(404).json({ message: 'Pedido não encontrado' });
+      }
+  
+      await pedido.update({
+        graficaCancl: graficaId,
+      });
+  
+      // Atualize os itens do pedido
+      const itensPedido = await ItensPedido.findAll({
+        where: {
+          id: idPedido,
+        },
+      });
+  
+      for (const itemPedido of itensPedido) {
+        await itemPedido.update({
+          graficaCancl: graficaId,
+        });
+      }
+  
+      res.json({ success: true, message: `Pedido ${idPedido} cancelado com sucesso` });
+    } catch (error) {
+      console.error('Erro ao cancelar pedido:', error);
+      res.status(500).json({ error: 'Erro ao cancelar pedido', message: error.message });
+    }
+  });
+  
   module.exports = app;

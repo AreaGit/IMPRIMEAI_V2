@@ -11,4 +11,56 @@
     .statusPedidos {
         width: 80vw;
     }
+    .cxPedido {
+        box-shadow: -1px 3px 5px black;
+        background-color: white;
+        border-radius: 5px;
+        margin: 5px;
+        padding: 25px;
+        /* transition: 0.8s; */
+        cursor: pointer;
+        /* width: 70%; */
+        position: relative;
+        left: -11%;
+        transform: translate(-0%);
+        height: 213px;
+        width: 91vw;
+        top: 280px;
+    }
+    .cxPedido > h2 {
+        position: relative;
+        left: 43%;
+        top: -127px;
+        width: 67%;
+    }
+    .cxPedido > p {
+        display: inline;
+        color: #6E6E73;
+        font-size: 17px;
+        font-weight: 500;
+        position: relative;
+        top: -53px;
+        left: -5%;
+        padding: 8px;
+    }
+    .cxPedido > a {
+        background-color: #F37160;
+        color: white;
+        font-weight: 500;
+        font-size: 17px;
+        padding: 10px 5px 10px 5px;
+        border-radius: 5px;
+        position: relative;
+        left: 43%;
+        top: -126px;
+    }
+}
+@media screen and (min-width:2560px) {
+    div#pedidos-list {
+        position: absolute;
+        width: 80%;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%);
+    }
 }
