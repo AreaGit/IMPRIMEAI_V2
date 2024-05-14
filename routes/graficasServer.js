@@ -123,7 +123,7 @@ async function getCoordinatesFromAddressEnd(enderecoEntregaInfo, apiKey) {
   
       const pedidosCadastrados = await ItensPedido.findAll({
         where: {
-          statusPed: ['Aguardando', 'Pedido Aceito Pela Gráfica', 'Finalizado', 'Pedido Entrgue pela Gráfica'],
+          statusPed: ['Aguardando', 'Pedido Aceito Pela Gráfica', 'Finalizado', 'Pedido Entregue pela Gráfica'],
           statusPag: 'Pago'
         },
       });
@@ -488,4 +488,48 @@ async function getCoordinatesFromAddressEnd(enderecoEntregaInfo, apiKey) {
     }
   });
   
+  app.post('/atualizar-endereco-entrega', async (req, res) => {
+    const idPedido = req.body.pedidoId;
+    const idGrafica = req.cookies.userId;
+  
+    try {
+      // Verificar se o pedido existe
+      const pedido = await Pedidos.findByPk(idPedido);
+      const enderecoPedido = await Enderecos.findByPk(idPedido);
+  
+      if (!pedido || !enderecoPedido) {
+        return res.status(404).json({ error: 'Pedido não encontrado' });
+      }
+  
+      // Verificar se o endereço do pedido indica "Entrega a Retirar na Loja"
+      if (enderecoPedido.tipoEntrega === 'Entrega a Retirar na Loja') {
+        // Buscar a gráfica no banco de dados usando o idGrafica
+        const grafica = await Graficas.findByPk(idGrafica);
+  
+        if (!grafica) {
+          return res.status(404).json({ error: 'Gráfica não encontrada' });
+        }
+  
+        // Atualizar o endereço do pedido com os dados da gráfica
+        enderecoPedido.rua = grafica.endereçoCad;
+        enderecoPedido.cidade = grafica.cidadeCad;
+        enderecoPedido.estado = grafica.estadoCad;
+        enderecoPedido.cep = grafica.cepCad;
+        enderecoPedido.tipoEntrega = 'Entrega a Retirar na Loja';
+  
+        // Salvar as alterações no banco de dados
+        await enderecoPedido.save();
+  
+        // Retornar uma resposta de sucesso
+        res.json({ success: true, message: 'Endereço de entrega atualizado com sucesso' });
+      } else {
+        // Se o endereço não for "Entrega a Retirar na Loja", retornar uma mensagem indicando que não é necessário atualizar
+        res.json({ success: false, message: 'Endereço de entrega já está atualizado' });
+      }
+    } catch (error) {
+      console.error('Erro ao atualizar o endereço de entrega:', error);
+      res.status(500).json({ error: 'Erro interno do servidor' });
+    }
+  });
+
   module.exports = app;

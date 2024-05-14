@@ -1,5 +1,6 @@
 let tipoEntrega;
 let pId
+let novoStatusPedido
 const btnAceitarPedido = document.getElementById('btnAceitarPedido');
 const btnCancelarPedido = document.getElementById('btnCancelarPedido')
 document.addEventListener('DOMContentLoaded', async() => { 
@@ -19,13 +20,13 @@ document.addEventListener('DOMContentLoaded', async() => {
     const detalhesUsuario = data.usuario;
     const statusPedido = detalhesPedido.itenspedidos[0].statusPed;
     if(statusPedido == "Aguardando") {
-      let novoStatus = "Pedido Aceito Pela Gráfica";
+      novoStatusPedido = "Pedido Aceito Pela Gráfica";
     }else if(statusPedido == "Pedido Aceito Pela Gráfica") {
-      let novoStatus = "Finalizado";
+      novoStatusPedido = "Finalizado";
       btnAceitarPedido.textContent = "Finalizar Pedido"
       btnCancelarPedido.style.display = 'none'
     }else if(statusPedido == "Finalizado") {
-      let novoStatus = "Pedido Enviado pela Gráfiac";
+      novoStatusPedido = "Pedido Enviado pela Gráfica";
       btnAceitarPedido.textContent = "Enviar Pedido"
       btnCancelarPedido.style.display = 'none'
     }
@@ -80,7 +81,7 @@ document.addEventListener('DOMContentLoaded', async() => {
                 'Content-Type': 'application/json',
               },
                 body: JSON.stringify({
-                  pedidoId: pId,
+                  pedidoId: idPedido,
                   novoStatus: novoStatus,
                 }),
               });
@@ -115,7 +116,7 @@ document.addEventListener('DOMContentLoaded', async() => {
           try {
             const urlParams = new URLSearchParams(window.location.search);
             const idPedido = urlParams.get('idPedido');
-            const novoStatus = 'Pedido Aceito Pela Gráfica';
+            const novoStatus = novoStatusPedido;
       
             // Envia uma requisição para o servidor para atualizar o status
             const response = await fetch('/atualizar-status-pedido', {
