@@ -1,5 +1,7 @@
 let tipoEntrega;
 let pId
+const btnAceitarPedido = document.getElementById('btnAceitarPedido');
+const btnCancelarPedido = document.getElementById('btnCancelarPedido')
 document.addEventListener('DOMContentLoaded', async() => { 
   // Obtém o ID do pedido e do produto da URL
   const urlParams = new URLSearchParams(window.location.search);
@@ -15,6 +17,18 @@ document.addEventListener('DOMContentLoaded', async() => {
     .then(data => {
     const detalhesPedido = data.pedido;
     const detalhesUsuario = data.usuario;
+    const statusPedido = detalhesPedido.itenspedidos[0].statusPed;
+    if(statusPedido == "Aguardando") {
+      let novoStatus = "Pedido Aceito Pela Gráfica";
+    }else if(statusPedido == "Pedido Aceito Pela Gráfica") {
+      let novoStatus = "Finalizado";
+      btnAceitarPedido.textContent = "Finalizar Pedido"
+      btnCancelarPedido.style.display = 'none'
+    }else if(statusPedido == "Finalizado") {
+      let novoStatus = "Pedido Enviado pela Gráfiac";
+      btnAceitarPedido.textContent = "Enviar Pedido"
+      btnCancelarPedido.style.display = 'none'
+    }
     // Exibe as variações do produto no console.log do HTML
     if (detalhesPedido.itenspedidos && detalhesPedido.itenspedidos.length > 0) {
       const variacoesProduto = detalhesPedido.itenspedidos[0];
@@ -223,7 +237,6 @@ document.addEventListener('DOMContentLoaded', async() => {
 
     console.log(`Id da gráfica ${graficaId} id do pedido ${idPedido}`);
 
-    const btnCancelarPedido = document.getElementById('btnCancelarPedido');
 
     btnCancelarPedido.addEventListener('click', async () => {
         // Prompt de confirmação
