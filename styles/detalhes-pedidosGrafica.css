@@ -109,3 +109,47 @@ div#produto-info {
     margin-top: 6px;
     margin-bottom: 10px;
 }
+#formEntrega {
+    display: block;
+    position: absolute;
+    left: 85%;
+    transform: translate(-85%);
+    top: 350px;
+    box-shadow: -2px -2px 13px #00000099;
+    border-radius: 5px;
+    width: 26%;
+    padding: 15px;
+    height: 358px;
+    z-index: 1;
+    background-color: white;
+}
+#formEntrega > h2 {
+    margin-bottom: 5px;
+}
+button#btnConfEnt {
+    position: relative;
+    top: 30px;
+    left: 55%;
+    padding: 16px 28px 16px 28px;
+    font-size: 17px;
+    font-weight: 600;
+    color: white;
+    background-color: #EF4126;
+    border: none;
+    transition: 0.8s;
+    border-radius: 5px;
+    cursor: pointer;
+}
+button#btnConfEnt:hover {
+    transition: 0.8s;
+    background-color: white;
+    border: 1px solid #EF4126;
+    color: #EF4126;
+}
+#formEntrega > input {
+    font-size: 1em;
+    width: 24vw;
+    height: 40px;
+    margin: 5px;
+    padding: 6px;
+}
