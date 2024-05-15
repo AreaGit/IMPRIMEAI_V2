@@ -1,3 +1,8 @@
+const divPedidosAguardando = document.getElementById('pedidosAguardando');
+const divPedidosAceitos = document.getElementById('pedidosAceitos');
+const divPedidosFinalizados = document.getElementById('pedidosFinalizados');
+const divPedidosEntregues = document.getElementById('pedidosEntregues');
+const carregamento = document.getElementById('carregamento');
 // Função para atualizar a lista de pedidos com base no status selecionado
 function atualizarListaPedidos(status) {
     fetch('/pedidos-cadastrados')
@@ -20,6 +25,7 @@ function atualizarListaPedidos(status) {
                 const dataFormatada = dataCriacao.toLocaleString('pt-BR');
                 const imgUrl = `/imagens/${pedido.idProduto}`;
                 li.style.display = 'block';
+                carregamento.style.display = 'none';
                 li.innerHTML = `
                     <img src="${imgUrl}"></img>
                     <h2 class="ped-nome">${pedido.nomeProd}</h2>
@@ -37,23 +43,48 @@ function atualizarListaPedidos(status) {
 
 // Adicionar eventos de clique para cada divisão de status
 document.addEventListener('DOMContentLoaded', () => {
+    carregamento.style.display = 'block';
     atualizarListaPedidos('Aguardando');
+    divPedidosAguardando.setAttribute('style', 'box-shadow: -1px 3px 5px #F69896;');
+    divPedidosAceitos.setAttribute('style', 'box-shadow: -1px 3px 5px black;');
+    divPedidosFinalizados.setAttribute('style', 'box-shadow: -1px 3px 5px black;');
+    divPedidosEntregues.setAttribute('style', 'box-shadow: -1px 3px 5px black;');
 });
 
 document.getElementById('pedidosAguardando').addEventListener('click', () => {
+    carregamento.style.display = 'block';
     atualizarListaPedidos('Aguardando');
+    divPedidosAguardando.setAttribute('style', 'box-shadow: -1px 3px 5px #F69896;');
+    divPedidosAceitos.setAttribute('style', 'box-shadow: -1px 3px 5px black;');
+    divPedidosFinalizados.setAttribute('style', 'box-shadow: -1px 3px 5px black;');
+    divPedidosEntregues.setAttribute('style', 'box-shadow: -1px 3px 5px black;');
 });
 
 document.getElementById('pedidosAceitos').addEventListener('click', () => {
+    carregamento.style.display = 'block';
     atualizarListaPedidos('Pedido Aceito Pela Gráfica');
+    divPedidosAguardando.setAttribute('style', 'box-shadow: -1px 3px 5px black;');
+    divPedidosAceitos.setAttribute('style', 'box-shadow: -1px 3px 5px #F69896;');
+    divPedidosFinalizados.setAttribute('style', 'box-shadow: -1px 3px 5px black;');
+    divPedidosEntregues.setAttribute('style', 'box-shadow: -1px 3px 5px black;');
 });
 
 document.getElementById('pedidosFinalizados').addEventListener('click', () => {
+    carregamento.style.display = 'block';
     atualizarListaPedidos('Finalizado');
+    divPedidosAguardando.setAttribute('style', 'box-shadow: -1px 3px 5px black;');
+    divPedidosAceitos.setAttribute('style', 'box-shadow: -1px 3px 5px black');
+    divPedidosFinalizados.setAttribute('style', 'box-shadow: -1px 3px 5px #F69896;');
+    divPedidosEntregues.setAttribute('style', 'box-shadow: -1px 3px 5px black;');
 });
 
 document.getElementById('pedidosEntregues').addEventListener('click', () => {
+    carregamento.style.display = 'block';
     atualizarListaPedidos('Pedido Entregue pela Gráfica');
+    divPedidosAguardando.setAttribute('style', 'box-shadow: -1px 3px 5px black;');
+    divPedidosAceitos.setAttribute('style', 'box-shadow: -1px 3px 5px black');
+    divPedidosFinalizados.setAttribute('style', 'box-shadow: -1px 3px 5px black;');
+    divPedidosEntregues.setAttribute('style', 'box-shadow: -1px 3px 5px #F69896;');
 });
 
 document.addEventListener('DOMContentLoaded', () => {

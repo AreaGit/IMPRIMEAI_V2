@@ -43,7 +43,7 @@ div#produto-info {
     top: 171px;
     left: 50%;
     transform: translate(-50%);
-    width: 60%;
+    width: 52%;
     border-radius: 5px;
     padding: 15px;
     background-color: white;
@@ -102,5 +102,10 @@ div#produto-info {
 }
 .detalhesEntrega > h2 {
     width: fit-content;
+    margin-bottom: 10px;
+}
+.itensProduto > h2 {
+    width: fit-content;
+    margin-top: 6px;
     margin-bottom: 10px;
 }
