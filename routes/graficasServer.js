@@ -443,7 +443,10 @@ async function getCoordinatesFromAddressEnd(enderecoEntregaInfo, apiKey) {
       if (!pedido) {
         return res.json({ success: false, message: 'Pedido não encontrado.' });
       }
-  
+      // Procurar o usuário pelo idUser
+      const ped = await Pedidos.findByPk(pedidoId);
+      const userId = ped.idUserPed; // Ou qualquer forma que você tenha o id do usuário
+      const user = await User.findByPk(userId);
       pedido.statusPed = novoStatus;
       pedido.graficaAtend = graficaId; // Save the graphics company's ID
       await pedido.save();
@@ -454,7 +457,26 @@ async function getCoordinatesFromAddressEnd(enderecoEntregaInfo, apiKey) {
         pedido.graficaFin = graficaId;
         await pedido.save();
       }
-  
+      
+        if(novoStatus === "Pedido Aceito Pela Gráifca") {
+          //mensagem whatsapp
+          const corpoMensagem = "Olá! Temos o prazer de informar que seu pedido foi aceito pela gráfica e está em processo de produção. Em breve entraremos em contato para fornecer atualizações sobre o progresso e a entrega. Agradecemos por escolher nossos serviços!😉";
+          await enviarNotificacaoWhatsapp(user.telefoneCad, corpoMensagem);
+          console.log("Mensagem enviada Com Sucesso!")
+        }else if(novoStatus === "Finalizado") {
+          //mensagem whatsapp
+          const corpoMensagem = "Olá! Seu pedido foi finalizado e está pronto para retirada ou entrega. Por favor, entre em contato conosco para agendar a retirada ou fornecer detalhes de entrega. Obrigado por escolher nossos serviços!😉";
+          await enviarNotificacaoWhatsapp(user.telefoneCad, corpoMensagem);
+          console.log("Mensagem enviada Com Sucesso!")
+        }else if(novoStatus === "Pedido Enviado pela Gráfica") {
+          //mensagem whatsapp
+          const corpoMensagem = "Olá! Seu pedido foi despachado e está a caminho do seu endereço. Estamos trabalhando para garantir que ele chegue até você o mais rápido possível. Obrigado por escolher nossos serviços!😉";
+          await enviarNotificacaoWhatsapp(user.telefoneCad, corpoMensagem);
+          console.log("Mensagem enviada Com Sucesso!")
+        }else {
+          console.log("Não foi possível encontrar o pedido!")
+        }
+
       return res.json({ success: true, graficaAtend: graficaId, /*itensPedidos*/ });
     } catch (error) {
       console.error('Erro ao atualizar o status do pedido:', error);
@@ -570,6 +592,14 @@ app.post('/dadosEntrega', upload.single('fotoEnt'), async (req, res) => {
       horario: horEnt,
       foto: fotoEnt.buffer, // Salva o conteúdo da imagem no banco de dados
     });
+
+    const ped = await Pedidos.findByPk(pedidoId);
+    const userId = ped.idUserPed; // Ou qualquer forma que você tenha o id do usuário
+    const user = await User.findByPk(userId);
+    //mensagem whatsapp
+    const corpoMensagem = `Olá! Temos o prazer de informar que seu pedido foi entregue com sucesso para ${recEnt} no horário ${horEnt}. Esperamos que você esteja satisfeito com nossos produtos e serviços. Se precisar de mais alguma coisa, não hesite em nos contatar. Obrigado!😉`;
+    await enviarNotificacaoWhatsapp(user.telefoneCad, corpoMensagem);
+    console.log("Mensagem de entrega enviada Com Sucesso!");
 
     res.send('Dados de entrega recebidos com sucesso!');
   } catch (error) {
