@@ -2,7 +2,10 @@ let tipoEntrega;
 let pId
 let novoStatusPedido
 const btnAceitarPedido = document.getElementById('btnAceitarPedido');
-const btnCancelarPedido = document.getElementById('btnCancelarPedido')
+const btnCancelarPedido = document.getElementById('btnCancelarPedido');
+const formEntrega = document.getElementById('formEntrega');
+const btnConfEnt = document.getElementById('btnConfEnt');
+const avisoEntregue = document.getElementById('avisoEntregue');
 document.addEventListener('DOMContentLoaded', async() => { 
   // Obtém o ID do pedido e do produto da URL
   const urlParams = new URLSearchParams(window.location.search);
@@ -37,6 +40,7 @@ document.addEventListener('DOMContentLoaded', async() => {
     }else if(statusPedido == "Pedido Entregue pela Gráfica") {
       btnAceitarPedido.style.display = 'none'
       btnCancelarPedido.style.display = 'none'
+      avisoEntregue.style.display = 'block'
     } 
     // Exibe as variações do produto no console.log do HTML
     if (detalhesPedido.itenspedidos && detalhesPedido.itenspedidos.length > 0) {
@@ -116,7 +120,12 @@ document.addEventListener('DOMContentLoaded', async() => {
                       console.error('Erro ao aceitar pedido:', error);
                     }
                   });
-      }else {
+      }else if(statusPedido == "Pedido Enviado pela Gráfica") {
+        btnAceitarPedido.addEventListener('click', () => {
+          formEntrega.style.display = 'block';
+        });
+      }
+      else {
         console.log(2)
         const btnAceitarPedido = document.getElementById('btnAceitarPedido');
       
@@ -286,3 +295,59 @@ document.addEventListener('DOMContentLoaded', async() => {
         console.error('Erro ao cancelar pedido:', error);
       }
     });
+
+    btnConfEnt.addEventListener('click', async () => {
+      const recEnt = document.getElementById('recEnt').value;
+      const horEnt = document.getElementById('horEnt').value;
+      const fotoEnt = document.getElementById('fotoEnt').files[0];
+      const currentPedidoId = urlParams.get('idPedido');
+      const formData = new FormData();
+      formData.append('recEnt', recEnt);
+      formData.append('horEnt', horEnt);
+      formData.append('fotoEnt', fotoEnt);
+      formData.append('pedidoId', currentPedidoId);
+
+      try {
+          const response = await fetch('/dadosEntrega', {
+              method: 'POST',
+              body: formData
+          });
+
+          if (!response.ok) {
+              throw new Error(`Erro ao enviar dados: ${response.statusText}`);
+          }
+
+          console.log('Dados enviados com sucesso!');
+          // Faça qualquer ação necessária após o envio dos dados
+          try {
+          const idPedido = currentPedidoId;
+          const novoStatus = 'Pedido Entregue pela Gráfica';
+
+          const response = await fetch('/atualizar-status-pedido', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+              pedidoId: idPedido,
+              novoStatus: novoStatus,
+            }),
+          });
+
+          if (!response.ok) {
+            throw new Error(`Erro ao enviar pedido: ${response.statusText}`);
+          }
+
+          // Redirect to after updating the order status
+          window.setTimeout(() => {
+            window.location.href = '/pedidos';
+          },5000)
+         
+
+        } catch (error) {
+          console.error('Erro ao enviar pedido:', error);
+        }
+      } catch (error) {
+          console.error('Erro ao enviar dados:', error);
+      }
+  });

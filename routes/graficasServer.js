@@ -8,6 +8,7 @@ const VariacoesProduto = require('../models/VariacoesProduto');
 const Pedidos = require('../models/Pedidos');
 const ItensPedido = require('../models/ItensPedido');
 const Enderecos = require('../models/Enderecos');
+const Entregas = require('../models/Entregas');
 const {Op} = require('sequelize');
 const multer = require('multer');
 const cookieParser = require('cookie-parser');
@@ -542,5 +543,39 @@ async function getCoordinatesFromAddressEnd(enderecoEntregaInfo, apiKey) {
       res.status(500).json({ error: 'Erro interno do servidor' });
     }
   });
+
+  // Rota para receber os dados do formulário de entrega
+app.post('/dadosEntrega', upload.single('fotoEnt'), async (req, res) => {
+  const recEnt = req.body.recEnt;
+  const horEnt = req.body.horEnt;
+  const pedidoId = req.body.pedidoId;
+  const fotoEnt = req.file; // Informações sobre o arquivo da imagem
+
+  console.log('Dados Recebidos:');
+  console.log('Quem Recebeu:', recEnt);
+  console.log('Horário da Entrega:', horEnt);
+  console.log('ID do Pedido:', pedidoId);
+  console.log('Imagem:', fotoEnt);
+
+  // Verifica se o arquivo de imagem foi enviado
+  if (!fotoEnt) {
+    return res.status(400).send('Nenhuma imagem foi enviada.');
+  }
+
+  try {
+    // Aqui você pode fazer o que quiser com os dados recebidos, como salvar no banco de dados
+    await Entregas.create({
+      idPed: pedidoId,
+      destinatario: recEnt,
+      horario: horEnt,
+      foto: fotoEnt.buffer, // Salva o conteúdo da imagem no banco de dados
+    });
+
+    res.send('Dados de entrega recebidos com sucesso!');
+  } catch (error) {
+    console.error('Erro ao salvar imagem:', error);
+    res.status(500).send('Erro ao salvar imagem.');
+  }
+});
 
   module.exports = app;
