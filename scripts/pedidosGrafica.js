@@ -4,16 +4,16 @@ const divPedidosFinalizados = document.getElementById('pedidosFinalizados');
 const divPedidosEntregues = document.getElementById('pedidosEntregues');
 const carregamento = document.getElementById('carregamento');
 // Função para atualizar a lista de pedidos com base no status selecionado
-function atualizarListaPedidos(status) {
+function atualizarListaPedidos(status1, status2) {
     fetch('/pedidos-cadastrados')
         .then(response => response.json())
         .then(data => {
             // Filtrar os pedidos com base no status
-            const pedidosFiltrados = data.pedidos.filter(pedido => pedido.statusPed === status);
-
+            const pedidosFiltrados = data.pedidos.filter(pedido => pedido.statusPed === status1 || pedido.statusPed === status2);
             // Limpar a lista de pedidos
             const pedidosList = document.getElementById('pedidos-list');
             pedidosList.innerHTML = '';
+            carregamento.style.display = 'none';
 
             // Adicionar os pedidos filtrados à lista
             pedidosFiltrados.forEach(pedido => {
@@ -25,7 +25,6 @@ function atualizarListaPedidos(status) {
                 const dataFormatada = dataCriacao.toLocaleString('pt-BR');
                 const imgUrl = `/imagens/${pedido.idProduto}`;
                 li.style.display = 'block';
-                carregamento.style.display = 'none';
                 li.innerHTML = `
                     <img src="${imgUrl}"></img>
                     <h2 class="ped-nome">${pedido.nomeProd}</h2>
@@ -71,7 +70,7 @@ document.getElementById('pedidosAceitos').addEventListener('click', () => {
 
 document.getElementById('pedidosFinalizados').addEventListener('click', () => {
     carregamento.style.display = 'block';
-    atualizarListaPedidos('Finalizado');
+    atualizarListaPedidos('Finalizado', 'Pedido Enviado pela Gráfica');
     divPedidosAguardando.setAttribute('style', 'box-shadow: -1px 3px 5px black;');
     divPedidosAceitos.setAttribute('style', 'box-shadow: -1px 3px 5px black');
     divPedidosFinalizados.setAttribute('style', 'box-shadow: -1px 3px 5px #F69896;');
@@ -107,6 +106,9 @@ document.addEventListener('DOMContentLoaded', () => {
                     aceitosCount++;
                     break;
                 case 'Finalizado':
+                    finalizadosCount++;
+                    break;
+                case 'Pedido Enviado pela Gráfica':
                     finalizadosCount++;
                     break;
                 case 'Pedido Entregue pela Gráfica':

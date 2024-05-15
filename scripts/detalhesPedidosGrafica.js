@@ -19,6 +19,7 @@ document.addEventListener('DOMContentLoaded', async() => {
     const detalhesPedido = data.pedido;
     const detalhesUsuario = data.usuario;
     const statusPedido = detalhesPedido.itenspedidos[0].statusPed;
+    console.log(statusPedido)
     if(statusPedido == "Aguardando") {
       novoStatusPedido = "Pedido Aceito Pela Gráfica";
     }else if(statusPedido == "Pedido Aceito Pela Gráfica") {
@@ -29,7 +30,14 @@ document.addEventListener('DOMContentLoaded', async() => {
       novoStatusPedido = "Pedido Enviado pela Gráfica";
       btnAceitarPedido.textContent = "Enviar Pedido"
       btnCancelarPedido.style.display = 'none'
-    }
+    }else if(statusPedido == "Pedido Enviado pela Gráfica") {
+      novoStatusPedido = "Pedido Entregue pela Gráfica";
+      btnAceitarPedido.textContent = "Pedido Entregue"
+      btnCancelarPedido.style.display = 'none'
+    }else if(statusPedido == "Pedido Entregue pela Gráfica") {
+      btnAceitarPedido.style.display = 'none'
+      btnCancelarPedido.style.display = 'none'
+    } 
     // Exibe as variações do produto no console.log do HTML
     if (detalhesPedido.itenspedidos && detalhesPedido.itenspedidos.length > 0) {
       const variacoesProduto = detalhesPedido.itenspedidos[0];

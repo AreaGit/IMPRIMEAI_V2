@@ -134,7 +134,7 @@ async function getCoordinatesFromAddressEnd(enderecoEntregaInfo, apiKey) {
   
       const pedidosCadastrados = await ItensPedido.findAll({
         where: {
-          statusPed: ['Aguardando', 'Pedido Aceito Pela Gráfica', 'Finalizado', 'Pedido Entregue pela Gráfica'],
+          statusPed: ['Aguardando', 'Pedido Aceito Pela Gráfica', 'Finalizado', 'Pedido Enviado pela Gráfica', 'Pedido Entregue pela Gráfica'],
           statusPag: 'Pago'
         },
       });
