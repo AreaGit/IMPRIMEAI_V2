@@ -125,3 +125,22 @@ document.getElementById('pedidosEntregues').addEventListener('click', () => {
     divPedidosFinalizados.setAttribute('style', 'box-shadow: -1px 3px 5px black;');
     divPedidosEntregues.setAttribute('style', 'box-shadow: -1px 3px 5px #F69896;');
 });
+
+const nomeGrafica = document.getElementById('nomeGrafica');
+
+async function carregarInfoUsers() {
+    try {
+        const response = await fetch('/perfilGrafica/dados');
+        if (!response.ok) {
+            throw new Error('Erro ao buscar os dados do usuário');
+        }
+
+        const data = await response.json();
+        nomeGrafica.innerText = `${data.userCad}`
+    } catch (error) {
+        console.log("erro")
+        window.location.href = '/login-graficas'
+    }
+}
+
+carregarInfoUsers();

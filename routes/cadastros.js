@@ -241,7 +241,7 @@ app.post("/login-graficas", async (req, res) => {
     }
 
     res.cookie('graficaUserCad', grafica.userCad);
-    res.cookie('userId', grafica.id)
+    res.cookie('graficaId', grafica.id)
 
     // Gere um token de autenticação (exemplo simples)
     const token = Math.random().toString(16).substring(2);

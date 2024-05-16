@@ -121,7 +121,7 @@ async function getCoordinatesFromAddressEnd(enderecoEntregaInfo, apiKey) {
   
   app.get('/pedidos-cadastrados', async (req, res) => {
     try {
-      const graficaId = req.cookies.userId;
+      const graficaId = req.cookies.graficaId;
       if (!graficaId) {
         return res.status(401).json({ message: "Usuário não autenticado" });
       }
@@ -438,7 +438,7 @@ async function getCoordinatesFromAddressEnd(enderecoEntregaInfo, apiKey) {
       const { pedidoId, novoStatus } = req.body;
   
       // Atualize o status do pedido na tabela Pedidos
-      const graficaId = req.cookies.userId; // Assuming the graphics company's ID is stored in a cookie
+      const graficaId = req.cookies.graficaId; // Assuming the graphics company's ID is stored in a cookie
       console.log(graficaId)
       const pedido = await ItensPedido.findByPk(pedidoId);
       if (!pedido) {
@@ -525,7 +525,7 @@ async function getCoordinatesFromAddressEnd(enderecoEntregaInfo, apiKey) {
   
   app.post('/atualizar-endereco-entrega', async (req, res) => {
     const idPedido = req.body.pedidoId;
-    const idGrafica = req.cookies.userId;
+    const idGrafica = req.cookies.graficaId;
   
     try {
       // Verificar se o pedido existe
@@ -606,6 +606,33 @@ app.post('/dadosEntrega', upload.single('fotoEnt'), async (req, res) => {
   } catch (error) {
     console.error('Erro ao salvar imagem:', error);
     res.status(500).send('Erro ao salvar imagem.');
+  }
+});
+
+app.get("/perfilGrafica/dados", async (req, res) => {
+  try {
+    // Verifique se o cookie "userId" está definido
+    const userId = req.cookies.graficaId
+
+    if (!userId) {
+      return res.status(401).json({ message: "Gráfica não autenticada" });
+    }
+
+    // Use o modelo Grafica para buscar o usuário no banco de dados pelo ID
+    const user = await Graficas.findByPk(userId);
+
+    if (!user) {
+      return res.status(404).json({ message: "Gráfica não encontrada" });
+    }
+
+    // Retorna os dados do usuário como JSON
+    res.json({
+      userCad: user.userCad,
+      userId: userId,
+    });
+  } catch (error) {
+    console.error("Erro ao buscar os dados do usuário:", error);
+    res.status(500).json({ message: "Erro interno do servidor" });
   }
 });
 

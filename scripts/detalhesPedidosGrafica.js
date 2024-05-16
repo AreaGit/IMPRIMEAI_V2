@@ -321,7 +321,7 @@ document.addEventListener('DOMContentLoaded', async() => {
     function getGraficaIdFromCookies() {
       for (const cookie of cookies) {
         const [name, value] = cookie.trim().split('=');
-        if (name === 'userId') {
+        if (name === 'graficaId') {
           console.log('ID da Gráfica nos Cookies:', value);
           return value;
         }
