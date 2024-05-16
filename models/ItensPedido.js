@@ -8,6 +8,9 @@ const ItensPedidos = db.define('itenspedidos', {
         autoIncrement: true,
         primaryKey: true
     },
+    idUserPed: {
+        type: Sequelize.INTEGER,
+    },
     idPed: {
         type: Sequelize.INTEGER,
     },

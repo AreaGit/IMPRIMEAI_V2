@@ -27,6 +27,7 @@ const nodemailer = require('nodemailer');
 const rp = require('request-promise');
 const Sequelize = require('sequelize');
 const fs = require('fs');
+const ItensPedidos = require('../models/ItensPedido');
 const apiKeyBingMaps = 'Ao6IBGy_Nf0u4t9E88BYDytyK5mK3kObchF4R0NV5h--iZ6YgwXPMJEckhAEaKlH';
 app.use(express.json());
 app.use(cookieParser());
@@ -444,7 +445,7 @@ async function getCoordinatesFromAddressEnd(enderecoEntregaInfo, apiKey) {
         return res.json({ success: false, message: 'Pedido não encontrado.' });
       }
       // Procurar o usuário pelo idUser
-      const ped = await Pedidos.findByPk(pedidoId);
+      const ped = await ItensPedidos.findByPk(pedidoId);
       const userId = ped.idUserPed; // Ou qualquer forma que você tenha o id do usuário
       const user = await User.findByPk(userId);
       pedido.statusPed = novoStatus;

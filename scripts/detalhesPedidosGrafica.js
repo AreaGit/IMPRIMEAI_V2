@@ -1,11 +1,13 @@
 let tipoEntrega;
 let pId
 let novoStatusPedido
+let idPedMult
 const btnAceitarPedido = document.getElementById('btnAceitarPedido');
 const btnCancelarPedido = document.getElementById('btnCancelarPedido');
 const formEntrega = document.getElementById('formEntrega');
 const btnConfEnt = document.getElementById('btnConfEnt');
 const avisoEntregue = document.getElementById('avisoEntregue');
+const carregamento = document.getElementById('carregamento');
 document.addEventListener('DOMContentLoaded', async() => { 
   // Obtém o ID do pedido e do produto da URL
   const urlParams = new URLSearchParams(window.location.search);
@@ -22,7 +24,7 @@ document.addEventListener('DOMContentLoaded', async() => {
     const detalhesPedido = data.pedido;
     const detalhesUsuario = data.usuario;
     const statusPedido = detalhesPedido.itenspedidos[0].statusPed;
-    console.log(statusPedido)
+    idPedMult = detalhesPedido.itenspedidos[0].id;
     if(statusPedido == "Aguardando") {
       novoStatusPedido = "Pedido Aceito Pela Gráfica";
     }else if(statusPedido == "Pedido Aceito Pela Gráfica") {
@@ -58,8 +60,47 @@ document.addEventListener('DOMContentLoaded', async() => {
       btnAceitarPedido.addEventListener('click', () => {
         formEntrega.style.display = 'block';
       });
-    }
-    else if (statusPedido === 'Pedido Aceito Pela Gráfica' || 'Finalizado' && tipoEntrega === 'Entrega a Retirar na Loja') {
+    }else if(tipoEntrega === "Múltiplos Enderecos") {
+      const btnAceitarPedido = document.getElementById('btnAceitarPedido') 
+      btnAceitarPedido.addEventListener('click', async () => {
+          try {
+            const idPedido = detalhesPedido.itenspedidos[0].id;
+            const novoStatus = novoStatusPedido;
+            // Envia uma requisição para o servidor para atualizar o status
+            const response = await fetch('/atualizar-status-pedido', {
+              method: 'POST',
+              headers: {
+                'Content-Type': 'application/json',
+              },
+                body: JSON.stringify({
+                  pedidoId: idPedido,
+                  novoStatus: novoStatus,
+                }),
+              });
+                // Verifica se a atualização foi bem-sucedida
+              if (!response.ok) {
+                 throw new Error(`Erro ao aceitar pedido: ${response.statusText}`);
+              }
+              // Exibe uma mensagem ou realiza outras ações conforme necessário
+              const data = await response.json();
+              if (data.success) {
+                console.log('Pedido aceito com sucesso!');
+                setTimeout( () =>{
+                  window.location.href = '/pedidos';
+                },3000);
+                // Verifica se o novo status é 'Pedido Aceito Pela Gráfica'
+                if (data.novoStatus === 'Pedido Aceito Pela Gráfica') {
+                } else {
+                  // Adicione código aqui para outras ações quando o status não é 'Pedido Aceito Pela Gráfica'
+                }
+              } else {
+                console.error('Erro ao aceitar pedido:', data.message);
+              }
+            } catch (error) {
+              console.error('Erro ao aceitar pedido:', error);
+            }
+        });
+    }else if (statusPedido === 'Pedido Aceito Pela Gráfica' || 'Finalizado' && tipoEntrega === 'Entrega a Retirar na Loja') {
       const btnAceitarPedido = document.getElementById('btnAceitarPedido');
       
       btnAceitarPedido.addEventListener('click', async () => {
@@ -313,6 +354,12 @@ document.addEventListener('DOMContentLoaded', async() => {
         }
       try {
         const idGrafica = graficaId;
+        let idPedidoCancl
+        if(tipoEntrega === "Múltiplos Enderecos") {
+           idPedidoCancl = idPedMult;
+        }else {
+           idPedidoCancl = urlParams.get('idPedido');
+        }
 
         const response = await fetch(`/cancelar-pedido/${idPedido}/${idGrafica}`, {
           method: 'POST',
@@ -320,7 +367,7 @@ document.addEventListener('DOMContentLoaded', async() => {
             'Content-Type': 'application/json',
           },
           body: JSON.stringify({
-            idPedido: pId,
+            idPedido: idPedidoCancl,
             graficaId: graficaId,
           }),
         });
@@ -345,6 +392,7 @@ document.addEventListener('DOMContentLoaded', async() => {
     });
 
     btnConfEnt.addEventListener('click', async () => {
+      carregamento.style.display = 'block';
       const recEnt = document.getElementById('recEnt').value;
       const horEnt = document.getElementById('horEnt').value;
       const fotoEnt = document.getElementById('fotoEnt').files[0];
@@ -388,6 +436,7 @@ document.addEventListener('DOMContentLoaded', async() => {
 
           // Redirect to after updating the order status
           window.setTimeout(() => {
+            carregamento.style.display = 'none';
             window.location.href = '/pedidos';
           },5000)
          

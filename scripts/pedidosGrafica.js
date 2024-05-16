@@ -1,3 +1,43 @@
+document.addEventListener('DOMContentLoaded', () => {
+    fetch('/pedidos-cadastrados')
+    .then(response => response.json())
+    .then(data => {
+        // Inicialize contadores para cada status
+        let aguardandoCount = 0;
+        let aceitosCount = 0;
+        let finalizadosCount = 0;
+        let entreguesCount = 0;
+
+        // Percorra os pedidos e conte quantos estão em cada status
+        data.pedidos.forEach(pedido => {
+            switch (pedido.statusPed) {
+                case 'Aguardando':
+                    aguardandoCount++;
+                    break;
+                case 'Pedido Aceito Pela Gráfica':
+                    aceitosCount++;
+                    break;
+                case 'Finalizado':
+                    finalizadosCount++;
+                    break;
+                case 'Pedido Enviado pela Gráfica':
+                    finalizadosCount++;
+                    break;
+                case 'Pedido Entregue pela Gráfica':
+                    entreguesCount++;
+                    break;
+                default:
+                    break;
+            }
+        });
+        // Atualize os spans com os contadores
+        document.getElementById('totalPedidosFazer').textContent = aguardandoCount;
+        document.getElementById('totalPedidosAceitos').textContent = aceitosCount;
+        document.getElementById('totalPedidosFinalizados').textContent = finalizadosCount;
+        document.getElementById('totalPedidosEntregues').textContent = entreguesCount;
+    })
+});
+
 const divPedidosAguardando = document.getElementById('pedidosAguardando');
 const divPedidosAceitos = document.getElementById('pedidosAceitos');
 const divPedidosFinalizados = document.getElementById('pedidosFinalizados');
@@ -85,43 +125,3 @@ document.getElementById('pedidosEntregues').addEventListener('click', () => {
     divPedidosFinalizados.setAttribute('style', 'box-shadow: -1px 3px 5px black;');
     divPedidosEntregues.setAttribute('style', 'box-shadow: -1px 3px 5px #F69896;');
 });
-
-document.addEventListener('DOMContentLoaded', () => {
-    fetch('/pedidos-cadastrados')
-    .then(response => response.json())
-    .then(data => {
-        // Inicialize contadores para cada status
-        let aguardandoCount = 0;
-        let aceitosCount = 0;
-        let finalizadosCount = 0;
-        let entreguesCount = 0;
-
-        // Percorra os pedidos e conte quantos estão em cada status
-        data.pedidos.forEach(pedido => {
-            switch (pedido.statusPed) {
-                case 'Aguardando':
-                    aguardandoCount++;
-                    break;
-                case 'Pedido Aceito Pela Gráfica':
-                    aceitosCount++;
-                    break;
-                case 'Finalizado':
-                    finalizadosCount++;
-                    break;
-                case 'Pedido Enviado pela Gráfica':
-                    finalizadosCount++;
-                    break;
-                case 'Pedido Entregue pela Gráfica':
-                    entreguesCount++;
-                    break;
-                default:
-                    break;
-            }
-        });
-        // Atualize os spans com os contadores
-        document.getElementById('totalPedidosFazer').textContent = aguardandoCount;
-        document.getElementById('totalPedidosAceitos').textContent = aceitosCount;
-        document.getElementById('totalPedidosFinalizados').textContent = finalizadosCount;
-        document.getElementById('totalPedidosEntregues').textContent = entreguesCount;
-    })
-})

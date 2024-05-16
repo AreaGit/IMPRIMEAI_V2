@@ -829,6 +829,7 @@ app.post('/criar-pedidos', async (req, res) => {
         const produto = await Produtos.findByPk(produtoQuebrado.produtoId);
         const itemPedido = await ItensPedido.create({
           idPed: pedido.id,
+          idUserPed: req.cookies.userId,
           idProduto: produtoQuebrado.produtoId,
           nomeProd: produto.nomeProd,
           quantidade: produtoQuebrado.quantidade,
@@ -933,6 +934,7 @@ app.post('/criar-pedidos', async (req, res) => {
 
         const itemPedido = await ItensPedido.create({
           idPed: pedido.id,
+          idUserPed: req.cookies.userId,
           idProduto: produtoNoCarrinho.produtoId,
           nomeProd: produto.nomeProd,
           quantidade: produtoNoCarrinho.quantidade,
