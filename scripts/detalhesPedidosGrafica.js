@@ -53,8 +53,61 @@ document.addEventListener('DOMContentLoaded', async() => {
     const detalhesItens = document.createElement('div');
     detalhesItens.id = `detalhesItens${data.pedido.id}`
     detalhesItens.className = 'itensProduto'
-
-    if(tipoEntrega === 'Entrega a Retirar na Loja') {
+    console.log(statusPedido , tipoEntrega)
+    if(statusPedido == "Pedido Enviado pela Gráfica") {
+      btnAceitarPedido.addEventListener('click', () => {
+        formEntrega.style.display = 'block';
+      });
+    }
+    else if (statusPedido === 'Pedido Aceito Pela Gráfica' || 'Finalizado' && tipoEntrega === 'Entrega a Retirar na Loja') {
+      const btnAceitarPedido = document.getElementById('btnAceitarPedido');
+      
+      btnAceitarPedido.addEventListener('click', async () => {
+        try {
+          const urlParams = new URLSearchParams(window.location.search);
+          const idPedido = urlParams.get('idPedido');
+          const novoStatus = novoStatusPedido;
+    
+          // Envia uma requisição para o servidor para atualizar o status
+          const response = await fetch('/atualizar-status-pedido', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+              pedidoId: idPedido,
+              novoStatus: novoStatus,
+            }),
+          });
+    
+          // Verifica se a atualização foi bem-sucedida
+          if (!response.ok) {
+            throw new Error(`Erro ao aceitar pedido: ${response.statusText}`);
+          }
+    
+          // Exibe uma mensagem ou realiza outras ações conforme necessário
+          const data = await response.json();
+          if (data.success) {
+            console.log('Pedido aceito com sucesso!');
+            window.location.href = '/pedidos';
+    
+            // Verifica se o novo status é 'Pedido Aceito Pela Gráfica'
+            if (data.novoStatus === 'Pedido Aceito Pela Gráfica') {
+              // Redireciona o usuário para a nova página
+               // Substitua '/pagina-nova' pela rota desejada
+            } else {
+              // Adicione código aqui para outras ações quando o status não é 'Pedido Aceito Pela Gráfica'
+            }
+          } else {
+            console.error('Erro ao aceitar pedido:', data.message);
+          }
+    
+        } catch (error) {
+          console.error('Erro ao aceitar pedido:', error);
+        }
+        });
+    }
+    else if(tipoEntrega === 'Entrega a Retirar na Loja') {
       console.log(1)
       const btnAceitarPedido = document.getElementById('btnAceitarPedido') 
       btnAceitarPedido.addEventListener('click', async () => {
@@ -98,34 +151,29 @@ document.addEventListener('DOMContentLoaded', async() => {
                 }),
               });
                 // Verifica se a atualização foi bem-sucedida
-                if (!response.ok) {
-                  throw new Error(`Erro ao aceitar pedido: ${response.statusText}`);
+              if (!response.ok) {
+                 throw new Error(`Erro ao aceitar pedido: ${response.statusText}`);
+              }
+              // Exibe uma mensagem ou realiza outras ações conforme necessário
+              const data = await response.json();
+              if (data.success) {
+                console.log('Pedido aceito com sucesso!');
+                setTimeout( () =>{
+                  window.location.href = '/pedidos';
+                },3000);
+                // Verifica se o novo status é 'Pedido Aceito Pela Gráfica'
+                if (data.novoStatus === 'Pedido Aceito Pela Gráfica') {
+                } else {
+                  // Adicione código aqui para outras ações quando o status não é 'Pedido Aceito Pela Gráfica'
                 }
-                // Exibe uma mensagem ou realiza outras ações conforme necessário
-                const data = await response.json();
-                  if (data.success) {
-                    console.log('Pedido aceito com sucesso!');
-                    setTimeout( () =>{
-                      window.location.href = '/pedidos';
-                    },3000);
-                    // Verifica se o novo status é 'Pedido Aceito Pela Gráfica'
-                    if (data.novoStatus === 'Pedido Aceito Pela Gráfica') {
-                    } else {
-                      // Adicione código aqui para outras ações quando o status não é 'Pedido Aceito Pela Gráfica'
-                    }
-                    } else {
-                      console.error('Erro ao aceitar pedido:', data.message);
-                    }
-                    } catch (error) {
-                      console.error('Erro ao aceitar pedido:', error);
-                    }
-                  });
-      }else if(statusPedido == "Pedido Enviado pela Gráfica") {
-        btnAceitarPedido.addEventListener('click', () => {
-          formEntrega.style.display = 'block';
+              } else {
+                console.error('Erro ao aceitar pedido:', data.message);
+              }
+            } catch (error) {
+              console.error('Erro ao aceitar pedido:', error);
+            }
         });
-      }
-      else {
+      }else {
         console.log(2)
         const btnAceitarPedido = document.getElementById('btnAceitarPedido');
       
