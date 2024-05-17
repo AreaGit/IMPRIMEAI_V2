@@ -182,3 +182,27 @@ document.addEventListener('DOMContentLoaded', function() {
   
     atualizarTotalAPagar(); // Chamada imediata da função após a definição
   });  
+
+  const btnAvancar = document.getElementById('btnAvancar');
+  function getCookie(name) {
+    const cookies = document.cookie.split(';');
+    for (let i = 0; i < cookies.length; i++) {
+    const cookie = cookies[i].trim();
+    if (cookie.startsWith(name + '=')) {
+        return cookie.substring(name.length + 1);
+    }
+}
+    return null;
+}
+     
+// Ler o valor do cookie 'userCad'
+const userId = getCookie('userId');
+console.log(userId);
+  
+btnAvancar.addEventListener('click', () => {
+  if(userId == null) {
+    window.location.href = '/cadastro';
+  }else {
+    window.location.href = '/formato-entrega';
+  }    
+});
