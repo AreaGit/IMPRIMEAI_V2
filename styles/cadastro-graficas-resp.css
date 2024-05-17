@@ -46,7 +46,7 @@
     #rightForm {
         position: absolute;
         left: -66%;
-        top: 124%;
+        top: 255%;
         transform: translate(0%);
     }
     form > button {
@@ -62,7 +62,7 @@
         position: absolute;
         left: -65%;
         transform: translate(0%);
-        top: 195%;
+        top: 380%;
         border-radius: 5px;
         transition: 0.8s;
     }
@@ -79,7 +79,7 @@
         position: absolute;
         left: 93%;
         transform: translate(-93%);
-        top: 303px;
+        top: 560px;
     }
     #popup {
         display: none;
@@ -108,15 +108,6 @@
         transform: translate(-90%);
         top: 60px;
     }
-    form > a {
-        position: absolute;
-        left: 50%;
-        top: 1241px;
-        text-decoration: underline;
-        color: #F37160;
-        font-size: 15px;
-        transform: translate(-50%);
-    }
 }
 @media screen and (min-width:768px) and (max-width:1024px) {
     #leftForm {
@@ -144,18 +135,9 @@
         position: absolute;
         left: 70%;
         transform: translate(0%);
-        top: 77%;
+        top: 117%;
         border-radius: 5px;
         transition: 0.8s;
-    }
-    form > a {
-        position: absolute;
-        left: 150%;
-        top: 550px;
-        text-decoration: underline;
-        color: #F37160;
-        transform: translate(-150%);
-        width: 41%;
     }
 }
 @media screen and (min-width:1025px) and (max-width:1440px) {
@@ -182,20 +164,11 @@
         box-shadow: -1px -1px 8px black;
         cursor: pointer;
         position: absolute;
-        left: 75%;
+        left: 76%;
         transform: translate(-0%);
         top: 80%;
         border-radius: 5px;
         transition: 0.8s;
-    }
-    form > a {
-        position: absolute;
-        left: 120%;
-        top: 542px;
-        text-decoration: underline;
-        color: #F37160;
-        transform: translate(-120%);
-        width: 26%;
     }
 }
 @media screen and (min-width:1441px) and (max-width:1919px) {
@@ -224,18 +197,9 @@
         position: absolute;
         left: 86%;
         transform: translate(-0%);
-        top: 75%;
+        top: 119%;
         border-radius: 5px;
         transition: 0.8s;
-    }
-    form > a {
-        position: absolute;
-        left: 120%;
-        top: 542px;
-        text-decoration: underline;
-        color: #F37160;
-        transform: translate(-120%);
-        width: 24%;
     }
 }
 @media screen and (min-width:2560px) {
@@ -290,7 +254,7 @@
         position: absolute;
         left: 90%;
         transform: translate(-90%);
-        top: 80%;
+        top: 180%;
         border-radius: 5px;
         transition: 0.8s;
     }
@@ -375,13 +339,5 @@
         color: rgb(74 222 128);
         width: 2rem;
         height: 2rem;
-    }
-    form > a {
-        position: relative;
-        left: 71%;
-        top: 555px;
-        text-decoration: underline;
-        color: #F37160;
-        font-size: 20px;
     }
 }

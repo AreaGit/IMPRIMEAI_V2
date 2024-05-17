@@ -383,3 +383,10 @@ label > a {
     margin-left: -0.5rem;
     margin-right: -0.5rem;
   }
+form > a {
+    position: relative;
+    left: 67%;
+    top: 555px;
+    text-decoration: underline;
+    color: #F37160;
+}  
