@@ -39,9 +39,30 @@ const Produtos = db.define('produtos', {
     type: Sequelize.BLOB('long'), // Use BLOB para armazenar imagens
     allowNull: true, // Alterado para não permitir valores nulos, se as imagens forem obrigatórias.
   },
+}, {
+  indexes: [
+    {
+      unique: false,
+      fields: ['categProd'],
+      name: 'idx_categProd'
+    },
+    {
+      unique: false,
+      fields: ['nomeProd'],
+      name: 'idx_nomeProd'
+    },
+    {
+      unique: false,
+      fields: ['categProd', 'nomeProd'],
+      name: 'idx_categProd_nomeProd'
+    }
+  ]
 });
 
-Produtos.hasMany(VariacoesProduto, { foreignKey: 'idProduto' }); // Adicione esta linha para configurar a associação
+// Configurar a associação com VariacoesProduto
+Produtos.hasMany(VariacoesProduto, { foreignKey: 'idProduto' });
+
+// Sincronizar o modelo com o banco de dados
 Produtos.sync() // Use isso para criar ou atualizar a tabela
 //Produtos.sync({ force: true }) // Use isso para recriar a tabela (cuidado, dados existentes serão apagados)
 
