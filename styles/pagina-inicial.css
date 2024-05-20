@@ -229,7 +229,6 @@ main {
     padding: 15px;
 }
 #novidades {
-    overflow-x: auto;
     position: relative;
     left: 15px;
     height: 1095px;
@@ -482,8 +481,8 @@ main {
 }
 footer {
     position: absolute;
-    top: 270%;
-    width: 100%;
+    top: 165%;
+    width: 94%;
     height: 25px;
 }
 footer > a {
