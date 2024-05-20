@@ -151,6 +151,122 @@
         background-color: white;
       }
 }
+@media screen and (min-width:1024px) and (max-width:1300px) {   
+    #nav-bar {
+        position: relative;
+        left: 50%;
+        top: 8px;
+        width: 568px;
+        transform: translate(-50%);
+    }
+    #logo {
+        position: fixed;
+        left: 27%;
+        transform: translate(-27%);
+        top: 1px;
+    }
+    #icone-pesquisa {
+        width: 22px;
+        height: 24px;
+        position: fixed;
+        left: 80%;
+        transform: translate(-80%);
+        top: 9px;
+    }
+}
+@media screen and (min-width:1301px) and (max-width:1440px) {
+    #nav-bar {
+        position: relative;
+        left: 50%;
+        top: 8px;
+        width: 568px;
+        transform: translate(-50%);
+    }
+    #logo {
+        position: fixed;
+        left: 28%;
+        transform: translate(-28%);
+        top: 1px;
+    }
+    #icone-pesquisa {
+        width: 22px;
+        height: 24px;
+        position: fixed;
+        left: 77%;
+        transform: translate(-77%);
+        top: 11px;
+    }
+    #carrinho-compras {
+        width: 32px;
+        height: 34px;
+        position: fixed;
+        left: 112%;
+        transform: translate(-112%);
+        top: -15%;
+    }
+}
+@media screen and (min-width:1441px) and (max-width:1635px) {
+    #nav-bar {
+        position: relative;
+        left: 50%;
+        top: 8px;
+        width: 568px;
+        transform: translate(-50%);
+    }
+    #logo {
+        position: fixed;
+        left: 30%;
+        transform: translate(-30%);
+        top: 1px;
+    }
+    #icone-pesquisa {
+        width: 22px;
+        height: 24px;
+        position: fixed;
+        left: 77%;
+        transform: translate(-77%);
+        top: 11px;
+    }
+    #carrinho-compras {
+        width: 32px;
+        height: 34px;
+        position: fixed;
+        left: 112%;
+        transform: translate(-112%);
+        top: -15%;
+    }
+}
+@media screen and (min-width:1635px) and (max-width:1789px) {
+    #nav-bar {
+        position: relative;
+        left: 50%;
+        top: 8px;
+        width: 568px;
+        transform: translate(-50%);
+    }
+    #logo {
+        position: fixed;
+        left: 32%;
+        transform: translate(-32%);
+        top: 1px;
+    }
+    #icone-pesquisa {
+        width: 22px;
+        height: 24px;
+        position: fixed;
+        left: 71%;
+        transform: translate(-71%);
+        top: 11px;
+    }
+    #carrinho-compras {
+        width: 32px;
+        height: 34px;
+        position: fixed;
+        left: 112%;
+        transform: translate(-112%);
+        top: -15%;
+    }
+}
 @media screen and (min-width:2560px) {
     .cxProd {
         margin: 30px;
