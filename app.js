@@ -1,6 +1,6 @@
 const express = require('express');
 const app = express();
-const PORT = 8082;
+const PORT = 8081;
 const fs = require('fs');
 const path = require('path');
 const cadastros = require('./routes/cadastros');
@@ -439,6 +439,16 @@ app.get('/detalhes-pedidos', (req, res) => {
     res.send(detalhesPedidosGraficasContentHtml);
   } catch (err) {
     console.log("Erro ao ler o arquivo detalhesPedidosGrafica.html: ", err);
+    res.status(500).send("Erro interno do servidor");
+  }
+});
+//Rota get para a painel administrativo
+app.get('/painel-administrativo', (req, res) => {
+  try {
+    const painelAdmContentHtml = fs.readFileSync(path.join(__dirname, "html", "painel-adm.html"), "utf-8");
+    res.send(painelAdmContentHtml);
+  } catch (err) {
+    console.log("Erro ao ler o arquivo painel-adm.html: ", err);
     res.status(500).send("Erro interno do servidor");
   }
 });
