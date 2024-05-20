@@ -145,7 +145,11 @@ function criarSelect(variacoes, tipo, labelText) {
      const label = document.createElement('label');
      label.textContent = labelText;
      secao.appendChild(label);
- 
+
+    // Adiciona uma quebra de linha
+    const br = document.createElement('br');
+    secao.appendChild(br);
+
      // Cria um select element
      const select = document.createElement('select');
      select.name = tipo;
