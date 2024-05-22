@@ -55,23 +55,28 @@
     #menu-icon {
         display: block;
         position: absolute;
-        left: 80%;
+        left: 100%;
+        transform: translate(-100%);
         top: -10%;
     }
     #logo {
+        display: none;
+    }    
+    #logo2 {
+        display: block;
         position: absolute;
         left: 0%;
         transform: translate(-5%);
         top: -3px;
-        width: 8%;
-    }    
+        width: 23%;
+    }
     #icone-pesquisa {
         width: 34px;
         height: 36px;
         position: absolute;
-        left: 15%;
-        transform: translate(-15%);
-        top: 3px;
+        left: 30%;
+        transform: translate(-30%);
+        top: 33px;
     }
     #carrinho-compras {
         width: 44px;
@@ -92,20 +97,22 @@
     footer {
         position: absolute;
         top: 230%;
-        width: 90%;
+        width: 71%;
         height: 25px;
-    }    
+        left: 54%;
+        transform: translate(-50%);
+        height: 30px;
+    } 
     footer > a {
         font-size: 17px;
-        width: 82%;
     }
     #linksRapidos {
         position: absolute;
         top: 205%;
-        width: 120%;
+        width: 100%;
         height: 108px;
-        padding: 10px;
-        left: -13%;
+        padding: 0px;
+        left: 20%;
     }
     #linksRapidos > h2 {
         font-size: 36px;
@@ -124,7 +131,7 @@
     #minha-carteira {
         position: relative;
         top: -32px;
-        left: 52%;
+        left: 57%;
         width: 45vw;
     }
     #minha-carteira > h3 {
@@ -175,7 +182,8 @@
         position: absolute;
         top: 145%;
         padding: 15px;
-        left: -5%;
+        left: 50%;
+        transform: translate(-50%);
     }
     #motivosCompra > h2 {
         font-size: 27px;
@@ -229,8 +237,17 @@
         width: 94vw;
         height: 342px;
         position: absolute;
-        left: 4%;
+        left: 50%;
         top: 16%;
+        transform: translate(-50%);
+    }
+    #prod1 {
+        cursor: pointer;
+        width: 179px;
+        height: 129px;
+        position: absolute;
+        top: 30px;
+        left: 4%;
     }
     #prod3 {
         cursor: pointer;
@@ -391,25 +408,25 @@
         transform: translate(-50%);
     }
     #logo {
-        position: fixed;
-        left: 27%;
-        transform: translate(-27%);
-        top: 1px;
+        position: absolute;
+        left: -14%;
+        top: -10px;
     }
     #icone-pesquisa {
         width: 22px;
         height: 24px;
-        position: fixed;
-        left: 80%;
-        transform: translate(-80%);
-        top: 9px;
+        position: absolute;
+        left: 112%;
+        transform: translate(-112%);
+        top: 1px;
     }
     #sec-header {
         width: 712px;
         height: 342px;
         position: absolute;
-        left: 17%;
+        left: 50%;
         top: 16%;
+        transform: translate(-50%);
     }
     main {
         position: relative;
@@ -434,6 +451,13 @@
         position: absolute;
         top: 46%;
         left: -17%;
+    }
+    #novidades {
+        position: absolute;
+        left: 50%;
+        height: 1095px;
+        width: 100%;
+        transform: translate(-50%);
     }
     #novidades > h2 {
         font-size: 28px;
@@ -485,42 +509,14 @@
         transition: transform 0.8s;
         overflow-x: hidden;
     }
-    #motivosCompra > h2 {
-        font-size: 28px;
-        font-weight: 600;
-        color: #A7A9AC;
+    #motivosCompra {
+        width: 1050px;
+        height: 313px;
         position: absolute;
-        left: -15%;
-    }
-    #mot1 {
-        width: 313px;
-        height: 194px;
-        box-shadow: -1px -1px 8px #434344;
-        border-radius: 5px;
-        position: absolute;
-        top: 35%;
-        transition: 1s;
-        left: -17%;
-    }
-    #mot2 {
-        width: 313px;
-        height: 194px;
-        box-shadow: -1px -1px 8px #434344;
-        border-radius: 5px;
-        position: absolute;
-        top: 33%;
-        left: 15%;
-        transition: 1s;
-    }
-    #mot3 {
-        width: 313px;
-        height: 194px;
-        box-shadow: -1px -1px 8px #434344;
-        border-radius: 5px;
-        position: absolute;
-        top: 35%;
-        left: 47%;
-        transition: 1s;
+        top: 105%;
+        padding: 15px;
+        left: 50%;
+        transform: translate(-50%);
     }
     #linksRapidos {
         position: absolute;
@@ -528,45 +524,20 @@
         width: 420px;
         height: 108px;
         padding: 10px;
-        left: -10%;
+        left: 30%;
+        transform: translate(-30%);
     }
     #linksRapidos > h2 {
         font-size: 28px;
         font-weight: 600;
     }
-    #meus-pedidos {
-        width: 162px;
-        height: 48px;
-        box-shadow: -1px -1px 8px #434344;
-        border-radius: 5px;
-        position: absolute;
-        left: 10%;
-        top: 50%;
-    }
-    #minha-carteira {
-        width: 162px;
-        height: 48px;
-        box-shadow: -1px -1px 8px #434344;
-        border-radius: 5px;
-        position: absolute;
-        left: 50%;
-        top: 50%;
-    }
-    #meu-perfil {
-        width: 162px;
-        height: 48px;
-        box-shadow: -1px -1px 8px #434344;
-        border-radius: 5px;
-        position: absolute;
-        left: 90%;
-        top: 50%;
-    }
     footer {
         position: absolute;
         top: 165%;
-        width: 100%;
+        width: 40%;
         height: 25px;
-        left: 0%;
+        left: 50%;
+        transform: translate(-50%);
     }
 }
 @media screen and (min-width:1301px) and (max-width:1440px) {
@@ -578,33 +549,25 @@
         transform: translate(-50%);
     }
     #logo {
-        position: fixed;
-        left: 28%;
-        transform: translate(-28%);
-        top: 1px;
+        position: absolute;
+        left: -14%;
+        top: -10px;
     }
     #icone-pesquisa {
         width: 22px;
         height: 24px;
-        position: fixed;
-        left: 77%;
-        transform: translate(-77%);
-        top: 11px;
-    }
-    #carrinho-compras {
-        width: 32px;
-        height: 34px;
-        position: fixed;
+        position: absolute;
         left: 112%;
         transform: translate(-112%);
-        top: -15%;
+        top: 1px;
     }
     #sec-header {
         width: 712px;
         height: 342px;
         position: absolute;
-        left: 17%;
+        left: 50%;
         top: 16%;
+        transform: translate(-50%);
     }
     main {
         position: relative;
@@ -630,12 +593,19 @@
         top: 46%;
         left: -17%;
     }
+    #novidades {
+        position: absolute;
+        left: 50%;
+        height: 1095px;
+        width: 100%;
+        transform: translate(-50%);
+    }
     #novidades > h2 {
         font-size: 28px;
         font-weight: 600;
         color: #A7A9AC;
         position: absolute;
-        left: 0%;
+        left: -11%;
     }
     #cx1 {
         box-shadow: -1px -1px 8px #434344;
@@ -680,50 +650,14 @@
         transition: transform 0.8s;
         overflow-x: hidden;
     }
-    #novidades {
-        overflow-x: auto;
-        position: relative;
-        left: -87px;
-        height: 1195px;
-        width: 110%;
-        top: -60px;
-    }
-    #motivosCompra > h2 {
-        font-size: 28px;
-        font-weight: 600;
-        color: #A7A9AC;
+    #motivosCompra {
+        width: 1050px;
+        height: 313px;
         position: absolute;
-        left: -15%;
-    }
-    #mot1 {
-        width: 313px;
-        height: 194px;
-        box-shadow: -1px -1px 8px #434344;
-        border-radius: 5px;
-        position: absolute;
-        top: 35%;
-        transition: 1s;
-        left: -17%;
-    }
-    #mot2 {
-        width: 313px;
-        height: 194px;
-        box-shadow: -1px -1px 8px #434344;
-        border-radius: 5px;
-        position: absolute;
-        top: 33%;
-        left: 15%;
-        transition: 1s;
-    }
-    #mot3 {
-        width: 313px;
-        height: 194px;
-        box-shadow: -1px -1px 8px #434344;
-        border-radius: 5px;
-        position: absolute;
-        top: 35%;
-        left: 47%;
-        transition: 1s;
+        top: 105%;
+        padding: 15px;
+        left: 50%;
+        transform: translate(-50%);
     }
     #linksRapidos {
         position: absolute;
@@ -731,55 +665,23 @@
         width: 420px;
         height: 108px;
         padding: 10px;
-        left: -10%;
+        left: 30%;
+        transform: translate(-30%);
     }
     #linksRapidos > h2 {
         font-size: 28px;
         font-weight: 600;
     }
-    #meus-pedidos {
-        width: 162px;
-        height: 48px;
-        box-shadow: -1px -1px 8px #434344;
-        border-radius: 5px;
-        position: absolute;
-        left: 10%;
-        top: 50%;
-    }
-    #minha-carteira {
-        width: 162px;
-        height: 48px;
-        box-shadow: -1px -1px 8px #434344;
-        border-radius: 5px;
-        position: absolute;
-        left: 50%;
-        top: 50%;
-    }
-    #meu-perfil {
-        width: 162px;
-        height: 48px;
-        box-shadow: -1px -1px 8px #434344;
-        border-radius: 5px;
-        position: absolute;
-        left: 90%;
-        top: 50%;
-    }
     footer {
         position: absolute;
         top: 165%;
-        width: 100%;
+        width: 40%;
         height: 25px;
-        left: 0%;
+        left: 50%;
+        transform: translate(-50%);
     }
 }
 @media screen and (min-width:1441px) and (max-width:1635px) {
-    footer {
-        position: absolute;
-        top: 165%;
-        width: 90%;
-        height: 25px;
-        left: 0%;
-    }
     #nav-bar {
         position: relative;
         left: 50%;
@@ -788,33 +690,25 @@
         transform: translate(-50%);
     }
     #logo {
-        position: fixed;
-        left: 30%;
-        transform: translate(-30%);
-        top: 1px;
+        position: absolute;
+        left: -14%;
+        top: -10px;
     }
     #icone-pesquisa {
         width: 22px;
         height: 24px;
-        position: fixed;
-        left: 77%;
-        transform: translate(-77%);
-        top: 11px;
-    }
-    #carrinho-compras {
-        width: 32px;
-        height: 34px;
-        position: fixed;
+        position: absolute;
         left: 112%;
         transform: translate(-112%);
-        top: -15%;
+        top: 1px;
     }
     #sec-header {
         width: 712px;
         height: 342px;
         position: absolute;
-        left: 17%;
+        left: 50%;
         top: 16%;
+        transform: translate(-50%);
     }
     main {
         position: relative;
@@ -839,6 +733,13 @@
         position: absolute;
         top: 46%;
         left: -17%;
+    }
+    #novidades {
+        position: absolute;
+        left: 50%;
+        height: 1095px;
+        width: 100%;
+        transform: translate(-50%);
     }
     #novidades > h2 {
         font-size: 28px;
@@ -890,42 +791,14 @@
         transition: transform 0.8s;
         overflow-x: hidden;
     }
-    #motivosCompra > h2 {
-        font-size: 28px;
-        font-weight: 600;
-        color: #A7A9AC;
+    #motivosCompra {
+        width: 1050px;
+        height: 313px;
         position: absolute;
-        left: -15%;
-    }
-    #mot1 {
-        width: 313px;
-        height: 194px;
-        box-shadow: -1px -1px 8px #434344;
-        border-radius: 5px;
-        position: absolute;
-        top: 35%;
-        transition: 1s;
-        left: -17%;
-    }
-    #mot2 {
-        width: 313px;
-        height: 194px;
-        box-shadow: -1px -1px 8px #434344;
-        border-radius: 5px;
-        position: absolute;
-        top: 33%;
-        left: 15%;
-        transition: 1s;
-    }
-    #mot3 {
-        width: 313px;
-        height: 194px;
-        box-shadow: -1px -1px 8px #434344;
-        border-radius: 5px;
-        position: absolute;
-        top: 35%;
-        left: 47%;
-        transition: 1s;
+        top: 105%;
+        padding: 15px;
+        left: 50%;
+        transform: translate(-50%);
     }
     #linksRapidos {
         position: absolute;
@@ -933,49 +806,23 @@
         width: 420px;
         height: 108px;
         padding: 10px;
-        left: -10%;
+        left: 30%;
+        transform: translate(-30%);
     }
     #linksRapidos > h2 {
         font-size: 28px;
         font-weight: 600;
     }
-    #meus-pedidos {
-        width: 162px;
-        height: 48px;
-        box-shadow: -1px -1px 8px #434344;
-        border-radius: 5px;
+    footer {
         position: absolute;
-        left: 10%;
-        top: 50%;
-    }
-    #minha-carteira {
-        width: 162px;
-        height: 48px;
-        box-shadow: -1px -1px 8px #434344;
-        border-radius: 5px;
-        position: absolute;
+        top: 165%;
+        width: 40%;
+        height: 25px;
         left: 50%;
-        top: 50%;
-    }
-    #meu-perfil {
-        width: 162px;
-        height: 48px;
-        box-shadow: -1px -1px 8px #434344;
-        border-radius: 5px;
-        position: absolute;
-        left: 90%;
-        top: 50%;
+        transform: translate(-50%);
     }
 }
 @media screen and (min-width:1635px) and (max-width:1789px) {
-    footer {
-        position: absolute;
-        top: 165%;
-        width: 90%;
-        height: 25px;
-        left: 45%;
-        transform: translate(-49%);
-    }
     #nav-bar {
         position: relative;
         left: 50%;
@@ -984,33 +831,25 @@
         transform: translate(-50%);
     }
     #logo {
-        position: fixed;
-        left: 32%;
-        transform: translate(-32%);
-        top: 1px;
+        position: absolute;
+        left: -14%;
+        top: -10px;
     }
     #icone-pesquisa {
         width: 22px;
         height: 24px;
-        position: fixed;
-        left: 71%;
-        transform: translate(-71%);
-        top: 11px;
-    }
-    #carrinho-compras {
-        width: 32px;
-        height: 34px;
-        position: fixed;
+        position: absolute;
         left: 112%;
         transform: translate(-112%);
-        top: -15%;
+        top: 1px;
     }
     #sec-header {
         width: 712px;
         height: 342px;
         position: absolute;
-        left: 17%;
+        left: 50%;
         top: 16%;
+        transform: translate(-50%);
     }
     main {
         position: relative;
@@ -1035,6 +874,13 @@
         position: absolute;
         top: 46%;
         left: -17%;
+    }
+    #novidades {
+        position: absolute;
+        left: 50%;
+        height: 1095px;
+        width: 100%;
+        transform: translate(-50%);
     }
     #novidades > h2 {
         font-size: 28px;
@@ -1086,42 +932,14 @@
         transition: transform 0.8s;
         overflow-x: hidden;
     }
-    #motivosCompra > h2 {
-        font-size: 28px;
-        font-weight: 600;
-        color: #A7A9AC;
+    #motivosCompra {
+        width: 1050px;
+        height: 313px;
         position: absolute;
-        left: -15%;
-    }
-    #mot1 {
-        width: 313px;
-        height: 194px;
-        box-shadow: -1px -1px 8px #434344;
-        border-radius: 5px;
-        position: absolute;
-        top: 35%;
-        transition: 1s;
-        left: -17%;
-    }
-    #mot2 {
-        width: 313px;
-        height: 194px;
-        box-shadow: -1px -1px 8px #434344;
-        border-radius: 5px;
-        position: absolute;
-        top: 33%;
-        left: 15%;
-        transition: 1s;
-    }
-    #mot3 {
-        width: 313px;
-        height: 194px;
-        box-shadow: -1px -1px 8px #434344;
-        border-radius: 5px;
-        position: absolute;
-        top: 35%;
-        left: 47%;
-        transition: 1s;
+        top: 105%;
+        padding: 15px;
+        left: 50%;
+        transform: translate(-50%);
     }
     #linksRapidos {
         position: absolute;
@@ -1129,133 +947,161 @@
         width: 420px;
         height: 108px;
         padding: 10px;
-        left: -10%;
+        left: 30%;
+        transform: translate(-30%);
     }
     #linksRapidos > h2 {
         font-size: 28px;
         font-weight: 600;
     }
-    #meus-pedidos {
-        width: 162px;
-        height: 48px;
-        box-shadow: -1px -1px 8px #434344;
-        border-radius: 5px;
+    footer {
         position: absolute;
-        left: 10%;
-        top: 50%;
-    }
-    #minha-carteira {
-        width: 162px;
-        height: 48px;
-        box-shadow: -1px -1px 8px #434344;
-        border-radius: 5px;
-        position: absolute;
+        top: 165%;
+        width: 40%;
+        height: 25px;
         left: 50%;
-        top: 50%;
-    }
-    #meu-perfil {
-        width: 162px;
-        height: 48px;
-        box-shadow: -1px -1px 8px #434344;
-        border-radius: 5px;
-        position: absolute;
-        left: 90%;
-        top: 50%;
+        transform: translate(-50%);
     }
 }
 @media screen and (min-width:2560px) {
-    header {
-        height: 42px;
-        width: 714px;
-        position: fixed;
-        left: 50%;
-        transform: translate(-50%);
-        top: 1%;
-        background-color: transparent;
-        transition: 2s;
-    }
-    header.scrolled {
-        position: fixed;
-        top: 0%;
-        transition: 2s;
-        color: white;
-        width: 714px;
-        z-index: 1000;
-    }
-    header.scrolled > #nav-bar > li > a {
-        color: #6E6E73;
-    }
-    header.scrolled > #nav-bar > li > a:hover {
-        color: #020202;
-    }
-    #logo {
-        position: fixed;
-        left: -4%;
-        transform: translate(-4%);
-        top: 1px;
-    }
-    li {
-        list-style: none;
-    }
-    a {
-        text-decoration: none;
-        color: black;
-    }
     #nav-bar {
         position: relative;
         left: 50%;
-        top: 15%;
+        top: 8px;
         width: 568px;
-        transform: translate(-63%);
+        transform: translate(-50%);
     }
-    #nav-bar > li {
-        display: inline;
-        position: relative;
-        left: 10%;
-        padding-right: 24px;
-    }
-    #nav-bar > li > a {
-        font-weight: 500;
-        font-size: 14px;
-        color: #6E6E73;
-    }
-    #nav-bar > li > a:hover {
-        transition: 1s;
-        color: #000000;
+    #logo {
+        position: absolute;
+        left: -14%;
+        top: -10px;
     }
     #icone-pesquisa {
         width: 22px;
         height: 24px;
-        position: fixed;
-        left: 92%;
-        transform: translate(-92%);
-        top: 11px;
-    }
-    #carrinho-compras {
-        width: 32px;
-        height: 34px;
-        position: fixed;
+        position: absolute;
         left: 112%;
         transform: translate(-112%);
-        top: -15%;
+        top: 1px;
+    }
+    #sec-header {
+        width: 712px;
+        height: 342px;
+        position: absolute;
+        left: 50%;
+        top: 16%;
+        transform: translate(-50%);
+    }
+    main {
+        position: relative;
+        top: 700px;
+        width: 812px;
+        height: 1109px;
+        left: 50%;
+        padding: 15px;
+        transform: translate(-50%);
+    }
+    #sec-header > h1 {
+        font-weight: lighter;
+        font-size: 49px;
+        color: #020202;
+        line-height: 62px;
+        width: 49%;
+        position: absolute;
+        left: -10%;
+    }
+    #prods-header {
+        width: 849px;
+        height: 184px;
+        position: absolute;
+        top: 46%;
+        left: -17%;
+    }
+    #novidades {
+        position: absolute;
+        left: 50%;
+        height: 1095px;
+        width: 100%;
+        transform: translate(-50%);
+    }
+    #novidades > h2 {
+        font-size: 28px;
+        font-weight: 600;
+        color: #A7A9AC;
+        position: absolute;
+        left: -11%;
+    }
+    #cx1 {
+        box-shadow: -1px -1px 8px #434344;
+        border-radius: 5px;
+        width: 360px;
+        height: 456px;
+        position: absolute;
+        top: 12%;
+        left: 3%;
+        transition: transform 0.8s;
+    }
+    #cx2 {
+        box-shadow: -1px -1px 8px #434344;
+        border-radius: 5px;
+        width: 360px;
+        height: 456px;
+        position: absolute;
+        top: 12%;
+        left: 53%;
+        transition: transform 0.8s;
+    }    
+    #cx3 {
+        box-shadow: -1px -1px 8px #434344;
+        border-radius: 5px;
+        width: 360px;
+        height: 456px;
+        position: absolute;
+        top: 57%;
+        left: 6%;
+        transition: transform 0.8s;
+        overflow-x: hidden;
+        transform: translate(-7%);
+    }
+    #cx4 {
+        box-shadow: -1px -1px 8px #434344;
+        border-radius: 5px;
+        width: 360px;
+        height: 456px;
+        position: absolute;
+        top: 57%;
+        left: 53%;
+        transition: transform 0.8s;
+        overflow-x: hidden;
+    }
+    #motivosCompra {
+        width: 1050px;
+        height: 313px;
+        position: absolute;
+        top: 105%;
+        padding: 15px;
+        left: 50%;
+        transform: translate(-50%);
+    }
+    #linksRapidos {
+        position: absolute;
+        top: 140%;
+        width: 420px;
+        height: 108px;
+        padding: 10px;
+        left: 30%;
+        transform: translate(-30%);
+    }
+    #linksRapidos > h2 {
+        font-size: 28px;
+        font-weight: 600;
     }
     footer {
         position: absolute;
         top: 165%;
-        width: 100%;
+        width: 40%;
         height: 25px;
-        left: 78%;
-        transform: translate(-64%);
-    }
-    footer > a {
-        color: #6E6E73;
-        font-size: 15px;
-        position: absolute;
         left: 50%;
         transform: translate(-50%);
-        transition: 1s;
-    }
-    ::-webkit-scrollbar {
-        display: none;
     }
 }

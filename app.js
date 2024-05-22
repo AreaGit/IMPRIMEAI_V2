@@ -1,6 +1,6 @@
 const express = require('express');
 const app = express();
-const PORT = 8081;
+const PORT = 8080;
 const fs = require('fs');
 const path = require('path');
 const cadastros = require('./routes/cadastros');
@@ -453,5 +453,5 @@ app.get('/painel-administrativo', (req, res) => {
   }
 });
 app.listen(PORT, () => {
-    console.log(`Servidor rodando na porta ${PORT} http://localhost:8082`);
+  console.log(`Servidor rodando na porta ${PORT} https://localhost:${PORT}`);
 });
