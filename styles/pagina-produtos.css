@@ -18,7 +18,6 @@ body {
 }
 header {
     height: 42px;
-    width: 714px;
     position: fixed;
     left: 50%;
     transform: translate(-50%);
@@ -31,9 +30,11 @@ header.scrolled {
     position: fixed;
     top: 0%;
     transition: 2s;
-    color: white;
+    color: black;
     width: 100%;
     z-index: 1000;
+    background-color: white;
+    height: 40px;
 }
 header.scrolled > #nav-bar > li > a {
     color: #6E6E73;
@@ -41,11 +42,14 @@ header.scrolled > #nav-bar > li > a {
 header.scrolled > #nav-bar > li > a:hover {
     color: #020202;
 }
+#logo2 {
+    display: none;
+}
 #logo {
-    position: fixed;
-    left: 32%;
-    transform: translate(-32%);
-    top: 1px;
+    position: absolute;
+    left: -14%;
+    width: 22%;
+    top: -10px;
 }
 li {
     list-style: none;
@@ -55,11 +59,11 @@ a {
     color: black;
 }
 #nav-bar {
-    position: relative;
+    position: absolute;
     left: 50%;
     top: 15%;
     width: 568px;
-    transform: translate(-63%);
+    transform: translate(-50%);
 }
 #nav-bar > li {
     display: inline;
@@ -80,9 +84,9 @@ a {
     width: 22px;
     height: 24px;
     position: fixed;
-    left: 64%;
-    transform: translate(-64%);
-    top: 7px;
+    left: 112%;
+    transform: translate(-112%);
+    top: 1px;
 }
 #carrinho-compras {
     width: 32px;
