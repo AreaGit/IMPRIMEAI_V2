@@ -39,7 +39,7 @@ const Produtos = db.define('produtos', {
     type: Sequelize.BLOB('long'), // Use BLOB para armazenar imagens
     allowNull: true, // Alterado para não permitir valores nulos, se as imagens forem obrigatórias.
   },
-}, {
+},  {
   indexes: [
     {
       unique: false,
@@ -55,7 +55,12 @@ const Produtos = db.define('produtos', {
       unique: false,
       fields: ['categProd', 'nomeProd'],
       name: 'idx_categProd_nomeProd'
-    }
+    },
+    {
+      unique: false,
+      fields: ['valorProd'],
+      name: 'idx_valorProd'
+    },
   ]
 });
 

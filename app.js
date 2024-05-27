@@ -9,6 +9,127 @@ const graficasServer = require('./routes/graficasServer')
 const Produtos = require('./models/Produtos');
 const VariacoesProduto = require('./models/VariacoesProduto');
 const { Op } = require('sequelize');
+const redis = require('redis');
+const client = redis.createClient({
+  host: '127.0.0.1', // Substitua pelo endereço IP do seu servidor Redis
+  port: 6379,         // Porta onde o Redis está escutando
+});
+
+client.on('error', (err) => {
+  console.log('Redis Client Error', err);
+});
+
+client.connect();
+// Função para obter produtos de comunicação visual com caching
+const getCachedComunicacaoVisualProducts = async (page, limit) => {
+  const cacheKey = `comunicacaoVisual:products:${page}:${limit}`;
+  const cachedData = await client.get(cacheKey);
+
+  if (cachedData) {
+    return JSON.parse(cachedData);
+  }
+
+  const produtos = await Produtos.findAndCountAll({
+    where: { categProd: 'Comunicação Visual' },
+    offset: (page - 1) * limit,
+    limit: parseInt(limit),
+    order: [['nomeProd', 'ASC']]
+  });
+
+  await client.set(cacheKey, JSON.stringify(produtos), {
+    EX: 3600, // Expire after 1 hour
+  });
+
+  return produtos;
+};
+// Função para obter produtos de adesivos com caching
+const getCachedAdesivosProducts = async (page, limit) => {
+  const cacheKey = `adesivos:products:${page}:${limit}`;
+  const cachedData = await client.get(cacheKey);
+
+  if (cachedData) {
+    return JSON.parse(cachedData);
+  }
+
+  const produtos = await Produtos.findAndCountAll({
+    where: { categProd: 'Adesivos e Etiquetas' },
+    offset: (page - 1) * limit,
+    limit: parseInt(limit),
+    order: [['nomeProd', 'ASC']]
+  });
+
+  await client.set(cacheKey, JSON.stringify(produtos), {
+    EX: 3600, // Expire after 1 hour
+  });
+
+  return produtos;
+};
+// Função para obter produtos de brindes com caching
+const getCachedBrindesProducts = async (page, limit) => {
+  const cacheKey = `brindes:products:${page}:${limit}`;
+  const cachedData = await client.get(cacheKey);
+
+  if (cachedData) {
+    return JSON.parse(cachedData);
+  }
+
+  const produtos = await Produtos.findAndCountAll({
+    where: { categProd: 'Brindes' },
+    offset: (page - 1) * limit,
+    limit: parseInt(limit),
+    order: [['nomeProd', 'ASC']]
+  });
+
+  await client.set(cacheKey, JSON.stringify(produtos), {
+    EX: 3600, // Expire after 1 hour
+  });
+
+  return produtos;
+};
+// Função para obter produtos de brindes com caching
+const getCachedCartazesProducts = async (page, limit) => {
+  const cacheKey = `cartazes:products:${page}:${limit}`;
+  const cachedData = await client.get(cacheKey);
+
+  if (cachedData) {
+    return JSON.parse(cachedData);
+  }
+
+  const produtos = await Produtos.findAndCountAll({
+    where: { categProd: 'Cartazes' },
+    offset: (page - 1) * limit,
+    limit: parseInt(limit),
+    order: [['nomeProd', 'ASC']]
+  });
+
+  await client.set(cacheKey, JSON.stringify(produtos), {
+    EX: 3600, // Expire after 1 hour
+  });
+
+  return produtos;
+};
+// Função para obter produtos de papelaria com caching
+const getCachedPapelariaProducts = async (page, limit) => {
+  const cacheKey = `papelaria:products:${page}:${limit}`;
+  const cachedData = await client.get(cacheKey);
+
+  if (cachedData) {
+    return JSON.parse(cachedData);
+  }
+
+  const produtos = await Produtos.findAndCountAll({
+    where: { categProd: 'Papelaria' },
+    offset: (page - 1) * limit,
+    limit: parseInt(limit),
+    order: [['nomeProd', 'ASC']]
+  });
+
+  await client.set(cacheKey, JSON.stringify(produtos), {
+    EX: 3600, // Expire after 1 hour
+  });
+
+  return produtos;
+};
 app.use(express.static(path.join(__dirname)));
 app.use('/', cadastros);
 app.use('/', pedidosUsers);
@@ -66,19 +187,17 @@ app.get('/comunicacao-visual', async(req, res) => {
 });
 //Rota get para renderizar os produtos na página de comunicacao-visual
 app.get('/api/produtos/comunicacao-visual', async (req, res) => {
+  const { page = 1, limit = 10 } = req.query;
   try {
-    // Consulta o banco de dados para obter os produtos de Comunicação Visual
-    const produtosComunicacaoVisual = await Produtos.findAll({
-      where: {
-        categProd: 'Comunicação Visual',
-      },
+    const produtos = await getCachedComunicacaoVisualProducts(page, limit);
+    res.json({
+      totalItems: produtos.count,
+      totalPages: Math.ceil(produtos.count / limit),
+      currentPage: parseInt(page),
+      produtos: produtos.rows
     });
-
-    // Envia os produtos como resposta JSON
-    res.json({ produtos: produtosComunicacaoVisual });
   } catch (error) {
-    console.error('Erro ao buscar produtos de Comunicação Visual:', error);
-    res.status(500).json({ error: 'Erro ao buscar produtos', message: error.message });
+    res.status(500).json({ error: error.message });
   }
 });
 //Rota get da página de adesivos
@@ -93,19 +212,17 @@ app.get('/adesivos', (req, res) => {
 });
 //Rota para renderizar os produtos de adesivos
 app.get('/api/produtos/adesivos-etiquetas', async (req, res) => {
+  const { page = 1, limit = 10 } = req.query;
   try {
-    // Consulta o banco de dados para obter os produtos de Adesivos e Etiquetas
-    const produtosAdesivosEtiquetas = await Produtos.findAll({
-      where: {
-        categProd: 'Adesivos e Etiquetas',
-      },
+    const produtos = await getCachedAdesivosProducts(page, limit);
+    res.json({
+      totalItems: produtos.count,
+      totalPages: Math.ceil(produtos.count / limit),
+      currentPage: parseInt(page),
+      produtos: produtos.rows
     });
-
-    // Envia os produtos como resposta JSON
-    res.json({ produtos: produtosAdesivosEtiquetas });
   } catch (error) {
-    console.error('Erro ao buscar produtos de Adesivos e Etiquetas:', error);
-    res.status(500).json({ error: 'Erro ao buscar produtos', message: error.message });
+    res.status(500).json({ error: error.message });
   }
 });
 //Rota get da página de brindes
@@ -120,19 +237,17 @@ app.get('/brindes', (req, res) => {
 });
 //Rota get para renderizar os produtos de brindes
 app.get('/api/produtos/brindes', async (req, res) => {
+  const { page = 1, limit = 10 } = req.query;
   try {
-    // Consulta o banco de dados para obter os produtos de Brindes
-    const produtosBrindes = await Produtos.findAll({
-      where: {
-        categProd: 'Brindes',
-      },
+    const produtos = await getCachedBrindesProducts(page, limit);
+    res.json({
+      totalItems: produtos.count,
+      totalPages: Math.ceil(produtos.count / limit),
+      currentPage: parseInt(page),
+      produtos: produtos.rows
     });
-
-    // Envia os produtos como resposta JSON
-    res.json({ produtos: produtosBrindes });
   } catch (error) {
-    console.error('Erro ao buscar produtos de Brindes:', error);
-    res.status(500).json({ error: 'Erro ao buscar produtos', message: error.message });
+    res.status(500).json({ error: error.message });
   }
 });
 //Rota get da página de cartazes
@@ -147,19 +262,17 @@ app.get('/cartazes', (req ,res) => {
 });
 //Rota get para renderizar os produtos de cartazes
 app.get('/api/produtos/cartazes', async (req, res) => {
+  const { page = 1, limit = 10 } = req.query;
   try {
-    // Consulta o banco de dados para obter os produtos de Cartazes
-    const produtosCartazes = await Produtos.findAll({
-      where: {
-        categProd: 'Cartazes',
-      },
+    const produtos = await getCachedCartazesProducts(page, limit);
+    res.json({
+      totalItems: produtos.count,
+      totalPages: Math.ceil(produtos.count / limit),
+      currentPage: parseInt(page),
+      produtos: produtos.rows
     });
-
-    // Envia os produtos como resposta JSON
-    res.json({ produtos: produtosCartazes });
   } catch (error) {
-    console.error('Erro ao buscar produtos de Cartazes:', error);
-    res.status(500).json({ error: 'Erro ao buscar produtos', message: error.message });
+    res.status(500).json({ error: error.message });
   }
 });
 //Rota get da página de papelaria
@@ -172,21 +285,20 @@ app.get('/papelaria', (req, res) => {
     res.status(500).send("Erro interno do servidor");
   }
 });
-//Rota get para renderizar os produtos de papelaria
+// Rota com paginação e caching para produtos de papelaria
 app.get('/api/produtos/papelaria', async (req, res) => {
-  try {
-    // Consulta o banco de dados para obter os produtos de Cartazes
-    const produtosPapelaria = await Produtos.findAll({
-      where: {
-        categProd: 'Papelaria',
-      },
-    });
+  const { page = 1, limit = 10 } = req.query;
 
-    // Envia os produtos como resposta JSON
-    res.json({ produtos: produtosPapelaria });
+  try {
+    const produtos = await getCachedPapelariaProducts(page, limit);
+    res.json({
+      totalItems: produtos.count,
+      totalPages: Math.ceil(produtos.count / limit),
+      currentPage: parseInt(page),
+      produtos: produtos.rows
+    });
   } catch (error) {
-    console.error('Erro ao buscar produtos de Papelaria:', error);
-    res.status(500).json({ error: 'Erro ao buscar produtos', message: error.message });
+    res.status(500).json({ error: error.message });
   }
 });
 //Rota get da página de carrinho

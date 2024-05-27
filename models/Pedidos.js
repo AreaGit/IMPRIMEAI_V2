@@ -46,6 +46,29 @@ const Pedidos = db.define('pedidos', {
     graficaCancl: {
         type: Sequelize.STRING(255),
     },
+}, {
+    indexes: [
+        {
+            unique: false,
+            fields: ['idUserPed'],
+            name: 'idx_idUserPed'
+        },
+        {
+            unique: false,
+            fields: ['statusPed'],
+            name: 'idx_statusPed'
+        },
+        {
+            unique: false,
+            fields: ['graficaAtend'],
+            name: 'idx_graficaAtend'
+        },
+        {
+            unique: false,
+            fields: ['graficaCancl'],
+            name: 'idx_graficaCancl'
+        }
+    ]
 });
 
 Pedidos.hasMany(ItensPedidos, { foreignKey: 'idPed'});

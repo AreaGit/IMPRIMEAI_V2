@@ -76,7 +76,40 @@ const ItensPedidos = db.define('itenspedidos', {
     graficaFin: {
         type: Sequelize.STRING(255),
     }
-})
+},{
+    indexes: [
+        {
+            unique: false,
+            fields: ['idUserPed'],
+            name: 'idx_idUserPed'
+        },
+        {
+            unique: false,
+            fields: ['idProduto'],
+            name: 'idx_idProduto'
+        },
+        {
+            unique: false,
+            fields: ['statusPed'],
+            name: 'idx_statusPed'
+        },
+        {
+            unique: false,
+            fields: ['idPed'],
+            name: 'idx_idPed'
+        },
+        {
+            unique: false,
+            fields: ['graficaAtend'],
+            name: 'idx_graficaAtend'
+        },
+        {
+            unique: false,
+            fields: ['graficaCancl'],
+            name: 'idx_graficaCancl'
+        },
+    ]
+});
 
 ItensPedidos.belongsTo(Produtos, { foreignKey: 'idProduto' });
 //ItensPedidos.sync({force:true})

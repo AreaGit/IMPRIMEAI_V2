@@ -451,32 +451,32 @@ async function getCoordinatesFromAddressEnd(enderecoEntregaInfo, apiKey) {
       pedido.statusPed = novoStatus;
       pedido.graficaAtend = graficaId; // Save the graphics company's ID
       await pedido.save();
-  
+      
+      if(novoStatus === "Pedido Aceito Pela Gráfica") {
+        //mensagem whatsapp
+        const corpoMensagem = "Olá! Temos o prazer de informar que seu pedido foi aceito pela gráfica e está em processo de produção. Em breve entraremos em contato para fornecer atualizações sobre o progresso e a entrega. Agradecemos por escolher nossos serviços!😉";
+        await enviarNotificacaoWhatsapp(user.telefoneCad, corpoMensagem);
+        console.log("Mensagem enviada Com Sucesso!")
+      }else if(novoStatus === "Finalizado") {
+        //mensagem whatsapp
+        const corpoMensagem = "Olá! Seu pedido foi finalizado e está pronto para retirada ou entrega. Por favor, entre em contato conosco para agendar a retirada ou fornecer detalhes de entrega. Obrigado por escolher nossos serviços!😉";
+        await enviarNotificacaoWhatsapp(user.telefoneCad, corpoMensagem);
+        console.log("Mensagem enviada Com Sucesso!")
+      }else if(novoStatus === "Pedido Enviado pela Gráfica") {
+        //mensagem whatsapp
+        const corpoMensagem = "Olá! Seu pedido foi despachado e está a caminho do seu endereço. Estamos trabalhando para garantir que ele chegue até você o mais rápido possível. Obrigado por escolher nossos serviços!😉";
+        await enviarNotificacaoWhatsapp(user.telefoneCad, corpoMensagem);
+        console.log("Mensagem enviada Com Sucesso!")
+      }else {
+        console.log("Não foi possível encontrar o pedido!")
+      }
+
       if(novoStatus === "Pedido Entregue pela Gráfica") {
         pedido.statusPed = novoStatus;
         pedido.graficaAtend = graficaId; // Save the graphics company's ID
         pedido.graficaFin = graficaId;
         await pedido.save();
       }
-      
-        if(novoStatus === "Pedido Aceito Pela Gráifca") {
-          //mensagem whatsapp
-          const corpoMensagem = "Olá! Temos o prazer de informar que seu pedido foi aceito pela gráfica e está em processo de produção. Em breve entraremos em contato para fornecer atualizações sobre o progresso e a entrega. Agradecemos por escolher nossos serviços!😉";
-          await enviarNotificacaoWhatsapp(user.telefoneCad, corpoMensagem);
-          console.log("Mensagem enviada Com Sucesso!")
-        }else if(novoStatus === "Finalizado") {
-          //mensagem whatsapp
-          const corpoMensagem = "Olá! Seu pedido foi finalizado e está pronto para retirada ou entrega. Por favor, entre em contato conosco para agendar a retirada ou fornecer detalhes de entrega. Obrigado por escolher nossos serviços!😉";
-          await enviarNotificacaoWhatsapp(user.telefoneCad, corpoMensagem);
-          console.log("Mensagem enviada Com Sucesso!")
-        }else if(novoStatus === "Pedido Enviado pela Gráfica") {
-          //mensagem whatsapp
-          const corpoMensagem = "Olá! Seu pedido foi despachado e está a caminho do seu endereço. Estamos trabalhando para garantir que ele chegue até você o mais rápido possível. Obrigado por escolher nossos serviços!😉";
-          await enviarNotificacaoWhatsapp(user.telefoneCad, corpoMensagem);
-          console.log("Mensagem enviada Com Sucesso!")
-        }else {
-          console.log("Não foi possível encontrar o pedido!")
-        }
 
       return res.json({ success: true, graficaAtend: graficaId, /*itensPedidos*/ });
     } catch (error) {

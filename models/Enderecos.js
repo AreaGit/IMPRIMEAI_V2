@@ -67,8 +67,25 @@ const Enderecos = db.define('enderecos', {
         type: Sequelize.DECIMAL(10, 2),
         allowNull: true
     },
-})
-
+}, {
+    indexes: [
+        {
+            unique: false,
+            fields: ['idPed'],
+            name: 'idx_idPed'
+        },
+        {
+            unique: false,
+            fields: ['idProduto'],
+            name: 'idx_idProduto'
+        },
+        {
+            unique: false,
+            fields: ['tipoEntrega'],
+            name: 'idx_tipoEntrega'
+        }
+    ]
+});
 //Criar Tabela
 Enderecos.belongsTo(Produtos, { foreignKey: 'idProduto' });
 Enderecos.sync()
