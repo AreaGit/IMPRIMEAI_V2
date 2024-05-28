@@ -977,123 +977,103 @@ app.post('/criar-pedidos', async (req, res) => {
     async function verificarGraficaMaisProximaEAtualizar(pedido) {
       try {
         const apiKey = 'Ao6IBGy_Nf0u4t9E88BYDytyK5mK3kObchF4R0NV5h--iZ6YgwXPMJEckhAEaKlH';
-    
-        const pedidosCadastrados = await ItensPedido.findAll({
-          /*where: {
-            statusPed: 'Aguardando',
-          },*/
+
+        const pedidoCadastrado = await ItensPedido.findOne({
+          where: { id: pedido.idPed },
         });
-    
-        let pedidosProximos = [];
-        
-        // Conjunto para armazenar IDs de gráficas já notificadas
-        let graficasNotificadas = new Set();
-    
-        for (let pedidoCadastrado of pedidosCadastrados) {
-          const enderecosPedido = await Enderecos.findAll({
-            where: {
-              id: pedidoCadastrado.id,
-            },
-          });
-    
-          let enderecoNotificado = false;
-    
-          for (let enderecoPedido of enderecosPedido) {
-            console.log(`Verificando pedido com o Id: ${pedidoCadastrado.id} e Endereço Id: ${enderecoPedido.id}`);
-    
-            const enderecoEntregaInfo = {
-              endereco: enderecoPedido.rua,
-              cep: enderecoPedido.cep,
-              cidade: enderecoPedido.cidade,
-              estado: enderecoPedido.estado,
-            };
-    
-            const coordinatesEnd = await getCoordinatesFromAddress(enderecoEntregaInfo, apiKey);
-    
-            if (coordinatesEnd.latitude !== null && coordinatesEnd.longitude !== null) {
-              console.log(`Latitude do Endereço de Entrega:`, coordinatesEnd.latitude);
-              console.log(`Longitude do Endereço de Entrega:`, coordinatesEnd.longitude);
-    
-              const graficas = await Graficas.findAll();
-    
-              let distanciaMinima = Infinity;
-              let graficaMaisProxima = null;
-    
-              for (let graficaAtual of graficas) {
-                // Verifica se a gráfica já foi notificada
-                if (graficasNotificadas.has(graficaAtual.id)) {
-                  continue;
-                }
-    
-                const graficaCoordinates = await getCoordinatesFromAddress({
-                  endereco: graficaAtual.enderecoCad,
-                  cep: graficaAtual.cepCad,
-                  cidade: graficaAtual.cidadeCad,
-                  estado: graficaAtual.estadoCad,
-                }, apiKey);
-    
-                const distanceToGrafica = haversineDistance(graficaCoordinates.latitude, graficaCoordinates.longitude, coordinatesEnd.latitude, coordinatesEnd.longitude);
-    
-                if (distanceToGrafica < distanciaMinima) {
-                  distanciaMinima = distanceToGrafica;
-                  graficaMaisProxima = graficaAtual;
-                }
+
+        if (!pedidoCadastrado) {
+          console.error(`Pedido com ID ${pedido.id} não encontrado.`);
+          return;
+        }
+
+        const enderecosPedido = await Enderecos.findAll({
+          where: { id: pedidoCadastrado.idPed },
+        });
+
+        let graficasNotificadasPorPedido = new Set();
+
+        for (let enderecoPedido of enderecosPedido) {
+          console.log(`Verificando pedido com o Id: ${pedidoCadastrado.id} e Endereço Id: ${enderecoPedido.id}`);
+
+          const enderecoEntregaInfo = {
+            endereco: enderecoPedido.rua,
+            cep: enderecoPedido.cep,
+            cidade: enderecoPedido.cidade,
+            estado: enderecoPedido.estado,
+          };
+
+          const coordinatesEnd = await getCoordinatesFromAddress(enderecoEntregaInfo, apiKey);
+
+          if (coordinatesEnd.latitude !== null && coordinatesEnd.longitude !== null) {
+            console.log(`Latitude do Endereço de Entrega:`, coordinatesEnd.latitude);
+            console.log(`Longitude do Endereço de Entrega:`, coordinatesEnd.longitude);
+
+            const graficas = await Graficas.findAll();
+
+            let distanciaMinima = Infinity;
+            let graficaMaisProxima = null;
+
+            for (let graficaAtual of graficas) {
+              if (graficasNotificadasPorPedido.has(graficaAtual.id)) {
+                continue;
               }
-    
-              const raioEndereco = enderecoPedido.raio;
-    
-              if (distanciaMinima <= raioEndereco && graficaMaisProxima && !enderecoNotificado) {
-                let produtosGrafica;
-              // Verifica se graficaMaisProxima.produtos é uma string JSON
+
+              const graficaCoordinates = await getCoordinatesFromAddress({
+                endereco: graficaAtual.enderecoCad,
+                cep: graficaAtual.cepCad,
+                cidade: graficaAtual.cidadeCad,
+                estado: graficaAtual.estadoCad,
+              }, apiKey);
+
+              const distanceToGrafica = haversineDistance(graficaCoordinates.latitude, graficaCoordinates.longitude, coordinatesEnd.latitude, coordinatesEnd.longitude);
+
+              if (distanceToGrafica < distanciaMinima) {
+                distanciaMinima = distanceToGrafica;
+                graficaMaisProxima = graficaAtual;
+              }
+            }
+
+            const raioEndereco = enderecoPedido.raio;
+
+            if (distanciaMinima <= raioEndereco && graficaMaisProxima) {
+              let produtosGrafica;
               if (typeof graficaMaisProxima.produtos === 'string') {
-                  const fixedJsonString = graficaMaisProxima.produtos.replace(/'/g, '"'); // Substitui todas as aspas simples por aspas duplas
-                  produtosGrafica = JSON.parse(fixedJsonString);
+                const fixedJsonString = graficaMaisProxima.produtos.replace(/'/g, '"');
+                produtosGrafica = JSON.parse(fixedJsonString);
               } else {
-                  produtosGrafica = graficaMaisProxima.produtos;
-              }     
-                if (produtosGrafica[pedidoCadastrado.nomeProd]) {
-                  const pedidoAssociado = {
-                    ...pedidoCadastrado.dataValues,
-                    enderecoId: enderecoPedido.id,
-                    graficaId: graficaMaisProxima.id,
-                  };
-    
-                  pedidosProximos.push(pedidoAssociado);
-    
-                  await pedidoCadastrado.update({
-                    graficaAtend: graficaMaisProxima.id,
-                  });
-    
-                  // Notifica a gráfica apenas uma vez
-                  if (!enderecoNotificado) {
-                    let mensagemStatus = '';
+                produtosGrafica = graficaMaisProxima.produtos;
+              }
 
-                    if (pedidoAssociado.statusPed === 'Aguardando') {
-                      mensagemStatus = 'Você tem um novo pedido em Aguardo para ser atendido. Abra o seu Painel de Pedidos!';
-                    } else {
-                      mensagemStatus = 'Você tem um novo pedido em Aberto para ser atendido. Fique atento ao seu Painel de Pedidos!';
-                    }
+              if (produtosGrafica[pedidoCadastrado.nomeProd]) {
+                await pedidoCadastrado.update({
+                  graficaAtend: graficaMaisProxima.id,
+                });
 
-                    await enviarEmailNotificacao(graficaMaisProxima.emailCad, `Novo Pedido - ID ${pedidoCadastrado.id}`, mensagemStatus);
-                    await enviarNotificacaoWhatsapp(graficaMaisProxima.telefoneCad, `Novo Pedido - ${mensagemStatus}`);
+                let mensagemStatus = '';
 
-                    enderecoNotificado = true; // Marca o endereço como notificado
-                    graficasNotificadas.add(graficaMaisProxima.id); // Marca a gráfica como notificada
-                    break;
-                  }
+                if (pedidoCadastrado.statusPed === 'Aguardando') {
+                  mensagemStatus = `Olá grafica ${graficaMaisProxima.userCad}, você tem um novo pedido com id ${pedidoCadastrado.id} em Aguardo para ser atendido. Abra o seu Painel de Pedidos!`;
+                } else {
+                  mensagemStatus = `Olá gráfica ${graficaMaisProxima.userCad}, você tem um novo pedido com id ${pedidoCadastrado.id} em Aberto para ser atendido. Fique atento ao seu Painel de Pedidos!`;
                 }
+
+                await enviarEmailNotificacao(graficaMaisProxima.emailCad, `Novo Pedido - ID ${pedidoCadastrado.id}`, mensagemStatus);
+                await enviarNotificacaoWhatsapp(graficaMaisProxima.telefoneCad, `Novo Pedido - ${mensagemStatus}`);
+
+                graficasNotificadasPorPedido.add(graficaMaisProxima.id);
+                break; // Notifica apenas a gráfica mais próxima e sai do loop
               }
             }
           }
         }
-    
-        if (pedidosProximos.length > 0) {
-          console.log("TODOS OS PEDIDOS", pedidosProximos);
-          // Restante do código para filtrar e retornar os pedidos
+
+        if (graficasNotificadasPorPedido.size > 0) {
+          console.log("Notificações enviadas para o pedido", pedidoCadastrado.id);
         }
       } catch (error) {
         console.error('Erro ao buscar pedidos cadastrados:', error);
-        // Restante do código para tratamento de erros
+        // Tratamento de erros
       }
     }
     
