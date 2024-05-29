@@ -113,59 +113,55 @@ document.addEventListener('DOMContentLoaded', function() {
                   }
               });
               
-              btnEnvArt.addEventListener("click", async () => {
-                carregamento.style.display = "block";
-                // Seleciona todos os inputs de arquivo com IDs começando com "enviarArte"
-                const inputs = document.querySelectorAll('[id^="enviarArte"]');
-                
-                // Itera sobre cada input de arquivo
-                for (const inputFile of inputs) {
-                    // Obter o produtoId a partir do dataset do elemento pai
-                    const produtoId = inputFile.closest('.produto-carrinho').dataset.produtoId;
-                    let file = inputFile.files[0];
+              btnEnvArt.addEventListener('click', async function() {
+                carregamento.style.display = 'block';
+                const files = document.querySelectorAll('input[type="file"]');
+                const formData = new FormData();
+            
+                files.forEach(fileInput => {
+                  if (fileInput.files.length > 0) {
+                    const produtoId = fileInput.dataset.produtoId;
+                    formData.append('files', fileInput.files[0], produtoId);
+                  }else {
+                    // Criar um arquivo com nome "Enviar Arte Depois" para produtos sem arte
+                    const produtoId = fileInput.dataset.produtoId;
+                    const blob = new Blob(['Enviar Arte Depois'], { type: 'text/plain' });
+                    const file = new File([blob], 'Enviar Arte Depois.txt');
+                    formData.append('files', file, "Enviar Arte Depois");
+                  }
+                });
+            
+                try {
+                  carregamento.style.display = 'block';
+                  btnEnvArt.disabled = true;
+            
+                  const response = await fetch('/api/upload', {
+                    method: 'POST',
+                    body: formData,
+                  });
+            
+                  btnEnvArt.disabled = false;
+            
+                  if (response.ok) {
+                    const responseBody = await response.text();
+                    console.log(`Arquivos enviados com sucesso.`);
                     
-                    // Verifica se o checkbox de "Enviar Depois" está marcado
-                    const enviarDepoisCheckbox = document.getElementById(`enviarDepois${produtoId}`);
-                    const enviarDepoisValue = enviarDepoisCheckbox ? enviarDepoisCheckbox.checked : false;
-                    // Verifica se há um arquivo selecionado, se não, define um arquivo vazio com o nome "Enviar Arte Depois"
-                    if (!file) {
-                        file = new File([""], "Enviar Arte Depois", { type: "text/plain" });
+                    if (responseBody === 'Upload para o Google Drive concluído com sucesso') {
+                      carregamento.style.display = 'none';
+                      window.location.href = '/pagamento';
                     }
-                    
-                    // Cria um objeto FormData para enviar os dados para o servidor
-                    const formData = new FormData();
-                    formData.append('produtoId', produtoId);
-                    formData.append('enviarDepoisValue', enviarDepoisValue); // Adiciona o estado do checkbox "Enviar Depois"
-                    formData.append('files', file);
-                    
-                    try {
-                        // Envia os dados para o servidor via fetch API
-                        const response = await fetch('/api/upload', {
-                            method: 'POST',
-                            body: formData,
-                        });
-                        
-                        // Verifica se a resposta é bem-sucedida
-                        if (response.ok) {
-                            const responseBody = await response.text();
-                            console.log(`Arquivo enviado com sucesso para o produto com o ID ${produtoId}`);
-                            // Adicione aqui qualquer lógica adicional após o envio bem-sucedido
-                            if (responseBody === 'Upload para o Google Drive concluído com sucesso') {
-                                carregamento.style.display = 'none';
-                                window.location.href = '/pagamento';
-                            }
-                        } else {
-                            // Exibe uma mensagem de erro no console se houver algum problema com o envio do arquivo
-                            console.error('Erro ao enviar arquivo para o servidor:', response.statusText);
-                            // Adicione aqui qualquer lógica de tratamento de erro
-                        }
-                    } catch (error) {
-                        // Exibe uma mensagem de erro no console se houver algum problema com o processamento do envio do arquivo
-                        console.error('Erro ao processar o envio de arquivo:', error);
-                        // Adicione aqui qualquer lógica de tratamento de erro adicional
-                    }
+                  } else {
+                    console.error('Erro ao enviar arquivo para o servidor:', response.statusText);
+                    alert('Erro ao enviar os arquivos. Tente novamente.');
+                  }
+                } catch (error) {
+                  console.error('Erro ao processar o envio de arquivo:', error);
+                  
+                } finally {
+                  carregamento.style.display = 'none';
+                  btnEnvArt.disabled = false;
                 }
-            });
+              });
                     
                 carrinhoProdutos.appendChild(produtoElement);
                 }

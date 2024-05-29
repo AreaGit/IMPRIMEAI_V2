@@ -292,7 +292,7 @@ div#Depois {
   div#carregamento {
     display: none;
     transition: 0.8s;
-    position: absolute;
+    position: fixed;
     left: 50%;
     transform: translate(-50%);
     top: 440px;

@@ -697,7 +697,7 @@ async function uploadFile(file) {
   console.log('File Object:', file);
   const nomeArquivo = file.originalname;
   if (file.originalname.trim() === "Enviar Arte Depois") {
-    return { webViewLink: "Enviar Arte Depois" };
+    return { webViewLink: "Enviar Arte Depois", nomeArquivo: "Enviar Arte Depois" };
   }else {
   const fileMetaData = {
     'name': file.originalname, // Use file.originalname instead of 'file.originalname'
