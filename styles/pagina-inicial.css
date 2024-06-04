@@ -230,7 +230,8 @@ main {
     top: 700px;
     width: 1286px;
     height: 1109px;
-    left: 18%;
+    left: 50%;
+    transform: translate(-50%);
     padding: 15px;
 }
 #novidades {
@@ -261,6 +262,9 @@ main {
 .box:hover {
     box-shadow: -1px 1px 8px #ef41266c;
     transform: scale(1.1);
+}
+.box > img  {
+    width: 100%;
 }
 ::-webkit-scrollbar {
     display: none;

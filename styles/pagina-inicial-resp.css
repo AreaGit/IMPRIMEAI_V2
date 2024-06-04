@@ -311,43 +311,46 @@
     #cx1 {
         box-shadow: -1px -1px 8px #434344;
         border-radius: 5px;
-        width: 96vw;
+        width: 388px;
         height: 456px;
         position: absolute;
         top: 12%;
-        left: -5%;
+        left: 50%;
+        transform: translate(-50%);
         transition: transform 0.8s;
     }
     #cx2 {
         box-shadow: -1px -1px 8px #434344;
         border-radius: 5px;
-        width: 96vw;
+        width: 388px;
         height: 456px;
         position: absolute;
         top: 58%;
-        left: -5%;
+        left: 50%;
+        transform: translate(-50%);
         transition: transform 0.8s;
     }
     #cx3 {
         box-shadow: -1px -1px 8px #434344;
         border-radius: 5px;
-        width: 96vw;
+        width: 388px;
         height: 456px;
         position: absolute;
         top: 104%;
-        left: 1%;
+        left: 50%;
+        transform: translate(-50%);
         transition: transform 0.8s;
         overflow-x: hidden;
-        transform: translate(-7%);
     }
     #cx4 {
         box-shadow: -1px -1px 8px #434344;
         border-radius: 5px;
-        width: 96vw;
+        width: 388px;
         height: 456px;
         position: absolute;
         top: 150%;
-        left: -5%;
+        left: 50%;
+        transform: translate(-50%);
         transition: transform 0.8s;
         overflow-x: hidden;
     }
@@ -993,7 +996,7 @@
         transform: translate(-50%);
     }
     main {
-        position: relative;
+        position: absolute;
         top: 700px;
         width: 812px;
         height: 1109px;
@@ -1058,10 +1061,10 @@
         height: 456px;
         position: absolute;
         top: 57%;
-        left: 6%;
+        left: 3%;
         transition: transform 0.8s;
         overflow-x: hidden;
-        transform: translate(-7%);
+        /*transform: translate(-7%);*/
     }
     #cx4 {
         box-shadow: -1px -1px 8px #434344;

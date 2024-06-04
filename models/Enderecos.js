@@ -87,8 +87,8 @@ const Enderecos = db.define('enderecos', {
     ]
 });
 //Criar Tabela
-//Enderecos.belongsTo(Produtos, { foreignKey: 'idProduto' });
-//Enderecos.sync()
-Enderecos.sync({force:true})
+Enderecos.belongsTo(Produtos, { foreignKey: 'idProduto' });
+Enderecos.sync()
+//Enderecos.sync({force:true})
 
 module.exports = Enderecos
