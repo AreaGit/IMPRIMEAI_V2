@@ -265,6 +265,7 @@ main {
 }
 .box > img  {
     width: 100%;
+    border-radius: 5px;
 }
 ::-webkit-scrollbar {
     display: none;
