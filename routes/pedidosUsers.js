@@ -849,7 +849,6 @@ app.post('/criar-pedidos', async (req, res) => {
           nomeArquivo: produtoQuebrado.arquivo,
           // ... outros campos relevantes ...
         });
-        await verificarGraficaMaisProximaEAtualizar(itemPedido);
         return itemPedido;
       });
 
@@ -882,6 +881,8 @@ app.post('/criar-pedidos', async (req, res) => {
       req.session.carrinho = [];
       req.session.endereco = {};
 
+      // Chamar a função verificarGraficaMaisProximaEAtualizar2 com os itens do pedido e os endereços
+      await verificarGraficaMaisProximaEAtualizar2(itensPedido, enderecos);
       res.json({ message: 'Mini Pedido criado com sucesso', pedido });
     } else {
       console.log('2');
@@ -1077,6 +1078,96 @@ app.post('/criar-pedidos', async (req, res) => {
       }
     }
     
+async function verificarGraficaMaisProximaEAtualizar2(itensPedido, enderecos) {
+      try {
+        const apiKey = 'Ao6IBGy_Nf0u4t9E88BYDytyK5mK3kObchF4R0NV5h--iZ6YgwXPMJEckhAEaKlH';
+        let graficasNotificadas = []; // Array para armazenar os IDs das gráficas notificadas
+
+        for (let pedidoCadastrado of itensPedido) {
+          for (let enderecoPedido of enderecos) {
+            console.log(`Verificando endereço com o Id: ${enderecoPedido.id}`);
+      
+            const enderecoEntregaInfo = {
+              endereco: enderecoPedido.rua,
+              cep: enderecoPedido.cep,
+              cidade: enderecoPedido.cidade,
+              estado: enderecoPedido.estado,
+            };
+      
+            const coordinatesEnd = await getCoordinatesFromAddress(enderecoEntregaInfo, apiKey);
+      
+            if (coordinatesEnd.latitude !== null && coordinatesEnd.longitude !== null) {
+              console.log(`Latitude do Endereço de Entrega: ${coordinatesEnd.latitude}`);
+              console.log(`Longitude do Endereço de Entrega: ${coordinatesEnd.longitude}`);
+      
+              let graficas = await Graficas.findAll();
+      
+              let distanciaMinima = Infinity;
+              let graficaMaisProxima = null;
+      
+              for (let grafica of graficas) {
+                const graficaCoordinates = await getCoordinatesFromAddress({
+                  endereco: grafica.enderecoCad,
+                  cep: grafica.cepCad,
+                  cidade: grafica.cidadeCad,
+                  estado: grafica.estadoCad,
+                }, apiKey);
+      
+                const distanceToGrafica = haversineDistance(graficaCoordinates.latitude, graficaCoordinates.longitude, coordinatesEnd.latitude, coordinatesEnd.longitude);
+      
+                if (distanceToGrafica < distanciaMinima) {
+                  distanciaMinima = distanceToGrafica;
+                  graficaMaisProxima = grafica;
+                }
+              }
+      
+              const raioEndereco = enderecoPedido.raio;
+      
+              if (distanciaMinima <= raioEndereco && graficaMaisProxima) {
+                let produtosGrafica;
+                if (typeof graficaMaisProxima.produtos === 'string') {
+                  const fixedJsonString = graficaMaisProxima.produtos.replace(/'/g, '"');
+                  produtosGrafica = JSON.parse(fixedJsonString);
+                } else {
+                  produtosGrafica = graficaMaisProxima.produtos;
+                }
+      
+                if (produtosGrafica && produtosGrafica[pedidoCadastrado.nomeProd]) {
+                  // Verificar se a gráfica já foi notificada para este pedido
+                  if (!graficasNotificadas.includes(graficaMaisProxima.id)) {
+                    await pedidoCadastrado.update({
+                      graficaAtend: graficaMaisProxima.id,
+                    });
+      
+                    // Salvar o ID da gráfica no graficaAtend do pedido
+                    pedidoCadastrado.graficaAtend = graficaMaisProxima.id;
+      
+                    let mensagemStatus = '';
+      
+                    if (pedidoCadastrado.statusPed === 'Aguardando') {
+                      mensagemStatus = `Olá gráfica ${graficaMaisProxima.userCad}, você tem um novo pedido em Aguardo para ser atendido. Abra o seu Painel de Pedidos!`;
+                    } else {
+                      mensagemStatus = `Olá gráfica ${graficaMaisProxima.userCad}, você tem um novo pedido em Aberto para ser atendido. Fique atento ao seu Painel de Pedidos!`;
+                    }
+      
+                    await enviarEmailNotificacao(graficaMaisProxima.emailCad, `Novo Pedido - ID ${pedidoCadastrado.id}`, mensagemStatus);
+                    await enviarNotificacaoWhatsapp(graficaMaisProxima.telefoneCad, `Novo Pedido - ${mensagemStatus}`);
+      
+                    // Adicionar o ID da gráfica notificada ao array
+                    graficasNotificadas.push(graficaMaisProxima.id);
+                  } else {
+                    console.log(`A gráfica ${graficaMaisProxima.id} já foi notificada para o pedido ${pedidoCadastrado.id}`);
+                  }   
+                }
+              }
+            }
+          }
+        }
+      } catch (error) {
+        console.error('Erro ao buscar pedidos cadastrados:', error);
+        // Tratamento de erros
+      }
+}
     async function enviarEmailNotificacao(destinatario, assunto, corpo) {
       const transporter = nodemailer.createTransport({
         host: 'smtp.gmail.com',

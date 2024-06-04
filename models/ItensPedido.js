@@ -111,8 +111,8 @@ const ItensPedidos = db.define('itenspedidos', {
     ]
 });
 
-ItensPedidos.belongsTo(Produtos, { foreignKey: 'idProduto' });
-//ItensPedidos.sync({force:true})
-ItensPedidos.sync()
+//ItensPedidos.belongsTo(Produtos, { foreignKey: 'idProduto' });
+ItensPedidos.sync({force:true})
+//ItensPedidos.sync()
 
 module.exports = ItensPedidos

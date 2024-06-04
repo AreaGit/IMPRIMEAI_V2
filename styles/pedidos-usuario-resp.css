@@ -9,9 +9,17 @@
         position: inherit;
         top: 0%;
         border-bottom: 0px solid transparent;
-        color: black;
+        color: white;
         width: 0%;
         z-index: -1;
+    }
+    div#lg {
+        width: 50px;
+        height: 50px;
+        position: absolute;
+        left: 0%;
+        top: 0px;
+        z-index: 999;
     }
     #nav-bar {
         display: none;
@@ -47,23 +55,28 @@
     #menu-icon {
         display: block;
         position: absolute;
-        left: 80%;
+        left: 100%;
+        transform: translate(-100%);
         top: -10%;
     }
     #logo {
+        display: none;
+    }    
+    #logo2 {
+        display: block;
         position: absolute;
         left: 0%;
         transform: translate(-5%);
-        top: -5px;
-        width: 13%;
+        top: -3px;
+        width: 23%;
     }
     #icone-pesquisa {
         width: 34px;
         height: 36px;
         position: absolute;
-        left: 15%;
-        transform: translate(-15%);
-        top: 3px;
+        left: 30%;
+        transform: translate(-30%);
+        top: 33px;
     }
     #carrinho-compras {
         width: 44px;
@@ -129,5 +142,71 @@
         left: 30%;
         top: 25px;
         width: fit-content;
+    }
+}
+@media screen and (min-width:1024px) and (max-width:1440px) {
+    #nav-bar {
+        position: relative;
+        left: 50%;
+        top: 8px;
+        width: 568px;
+        transform: translate(-50%);
+    }
+    #logo {
+        position: absolute;
+        left: -14%;
+        top: -10px;
+    }
+    #icone-pesquisa {
+        width: 22px;
+        height: 24px;
+        position: absolute;
+        left: 112%;
+        transform: translate(-112%);
+        top: 1px;
+    }
+}
+@media screen and (min-width:1441px) and (max-width:1789px) {
+    #nav-bar {
+        position: relative;
+        left: 50%;
+        top: 8px;
+        width: 568px;
+        transform: translate(-50%);
+    }
+    #logo {
+        position: absolute;
+        left: -14%;
+        top: -10px;
+    }
+    #icone-pesquisa {
+        width: 22px;
+        height: 24px;
+        position: absolute;
+        left: 112%;
+        transform: translate(-112%);
+        top: 1px;
+    }
+}
+@media screen and (min-width:2560px) {
+    #nav-bar {
+        position: relative;
+        left: 50%;
+        top: 8px;
+        width: 568px;
+        transform: translate(-50%);
+    }
+    #logo {
+        position: absolute;
+        left: -14%;
+        top: -10px;
+    }
+    #icone-pesquisa {
+        width: 22px;
+        height: 24px;
+        position: absolute;
+        left: 112%;
+        transform: translate(-112%);
+        top: 1px;
     }
 }

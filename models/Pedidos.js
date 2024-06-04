@@ -71,10 +71,10 @@ const Pedidos = db.define('pedidos', {
     ]
 });
 
-Pedidos.hasMany(ItensPedidos, { foreignKey: 'idPed'});
-Pedidos.hasMany(Enderecos, { foreignKey: 'idPed'});
+//Pedidos.hasMany(ItensPedidos, { foreignKey: 'idPed'});
+//Pedidos.hasMany(Enderecos, { foreignKey: 'idPed'});
 
-//Pedidos.sync({force: true});
-Pedidos.sync()
+Pedidos.sync({force: true});
+//Pedidos.sync()
 
 module.exports = Pedidos;
