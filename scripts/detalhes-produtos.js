@@ -2,6 +2,7 @@ const avisoAdicionadoaoCarrinho = document.getElementById('avisoGeral');
 const erroCarrinho = document.getElementById('erroCarrinho');
 const avancarSlides = document.getElementById('avancarSlides');
 const retrocederSlides = document.getElementById('retrocederSlides');
+const downloadGab = document.getElementById('downloadGab');
 document.addEventListener('DOMContentLoaded', function() {
     // Obtenha o ID do produto da URL atual (por exemplo, /detalhes-produtos.html?id=1)
     const params = new URLSearchParams(window.location.search);
@@ -27,6 +28,19 @@ document.addEventListener('DOMContentLoaded', function() {
                 precoProdutoElement.textContent = `R$ ${data.valorProd.toFixed(2)}`;
                 descricaoProdutoElement.textContent = data.descProd;
                 imagemProdutoElement.src = `/imagens/${data.id}`;
+                // Evento de download do gabarito
+                downloadGab.addEventListener('click', () => {
+                  const buffer = new Uint8Array(data.gabaritoProd.data);
+                  const blob = new Blob([buffer], { type: 'application/pdf' });
+                  const url = window.URL.createObjectURL(blob);
+                  const a = document.createElement('a');
+                  a.style.display = 'none';
+                  a.href = url;
+                  a.download = `${data.nomeProd}_gabarito.pdf`;
+                  document.body.appendChild(a);
+                  a.click();
+                  window.URL.revokeObjectURL(url);
+              });
                   // Update slideshow images
                   const slideshowImages = [
                     data.imgProd,

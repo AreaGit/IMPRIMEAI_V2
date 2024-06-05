@@ -370,6 +370,7 @@ app.get('/produto/:id', async (req, res) => {
         imgProd2: produto.imgProd2, // Include additional image 1
         imgProd3: produto.imgProd3, // Include additional image 2
         imgProd4: produto.imgProd4, // Include additional image 3
+        gabaritoProd: produto.gabaritoProd,
         // Adicione outras propriedades do produto conforme necessário
       });
     }
