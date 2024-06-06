@@ -269,7 +269,7 @@ async function getCoordinatesFromAddressEnd(enderecoEntregaInfo, apiKey) {
                       console.log(`Pedido redirecionado com sucesso para a gráfica ID ${graficaMaisProxima.id}`);
       
                     } else {
-                      console.log('A gráfica mais próxima não faz o produto necessário. Procurando outra gráfica...', error);
+                      console.log('A gráfica mais próxima não faz o produto necessário. Procurando outra gráfica...');
                     }
                   } else {
                     console.log('Nenhuma gráfica próxima encontrada para redirecionamento.');
@@ -288,7 +288,7 @@ async function getCoordinatesFromAddressEnd(enderecoEntregaInfo, apiKey) {
   
                 pedidosProximos.push(pedidoAssociado);
               } else {
-                console.log('A gráfica mais próxima não faz o produto necessário. Procurando outra gráfica...', error);
+                console.log('A gráfica mais próxima não faz o produto necessário. Procurando outra gráfica...');
   
                 for (let graficaAtual of graficas) {
                   let produtosGraficaAtual;
@@ -340,21 +340,7 @@ async function getCoordinatesFromAddressEnd(enderecoEntregaInfo, apiKey) {
       }
     } catch (error) {
       console.error('Erro ao buscar pedidos cadastrados:', error);
-  
-      if (error.response) {
-        console.error('Detalhes do erro de resposta:', error.response.status, error.response.statusText);
-  
-        try {
-          const errorData = await error.response.json();
-          console.error('Detalhes adicionais do erro:', errorData);
-        } catch (jsonError) {
-          console.error('Erro ao analisar o corpo JSON da resposta:', jsonError.message);
-        }
-      }
-  
-      if (!res.headersSent) {
-        res.status(500).json({ error: 'Erro ao buscar pedidos cadastrados', message: error.message });
-      }
+      res.status(500).json({ message: 'Erro ao buscar pedidos cadastrados', error: error.message });
     }
   });
 
