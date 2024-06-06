@@ -34,6 +34,8 @@ const telefoneUser = document.getElementById('telefoneUser');
 let validTelefoneUser = false;
 const emailUser = document.getElementById('emailUser');
 let validEmailUser = false;
+const confirmEmailUser = document.getElementById('confirmEmailUser');
+let validConfirmEmailUser = false;
 const senhaUser = document.getElementById('senhaUser');
 let validSenhaUser = false;
 const btnCad = document.getElementById('btnCad');
@@ -49,6 +51,7 @@ const avisoEnderecos = document.getElementById('avisoEnderecos');
 const emailCadastrado = document.getElementById('emailCadastrado');
 const erroUsuario = document.getElementById('erroUsuario');
 const avisoGeral = document.getElementById('avisoGeral');
+const avisoConfirmEmail = document.getElementById('emailIncorreto');
 //Formatando campos
 nomeUser.addEventListener('keyup', () => {
     if(nomeUser.value.length <= 4) {
@@ -166,6 +169,20 @@ emailUser.addEventListener('keyup', () => {
         validEmailUser = true;
     }
 });
+// Formatando e validando o campo de confirmação de e-mail
+confirmEmailUser.addEventListener('keyup', () => {
+    const emailValue = emailUser.value;
+    const confirmEmailValue = confirmEmailUser.value;
+
+    // Verifica se os e-mails são iguais
+    if (emailValue === confirmEmailValue) {
+        confirmEmailUser.setAttribute('style', 'color: black; border-color: green;');
+        validConfirmEmailUser = true;
+    } else {
+        confirmEmailUser.setAttribute('style', 'color: red; border-color: red;');
+        validConfirmEmailUser = false;
+    }
+});
 //Formatando campo de Senha do usuário
 senhaUser.addEventListener('keyup', () => {
     const senhaValue = senhaUser.value;
@@ -217,7 +234,13 @@ btnCad.addEventListener('click', () => {
         setTimeout(() => {
             avisoEmail.style.display = 'none'
         }, 5000);
-    } else if(validSenhaUser === false) {
+    }else if (validConfirmEmailUser === false) {
+        avisoConfirmEmail.style.display = 'block'
+        setTimeout(() => {
+            avisoConfirmEmail.style.display = 'none'
+        }, 5000);
+    }
+     else if(validSenhaUser === false) {
         avisoSenha.style.display = 'block'
         setTimeout(() => {
             avisoSenha.style.display = 'none'

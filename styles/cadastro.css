@@ -98,7 +98,7 @@ form > button {
     position: absolute;
     left: 90%;
     transform: translate(-90%);
-    top: 80%;
+    top: 90%;
     border-radius: 5px;
     transition: 0.8s;
 }
@@ -207,7 +207,7 @@ label > a {
     position: absolute;
     left: 93%;
     transform: translate(-93%);
-    top: 78%;
+    top: 82%;
   }
   
   .container .eye {
@@ -278,6 +278,9 @@ label > a {
     display: none;
   }
   #erroUsuario {
+    display: none;
+  }
+  #emailIncorreto {
     display: none;
   }
   .notifications-container {
@@ -385,8 +388,8 @@ label > a {
   }
 form > a {
     position: relative;
-    left: 67%;
-    top: 555px;
+    left: 66%;
+    top: 610px;
     text-decoration: underline;
     color: #F37160;
 }  
