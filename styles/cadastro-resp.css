@@ -62,7 +62,7 @@
         position: absolute;
         left: -65%;
         transform: translate(0%);
-        top: 195%;
+        top: 210%;
         border-radius: 5px;
         transition: 0.8s;
     }
@@ -111,7 +111,7 @@
     form > a {
         position: absolute;
         left: 50%;
-        top: 1241px;
+        top: 1345px;
         text-decoration: underline;
         color: #F37160;
         font-size: 15px;
@@ -144,18 +144,26 @@
         position: absolute;
         left: 70%;
         transform: translate(0%);
-        top: 77%;
+        top: 90%;
         border-radius: 5px;
         transition: 0.8s;
     }
     form > a {
         position: absolute;
         left: 150%;
-        top: 550px;
+        top: 620px;
         text-decoration: underline;
         color: #F37160;
         transform: translate(-150%);
         width: 41%;
+    }
+    form {
+        position: absolute;
+        top: 45%;
+        width: 40vw;
+        height: 600px;
+        left: 50%;
+        transform: translate(-50%);
     }
 }
 @media screen and (min-width:1025px) and (max-width:1440px) {
@@ -184,18 +192,26 @@
         position: absolute;
         left: 75%;
         transform: translate(-0%);
-        top: 80%;
+        top: 90%;
         border-radius: 5px;
         transition: 0.8s;
     }
     form > a {
         position: absolute;
         left: 120%;
-        top: 542px;
+        top: 620px;
         text-decoration: underline;
         color: #F37160;
         transform: translate(-120%);
         width: 26%;
+    }
+    form {
+        position: absolute;
+        top: 40%;
+        width: 40vw;
+        height: 600px;
+        left: 50%;
+        transform: translate(-50%);
     }
 }
 @media screen and (min-width:1441px) and (max-width:1919px) {
@@ -224,18 +240,26 @@
         position: absolute;
         left: 86%;
         transform: translate(-0%);
-        top: 75%;
+        top: 90%;
         border-radius: 5px;
         transition: 0.8s;
     }
     form > a {
         position: absolute;
         left: 120%;
-        top: 542px;
+        top: 620 px;
         text-decoration: underline;
         color: #F37160;
         transform: translate(-120%);
         width: 24%;
+    }
+    form {
+        position: absolute;
+        top: 40%;
+        width: 40vw;
+        height: 600px;
+        left: 50%;
+        transform: translate(-50%);
     }
 }
 @media screen and (min-width:2560px) {
@@ -290,7 +314,7 @@
         position: absolute;
         left: 90%;
         transform: translate(-90%);
-        top: 80%;
+        top: 95%;
         border-radius: 5px;
         transition: 0.8s;
     }
@@ -379,7 +403,7 @@
     form > a {
         position: relative;
         left: 71%;
-        top: 555px;
+        top: 640px;
         text-decoration: underline;
         color: #F37160;
         font-size: 20px;
