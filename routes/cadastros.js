@@ -54,7 +54,7 @@ app.post("/cadastrar", async (req, res) => {
       });
     }
     // Geração do código de verificação
-    const verificationCode = Math.floor(100000 + Math.random() * 900000).toString();
+    const verificationCode = Math.floor(1000 + Math.random() * 9000).toString();
 
         const newUser = await User.create({
             userCad: userCad,
@@ -80,6 +80,31 @@ app.post("/cadastrar", async (req, res) => {
         console.error('Erro ao cadastrar usuário:', error);
         res.status(500).json({ message: 'Erro ao cadastrar usuário' });
     }
+});
+
+app.post('/verificar-codigo', async (req, res) => {
+  try {
+      const { emailCad, verificationCode } = req.body;
+
+      const user = await User.findOne({ where: { emailCad: emailCad } });
+
+      if (!user) {
+          return res.status(400).json({ message: 'Usuário não encontrado' });
+      }
+
+      if (user.verificationCode === verificationCode) {
+          // Código de verificação está correto, marque o usuário como verificado
+          user.verificado = true;
+          await user.save();
+
+          return res.json({ message: 'Verificação bem-sucedida!' });
+      } else {
+          return res.status(400).json({ message: 'Código de verificação inválido' });
+      }
+  } catch (error) {
+      console.error('Erro ao verificar código:', error);
+      res.status(500).json({ message: 'Erro ao verificar código' });
+  }
 });
 
 app.post("/login", async (req, res) => {

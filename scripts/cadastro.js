@@ -287,9 +287,11 @@ btnCad.addEventListener('click', () => {
           .then(data => {
             if (data.message === 'Usuário cadastrado com sucesso!') {
                 avisoGeral.style.display = 'block'
+                // Salva o e-mail nos cookies
+                document.cookie = `email=${emailUser}; path=/; max-age=31536000`; 
                 setTimeout(() => {
                     avisoGeral.style.display = 'none'
-                    window.location.href = "/login"
+                    window.location.href = "/verificacao"
                 }, 5000);
            }else if (data.message === 'Já existe um usuário com este e-mail cadastrado'){
                 emailCadastrado.style.display = 'block'

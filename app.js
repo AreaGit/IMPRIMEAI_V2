@@ -565,6 +565,16 @@ app.get('/painel-administrativo', (req, res) => {
     res.status(500).send("Erro interno do servidor");
   }
 });
+//Rota get para a página de verificação de conta
+app.get('/verificacao', (req, res) => {
+  try {
+    const verificacaoContentHtml = fs.readFileSync(path.join(__dirname, "html", "verificacaoUser.html"), "utf-8");
+    res.send(verificacaoContentHtml);
+  } catch (err) {
+    console.log("Erro ao ler o arquivo verificacaoUser.html: ", err);
+    res.status(500).send("Erro interno do servidor");
+  }
+});
 app.listen(PORT, () => {
   console.log(`Servidor rodando na porta ${PORT} https://localhost:${PORT}`);
 });

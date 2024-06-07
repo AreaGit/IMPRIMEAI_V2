@@ -47,10 +47,6 @@ const  User = db.define('users', {
         type : Sequelize.STRING(255),
         allowNull: true,
     },
-    inscricaoEstadualCad: {
-        type : Sequelize.STRING(255),
-        allowNull: true,
-    },
     emailCad: {
         type: Sequelize.STRING(255),
         allowNull: true
@@ -64,7 +60,7 @@ const  User = db.define('users', {
 })
 
 //CRIAR A TABELA
-//User.sync()
-User.sync({ force: true })
+User.sync()
+//User.sync({ force: true })
 
 module.exports = User
