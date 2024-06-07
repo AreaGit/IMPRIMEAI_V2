@@ -58,11 +58,13 @@ const  User = db.define('users', {
     passCad: {
         type: Sequelize.STRING(255),
         allowNull: true
-    }
+    },
+    verificationCode: Sequelize.STRING,
+    verificado: { type: Sequelize.BOOLEAN, defaultValue: false }
 })
 
 //CRIAR A TABELA
-User.sync()
-//User.sync({ force: true })
+//User.sync()
+User.sync({ force: true })
 
 module.exports = User

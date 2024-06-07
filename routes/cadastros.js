@@ -7,17 +7,39 @@ const Produtos = require('../models/Produtos');
 const VariacoesProduto = require('../models/VariacoesProduto');
 const Graficas = require('../models/Graficas');
 const multer = require('multer');
+const nodemailer = require('nodemailer');
 const storage = multer.memoryStorage();
 const upload = multer({ storage: storage });
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+
+async function enviarEmailNotificacao(destinatario, assunto, corpo) {
+  const transporter = nodemailer.createTransport({
+    host: 'smtp.gmail.com',
+    port: 465,
+    secure: true,
+    auth: {
+      user: "gabrieldiastrin63@gmail.com",
+      pass: "bwep pyqq zocy ljsi"
+    }
+  })
+
+  const info = await transporter.sendMail({
+    from: 'admin@imprimeai.com.br',
+    to: destinatario,
+    subject: assunto,
+    text: corpo,
+  });
+
+  console.log('E-mail enviado:', info);
+}
 
 app.post("/cadastrar", async (req, res) => { 
     try {
         const { userCad, cpfCad, endereçoCad, numCad, compCad, bairroCad, cepCad, cidadeCad, estadoCad, inscricaoEstadualCad, telefoneCad, emailCad, passCad } = req.body;
         const hashedPassword = await bcrypt.hash(passCad, 10);
 
-            // Verifique se já existe um usuário com o mesmo CPF, email ou senha
+    // Verifique se já existe um usuário com o mesmo CPF, email ou senha
     const existingUser = await User.findOne({
       where: {
         [Op.or]: [
@@ -31,6 +53,8 @@ app.post("/cadastrar", async (req, res) => {
         message: "Já existe um usuário com este e-mail cadastrado",
       });
     }
+    // Geração do código de verificação
+    const verificationCode = Math.floor(100000 + Math.random() * 900000).toString();
 
         const newUser = await User.create({
             userCad: userCad,
@@ -45,9 +69,11 @@ app.post("/cadastrar", async (req, res) => {
             inscricaoEstadualCad: inscricaoEstadualCad,
             telefoneCad: telefoneCad,
             emailCad: emailCad,
-            passCad: hashedPassword
+            passCad: hashedPassword,
+            verificationCode: verificationCode // Salve o código de verificação
         });
-
+        const mensagemStatus = `Seu código de verificação é: ${verificationCode}`
+        await enviarEmailNotificacao(emailCad, `Código de Verificação do usuário ${userCad}`, mensagemStatus);
         res.json({ message: 'Usuário cadastrado com sucesso!', user: newUser });
         
     } catch (error) {
