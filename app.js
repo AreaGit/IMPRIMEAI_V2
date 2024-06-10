@@ -130,6 +130,116 @@ const getCachedPapelariaProducts = async (page, limit) => {
 
   return produtos;
 };
+// Função para obter produtos de cartões com caching
+const getCachedCartoesProducts = async (page, limit) => {
+  const cacheKey = `cartoes:products:${page}:${limit}`;
+  const cachedData = await client.get(cacheKey);
+
+  if (cachedData) {
+    return JSON.parse(cachedData);
+  }
+
+  const produtos = await Produtos.findAndCountAll({
+    where: { categProd: 'Cartões de Visita' },
+    offset: (page - 1) * limit,
+    limit: parseInt(limit),
+    order: [['nomeProd', 'ASC']]
+  });
+
+  await client.set(cacheKey, JSON.stringify(produtos), {
+    EX: 3600, // Expire after 1 hour
+  });
+
+  return produtos;
+};
+// Função para obter produtos de folders com caching
+const getCachedFoldersProducts = async (page, limit) => {
+  const cacheKey = `folders:products:${page}:${limit}`;
+  const cachedData = await client.get(cacheKey);
+
+  if (cachedData) {
+    return JSON.parse(cachedData);
+  }
+
+  const produtos = await Produtos.findAndCountAll({
+    where: { categProd: 'Folders e Panfletos' },
+    offset: (page - 1) * limit,
+    limit: parseInt(limit),
+    order: [['nomeProd', 'ASC']]
+  });
+
+  await client.set(cacheKey, JSON.stringify(produtos), {
+    EX: 3600, // Expire after 1 hour
+  });
+
+  return produtos;
+};
+// Função para obter produtos de pastas com caching
+const getCachedPastasProducts = async (page, limit) => {
+  const cacheKey = `pastas:products:${page}:${limit}`;
+  const cachedData = await client.get(cacheKey);
+
+  if (cachedData) {
+    return JSON.parse(cachedData);
+  }
+
+  const produtos = await Produtos.findAndCountAll({
+    where: { categProd: 'Pastas' },
+    offset: (page - 1) * limit,
+    limit: parseInt(limit),
+    order: [['nomeProd', 'ASC']]
+  });
+
+  await client.set(cacheKey, JSON.stringify(produtos), {
+    EX: 3600, // Expire after 1 hour
+  });
+
+  return produtos;
+};
+// Função para obter produtos de imãs com caching
+const getCachedImasProducts = async (page, limit) => {
+  const cacheKey = `imas:products:${page}:${limit}`;
+  const cachedData = await client.get(cacheKey);
+
+  if (cachedData) {
+    return JSON.parse(cachedData);
+  }
+
+  const produtos = await Produtos.findAndCountAll({
+    where: { categProd: 'Imãs' },
+    offset: (page - 1) * limit,
+    limit: parseInt(limit),
+    order: [['nomeProd', 'ASC']]
+  });
+
+  await client.set(cacheKey, JSON.stringify(produtos), {
+    EX: 3600, // Expire after 1 hour
+  });
+
+  return produtos;
+};
+// Função para obter produtos de sacolas com caching
+const getCachedSacolasProducts = async (page, limit) => {
+  const cacheKey = `sacolas:products:${page}:${limit}`;
+  const cachedData = await client.get(cacheKey);
+
+  if (cachedData) {
+    return JSON.parse(cachedData);
+  }
+
+  const produtos = await Produtos.findAndCountAll({
+    where: { categProd: 'Sacolas' },
+    offset: (page - 1) * limit,
+    limit: parseInt(limit),
+    order: [['nomeProd', 'ASC']]
+  });
+
+  await client.set(cacheKey, JSON.stringify(produtos), {
+    EX: 3600, // Expire after 1 hour
+  });
+
+  return produtos;
+};
 app.use(express.static(path.join(__dirname)));
 app.use('/', cadastros);
 app.use('/', pedidosUsers);
@@ -301,6 +411,137 @@ app.get('/api/produtos/papelaria', async (req, res) => {
     res.status(500).json({ error: error.message });
   }
 });
+//Rota get da página de cartão de visita
+app.get('/cartoes', (req, res) => {
+  try {
+    const cartaoHtmlContent = fs.readFileSync(path.join(__dirname, "html", "cartao-visita.html"), "utf-8");
+    res.send(cartaoHtmlContent);
+  } catch (err) {
+    console.log("Erro ao ler o arquivo cartao-visita.html");
+    res.status(500).send("Erro interno do servidor");
+  }
+});
+// Rota com paginação e caching para produtos de cartões de visita
+app.get('/api/produtos/cartoes', async (req, res) => {
+  const { page = 1, limit = 10 } = req.query;
+
+  try {
+    const produtos = await getCachedCartoesProducts(page, limit);
+    res.json({
+      totalItems: produtos.count,
+      totalPages: Math.ceil(produtos.count / limit),
+      currentPage: parseInt(page),
+      produtos: produtos.rows
+    });
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+});
+//Rota get da página de folders e panfletos
+app.get('/folders', (req, res) => {
+  try {
+    const foldersHtmlContent = fs.readFileSync(path.join(__dirname, "html", "folders.html"), "utf-8");
+    res.send(foldersHtmlContent);
+  } catch (err) {
+    console.log("Erro ao ler o arquivo folders.html");
+    res.status(500).send("Erro interno do servidor");
+  }
+});
+// Rota com paginação e caching para produtos de folders
+app.get('/api/produtos/folders', async (req, res) => {
+  const { page = 1, limit = 10 } = req.query;
+
+  try {
+    const produtos = await getCachedFoldersProducts(page, limit);
+    res.json({
+      totalItems: produtos.count,
+      totalPages: Math.ceil(produtos.count / limit),
+      currentPage: parseInt(page),
+      produtos: produtos.rows
+    });
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+});
+//Rota get da página de pastas
+app.get('/pastas', (req, res) => {
+  try {
+    const pastasHtmlContent = fs.readFileSync(path.join(__dirname, "html", "pastas.html"), "utf-8");
+    res.send(pastasHtmlContent);
+  } catch (err) {
+    console.log("Erro ao ler o arquivo pastas.html");
+    res.status(500).send("Erro interno do servidor");
+  }
+});
+// Rota com paginação e caching para produtos pastas
+app.get('/api/produtos/pastas', async (req, res) => {
+  const { page = 1, limit = 10 } = req.query;
+
+  try {
+    const produtos = await getCachedPastasProducts(page, limit);
+    res.json({
+      totalItems: produtos.count,
+      totalPages: Math.ceil(produtos.count / limit),
+      currentPage: parseInt(page),
+      produtos: produtos.rows
+    });
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+});
+//Rota get da página de imas
+app.get('/imas', (req, res) => {
+  try {
+    const imasHtmlContent = fs.readFileSync(path.join(__dirname, "html", "imas.html"), "utf-8");
+    res.send(imasHtmlContent);
+  } catch (err) {
+    console.log("Erro ao ler o arquivo imas.html");
+    res.status(500).send("Erro interno do servidor");
+  }
+});
+// Rota com paginação e caching para produtos imas
+app.get('/api/produtos/imas', async (req, res) => {
+  const { page = 1, limit = 10 } = req.query;
+
+  try {
+    const produtos = await getCachedImasProducts(page, limit);
+    res.json({
+      totalItems: produtos.count,
+      totalPages: Math.ceil(produtos.count / limit),
+      currentPage: parseInt(page),
+      produtos: produtos.rows
+    });
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+});
+//Rota get da página de imas
+app.get('/sacolas', (req, res) => {
+  try {
+    const sacolasHtmlContent = fs.readFileSync(path.join(__dirname, "html", "sacolas.html"), "utf-8");
+    res.send(sacolasHtmlContent);
+  } catch (err) {
+    console.log("Erro ao ler o arquivo sacolas.html");
+    res.status(500).send("Erro interno do servidor");
+  }
+});
+// Rota com paginação e caching para produtos sacolas
+app.get('/api/produtos/sacolas', async (req, res) => {
+  const { page = 1, limit = 10 } = req.query;
+
+  try {
+    const produtos = await getCachedSacolasProducts(page, limit);
+    res.json({
+      totalItems: produtos.count,
+      totalPages: Math.ceil(produtos.count / limit),
+      currentPage: parseInt(page),
+      produtos: produtos.rows
+    });
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+});
+
 //Rota get da página de carrinho
 app.get('/carrinho', (req, res) => {
   try {
