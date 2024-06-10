@@ -45,12 +45,12 @@
   #logo2 {
     display: none;
   }
-  #logo {
-    position: absolute;
-    left: -14%;
-    width: 22%;
-    top: -10px;
-  }
+#logo {
+  position: absolute;
+  left: -3%;
+  width: 12%;
+  top: -11px;
+}
   li {
     list-style: none;
   }
@@ -58,13 +58,13 @@
     text-decoration: none;
     color: black;
   }
-  #nav-bar {
-    position: absolute;
-    left: 50%;
-    top: 15%;
-    width: 568px;
-    transform: translate(-50%);
-  }
+#nav-bar {
+  position: absolute;
+  left: 50%;
+  top: 15%;
+  width: 54%;
+  transform: translate(-50%);
+}
   #nav-bar > li {
     display: inline;
     position: relative;

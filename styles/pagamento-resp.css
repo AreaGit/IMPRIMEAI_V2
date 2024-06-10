@@ -30,7 +30,7 @@
         top: 5px;
         box-shadow: -1px -3px 20px black;
         border-radius: 5px;
-        height: 495px;
+        height: 715px;
         opacity: 0;
         z-index: 1000;
         background-color: white;
@@ -250,13 +250,14 @@
         position: relative;
         left: 50%;
         top: 8px;
-        width: 568px;
+        width: 700px;
         transform: translate(-50%);
     }
     #logo {
         position: absolute;
         left: -14%;
-        top: -10px;
+        top: -2px;
+        width: 107px;
     }
     #icone-pesquisa {
         width: 22px;
@@ -279,7 +280,7 @@
         width: 90vw;
         height: 200px;
         position: relative;
-        top: 882px;
+        top: 892px;
         left: 90%;
         transform: translate(-90%);
         padding: 15px;
@@ -355,13 +356,14 @@
         position: relative;
         left: 50%;
         top: 8px;
-        width: 568px;
+        width: 1050px;
         transform: translate(-50%);
     }
     #logo {
         position: absolute;
-        left: -14%;
-        top: -10px;
+        left: -2%;
+        top: -7px;
+        width: 107px;
     }
     #icone-pesquisa {
         width: 22px;
@@ -377,13 +379,14 @@
         position: relative;
         left: 50%;
         top: 8px;
-        width: 568px;
+        width: 1050px;
         transform: translate(-50%);
     }
     #logo {
         position: absolute;
-        left: -14%;
-        top: -10px;
+        left: -2%;
+        top: -7px;
+        width: 107px;
     }
     #icone-pesquisa {
         width: 22px;

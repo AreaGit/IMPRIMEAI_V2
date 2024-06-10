@@ -47,9 +47,9 @@ header.scrolled > #nav-bar > li > a:hover {
 }
 #logo {
   position: absolute;
-  left: -14%;
-  width: 22%;
-  top: -10px;
+  left: -3%;
+  width: 12%;
+  top: -11px;
 }
 li {
   list-style: none;
@@ -62,7 +62,7 @@ a {
   position: absolute;
   left: 50%;
   top: 15%;
-  width: 568px;
+  width: 54%;
   transform: translate(-50%);
 }
 #nav-bar > li {
