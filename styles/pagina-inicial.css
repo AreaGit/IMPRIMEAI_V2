@@ -501,7 +501,6 @@ footer {
     background-color: #2B2B2B;
     border: 1px solid;
     padding: 15px;
-    color: white;
 }
 footer > a {
     color: white;
@@ -523,6 +522,7 @@ footer > a:hover {
     top: 70px;
 }
 #institucional > h2 {
+    color: white;
     font-size: 16px;
     margin-bottom: 10px;
 }
@@ -545,6 +545,7 @@ footer > a:hover {
     top: 170px;
 }
 #formasDePagamento > h2 {
+    color: white;
     font-size: 16px;
     margin-bottom: 10px;
 }
@@ -558,6 +559,7 @@ footer > a:hover {
     top: -45px;
 }
 #redesSociais > h2 {
+    color: white;
     font-size: 16px;
     margin-bottom: 10px;
 }
@@ -665,6 +667,7 @@ ul {
     top: 190px;
   }
   #siteSeguro > h2 {
+    color: white;
     font-size: 16px;
     margin-bottom: 10px;
   }
@@ -678,10 +681,12 @@ ul {
     top: -26px;
   }
   #canaisAtendimento > h2 {
+    color: white;
     font-size: 16px;
     margin-bottom: 10px;
   }
   #canaisAtendimento > p {
+    color: white;
     font-size: 13px;
     font-weight: 500;
   }
