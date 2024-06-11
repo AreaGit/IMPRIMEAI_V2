@@ -96,15 +96,45 @@
     }
     footer {
         position: absolute;
-        top: 230%;
-        width: 71%;
-        height: 25px;
-        left: 54%;
-        transform: translate(-50%);
-        height: 30px;
-    } 
+        top: 500%;
+        width: 131vw;
+        height: 625px;
+    }
     footer > a {
         font-size: 17px;
+        position: relative;
+        top: 240px;
+        left: 4%;
+    }
+    #institucional {
+        width: fit-content;
+        position: relative;
+        left: 0%;
+        top: 30px;
+    }
+    #redesSociais {
+        width: fit-content;
+        position: relative;
+        left: 0%;
+        top: -10px;
+    }
+    #formasDePagamento {
+        width: fit-content;
+        position: relative;
+        left: 0%;
+        top: 170px;
+    }
+    #canaisAtendimento {
+        width: fit-content;
+        position: relative;
+        left: 4%;
+        top: 55px;
+    }
+    #siteSeguro {
+        width: fit-content;
+        position: relative;
+        left: 10%;
+        top: 230px;
     }
     #linksRapidos {
         position: absolute;
@@ -531,11 +561,18 @@
     }
     footer {
         position: absolute;
-        top: 165%;
-        width: 40%;
-        height: 25px;
-        left: 50%;
-        transform: translate(-50%);
+        top: 300%;
+        width: 102vw;
+        height: 512px;
+    }
+    footer > a {
+        color: white;
+        font-size: 12px;
+        position: absolute;
+        transition: 1s;
+        position: relative;
+        left: 40%;
+        top: 35%;
     }
 }
 @media screen and (min-width:1301px) and (max-width:1440px) {
@@ -674,11 +711,18 @@
     }
     footer {
         position: absolute;
-        top: 165%;
-        width: 40%;
-        height: 25px;
-        left: 50%;
-        transform: translate(-50%);
+        top: 300%;
+        width: 102vw;
+        height: 512px;
+    }
+    footer > a {
+        color: white;
+        font-size: 12px;
+        position: absolute;
+        transition: 1s;
+        position: relative;
+        left: 40%;
+        top: 35%;
     }
 }
 @media screen and (min-width:1441px) and (max-width:1635px) {
@@ -817,11 +861,18 @@
     }
     footer {
         position: absolute;
-        top: 165%;
-        width: 40%;
-        height: 25px;
-        left: 50%;
-        transform: translate(-50%);
+        top: 300%;
+        width: 102vw;
+        height: 512px;
+    }
+    footer > a {
+        color: white;
+        font-size: 12px;
+        position: absolute;
+        transition: 1s;
+        position: relative;
+        left: 40%;
+        top: 35%;
     }
 }
 @media screen and (min-width:1635px) and (max-width:1789px) {
@@ -960,11 +1011,18 @@
     }
     footer {
         position: absolute;
-        top: 165%;
-        width: 40%;
-        height: 25px;
-        left: 50%;
-        transform: translate(-50%);
+        top: 310%;
+        width: 102vw;
+        height: 512px;
+    }
+    footer > a {
+        color: white;
+        font-size: 12px;
+        position: absolute;
+        transition: 1s;
+        position: relative;
+        left: 40%;
+        top: 35%;
     }
 }
 @media screen and (min-width:2560px) {
@@ -1103,10 +1161,21 @@
     }
     footer {
         position: absolute;
-        top: 165%;
-        width: 40%;
-        height: 25px;
-        left: 50%;
-        transform: translate(-50%);
+        top: 215%;
+        width: 100%;
+        height: 550px;
+        background-color: #2B2B2B;
+        border: 1px solid;
+        padding: 15px;
+        color: white;
+    }
+    footer > a {
+        color: white;
+        font-size: 12px;
+        position: absolute;
+        transition: 1s;
+        position: relative;
+        left: 45%;
+        top: 40%;
     }
 }
