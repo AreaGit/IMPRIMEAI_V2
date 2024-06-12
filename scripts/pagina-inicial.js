@@ -140,3 +140,12 @@ document.addEventListener("DOMContentLoaded", function() {
         });
     }
 });
+
+const cx1 = document.getElementById('cx1');
+cx1.addEventListener('click', () => {
+    window.location.href = '/detalhes-produtos?id=2'
+})
+const cx2 = document.getElementById('cx2');
+cx2.addEventListener('click', () => {
+    window.location.href = '/detalhes-produtos?id=3'
+})

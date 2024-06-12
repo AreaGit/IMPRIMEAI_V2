@@ -258,6 +258,7 @@ main {
     position: relative;
     top: 20px;
     left: 15px;
+    cursor: pointer;
 }
 .box:hover {
     box-shadow: -1px 1px 8px #ef41266c;
