@@ -202,6 +202,10 @@ a {
   left: 50%;
   transform: translate(-50%);
 }
+.slides > img {
+  width: 380px;
+  height: 380px;
+}
 #avancarSlides {
   position: relative;
   left: 56%;

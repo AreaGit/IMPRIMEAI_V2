@@ -816,6 +816,16 @@ app.get('/verificacao', (req, res) => {
     res.status(500).send("Erro interno do servidor");
   }
 });
+//Rota get para a página de central de ajuda
+app.get('/central-de-ajuda', (req, res) => {
+  try {
+    const centralAjudaContentHtml = fs.readFileSync(path.join(__dirname, "html", "centralAjuda.html"), "utf-8");
+    res.send(centralAjudaContentHtml);
+  } catch (err) {
+    console.log("Erro ao ler o arquivo centralAjuda.html: ", err);
+    res.status(500).send("Erro interno do servidor");
+  }
+});
 app.listen(PORT, () => {
   console.log(`Servidor rodando na porta ${PORT} https://localhost:${PORT}`);
 });
