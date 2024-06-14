@@ -424,6 +424,12 @@
         left: -25px;
         width: 120%;
       }
+      #cx5 {
+        display: none;
+      }
+      #cx6 {
+        display: none;
+      }
 }
 @media screen and (min-width:1024px) and (max-width:1300px) {   
     #nav-bar {
@@ -493,6 +499,12 @@
         color: #A7A9AC;
         position: absolute;
         left: -11%;
+    }
+    #cx5 {
+        display: none;
+    }
+    #cx6 {
+        display: none;
     }
     #cx1 {
         box-shadow: -1px -1px 8px #434344;
@@ -634,7 +646,7 @@
         position: absolute;
         left: 50%;
         height: 1095px;
-        width: 100%;
+        width: 160%;
         transform: translate(-50%);
     }
     #novidades > h2 {
@@ -642,50 +654,18 @@
         font-weight: 600;
         color: #A7A9AC;
         position: absolute;
-        left: -11%;
+        left: 11%;
+        top: -30px;
     }
-    #cx1 {
+    .box {
+        display: inline-flex;
         box-shadow: -1px -1px 8px #434344;
         border-radius: 5px;
-        width: 360px;
+        width: 376px;
         height: 456px;
-        position: absolute;
-        top: 12%;
-        left: 3%;
         transition: transform 0.8s;
-    }
-    #cx2 {
-        box-shadow: -1px -1px 8px #434344;
-        border-radius: 5px;
-        width: 360px;
-        height: 456px;
-        position: absolute;
-        top: 12%;
-        left: 53%;
-        transition: transform 0.8s;
-    }    
-    #cx3 {
-        box-shadow: -1px -1px 8px #434344;
-        border-radius: 5px;
-        width: 360px;
-        height: 456px;
-        position: absolute;
-        top: 57%;
-        left: 6%;
-        transition: transform 0.8s;
-        overflow-x: hidden;
-        transform: translate(-7%);
-    }
-    #cx4 {
-        box-shadow: -1px -1px 8px #434344;
-        border-radius: 5px;
-        width: 360px;
-        height: 456px;
-        position: absolute;
-        top: 57%;
-        left: 53%;
-        transition: transform 0.8s;
-        overflow-x: hidden;
+        margin: 25px;
+        cursor: pointer;
     }
     #motivosCompra {
         width: 1050px;
@@ -784,7 +764,7 @@
         position: absolute;
         left: 50%;
         height: 1095px;
-        width: 100%;
+        width: 160%;
         transform: translate(-50%);
     }
     #novidades > h2 {
@@ -792,50 +772,18 @@
         font-weight: 600;
         color: #A7A9AC;
         position: absolute;
-        left: -11%;
+        left: 11%;
+        top: -20px;
     }
-    #cx1 {
+    .box {
+        display: inline-flex;
         box-shadow: -1px -1px 8px #434344;
         border-radius: 5px;
-        width: 360px;
+        width: 376px;
         height: 456px;
-        position: absolute;
-        top: 12%;
-        left: 3%;
         transition: transform 0.8s;
-    }
-    #cx2 {
-        box-shadow: -1px -1px 8px #434344;
-        border-radius: 5px;
-        width: 360px;
-        height: 456px;
-        position: absolute;
-        top: 12%;
-        left: 53%;
-        transition: transform 0.8s;
-    }    
-    #cx3 {
-        box-shadow: -1px -1px 8px #434344;
-        border-radius: 5px;
-        width: 360px;
-        height: 456px;
-        position: absolute;
-        top: 57%;
-        left: 6%;
-        transition: transform 0.8s;
-        overflow-x: hidden;
-        transform: translate(-7%);
-    }
-    #cx4 {
-        box-shadow: -1px -1px 8px #434344;
-        border-radius: 5px;
-        width: 360px;
-        height: 456px;
-        position: absolute;
-        top: 57%;
-        left: 53%;
-        transition: transform 0.8s;
-        overflow-x: hidden;
+        margin: 25px;
+        cursor: pointer;
     }
     #motivosCompra {
         width: 1050px;
@@ -1084,7 +1032,7 @@
         position: absolute;
         left: 50%;
         height: 1095px;
-        width: 100%;
+        width: 160%;
         transform: translate(-50%);
     }
     #novidades > h2 {
@@ -1092,50 +1040,18 @@
         font-weight: 600;
         color: #A7A9AC;
         position: absolute;
-        left: -11%;
+        left: 4%;
+        top: -57px;
     }
-    #cx1 {
+    .box {
+        display: inline-flex;
         box-shadow: -1px -1px 8px #434344;
         border-radius: 5px;
-        width: 360px;
+        width: 376px;
         height: 456px;
-        position: absolute;
-        top: 12%;
-        left: 3%;
         transition: transform 0.8s;
-    }
-    #cx2 {
-        box-shadow: -1px -1px 8px #434344;
-        border-radius: 5px;
-        width: 360px;
-        height: 456px;
-        position: absolute;
-        top: 12%;
-        left: 53%;
-        transition: transform 0.8s;
-    }    
-    #cx3 {
-        box-shadow: -1px -1px 8px #434344;
-        border-radius: 5px;
-        width: 360px;
-        height: 456px;
-        position: absolute;
-        top: 57%;
-        left: 3%;
-        transition: transform 0.8s;
-        overflow-x: hidden;
-        /*transform: translate(-7%);*/
-    }
-    #cx4 {
-        box-shadow: -1px -1px 8px #434344;
-        border-radius: 5px;
-        width: 360px;
-        height: 456px;
-        position: absolute;
-        top: 57%;
-        left: 53%;
-        transition: transform 0.8s;
-        overflow-x: hidden;
+        margin: 25px;
+        cursor: pointer;
     }
     #motivosCompra {
         width: 1050px;
@@ -1167,7 +1083,6 @@
         background-color: #2B2B2B;
         border: 1px solid;
         padding: 15px;
-        color: white;
     }
     footer > a {
         color: white;

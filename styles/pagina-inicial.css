@@ -236,13 +236,18 @@ main {
 }
 #novidades {
     position: absolute;
-    left: 15%;
+    left: 0%;
     height: 1095px;
+    width: 100%;
 }
 #novidades > h2 {
     font-size: 28px;
     font-weight: 600;
     color: #A7A9AC;
+    width: fit-content;
+    position: relative;
+    left: 10%;
+    margin-bottom: 15px;
 }
 #novidades > h2 > strong {
     color: #EF4126;
@@ -251,13 +256,10 @@ main {
     display: inline-flex;
     box-shadow: -1px -1px 8px #434344;
     border-radius: 5px;
-    width: 388px;
+    width: 376px;
     height: 456px;
     transition: transform 0.8s;
     margin: 25px;
-    position: relative;
-    top: 20px;
-    left: 15px;
     cursor: pointer;
 }
 .box:hover {
