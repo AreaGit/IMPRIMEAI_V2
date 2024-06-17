@@ -883,6 +883,16 @@ app.post('/inscrever-newsletter', async (req, res) => {
     res.status(500).send('Erro ao se inscrever na newsletter.');
   }
 });
+//Rota get para a página de sobre
+app.get('/sobre', (req, res) => {
+  try {
+    const sobreContentHtml = fs.readFileSync(path.join(__dirname, "html", "sobre.html"), "utf-8");
+    res.send(sobreContentHtml);
+  }catch(err) {
+    console.log("Erro ao ler o arquivo sobre.html: ", err);
+    res.status(500).send("Erro interno do servidor");
+  }
+});
 app.listen(PORT, () => {
   console.log(`Servidor rodando na porta ${PORT} https://localhost:${PORT}`);
 });
