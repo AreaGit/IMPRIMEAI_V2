@@ -8,6 +8,8 @@ const pedidosUsers = require('./routes/pedidosUsers');
 const graficasServer = require('./routes/graficasServer')
 const Produtos = require('./models/Produtos');
 const VariacoesProduto = require('./models/VariacoesProduto');
+const Newsletter = require('./models/Newsletter');
+const nodemailer = require('nodemailer');
 const { Op } = require('sequelize');
 const redis = require('redis');
 const client = redis.createClient({
@@ -844,6 +846,41 @@ app.get('/blog', (req, res) => {
   }catch(err) {
     console.log("Erro ao ler o arquivo blog.html: ", err);
     res.status(500).send("Erro interno do servidor");
+  }
+});
+app.post('/inscrever-newsletter', async (req, res) => {
+  const email = req.body.email;
+  try {
+    const subscriber = await Newsletter.create({ email });
+    console.log('Inscrição adicionada ao banco de dados:', subscriber.email);
+
+    const transporter = nodemailer.createTransport({
+      host: 'smtp.gmail.com',
+      port: 465,
+      secure: true,
+      auth: {
+        user: "gabrieldiastrin63@gmail.com",
+        pass: "bwep pyqq zocy ljsi"
+      }
+    });
+
+    const mailOptions = {
+      from: 'gabrieldiastrin63@gmail.com',
+      to: email,
+      subject: 'Bem-vindo à nossa Newsletter!',
+      html: '<p>Obrigado por se inscrever em nossa newsletter!</p>'
+    };
+
+    transporter.sendMail(mailOptions, (error, info) => {
+      if (error) {
+        return res.status(500).send(error.toString());
+      }
+      console.log('Email enviado:', info.response);
+      res.send('Inscrição bem-sucedida!');
+    });
+  } catch (error) {
+    console.error('Erro ao adicionar inscrição ao banco de dados:', error);
+    res.status(500).send('Erro ao se inscrever na newsletter.');
   }
 });
 app.listen(PORT, () => {

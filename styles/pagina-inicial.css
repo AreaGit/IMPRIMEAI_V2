@@ -800,3 +800,200 @@ div#lg {
 #sugestoes li:hover {
     background-color: #f0f0f0; /* Mude a cor de fundo ao passar o mouse sobre os itens */
 }
+.popup {
+    display: none;
+    position: fixed;
+    left: 50%;
+    transform: translate(-50%);
+    top: 45%;
+    width: 18vw;
+    height: fit-content;
+    background: #FFFFFF;
+    box-shadow: 0px 187px 75px rgba(0, 0, 0, 0.01), 0px 105px 63px rgba(0, 0, 0, 0.05), 0px 47px 47px rgba(0, 0, 0, 0.09), 0px 12px 26px rgba(0, 0, 0, 0.1), 0px 0px 0px rgba(0, 0, 0, 0.1);
+    border-radius: 13px;
+  }
+  
+  .form {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    padding: 20px;
+    gap: 20px;
+  }
+  
+  .icone {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 60px;
+    height: 60px;
+    position: absolute;
+    top: 0%;
+  }
+  
+  .note {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+  
+  .title {
+    font-style: normal;
+    font-weight: 700;
+    font-size: 17px;
+    line-height: 24px;
+    color: #2B2B2F;
+  }
+  
+  .subtitle {
+    font-style: normal;
+    font-weight: 600;
+    font-size: 13px;
+    line-height: 18px;
+    color: #5F5D6B;
+  }
+  
+  .input_field {
+    width: 100%;
+    height: 42px;
+    padding: 0 0 0 12px;
+    border-radius: 5px;
+    outline: none;
+    border: 1px solid #e5e5e5;
+    filter: drop-shadow(0px 1px 0px #efefef)
+      drop-shadow(0px 1px 0.5px rgba(239, 239, 239, 0.5));
+    transition: all 0.3s cubic-bezier(0.15, 0.83, 0.66, 1);
+  }
+  
+  .input_field:focus {
+    border: 1px solid transparent;
+    box-shadow: 0px 0px 0px 1px #2B2B2F;
+    background-color: transparent;
+  }
+  
+  .form button.submit {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    padding: 10px 18px;
+    gap: 10px;
+    width: 100%;
+    height: 42px;
+    background: linear-gradient(180deg, #F69896 -30%, #F37160 50%, #EF4126 100%);
+    box-shadow: 0px 0.5px 0.5px #EFEFEF, 0px 1px 0.5px rgba(239, 239, 239, 0.5);
+    border-radius: 5px;
+    border: 0;
+    font-style: normal;
+    font-weight: 600;
+    font-size: 12px;
+    line-height: 15px;
+    color: #ffffff;
+    cursor: pointer;
+  }  
+  #avisoGeral {
+    display: none;
+  }
+  .notifications-container {
+    width: 320px;
+    height: auto;
+    font-size: 0.875rem;
+    line-height: 1.25rem;
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    position: fixed;
+    left: 90%;
+    transform: translate(-90%);
+    top: 60px;
+  }
+  
+  .flex {
+    display: flex;
+  }
+  
+  .flex-shrink-0 {
+    flex-shrink: 0;
+  }
+  
+  .error-alert {
+    border-radius: 0.375rem;
+    padding: 1rem;
+    background-color: rgb(254 242 242);
+    border: 1px solid #f37160;
+  }
+  
+  .error-svg {
+    color: #F87171;
+    width: 1.25rem;
+    height: 1.25rem;
+  }
+  
+  .error-prompt-heading {
+    color: #991B1B;
+    font-size: 0.875rem;
+    line-height: 1.25rem;
+    font-weight: bold;
+  }
+  
+  .error-prompt-container {
+    display: flex;
+    flex-direction: column;
+    margin-left: 1.25rem;
+  }
+  
+  .error-prompt-wrap {
+    margin-top: 0.5rem;
+    color: #B91C1C;
+    font-size: 0.875rem;
+    line-height: 1.25rem;
+  }
+  
+  .error-prompt-list {
+    padding-left: 1.25rem;
+    margin-top: 0.25rem;
+    list-style-type: disc;
+  }
+
+  .flex {
+    display: flex;
+  }
+  
+  .flex-shrink-0 {
+    flex-shrink: 0;
+  }
+  
+  .success {
+    padding: 1rem;
+    border-radius: 0.375rem;
+    background-color: rgb(240 253 244);
+    border: 1px solid rgb(22 101 52);
+  }
+  
+  .succes-svg {
+    color: rgb(74 222 128);
+    width: 1.25rem;
+    height: 1.25rem;
+  }
+  
+  .success-prompt-wrap {
+    margin-left: 0.75rem;
+  }
+  
+  .success-prompt-heading {
+    font-weight: bold;
+    color: rgb(22 101 52);
+  }
+  
+  .success-prompt-prompt {
+    margin-top: 0.5rem;
+    color: rgb(21 128 61);
+  }
+  
+  .success-button-container {
+    display: flex;
+    margin-top: 0.875rem;
+    margin-bottom: -0.375rem;
+    margin-left: -0.5rem;
+    margin-right: -0.5rem;
+  }

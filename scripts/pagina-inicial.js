@@ -149,3 +149,64 @@ const cx2 = document.getElementById('cx2');
 cx2.addEventListener('click', () => {
     window.location.href = '/detalhes-produtos?id=3'
 })
+
+document.addEventListener("DOMContentLoaded", function() {
+    function setCookie(name, value, days) {
+        let expires = "";
+        if (days) {
+            const date = new Date();
+            date.setTime(date.getTime() + (days*24*60*60*1000));
+            expires = "; expires=" + date.toUTCString();
+        }
+        document.cookie = name + "=" + (value || "") + expires + "; path=/";
+    }
+
+    function getCookie(name) {
+        const nameEQ = name + "=";
+        const ca = document.cookie.split(';');
+        for(let i=0;i < ca.length;i++) {
+            let c = ca[i];
+            while (c.charAt(0) === ' ') c = c.substring(1,c.length);
+            if (c.indexOf(nameEQ) === 0) return c.substring(nameEQ.length,c.length);
+        }
+        return null;
+    }
+
+    const newsletter = document.getElementById('newsletter');
+    const newsletterShown = getCookie("newsletterShown");
+
+    if (!newsletterShown) {
+        newsletter.style.display = 'block';
+        setCookie("newsletterShown", "true", 30);
+    } else {
+        newsletter.style.display = 'none';
+    }
+});
+
+const fecharPopup = document.getElementById('fechar-popup');
+fecharPopup.addEventListener('click', () =>  {
+    const newsletter = document.getElementById('newsletter');
+    newsletter.style.display = 'none';
+})
+
+const subNews = document.getElementById('subNews');
+subNews.addEventListener('click',  () => {
+    const email = document.getElementById('email').value;
+    fetch('/inscrever-newsletter', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ email: email })
+    })
+    .then(response => response.text())
+    .then(data => {
+        const avisoGeral = document.getElementById('avisoGeral');
+        avisoGeral.style.display = 'block';
+        window.setTimeout(() => {
+            newsletter.style.display = 'none';
+            window.location.reload();
+        },5000)
+    })
+    .catch(error => console.error('Erro:', error));
+});
