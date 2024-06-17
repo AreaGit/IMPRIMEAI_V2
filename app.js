@@ -836,6 +836,16 @@ app.get('/politica-de-privacidade', (req, res) => {
     res.status(500).send("Erro interno do servidor");
   }
 });
+//Rota get para a página do blog do site
+app.get('/blog', (req, res) => {
+  try {
+    const blogContentHtml = fs.readFileSync(path.join(__dirname, "html", "blog.html"), "utf-8");
+    res.send(blogContentHtml);
+  }catch(err) {
+    console.log("Erro ao ler o arquivo blog.html: ", err);
+    res.status(500).send("Erro interno do servidor");
+  }
+});
 app.listen(PORT, () => {
   console.log(`Servidor rodando na porta ${PORT} https://localhost:${PORT}`);
 });
