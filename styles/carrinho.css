@@ -190,6 +190,7 @@ main {
     left: 5%;
     transform: translate(-5%);
     top: 50px;
+    width: 380px;
 }
 .remover-produto {
     cursor: pointer;

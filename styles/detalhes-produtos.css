@@ -104,11 +104,11 @@ a {
     cursor: pointer;
 }
 #detalhes-produto {
-    width: 17%;
-    position: absolute;
-    left: 28%;
-    transform: translate(-28%);
-    top: 180px;
+  width: 17%;
+  position: absolute;
+  left: 50%;
+  transform: translate(-50%);
+  top: 180px;
 }
 #detalhes-produto > h1 {
     font-size: 32px;
@@ -191,11 +191,11 @@ a {
     transform: translate(-2%);
 }
 #img-produto {
-    width: 40%;
-    position: absolute;
-    left: 80%;
-    transform: translate(-80%);
-    top: 200px;
+  width: 40%;
+  position: absolute;
+  left: 10%;
+  transform: translate(-10%);
+  top: 200px;
 }
 #image-container {
   position: absolute;
@@ -501,4 +501,31 @@ a {
 
 .text {
   margin: 0 1.5em
+}
+section#quantidades {
+  position: absolute;
+  left: 80%;
+  transform: translate(-80%);
+  top: 30%;
+  background-color: white;
+  border: 1px solid #DEE2E6;
+  width: 17vw;
+}
+.checkQuant {
+  cursor: pointer;
+  background-color: white;
+  width: 323px;
+  height: 61px;
+  padding: 18px;
+  transition: 0.8s;
+  border-bottom: 1px solid #DEE2E6;
+}
+.checkQuant > input {
+  width: 55px;
+  height: 15px;
+}
+.checkQuant > label {
+  font-size: 17px;
+  font-weight: 300;
+  cursor: pointer;
 }

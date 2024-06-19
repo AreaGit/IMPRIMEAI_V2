@@ -201,19 +201,79 @@ function criarSelect(variacoes, tipo, labelText) {
 // Chame a função
 carregarVariacoesDoProduto();
 
+document.addEventListener('DOMContentLoaded', function () {
+  const quantidadesSection = document.getElementById('quantidades');
+  const quantidades = [1, 10, 50, 100, 500, 1000];
+
+  quantidades.forEach((quantidade, index) => {
+    const checkboxWrapper = document.createElement('div');
+    checkboxWrapper.className = 'checkQuant';
+
+    const checkbox = document.createElement('input');
+    checkbox.type = 'checkbox';
+    checkbox.id = `quantidadeCheckbox${index + 1}`;
+    checkbox.value = quantidade;
+    checkbox.className = 'quantidade-checkbox';
+    checkboxWrapper.appendChild(checkbox);
+    // Marcar o checkbox de 1 unidade por padrão
+    if (quantidade === 1) {
+      checkbox.checked = true;
+    }
+    // Adicionar evento para desmarcar outros checkboxes ao selecionar um
+    checkbox.addEventListener('change', function () {
+      if (this.checked) {
+        document.querySelectorAll('.quantidade-checkbox').forEach(otherCheckbox => {
+          if (otherCheckbox !== this) {
+            otherCheckbox.checked = false;
+          }
+        });
+      }
+    });
+
+    checkboxWrapper.appendChild(checkbox);
+    const label = document.createElement('label');
+    label.htmlFor = `quantidadeCheckbox${index + 1}`;
+    label.textContent = `${quantidade} un`;
+
+    checkboxWrapper.appendChild(checkbox);
+    checkboxWrapper.appendChild(label);
+    quantidadesSection.appendChild(checkboxWrapper);
+  });
+});
+
+// Função para obter a quantidade marcada no checkbox
+function getMarkedQuantity() {
+  const checkboxes = document.querySelectorAll('.quantidade-checkbox');
+  for (const checkbox of checkboxes) {
+    if (checkbox.checked) {
+      return parseInt(checkbox.value);
+    }
+  }
+  return 0;
+}
+
 const adicionarAoCarrinhoBtn = document.getElementById('adicionarAoCarrinhoBtn');
 const inputQuantidade = document.getElementById('quantidade');
+
 // Lida com o clique no botão "Adicionar ao Carrinho"
 adicionarAoCarrinhoBtn.addEventListener('click', async () => {
-    try {
-      // Obtenha a quantidade escolhida pelo usuário
-      const quantidade = parseInt(inputQuantidade.value);
+  try {
+    // Obtenha a quantidade escolhida pelo usuário
+    let quantidade = parseInt(inputQuantidade.value);
 
-      // Verifique se a quantidade é válida (maior que 0)
-      if (quantidade <= 0) {
-        alert('Por favor, escolha uma quantidade válida maior que 0.');
-        return;
-      }
+    // Obtenha a quantidade marcada no checkbox
+    const markedQuantity = getMarkedQuantity();
+
+    // Verifique se a quantidade marcada no checkbox é maior
+    if (markedQuantity > quantidade) {
+      quantidade = markedQuantity;
+    }
+
+    // Verifique se a quantidade é válida (maior que 0)
+    if (quantidade <= 0) {
+      alert('Por favor, escolha uma quantidade válida maior que 0.');
+      return;
+    }
 
     const params = new URLSearchParams(window.location.search);
     const produtoId = params.get('id');
@@ -231,36 +291,35 @@ adicionarAoCarrinhoBtn.addEventListener('click', async () => {
       enobrecimento: enobrecimentoSelecionado,
       acabamento: acabamentoSelecionado
     };
-      // Faça uma solicitação POST para adicionar o produto ao carrinho
-      const response = await fetch(`/adicionar-ao-carrinho/${produtoId}`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({ quantidade, ...variacoesSelecionadas })
-      });
 
-      if (response.ok) {
-        // Produto adicionado com sucesso ao carrinho
-        avisoAdicionadoaoCarrinho.style.display = 'block';
-        setTimeout(() => {
-          avisoAdicionadoaoCarrinho.style.display = 'none';
-        }, 5000);
-        // Limpe o campo de entrada de quantidade
-        inputQuantidade.value = '1';
-      } else {
-        // Trate qualquer erro de adição ao carrinho
-        erroCarrinho.style.display = 'block';
-        setTimeout(() => {
-          erroCarrinho.style.display = 'none';
-        }, 5000);
-        //alert('Erro ao adicionar o produto ao carrinho');
-      }
-    } catch (error) {
-      console.error('Erro ao adicionar o produto ao carrinho:', error);
-      //alert('Erro ao adicionar o produto ao carrinho');
+    // Faça uma solicitação POST para adicionar o produto ao carrinho
+    const response = await fetch(`/adicionar-ao-carrinho/${produtoId}`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({ quantidade, ...variacoesSelecionadas })
+    });
+
+    if (response.ok) {
+      // Produto adicionado com sucesso ao carrinho
+      avisoAdicionadoaoCarrinho.style.display = 'block';
+      setTimeout(() => {
+        avisoAdicionadoaoCarrinho.style.display = 'none';
+      }, 5000);
+      // Limpe o campo de entrada de quantidade
+      inputQuantidade.value = '1';
+    } else {
+      // Trate qualquer erro de adição ao carrinho
+      erroCarrinho.style.display = 'block';
+      setTimeout(() => {
+        erroCarrinho.style.display = 'none';
+      }, 5000);
     }
-  });
+  } catch (error) {
+    console.error('Erro ao adicionar o produto ao carrinho:', error);
+  }
+});
 
   document.addEventListener('DOMContentLoaded', function () {
     // Obtenha o ID do produto da URL atual (por exemplo, /detalhes-produtos.html?id=1)
@@ -277,66 +336,68 @@ adicionarAoCarrinhoBtn.addEventListener('click', async () => {
     
     // Lida com o clique no botão "Avançar"
     avancarBtn.addEventListener('click', async () => {
-            try {
-      // Obtenha a quantidade escolhida pelo usuário
-      const quantidade = parseInt(inputQuantidade.value);
-
-      // Verifique se a quantidade é válida (maior que 0)
-      if (quantidade <= 0) {
-        alert('Por favor, escolha uma quantidade válida maior que 0.');
-        return;
+      try {
+        // Obtenha a quantidade escolhida pelo usuário
+        let quantidade = parseInt(inputQuantidade.value);
+    
+        // Obtenha a quantidade marcada no checkbox
+        const markedQuantity = getMarkedQuantity();
+    
+        // Verifique se a quantidade marcada no checkbox é maior
+        if (markedQuantity > quantidade) {
+          quantidade = markedQuantity;
+        }
+    
+        // Verifique se a quantidade é válida (maior que 0)
+        if (quantidade <= 0) {
+          alert('Por favor, escolha uma quantidade válida maior que 0.');
+          return;
+        }
+    
+        const params = new URLSearchParams(window.location.search);
+        const produtoId = params.get('id');
+        const materialSelecionado = document.getElementById('material').value;
+        const formatoSelecionado = document.getElementById('formato').value;
+        const corSelecionada = document.getElementById('cor').value;
+        const enobrecimentoSelecionado = document.getElementById('enobrecimento').value;
+        const acabamentoSelecionado = document.getElementById('acabamento').value;
+    
+        const variacoesSelecionadas = {
+          idProduto: produtoId,
+          material: materialSelecionado,
+          formato: formatoSelecionado,
+          cor: corSelecionada,
+          enobrecimento: enobrecimentoSelecionado,
+          acabamento: acabamentoSelecionado
+        };
+    
+        // Faça uma solicitação POST para adicionar o produto ao carrinho
+        const response = await fetch(`/adicionar-ao-carrinho/${produtoId}`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({ quantidade, ...variacoesSelecionadas })
+        });
+    
+        if (response.ok) {
+          // Produto adicionado com sucesso ao carrinho
+          avisoAdicionadoaoCarrinho.style.display = 'block';
+          setTimeout(() => {
+            window.location.href = '/carrinho'
+            avisoAdicionadoaoCarrinho.style.display = 'none';
+          }, 5000);
+          // Limpe o campo de entrada de quantidade
+          inputQuantidade.value = '1';
+        } else {
+          // Trate qualquer erro de adição ao carrinho
+          erroCarrinho.style.display = 'block';
+          setTimeout(() => {
+            erroCarrinho.style.display = 'none';
+          }, 5000);
+        }
+      } catch (error) {
+        console.error('Erro ao adicionar o produto ao carrinho:', error);
       }
-
-    const params = new URLSearchParams(window.location.search);
-    const produtoId = params.get('id');
-    const materialSelecionado = document.getElementById('material').value;
-    const formatoSelecionado = document.getElementById('formato').value;
-    const corSelecionada = document.getElementById('cor').value;
-    const enobrecimentoSelecionado = document.getElementById('enobrecimento').value;
-    const acabamentoSelecionado = document.getElementById('acabamento').value;
-
-    const variacoesSelecionadas = {
-      idProduto: produtoId,
-      material: materialSelecionado,
-      formato: formatoSelecionado,
-      cor: corSelecionada,
-      enobrecimento: enobrecimentoSelecionado,
-      acabamento: acabamentoSelecionado
-    };
-
-    console.log('Variações Selecionadas', variacoesSelecionadas);
-
-
-      // Faça uma solicitação POST para adicionar o produto ao carrinho
-      const response = await fetch(`/adicionar-ao-carrinho/${produtoId}`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({ quantidade, ...variacoesSelecionadas })
-      });
-
-      if (response.ok) {
-        // Produto adicionado com sucesso ao carrinho
-        console.log(`Produto (ID ${produtoId}) adicionado ao carrinho com quantidade ${quantidade}.`);
-        // Limpe o campo de entrada de quantidade
-        inputQuantidade.value = '1';
-        window.location.href = '/carrinho'
-        avisoAdicionadoaoCarrinho.style.display = 'block';
-        setTimeout(() => {
-          avisoAdicionadoaoCarrinho.style.display = 'none';
-        }, 5000);
-      } else {
-        // Trate qualquer erro de adição ao carrinho
-        erroCarrinho.style.display = 'block';
-        setTimeout(() => {
-          erroCarrinho.style.display = 'none';
-        }, 5000);
-       // alert('Erro ao adicionar o produto ao carrinho');
-      }
-    } catch (error) {
-      console.error('Erro ao adicionar o produto ao carrinho:', error);
-      //alert('Erro ao adicionar o produto ao carrinho');
-    }
     });
 });
