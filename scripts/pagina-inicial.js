@@ -150,6 +150,16 @@ cx2.addEventListener('click', () => {
     window.location.href = '/detalhes-produtos?id=3'
 })
 
+const cx5 = document.getElementById('cx5');
+cx5.addEventListener('click', () => {
+    window.location.href = '/detalhes-produtos?id=5'
+});
+
+const cx6 = document.getElementById('cx6');
+cx6.addEventListener('click', () => {
+    window.location.href = '/cartazes'
+});
+
 document.addEventListener("DOMContentLoaded", function() {
     function setCookie(name, value, days) {
         let expires = "";
