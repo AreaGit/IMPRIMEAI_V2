@@ -144,11 +144,21 @@ document.addEventListener("DOMContentLoaded", function() {
 const cx1 = document.getElementById('cx1');
 cx1.addEventListener('click', () => {
     window.location.href = '/detalhes-produtos?id=2'
-})
+});
 const cx2 = document.getElementById('cx2');
 cx2.addEventListener('click', () => {
     window.location.href = '/detalhes-produtos?id=3'
-})
+});
+
+const cx3 = document.getElementById('cx3');
+cx3.addEventListener('click', () => {
+    window.location.href = '/detalhes-produtos?id=10'
+});
+
+const cx4 = document.getElementById('cx4');
+cx4.addEventListener('click', () => {
+    window.location.href = '/detalhes-produtos?id=9'
+});
 
 const cx5 = document.getElementById('cx5');
 cx5.addEventListener('click', () => {
