@@ -23,7 +23,6 @@ const form = document.getElementById('formEnviarPlanilha');
         const formData = new FormData();
         formData.append('filePlanilha', fileInput.files[0]);
         console.log(fileInput.files[0].name)
-        if(fileInput.files[0].name === "Planilha-Modelo-Endereço.xlsx") {
             try {
                 const response = await fetch('/upload', {
                     method: 'POST',
@@ -48,12 +47,5 @@ const form = document.getElementById('formEnviarPlanilha');
         } catch (error) {
             console.error(error);
             alert('Ocorreu um erro ao enviar a planilha.');
-        }
-        } else {
-            erroPl.style.display = 'block'
-            setTimeout(() => {
-                erroPl.style.display = 'none'
-                window.location.reload();
-            }, 3000);
         }
 });

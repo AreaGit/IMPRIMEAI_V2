@@ -82,6 +82,9 @@ div#produto-info {
     left: 10%;
     z-index: -1;
 }
+.itensProduto > img {
+  width: 380px;
+}
 .itensProduto > p {
     margin-bottom: 10px;
     width: fit-content;
