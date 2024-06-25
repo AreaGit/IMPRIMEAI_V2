@@ -230,3 +230,12 @@ subNews.addEventListener('click',  () => {
     })
     .catch(error => console.error('Erro:', error));
 });
+document.addEventListener('DOMContentLoaded', () => {
+    fetch('/api/produtos')
+        .then(response => response.json())
+        .then(produtos => {
+            produtos.forEach(produto => {
+            });
+        })
+        .catch(error => console.error('Erro ao carregar produtos:', error));
+});

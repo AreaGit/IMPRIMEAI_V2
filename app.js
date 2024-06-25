@@ -893,6 +893,32 @@ app.get('/sobre', (req, res) => {
     res.status(500).send("Erro interno do servidor");
   }
 });
+//Api para pegar todos os produtos
+app.get('/api/produtos', async (req, res) => {
+  const { page = 1, limit = 5 } = req.query; // Default to page 1, 10 products per page
+
+  try {
+    const offset = (page - 1) * limit;
+
+    const { count, rows: produtos } = await Produtos.findAndCountAll({
+      attributes: ['id', 'nomeProd', 'imgProd'],
+      offset,
+      limit: parseInt(limit),
+    });
+
+    // Convert blob to base64
+    const produtosFormatados = produtos.map(produto => ({
+      id: produto.id,
+      nome: produto.nomeProd,
+      imagem: produto.imgProd ? `data:image/jpeg;base64,${produto.imgProd.toString('base64')}` : null,
+    }));
+
+    res.json(produtosFormatados);
+  } catch (err) {
+    console.error('Erro ao buscar produtos:', err);
+    res.status(500).send('Erro ao buscar produtos');
+  }
+});
 app.listen(PORT, () => {
   console.log(`Servidor rodando na porta ${PORT} https://localhost:${PORT}`);
 });
