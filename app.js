@@ -12,6 +12,7 @@ const Newsletter = require('./models/Newsletter');
 const nodemailer = require('nodemailer');
 const { Op } = require('sequelize');
 const redis = require('redis');
+const { _ } = require('pagarme');
 const client = redis.createClient({
   host: '127.0.0.1', // Substitua pelo endereço IP do seu servidor Redis
   port: 6379,         // Porta onde o Redis está escutando
@@ -895,7 +896,7 @@ app.get('/sobre', (req, res) => {
 });
 //Api para pegar todos os produtos
 app.get('/api/produtos', async (req, res) => {
-  const { page = 1, limit = 5 } = req.query; // Default to page 1, 10 products per page
+  const { page = 1, limit = 15 } = req.query; // Default to page 1, 10 products per page
 
   try {
     const offset = (page - 1) * limit;
@@ -917,6 +918,16 @@ app.get('/api/produtos', async (req, res) => {
   } catch (err) {
     console.error('Erro ao buscar produtos:', err);
     res.status(500).send('Erro ao buscar produtos');
+  }
+});
+//Rota get para a página de login do painel administrativa
+app.get('/login-adm', (req ,res) => {
+  try {
+    const loginAdmContentHtml = fs.readFileSync(path.join(__dirname, "html", "loginAdm.html"), "utf-8");
+    res.send(loginAdmContentHtml);
+    } catch (err) {
+      console.log("Erro ao ler o arquivo loginAdm.html", err);
+      res.status(500).send("Erro interno do servidor");
   }
 });
 app.listen(PORT, () => {
