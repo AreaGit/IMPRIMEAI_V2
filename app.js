@@ -13,6 +13,9 @@ const nodemailer = require('nodemailer');
 const { Op } = require('sequelize');
 const redis = require('redis');
 const { _ } = require('pagarme');
+const multer = require('multer');
+const storage = multer.memoryStorage();
+const upload = multer({ storage: storage });
 const client = redis.createClient({
   host: '127.0.0.1', // Substitua pelo endereço IP do seu servidor Redis
   port: 6379,         // Porta onde o Redis está escutando
@@ -920,6 +923,40 @@ app.get('/api/produtos', async (req, res) => {
     res.status(500).send('Erro ao buscar produtos');
   }
 });
+app.get('/api/produtos/:id', async (req, res) => {
+  const produtoId = req.params.id;
+
+  try {
+    // Encontra o produto pelo ID
+    const produto = await Produtos.findByPk(produtoId, {
+      attributes: ['id', 'nomeProd', 'imgProd', 'imgProd2', 'imgProd3', 'imgProd4', 'descProd', 'valorProd', 'categProd', 'raioProd', 'gabaritoProd']
+    });
+
+    if (!produto) {
+      return res.status(404).json({ error: 'Produto não encontrado' });
+    }
+
+    // Formata o produto para enviar como resposta
+    const produtoFormatado = {
+      id: produto.id,
+      nome: produto.nomeProd,
+      descricao: produto.descProd,
+      valor: produto.valorProd,
+      imagem: produto.imgProd ? `data:image/jpeg;base64,${produto.imgProd.toString('base64')}` : null,
+      imagem2: produto.imgProd2 ? `data:image/jpeg;base64,${produto.imgProd2.toString('base64')}` : null,
+      imagem3: produto.imgProd3 ? `data:image/jpeg;base64,${produto.imgProd3.toString('base64')}` : null,
+      imagem4: produto.imgProd4 ? `data:image/jpeg;base64,${produto.imgProd4.toString('base64')}` : null,
+      categoria: produto.categProd,
+      raio: produto.raioProd,
+      gabarito: produto.gabaritoProd,
+    };
+
+    res.json(produtoFormatado);
+  } catch (err) {
+    console.error('Erro ao buscar produto:', err);
+    res.status(500).send('Erro ao buscar produto');
+  }
+});
 //Rota get para a página de login do painel administrativa
 app.get('/login-adm', (req ,res) => {
   try {
@@ -928,6 +965,82 @@ app.get('/login-adm', (req ,res) => {
     } catch (err) {
       console.log("Erro ao ler o arquivo loginAdm.html", err);
       res.status(500).send("Erro interno do servidor");
+  }
+});
+//Rota para edição de produtos
+app.post('/editar-produto/:id', upload.fields([
+  { name: 'imagem', maxCount: 1 },
+  { name: 'imagem2', maxCount: 1 },
+  { name: 'imagem3', maxCount: 1 },
+  { name: 'imagem4', maxCount: 1 },
+  { name: 'gabarito', maxCount: 1 }
+]), async (req, res) => {
+  try {
+    const { nomeProd, descProd, valorProd, categoriaProd, raioProd } = req.body;
+    const { imagem, imagem2, imagem3, imagem4, gabarito } = req.files;
+
+    console.log('Dados recebidos:', { nomeProd, descProd, valorProd, categoriaProd, raioProd });
+    console.log('Arquivos recebidos:', { imagem, imagem2, imagem3, imagem4, gabarito });
+
+    const produto = await Produtos.findByPk(req.params.id);
+
+    if (!produto) {
+      return res.status(404).json({ error: 'Produto não encontrado' });
+    }
+
+    // Atualiza apenas os campos recebidos
+    if (nomeProd !== undefined) {
+      produto.nomeProd = nomeProd;
+    }
+    if (descProd !== undefined) {
+      produto.descProd = descProd;
+    }
+    if (valorProd !== undefined) {
+      produto.valorProd = valorProd;
+    }
+    if (categoriaProd !== undefined) {
+      produto.categProd = categoriaProd;
+    }
+    if (raioProd !== undefined) {
+      produto.raioProd = raioProd;
+    }
+
+    // Atualiza as imagens apenas se elas forem recebidas
+    if (imagem && imagem.length > 0) {
+      produto.igmProd = imagem[0].buffer;
+    }
+    if (imagem2 && imagem2.length > 0) {
+      produto.imgProd2 = imagem2[0].buffer;
+    }
+    if (imagem3 && imagem3.length > 0) {
+      produto.imgProd3 = imagem3[0].buffer;
+    }
+    if (imagem4 && imagem4.length > 0) {
+      produto.imgProd4 = imagem4[0].buffer;
+    }
+    if (gabarito && gabarito.length > 0) {
+      produto.gabaritoProd = gabarito[0].buffer;
+    }
+
+    await produto.save();
+
+    res.json({ message: 'Produto atualizado com sucesso' });
+  } catch (error) {
+    console.error('Erro ao editar o produto:', error);
+    res.status(500).json({
+      error: 'Erro ao editar o produto',
+      message: error.message,
+    });
+  }
+});
+//Rota get para a página de edição de produtos
+app.get('/editar-produtos', (req, res) => {
+  try {
+    const editarProdHtmlContent =  fs.readFileSync(path.join(__dirname, "html", "editar-produtos.html"), "utf-8");
+    res.send(editarProdHtmlContent);
+  } catch(err) {
+    console.log("Erro ao ler o arquivo editarProdHtmlContent.html", err);
+    res.status(500).send("Erro interno do serviodor");
   }
 });
 app.listen(PORT, () => {

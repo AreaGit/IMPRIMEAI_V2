@@ -29,7 +29,7 @@ document.getElementById('produtos').addEventListener('click', () => {
                 produtoDiv.innerHTML = `
                     <img src="${produto.imagem}" alt="${produto.nome}">
                     <h3>${produto.nome}</h3>
-                    <a href="#">Editar Produto</a>
+                    <a href="/editar-produtos?id=${produto.id}">Editar Produto</a>
                 `;
                 listaProdutos.appendChild(produtoDiv);
                 carregamento.style.display = 'none';

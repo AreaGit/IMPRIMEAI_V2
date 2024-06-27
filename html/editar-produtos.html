@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Editar Produto</title>
+    <link rel="shortcut icon" href="../images/favicon-imprimeai.png" type="image/x-icon">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,300;1,400;1,500;1,600;1,700;1,800&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter+Tight:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0"/>
+    <link rel="stylesheet" href="../styles/editar-produtos.css">
+</head>
+<body>
+    <header>
+        <a href="/painel-administrativo"><img src="../images/logo-imprimeai.png" alt="..." id="logo"></a>
+        <h1>Edição de Produtos</h1>
+        <div id="linhaHr"></div>
+        <h2>Edite as propriedades do produto abaixo</h2>
+    </header>
+    <main>
+        <div id="editarProdutoForm">
+            <form id="formEditarProduto" enctype="multipart/form-data">
+                <div>
+                    <label for="nome">Nome do Produto:</label>
+                    <br>
+                    <input type="text" id="nome" name="nomeProd" required>
+                </div>
+                <div>
+                    <label for="descricao">Descrição:</label>
+                    <br>
+                    <textarea id="descricao" name="descProd" required></textarea>
+                </div>
+                <div>
+                    <label for="preco">Preço:</label>
+                    <br>
+                    <input type="number" id="preco" name="valorProd" step="0.01" required>
+                </div>
+                <div>
+                    <label for="imagem1">Imagem 1:</label>
+                    <br>
+                    <img src="" alt="Imagem 1" id="imagem1">
+                    <input type="file" id="fileImagem1" name="imagem">
+                </div>
+                <div>
+                    <label for="imagem2">Imagem 2:</label>
+                    <br>
+                    <img src="" alt="Imagem 2" id="imagem2">
+                    <input type="file" id="fileImagem2" name="imagem2">
+                </div>
+                <div>
+                    <label for="imagem3">Imagem 3:</label>
+                    <br>
+                    <img src="" alt="Imagem 3" id="imagem3">
+                    <input type="file" id="fileImagem3" name="imagem3">
+                </div>
+                <div>
+                    <label for="imagem4">Imagem 4:</label>
+                    <br>
+                    <img src="" alt="Imagem 4" id="imagem4">
+                    <input type="file" id="fileImagem4" name="imagem4">
+                </div>
+                <div>
+                    <label for="categoria">Categoria:</label>
+                    <br>
+                    <input type="text" id="categoria" name="categoriaProd" required>
+                </div>
+                <div>
+                    <label for="raio">Raio:</label>
+                    <br>
+                    <input type="text" id="raio" name="raioProd" required>
+                </div>
+                <div>
+                    <label for="gabarito">Gabarito (PDF):</label>
+                    <a class="download" id="downloadGabarito" style="display:none;">Baixar gabarito atual</a>
+                    <br>
+                    <input type="file" id="gabarito" name="gabarito" accept="application/pdf">
+                    <br>
+                </div>
+                <button type="button" id="btnSalvarProd">Salvar Alterações</button>
+            </form>
+        </div>
+    </main>
+    <div id="carregamento">
+        <div class="spinnerContainer">
+            <div class="spinner"></div>
+            <div class="loader">
+              <p>carregando</p>
+              <div class="words">
+                <span class="word">produtos</span>
+                <span class="word">materiais</span>
+                <span class="word">cores</span>
+                <span class="word">formatos</span>
+                <span class="word">gabaritos</span>
+              </div>
+            </div>
+          </div>
+    </div>
+    <div id="avisoGeral">
+        <div class="notifications-container">
+            <div class="success">
+              <div class="flex">
+                <div class="flex-shrink-0">
+                  <svg aria-hidden="true" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg" class="succes-svg">
+                    <path clip-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" fill-rule="evenodd"></path>
+                  </svg>
+                </div>
+                <div class="success-prompt-wrap">
+                  <p class="success-prompt-heading">
+                    Produto Atualizado!
+                  </p>
+                  <div class="success-prompt-prompt">
+                    
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>          
+    </div>
+    <div id="erroUsuario">
+        <div class="notifications-container">
+            <div class="error-alert">
+              <div class="flex">
+                <div class="flex-shrink-0">
+                  
+                  <svg aria-hidden="true" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg" class="error-svg">
+                    <path clip-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" fill-rule="evenodd"></path>
+                  </svg>
+                </div>
+                <div class="error-prompt-container">
+                  <p class="error-prompt-heading">Erro ao Atualizar Produto!
+                  </p><div class="error-prompt-wrap">
+                    <ul class="error-prompt-list" role="list">
+                    </ul>
+                </div>
+                </div>
+              </div>
+            </div>
+          </div>
+    </div>
+    <script src="../scripts/editar-produtos.js"></script>
+</body>
+</html>
