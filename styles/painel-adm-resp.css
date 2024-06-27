@@ -1,0 +1,29 @@
+@media screen and (min-width:320px) and (max-width:767px) {
+    .container {
+        display: block;
+        margin-bottom: 10px;
+    }
+    header > img {
+        width: 24%;
+        position: relative;
+        top: -10px;
+    }
+    .cxs {
+        width: 90vw;
+        height: 130px;
+        box-shadow: -1px 3px 5px black;
+        background-color: white;
+        border-radius: 5px;
+        margin: 5px;
+        padding: 25px;
+        transition: 0.8s;
+        cursor: pointer;
+    }
+    div#lista-produtos {
+        position: absolute;
+        left: 50%;
+        transform: translate(-50%);
+        top: 140%;
+        width: 90vw;
+    }
+}
