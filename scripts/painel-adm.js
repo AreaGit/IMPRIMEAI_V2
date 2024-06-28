@@ -13,6 +13,8 @@ document.addEventListener('DOMContentLoaded', () => {
     const userName = getCookie('username');
     if (userName) {
         nomeAdmElement.textContent = userName;
+    } else {
+        window.location.href = '/login-adm';
     }
 });
 //função ao clicar em produtos
