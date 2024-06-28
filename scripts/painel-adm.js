@@ -41,3 +41,34 @@ document.getElementById('produtos').addEventListener('click', () => {
             console.error('Erro ao buscar produtos:', error);
         });
 });
+//função ao clicar em gráficas
+document.getElementById('graficas').addEventListener('click', () => {
+    const carregamento = document.getElementById('carregamento');
+    carregamento.style.display = 'block';
+
+    fetch('/api/graficas')
+        .then(response => response.json())
+        .then(graficas => {
+            const listaGraficas = document.getElementById('lista-graficas');
+            listaGraficas.innerHTML = '';
+            console.log(graficas)
+            graficas.forEach(grafica => {
+                const graficaDiv = document.createElement('div');
+                graficaDiv.classList.add('grafica');
+                graficaDiv.innerHTML = `
+                    <h3>${grafica.userCad}</h3>
+                    <p>ID ${grafica.id}</p>
+                    <p>Estado ${grafica.estadoCad}</p>
+                    <p>Cidade ${grafica.cidadeCad}</p>
+                    <a href="/editar-grafica?id=${grafica.id}">Editar Gráfica</a>
+                `;
+                listaGraficas.appendChild(graficaDiv);
+            });
+
+            carregamento.style.display = 'none';
+        })
+        .catch(error => {
+            console.log('Erro ao buscar gráficas:', error);
+            carregamento.style.display = 'none';
+        });
+});

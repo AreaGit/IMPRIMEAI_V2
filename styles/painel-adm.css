@@ -239,3 +239,32 @@ div#lista-produtos {
     top: -15px;
     color: #F37160;
 }
+div#lista-graficas {
+  position: absolute;
+  left: 50%;
+  transform: translate(-50%);
+  top: 140%;
+  width: 90%;
+}
+.grafica {
+  background-color: white;
+  margin: 17px;
+  border-radius: 6px;
+  box-shadow: 1px 1px 3px black;
+  padding: 15px;
+  transition: 0.8s;
+}
+.grafica:hover {
+  transition: 0.8s;
+  box-shadow: 1px  1px 3px #EF4126;
+}
+.grafica > p {
+  display: inline;
+  padding-right: 10px;
+}
+.grafica > h3 {
+  margin-bottom: 20px;
+}
+.grafica > a {
+  color: #F37160;
+}

@@ -8,6 +8,7 @@ const pedidosUsers = require('./routes/pedidosUsers');
 const graficasServer = require('./routes/graficasServer')
 const Produtos = require('./models/Produtos');
 const VariacoesProduto = require('./models/VariacoesProduto');
+const Graficas = require('./models/Graficas');
 const Newsletter = require('./models/Newsletter');
 const nodemailer = require('nodemailer');
 const { Op } = require('sequelize');
@@ -1041,6 +1042,18 @@ app.get('/editar-produtos', (req, res) => {
   } catch(err) {
     console.log("Erro ao ler o arquivo editarProdHtmlContent.html", err);
     res.status(500).send("Erro interno do serviodor");
+  }
+});
+//Rota get para enviar todas as gráficas para o lado do cliente
+app.get('/api/graficas', async (req, res) => {
+  try {
+    // Consulte o banco de dados para buscar as gráficas cadastradas
+    const graficas = await Graficas.findAll();
+    // Envie as gráficas como resposta em JSON
+    res.json(graficas);
+  } catch (err) {
+    console.log("Erro ao enviar gráficas", err);
+    res.status(500).json({ error: 'Erro ao buscar gráficas' });
   }
 });
 app.listen(PORT, () => {
