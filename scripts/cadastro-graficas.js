@@ -354,7 +354,7 @@ btnCad.addEventListener('click', async() => {
                 avisoGeral.style.display = 'block'
                 setTimeout(() => {
                     avisoGeral.style.display = 'none'
-                    window.location.href = "/login-graficas"
+                    window.location.href = "/painel-administrativo"
                 }, 5000);
             }else if (data.message === 'Já existe uma Gráfica com este e-mail cadastrado') {
                 emailCadastrado.style.display = 'block'

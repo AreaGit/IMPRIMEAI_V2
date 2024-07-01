@@ -50,6 +50,8 @@ document.getElementById('graficas').addEventListener('click', () => {
         .then(response => response.json())
         .then(graficas => {
             const listaGraficas = document.getElementById('lista-graficas');
+            const divAddGraficas = document.getElementById('divAddGraficas');
+            divAddGraficas.style.display = 'block';
             listaGraficas.innerHTML = '';
             console.log(graficas)
             graficas.forEach(grafica => {
@@ -60,7 +62,7 @@ document.getElementById('graficas').addEventListener('click', () => {
                     <p>ID ${grafica.id}</p>
                     <p>Estado ${grafica.estadoCad}</p>
                     <p>Cidade ${grafica.cidadeCad}</p>
-                    <a href="/editar-grafica?id=${grafica.id}">Editar Gráfica</a>
+                    <a href="/editar-graficas?id=${grafica.id}">Editar Gráfica</a>
                 `;
                 listaGraficas.appendChild(graficaDiv);
             });

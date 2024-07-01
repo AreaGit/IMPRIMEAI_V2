@@ -1056,6 +1056,107 @@ app.get('/api/graficas', async (req, res) => {
     res.status(500).json({ error: 'Erro ao buscar gráficas' });
   }
 });
+//Rota get para a página de editar gráficas
+app.get('/editar-graficas', (req, res) => {
+  try {
+    const editarGraficasHtmlContent = fs.readFileSync(path.join(__dirname, "html", "editar-graficas.html"), "utf-8");
+    res.send(editarGraficasHtmlContent);
+  } catch (err) {
+    console.log("Erro ao ler o arquivo editar-graficas.html", err);
+    res.status(500).send("Erro interno do servidor", err);
+  }
+});
+app.get('/api/graficas/:id', async (req, res) => {
+  const graficaId = req.params.id;
+
+  try {
+    // Encontra a gráfica pelo ID
+    const graficas = await Graficas.findByPk(graficaId, {
+      attributes: ['id', 'userCad', 'emailCad', 'estadoCad', 'cidadeCad', 'produtos', 'enderecoCad', 'cepCad', 'cnpjCad', 'telefoneCad', 'bancoCad', 'agenciaCad', 'contaCorrenteCad']
+    });
+
+    if (!graficas) {
+      return res.status(404).json({ error: 'Gráfica não encontrada' });
+    }
+
+    // Formata os dados da gráfica para enviar como resposta
+    const graficaFormatada = {
+      id: graficas.id,
+      userCad: graficas.userCad,
+      emailCad: graficas.emailCad,
+      estadoCad: graficas.estadoCad,
+      cidadeCad: graficas.cidadeCad,
+      enderecoCad: graficas.enderecoCad,
+      cepCad: graficas.cepCad,
+      cnpjCad: graficas.cnpjCad,
+      telefoneCad: graficas.telefoneCad,
+      produtos: graficas.produtos,
+      bancoCad: graficas.bancoCad,
+      agenciaCad: graficas.agenciaCad,
+      contaCorrente: graficas.contaCorrenteCad
+    };
+
+    res.json(graficaFormatada);
+  } catch (err) {
+    console.error('Erro ao buscar grafica:', err);
+    res.status(500).send('Erro ao buscar grafica');
+  }
+});
+app.post('/editar-grafica/:id', upload.none(), async (req, res) => {
+  try {
+    const { nome, email, estado, cidade, produtos, endereco, cep, cnpj, telefone, banco, agencia, conta } = req.body;
+    const id = req.params.id;
+    console.log("DADOS RECEBIDOS: ", req.body);
+
+    // Validação dos dados (adicione conforme necessário)
+    if (!id || !nome || !endereco || !cep || !cidade || !estado || !telefone || !cnpj || !banco || !agencia || !conta || !produtos || !email) {
+      return res.status(400).json({ error: 'Todos os campos são obrigatórios' });
+    }
+
+    // Validação do email
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(email)) {
+      return res.status(400).json({ error: 'Email inválido' });
+    }
+
+    // Busca a gráfica pelo ID
+    const grafica = await Graficas.findByPk(id);
+
+    if (!grafica) {
+      return res.status(404).json({ error: 'Gráfica não encontrada' });
+    }
+
+    // Atualiza os dados da gráfica
+    grafica.userCad = nome;
+    grafica.enderecoCad = endereco;
+    grafica.cepCad = cep;
+    grafica.cidadeCad = cidade;
+    grafica.estadoCad = estado;
+    grafica.telefoneCad = telefone;
+    grafica.cnpjCad = cnpj;
+    grafica.bancoCad = banco;
+    grafica.agenciaCad = agencia;
+    grafica.contaCorrenteCad = conta;
+
+    // Converte a string de produtos para um array
+    const produtosArray = produtos.split(',').map(produto => produto.trim());
+    grafica.produtos = JSON.stringify(produtosArray);
+
+    grafica.emailCad = email;
+
+    // Salva as alterações no banco de dados
+    await grafica.save();
+
+    res.json({ message: 'Informações da gráfica atualizadas com sucesso' });
+  } catch (error) {
+    console.error('Erro ao editar informações da gráfica:', error);
+    res.status(500).json({
+      error: 'Erro ao editar informações da gráfica',
+      message: error.message,
+    });
+  }
+});
+
 app.listen(PORT, () => {
   console.log(`Servidor rodando na porta ${PORT} https://localhost:${PORT}`);
 });
