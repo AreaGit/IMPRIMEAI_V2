@@ -9,6 +9,9 @@ const graficasServer = require('./routes/graficasServer')
 const Produtos = require('./models/Produtos');
 const VariacoesProduto = require('./models/VariacoesProduto');
 const Graficas = require('./models/Graficas');
+const Pedidos = require('./models/Pedidos');
+const ItensPedido = require('./models/ItensPedido');
+const Enderecos = require('./models/Enderecos');
 const Newsletter = require('./models/Newsletter');
 const nodemailer = require('nodemailer');
 const { Op } = require('sequelize');
@@ -1154,6 +1157,24 @@ app.post('/editar-grafica/:id', upload.none(), async (req, res) => {
       error: 'Erro ao editar informações da gráfica',
       message: error.message,
     });
+  }
+});
+//Rota get para pegar todos os pedidos
+app.get('/pedidos-todos', async (req, res) => {
+  try {
+      const pedidos = await Pedidos.findAll({
+          include: [
+              {
+                  model: ItensPedido,
+              },
+              {
+                  model: Enderecos,
+              },
+          ],
+      });
+      res.status(200).json({ pedidos });
+  } catch (error) {
+      res.status(500).send({ error: error.message });
   }
 });
 

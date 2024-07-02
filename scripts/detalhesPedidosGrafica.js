@@ -269,7 +269,7 @@ document.addEventListener('DOMContentLoaded', async() => {
             <h2>${detalhesPedido.itenspedidos[0].nomeProd}</h2>
             <p class="idPed"><strong>Id do Pedido:</strong> ${detalhesPedido.id}</p>
             <p class="quantPed"><strong>Quantidade:</strong> ${detalhesPedido.itenspedidos[0].quantidade}</p>
-            <p class="valorPed"><strong>Valor:</strong> R$${detalhesPedido.valorPed.toFixed(2)}</p>
+            <p class="valorPed"><strong>Valor:</strong> R$${detalhesPedido.itenspedidos[0].valorProd}</p>
             <p class="nomeDest"><strong>Nome do Destinatário:</strong> ${detalhesUsuario.userCad}</p>
             <p class=""><strong>Material:</strong> ${variacoesProduto.material}</p>
             <p class=""><strong>Formato:</strong> ${variacoesProduto.formato}</p>
