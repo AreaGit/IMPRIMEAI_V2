@@ -186,7 +186,7 @@ document.getElementById('pedidos').addEventListener('click', () => {
                                 <p class="ped-valor">R$ ${parseFloat(item.valorProd).toFixed(2)}</p>
                                 <p class="ped-quant">${item.quantidade} unidades</p>
                                 <p id="dataCriacao">${dataFormatada}</p>
-                                <a href="detalhes-pedidos?idPedido=${item.idPed}&idProduto=${item.idProduto}" id="verPed">Detalhes do Pedido</a>
+                                <a href="detalhes-pedidoAdm?idPedido=${item.idPed}&idProduto=${item.idProduto}" id="verPed">Detalhes do Pedido</a>
                             `;
                             pedidosList.appendChild(li);
                         }

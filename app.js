@@ -1177,7 +1177,16 @@ app.get('/pedidos-todos', async (req, res) => {
       res.status(500).send({ error: error.message });
   }
 });
-
+//Rota get para a página de detalhes dos pedidos para o adm
+app.get('/detalhes-pedidoAdm', (req, res) => {
+  try {
+    const pedidoAdmHtmlContent = fs.readFileSync(path.join(__dirname, "html", "detalhesPedidosAdm.html"), "utf-8");
+    res.send(pedidoAdmHtmlContent);
+  } catch (err) {
+    console.log("Erro ao ler o arquivo detalhesPedidosAdm.html", err);
+    res.status(500).send("Erro interno do servidor", err);
+  }
+});
 app.listen(PORT, () => {
   console.log(`Servidor rodando na porta ${PORT} https://localhost:${PORT}`);
 });
