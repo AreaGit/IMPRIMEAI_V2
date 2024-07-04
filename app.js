@@ -18,6 +18,8 @@ const { Op } = require('sequelize');
 const redis = require('redis');
 const { _ } = require('pagarme');
 const multer = require('multer');
+const axios = require('axios');
+const apiKey = 'sk_e74e3fe1ccbe4ae080f70d85d94e2c68'; // sua chave de API
 const storage = multer.memoryStorage();
 const upload = multer({ storage: storage });
 const client = redis.createClient({
@@ -1185,6 +1187,26 @@ app.get('/detalhes-pedidoAdm', (req, res) => {
   } catch (err) {
     console.log("Erro ao ler o arquivo detalhesPedidosAdm.html", err);
     res.status(500).send("Erro interno do servidor", err);
+  }
+});
+//Rota get para obter saldo da conta do pagarme
+app.get('/api/balance', async (req, res) => {
+  try {
+    const response = await axios.get('https://api.pagar.me/1/balance', {
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      params: {
+        api_key: apiKey,
+      },
+    });
+
+    const balance = response.data;
+    console.log("Consulta de saldo em Conta: ", balance.available.amount / 100)
+    res.json({ available: balance.available.amount / 100 }); // Convertendo para reais
+  } catch (error) {
+    console.error('Error fetching balance:', error.response ? error.response.data : error.message);
+    res.status(500).json({ error: 'Erro ao buscar saldo' });
   }
 });
 app.listen(PORT, () => {

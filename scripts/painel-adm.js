@@ -235,3 +235,18 @@ document.getElementById('pedidos').addEventListener('click', () => {
     // Atualize os contadores de pedidos ao carregar a página
     atualizarContadores();
 });
+//função ao clicar em saldo
+document.getElementById('saldo').addEventListener('click', async() => {
+    const containerValor = document.getElementById('container-valor');
+    containerValor.style.display = 'block';
+    const saldoAdm = document.getElementById('saldoAdm');
+    const btnSacar = document.getElementById('btnSacar');
+
+    try {
+        const response = await fetch('/api/balance');
+        const data = await response.json();
+        saldoAdm.textContent = data.available.toFixed(2);
+    } catch (error) {
+        console.error('Erro ao buscar saldo:', error);
+    }
+});

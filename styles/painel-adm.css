@@ -375,3 +375,66 @@ div#pedidos-list {
   width: 96px;
   height: 120px;
 }
+#container-valor {
+  display: none;
+  background-color: white;
+  box-shadow: 1px 1px 3px black;
+  border-radius: 5px;
+  position: absolute;
+  left: 50%;
+  transform: translate(-50%);
+  width: 30vw;
+  top: 210px;
+  padding: 15px;
+  height: 450px;
+}
+#container-valor > h2 {
+  font-size: 28px;
+  text-align: center;
+  font-weight: 400;
+  position: relative;
+  top: 10px;
+}
+#linhaHr2 {
+  border: 1px solid black;
+  width: 28vw;
+  position: absolute;
+  top: 90px;
+  left: 50%;
+  transform: translate(-50%);
+}
+div#valor {
+  width: 25%;
+  position: absolute;
+  left: 50%;
+  top: 30%;
+  transform: translate(-50%);
+}
+#valor > h3 {
+  font-weight: 400;
+  font-size: 20px;
+  text-align: center;
+}
+#btnSacar {
+  width: 150px;
+  height: 43px;
+  font-size: 17px;
+  font-weight: 600;
+  border: none;
+  background-color: #EF4126;
+  color: white;
+  transition: 0.8s;
+  border-radius: 5px;
+  cursor: pointer;
+}
+#btnSacar:hover {
+  transition: 0.8s;
+  background-color: white;
+  color: #EF4126;
+  border: 1px solid #EF4126;
+}
+#valor > p {
+  font-size: 23px;
+  font-weight: 200;
+  margin: 14px;
+}
