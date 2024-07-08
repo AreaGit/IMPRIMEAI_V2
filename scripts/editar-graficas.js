@@ -23,6 +23,11 @@ document.addEventListener('DOMContentLoaded', () => {
         })
         .then(grafica => {
           console.log(grafica);
+          const jsonInput = JSON.stringify(grafica.produtos);
+          // Remover as chaves e aspas
+          const produtosArray = Object.keys(JSON.parse(jsonInput)).map(key => key);
+          // Converter array em string separada por vírgulas
+          const produtosString = produtosArray.join(', ');
           form.nome.value = grafica.userCad;
           form.email.value = grafica.emailCad;
           form.estado.value = grafica.estadoCad;
@@ -31,7 +36,7 @@ document.addEventListener('DOMContentLoaded', () => {
           form.cep.value = grafica.cepCad;
           form.cnpj.value = grafica.cnpjCad;
           form.telefone.value = grafica.telefoneCad;
-          form.produtos.value = JSON.parse(grafica.produtos).join(', ');
+          form.produtos.value = produtosString;
           form.banco.value = grafica.bancoCad;
           form.agencia.value = grafica.agenciaCad;
           form.conta.value = grafica.contaCorrente;

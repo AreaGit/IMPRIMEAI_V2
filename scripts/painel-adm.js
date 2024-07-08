@@ -245,8 +245,31 @@ document.getElementById('saldo').addEventListener('click', async() => {
     try {
         const response = await fetch('/api/balance');
         const data = await response.json();
-        saldoAdm.textContent = data.available.toFixed(2);
+        console.log(data)
+        saldoAdm.textContent = data.adminBalance;
     } catch (error) {
         console.error('Erro ao buscar saldo:', error);
+    }
+});
+document.getElementById('btnSacar').addEventListener('click', async () => {
+    const saldoAdm = document.getElementById('saldoAdm').textContent;
+    const amount = parseFloat(saldoAdm);
+
+    try {
+        const response = await fetch('/api/withdraw', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ amount }),
+        });
+
+        const data = await response.json();
+        console.log('Withdrawal successful:', data);
+        alert('Saque realizado com sucesso!');
+        document.getElementById('saldoAdm').textContent = '0.00';
+    } catch (error) {
+        console.error('Erro ao fazer saque:', error);
+        alert('Erro ao fazer saque');
     }
 });

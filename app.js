@@ -13,6 +13,7 @@ const Pedidos = require('./models/Pedidos');
 const ItensPedido = require('./models/ItensPedido');
 const Enderecos = require('./models/Enderecos');
 const Newsletter = require('./models/Newsletter');
+const Saques = require('./models/Saques');
 const nodemailer = require('nodemailer');
 const { Op } = require('sequelize');
 const redis = require('redis');
@@ -1143,9 +1144,18 @@ app.post('/editar-grafica/:id', upload.none(), async (req, res) => {
     grafica.agenciaCad = agencia;
     grafica.contaCorrenteCad = conta;
 
-    // Converte a string de produtos para um array
+    // Transformar a string em um array, removendo espaços extras ao redor de cada produto
     const produtosArray = produtos.split(',').map(produto => produto.trim());
-    grafica.produtos = JSON.stringify(produtosArray);
+    // Criar um objeto JavaScript com base no array de produtos
+    const graficaProdutos = {};
+    produtosArray.forEach(produto => {
+      graficaProdutos[produto] = true;
+    });
+    // Converter o objeto JavaScript em uma string JSON formatada
+    const graficaProdutosJSON = JSON.stringify(graficaProdutos, null, 4);
+    const cleanedString = graficaProdutosJSON.replace(/\\/g, '');
+    const graficaProdutos2 = JSON.parse(cleanedString);  
+    grafica.produtos = graficaProdutos2;
 
     grafica.emailCad = email;
 
@@ -1189,24 +1199,37 @@ app.get('/detalhes-pedidoAdm', (req, res) => {
     res.status(500).send("Erro interno do servidor", err);
   }
 });
-//Rota get para obter saldo da conta do pagarme
+//Rota get para obter saldo
 app.get('/api/balance', async (req, res) => {
   try {
-    const response = await axios.get('https://api.pagar.me/1/balance', {
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      params: {
-        api_key: apiKey,
-      },
+    // Calcular o saldo total do admin
+    const adminBalance = await Saques.sum('valorAdm', {
+      where: {
+        admSacou: false
+      }
     });
 
-    const balance = response.data;
-    console.log("Consulta de saldo em Conta: ", balance.available.amount / 100)
-    res.json({ available: balance.available.amount / 100 }); // Convertendo para reais
+    res.json({ adminBalance: adminBalance.toFixed(2) });
   } catch (error) {
-    console.error('Error fetching balance:', error.response ? error.response.data : error.message);
+    console.error('Erro ao buscar saldo:', error);
     res.status(500).json({ error: 'Erro ao buscar saldo' });
+  }
+});
+//Rota para fazer o saque do valor disponível do pagarme
+app.post('/api/withdraw', async (req, res) => {
+  const amount = 0.1; // valor a ser sacado
+  console.log(amount)
+  try {
+    const response = await axios.post('https://api.pagar.me/1/transfers', {
+      api_key: apiKey,
+      amount: amount * 100, // convertendo para centavos
+      recipient_id: 're_clvchabno0fqc019tlus65sde' // Substitua com o ID do recebedor
+    });
+
+    res.json(response.data);
+  } catch (error) {
+    console.error('Error making withdrawal:', error.response ? error.response.data : error.message);
+    res.status(500).json({ error: 'Erro ao fazer saque' });
   }
 });
 app.listen(PORT, () => {

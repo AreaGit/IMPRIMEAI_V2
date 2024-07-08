@@ -9,6 +9,7 @@ const Pedidos = require('../models/Pedidos');
 const ItensPedido = require('../models/ItensPedido');
 const Enderecos = require('../models/Enderecos');
 const Entregas = require('../models/Entregas');
+const Saques = require('../models/Saques');
 const {Op} = require('sequelize');
 const multer = require('multer');
 const cookieParser = require('cookie-parser');
@@ -427,6 +428,7 @@ async function getCoordinatesFromAddressEnd(enderecoEntregaInfo, apiKey) {
       const graficaId = req.cookies.graficaId; // Assuming the graphics company's ID is stored in a cookie
       console.log(graficaId)
       const pedido = await ItensPedido.findByPk(pedidoId);
+      const tablePedidos = await Pedidos.findByPk(pedidoId);
       if (!pedido) {
         return res.json({ success: false, message: 'Pedido não encontrado.' });
       }
@@ -457,9 +459,19 @@ async function getCoordinatesFromAddressEnd(enderecoEntregaInfo, apiKey) {
         console.log("Não foi possível encontrar o pedido!")
       }
 
-      if(novoStatus === "Pedido Entregue pela Gráfica") {
-        pedido.statusPed = novoStatus;
-        pedido.graficaAtend = graficaId; // Save the graphics company's ID
+      if (novoStatus === "Pedido Entregue pela Gráfica") {
+        const valorTotalPedido = tablePedidos.valorPed;
+        const valorAdm = valorTotalPedido * 0.20;
+        const valorGrafica = valorTotalPedido * 0.80;
+  
+        // Criar registro na tabela de saques
+        await Saques.create({
+          idPed: pedidoId,
+          idGrafica: graficaId,
+          valorGrafica: valorGrafica.toFixed(2), // Convertendo para formato monetário
+          valorAdm: valorAdm.toFixed(2) // Convertendo para formato monetário
+        });
+  
         pedido.graficaFin = graficaId;
         await pedido.save();
       }
