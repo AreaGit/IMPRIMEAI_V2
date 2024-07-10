@@ -1217,7 +1217,7 @@ app.get('/api/balance', async (req, res) => {
 });
 //Rota para fazer o saque do valor disponível do pagarme
 app.post('/api/withdraw', async (req, res) => {
-  const amount = 0.1; // valor a ser sacado
+  const amount = req.body; // valor a ser sacado
   console.log(amount)
   try {
     const response = await axios.post('https://api.pagar.me/1/transfers', {
@@ -1225,11 +1225,37 @@ app.post('/api/withdraw', async (req, res) => {
       amount: amount * 100, // convertendo para centavos
       recipient_id: 're_clvchabno0fqc019tlus65sde' // Substitua com o ID do recebedor
     });
-
+    console.log(response)
     res.json(response.data);
   } catch (error) {
     console.error('Error making withdrawal:', error.response ? error.response.data : error.message);
     res.status(500).json({ error: 'Erro ao fazer saque' });
+  }
+});
+//Rota get para a página de saldo da gráfica
+app.get('/saldo-grafica', (req, res) => {
+  try {
+  const saldoGraficaHtmlContent = fs.readFileSync(path.join(__dirname, "html", "saldo-grafica.html"), "utf-8");
+  res.send(saldoGraficaHtmlContent);
+  } catch(err) {
+    console.log("Erro ao ler o arquivo saldo-grafica.html", err);
+    res.status(500).send("Erro interno do servidor", err);
+  }
+});
+//Rota get para obter saldo da gráfica
+app.get('/api/saldo-grafica', async (req, res) => {
+  try {
+    // Calcular o saldo total da grafica
+    const adminBalance = await Saques.sum('valorGrafica', {
+      where: {
+        admSacou: false
+      }
+    });
+
+    res.json({ adminBalance: adminBalance.toFixed(2) });
+  } catch (error) {
+    console.error('Erro ao buscar saldo:', error);
+    res.status(500).json({ error: 'Erro ao buscar saldo' });
   }
 });
 app.listen(PORT, () => {

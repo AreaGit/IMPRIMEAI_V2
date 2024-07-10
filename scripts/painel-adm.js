@@ -2,6 +2,7 @@ const carregamento = document.getElementById('carregamento');
 const listaProdutos = document.getElementById('lista-produtos');
 const listaGraficas = document.getElementById('lista-graficas');
 const listaPedidos = document.getElementById('pedidos-list');
+const saldo = document.getElementById('container-valor');
 // Função para obter o valor de um cookie pelo nome
 function getCookie(name) {
     const value = `; ${document.cookie}`;
@@ -24,6 +25,7 @@ document.addEventListener('DOMContentLoaded', () => {
 document.getElementById('produtos').addEventListener('click', () => {
     const divAddGraficas = document.getElementById('divAddGraficas');
     const containerPedidos = document.getElementById('container-pedidos');
+    saldo.style.display = 'none';
     containerPedidos.style.display = 'none'
     divAddGraficas.style.display = 'none';
     carregamento.style.display = 'block';
@@ -55,6 +57,7 @@ document.getElementById('produtos').addEventListener('click', () => {
 document.getElementById('graficas').addEventListener('click', () => {
     const carregamento = document.getElementById('carregamento');
     const containerPedidos = document.getElementById('container-pedidos');
+    saldo.style.display = 'none';
     containerPedidos.style.display = 'none'
     carregamento.style.display = 'block';
     listaGraficas.style.display = 'block'
@@ -98,6 +101,7 @@ document.getElementById('pedidos').addEventListener('click', () => {
     const totalPedidosFinalizados = document.getElementById('totalPedidosFinalizados');
     const totalPedidosEntregues = document.getElementById('totalPedidosEntregues');
     const divAddGraficas = document.getElementById('divAddGraficas');
+    saldo.style.display = 'none';
     divAddGraficas.style.display = 'none';
     listaPedidos.style.display = 'block';
     listaGraficas.style.display = 'none';
@@ -238,9 +242,15 @@ document.getElementById('pedidos').addEventListener('click', () => {
 //função ao clicar em saldo
 document.getElementById('saldo').addEventListener('click', async() => {
     const containerValor = document.getElementById('container-valor');
+    const containerPedidos = document.getElementById('container-pedidos');
+    containerPedidos.style.display = 'none'
     containerValor.style.display = 'block';
     const saldoAdm = document.getElementById('saldoAdm');
     const btnSacar = document.getElementById('btnSacar');
+    divAddGraficas.style.display = 'none';
+    listaPedidos.style.display = 'none';
+    listaGraficas.style.display = 'none';
+    listaProdutos.style.display = 'none';
 
     try {
         const response = await fetch('/api/balance');
@@ -267,7 +277,7 @@ document.getElementById('btnSacar').addEventListener('click', async () => {
         const data = await response.json();
         console.log('Withdrawal successful:', data);
         alert('Saque realizado com sucesso!');
-        document.getElementById('saldoAdm').textContent = '0.00';
+        window.location.reload();
     } catch (error) {
         console.error('Erro ao fazer saque:', error);
         alert('Erro ao fazer saque');

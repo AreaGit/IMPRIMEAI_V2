@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Meus Pedidos</title>
+    <title>Saldo Gráfica</title>
     <link rel="shortcut icon" href="../images/favicon-imprimeai.png" type="image/x-icon">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -13,8 +13,7 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter+Tight:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0"/>
-    <link rel="stylesheet" href="../styles/pedidos-grafica.css">
-    <link rel="stylesheet" href="../styles/pedidos-grafica-resp.css">
+    <link rel="stylesheet" href="../styles/saldo-grafica.css">
 </head>
 <body>
     <header id="header">
@@ -30,46 +29,20 @@
                 <li><a href="/conta-grafica">Minha Conta</a></li>
             </ul>
         </nav>
+    </header>
     <main>
-        <h1>Meus pedidos</h1>
+        <h1>Saldo da Gráfica</h1>
         <div id="linhaHr"></div>
-        <h2>Olá <span id="nomeGrafica"></span> <br> Visualize os pedidos e seus status</h2>
-        <div class="container">
-            <div class="statusPedidos" id="pedidosAguardando">
-                <h2>Pedidos a fazer</h2>
-                <p><span id="totalPedidosFazer">0</span> pedidos</p>
-            </div>
-            <div class="statusPedidos" id="pedidosAceitos">
-                <h2>Pedidos aceitos</h2>
-                <p><span id="totalPedidosAceitos">0</span> pedidos</p>
-            </div>
-            <div class="statusPedidos" id="pedidosFinalizados">
-                <h2>Pedidos finalizados</h2>
-                <p><span id="totalPedidosFinalizados">0</span> pedidos</p>
-            </div>
-            <div class="statusPedidos" id="pedidosEntregues">
-                <h2>Pedidos entregues</h2>
-                <p><span id="totalPedidosEntregues">0</span> pedidos</p>
+        <div id="container">
+            <div id="saldoDisp">
+                <h2>Seu saldo na Imprimeai</h2>
+                <span id="valorDisp">R$ 0,00</span>
+                <br>
+                <button>Sacar Agora</button>
+                <a href="#" id="vrSd">Saldo a Liberar</a>
             </div>
         </div>
-        <div id="pedidos-list">
-            <!--Aqui irá ficar os pedidos para a gráfica atender-->
-        </div>
-        <div id="carregamento">
-            <div class="spinnerContainer">
-                <div class="spinner"></div>
-                <div class="loader">
-                  <p>carregando</p>
-                  <div class="words">
-                    <span class="word">gráficas</span>
-                    <span class="word">pedidos</span>
-                    <span class="word">rotas</span>
-                    <span class="word">produtos</span>
-                  </div>
-                </div>
-              </div>
-        </div>
-    </main> 
-    <script src="../scripts/pedidosGrafica.js"></script>   
+    </main>
+    <script src="../scripts/saldoGrafica.js"></script>
 </body>
 </html>
