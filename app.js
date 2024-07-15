@@ -23,6 +23,9 @@ const axios = require('axios');
 const apiKey = 'sk_e74e3fe1ccbe4ae080f70d85d94e2c68'; // sua chave de API
 const storage = multer.memoryStorage();
 const upload = multer({ storage: storage });
+const NodeCache = require('node-cache');
+const productCache = new NodeCache({ stdTTL: 200, checkperiod: 1 });
+const Sequelize = require('sequelize')
 const client = redis.createClient({
   host: '127.0.0.1', // Substitua pelo endereço IP do seu servidor Redis
   port: 6379,         // Porta onde o Redis está escutando
@@ -904,30 +907,29 @@ app.get('/sobre', (req, res) => {
     res.status(500).send("Erro interno do servidor");
   }
 });
-//Api para pegar todos os produtos
+async function getProducts() {
+  const produtos = await Produtos.findAll({
+      attributes: ['id', 'nomeProd', 'imgProd',
+         
+      ]
+  });
+  return produtos.map(produto => produto.dataValues);
+}
+
 app.get('/api/produtos', async (req, res) => {
-  const { page = 1, limit = 15 } = req.query; // Default to page 1, 10 products per page
-
   try {
-    const offset = (page - 1) * limit;
+      const cacheKey = 'produtos-todos';
+      let produtos = productCache.get(cacheKey);
 
-    const { count, rows: produtos } = await Produtos.findAndCountAll({
-      attributes: ['id', 'nomeProd', 'imgProd'],
-      offset,
-      limit: parseInt(limit),
-    });
+      if (!produtos) {
+          produtos = await getProducts();
+          productCache.set(cacheKey, produtos);
+      }
 
-    // Convert blob to base64
-    const produtosFormatados = produtos.map(produto => ({
-      id: produto.id,
-      nome: produto.nomeProd,
-      imagem: produto.imgProd ? `data:image/jpeg;base64,${produto.imgProd.toString('base64')}` : null,
-    }));
-
-    res.json(produtosFormatados);
-  } catch (err) {
-    console.error('Erro ao buscar produtos:', err);
-    res.status(500).send('Erro ao buscar produtos');
+      res.json(produtos);
+  } catch (error) {
+      console.error('Erro ao buscar produtos:', error);
+      res.status(500).json({ error: 'Erro ao buscar produtos' });
   }
 });
 app.get('/api/produtos/:id', async (req, res) => {

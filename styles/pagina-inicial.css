@@ -998,3 +998,62 @@ div#lg {
     margin-left: -0.5rem;
     margin-right: -0.5rem;
   }
+  #carousel {
+    position: relative;
+    width: 104%;
+    margin: auto;
+    overflow: hidden;
+}
+
+.carousel-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+    width: 100%;
+}
+
+.carousel-slide {
+    display: flex;
+    transition: transform 0.5s ease-in-out;
+}
+
+.carousel-item {
+  flex: 0 0 20.333%;
+  box-sizing: border-box;
+  text-align: center;
+}
+
+.carousel-item img {
+  width: 40%;
+  height: auto;
+}
+
+button {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    background-color: #E8E8EB;
+    color: #545455;
+    border: none;
+    cursor: pointer;
+    padding: 10px;
+    font-size: 18px;
+    border-radius: 50%;
+}
+
+#prevBtn {
+    left: 6px;
+}
+
+#nextBtn {
+    right: 6px;
+}
+
+button:focus {
+    outline: none;
+}
+
+svg {
+  width: 47px;
+}

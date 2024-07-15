@@ -28,56 +28,66 @@ document.addEventListener('DOMContentLoaded', function() {
             carrinhoVazio.style.display = 'block'
             totalCarrinho.style.display = 'none'
             resumoCompra.style.display = 'none'
-        } else {
-          // Caso contrário, exiba os produtos do carrinho
-          produtos.forEach(produto => {
-            carrinhoVazio.style.display = 'none'
-            totalCarrinho.style.display = 'block'
-            resumoCompra.style.display = 'block'
-            const produtoElement = document.createElement('div');
-            produtoElement.classList.add('produto-carrinho');
-            produtoElement.innerHTML = `
-              <img src="/imagens/${produto.produtoId}" alt="Imagem do Produto">
-              <h2 class="nomeProduto">${produto.nomeProd}</h2>
-              <p class="qnt">Quantidade: ${produto.quantidade}</p>
-              <p class="sub">R$ ${produto.subtotal.toFixed(2)}</p>
-              <button class="remover-produto" data-produto-id="${produto.produtoId}"> Remover</button>
-            `;
-  
-            carrinhoProdutos.appendChild(produtoElement);
-  
+          } else {
+            carrinhoVazio.style.display = 'none';
+            totalCarrinho.style.display = 'block';
+            resumoCompra.style.display = 'block';
+    
+            for (const produto of produtos) {
+              const produtoElement = document.createElement('div');
+              produtoElement.classList.add('produto-carrinho');
+    
+              // Fetch the image URL for the product
+              const imgResponse = await fetch(`/imagens/${produto.produtoId}`);
+              if (!imgResponse.ok) {
+                throw new Error('Erro ao obter a URL da imagem do produto');
+              }
+              const imgData = await imgResponse.json();
+              const srcDaImagem = imgData.imgProdUrl;
+    
+              console.log(srcDaImagem);
+              produtoElement.innerHTML = `
+                <img src="${srcDaImagem}" alt="Imagem do Produto">
+                <h2 class="nomeProduto">${produto.nomeProd}</h2>
+                <p class="qnt">Quantidade: ${produto.quantidade}</p>
+                <p class="sub">R$ ${produto.subtotal.toFixed(2)}</p>
+                <button class="remover-produto" data-produto-id="${produto.produtoId}">Remover</button>
+              `;
+    
+              carrinhoProdutos.appendChild(produtoElement);
+    
               const removerProdutoBtn = produtoElement.querySelector('.remover-produto');
               removerProdutoBtn.addEventListener('click', async () => {
-              const produtoId = removerProdutoBtn.getAttribute('data-produto-id');
-  
-                  try {
+                const produtoId = removerProdutoBtn.getAttribute('data-produto-id');
+    
+                try {
                   // Faça uma solicitação AJAX para remover o produto do carrinho
-                      const response = await fetch(`/remover-do-carrinho/${produtoId}`, {
-                      method: 'DELETE',
+                  const response = await fetch(`/remover-do-carrinho/${produtoId}`, {
+                    method: 'DELETE',
                   });
-  
+    
                   if (response.ok) {
-                      // Produto removido com sucesso do carrinho
-                      // Atualize a visualização do carrinho após a remoção
-                      location.reload();
-                      carregarProdutosCarrinho();
+                    // Produto removido com sucesso do carrinho
+                    // Atualize a visualização do carrinho após a remoção
+                    location.reload();
+                    carregarProdutosCarrinho();
                   } else {
-                       new Error('Erro ao remover o produto do carrinho');
+                    throw new Error('Erro ao remover o produto do carrinho');
                   }
-                  } catch (error) {
-                      console.error('Erro ao remover o produto do carrinho:', error);
-                      }
-                  });
-                  });
+                } catch (error) {
+                  console.error('Erro ao remover o produto do carrinho:', error);
+                }
+              });
+            }
+          }
+        } catch (error) {
+          console.error('Erro ao carregar produtos do carrinho:', error);
         }
-      } catch (error) {
-        console.error('Erro ao carregar produtos do carrinho:', error);
       }
-    }
-  
-    // Chame a função para carregar os produtos do carrinho quando a página for carregada
-    carregarProdutosCarrinho();
-  });
+    
+      // Chame a função para carregar os produtos do carrinho quando a página for carregada
+      carregarProdutosCarrinho();
+    });
   function atualizarTotalAPagar() {
     const totalAPagarElement = document.getElementById('totalComp');
     const totalAPagarElement2 = document.getElementById('total');

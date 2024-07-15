@@ -32,7 +32,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         console.log(endereco)
         productImage.style.display = 'block';
         // Process the data and update the DOM
-        const productImageData = `data:image/png;base64,${btoa(String.fromCharCode(...new Uint8Array(dadosProduto.imgProd.data)))}`;
+        const productImageData = await pegarImagemProduto(idProduto);
         productImage.src = productImageData;
         productVariations.innerHTML = `
           <h2>Dados do Produto</h2>
@@ -78,3 +78,17 @@ document.addEventListener('DOMContentLoaded', async () => {
         // Handle error case
     }
 });
+// Função para pegar a imagem do produto
+async function pegarImagemProduto(idProduto) {
+  try {
+      const imgResponse = await fetch(`/imagens/${idProduto}`);
+      if (!imgResponse.ok) {
+          throw new Error('Erro ao obter a URL da imagem do produto');
+      }
+      const imgData = await imgResponse.json();
+      return imgData.imgProdUrl;
+  } catch (error) {
+      console.error('Erro ao carregar a imagem:', error);
+      return null;
+  }
+}

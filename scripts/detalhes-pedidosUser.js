@@ -124,15 +124,14 @@ fetch(`/detalhes-pedidoUser/${idPedido}`)
       // Function to fetch the image URL for a product
 async function pegarImagemProduto(idProduto) {
     try {
-      const response = await fetch(`/imagens/${idProduto}`);
-      if (!response.ok) {
-        throw new Error('Imagem não encontrada');
-      }
-      const blob = await response.blob();
-      return URL.createObjectURL(blob);
+        const imgResponse = await fetch(`/imagens/${idProduto}`);
+        if (!imgResponse.ok) {
+            throw new Error('Erro ao obter a URL da imagem do produto');
+        }
+        const imgData = await imgResponse.json();
+        return imgData.imgProdUrl;
     } catch (error) {
-      console.error('Erro ao buscar imagem do produto:', error);
-      // Handle error, e.g., return a placeholder image URL
-      return 'placeholder_image_url'; // Replace 'placeholder_image_url' with the actual URL of a placeholder image
+        console.error('Erro ao carregar a imagem:', error);
+        return null;
     }
   }

@@ -15,12 +15,11 @@ document.addEventListener('DOMContentLoaded', async() => {
   const idProduto = urlParams.get('idProduto');
   const produtoInfo = document.getElementById('produto-info');
 
-  // Verifica se o ID do pedido e do produto estão presentes na URL
   if (idPedido && idProduto) {
-    // Faz a requisição para o servidor para obter os detalhes do pedido
-    fetch(`/detalhes-pedido/${idPedido}/${idProduto}`)
-    .then(response => response.json())
-    .then(data => {
+    try {
+      // Faz a requisição para o servidor para obter os detalhes do pedido
+      const response = await fetch(`/detalhes-pedido/${idPedido}/${idProduto}`);
+      const data = await response.json();
     const detalhesPedido = data.pedido;
     const detalhesUsuario = data.usuario;
     const statusPedido = detalhesPedido.itenspedidos[0].statusPed;
@@ -263,9 +262,9 @@ document.addEventListener('DOMContentLoaded', async() => {
           }
           });
         }      
-
+        const imgUrl = await pegarImagemProduto(idProduto);
         detalhesItens.innerHTML = `
-            <img src="/imagens/${idProduto}"></img>
+            <img src="${imgUrl}"></img>
             <h2>${detalhesPedido.itenspedidos[0].nomeProd}</h2>
             <p class="idPed"><strong>Id do Pedido:</strong> ${detalhesPedido.id}</p>
             <p class="quantPed"><strong>Quantidade:</strong> ${detalhesPedido.itenspedidos[0].quantidade}</p>
@@ -308,9 +307,26 @@ document.addEventListener('DOMContentLoaded', async() => {
                 console.error('Endereço não encontrado no pedido.');
               }
             produtoInfo.appendChild(detalhesEntrega);
-          });
+          
+          } catch (error) {
+            console.error('Erro ao obter detalhes do pedido:', error);
+          }
         }
-    });
+      });
+
+      async function pegarImagemProduto(idProduto) {
+        try {
+          const imgResponse = await fetch(`/imagens/${idProduto}`);
+          if (!imgResponse.ok) {
+            throw new Error('Erro ao obter a URL da imagem do produto');
+          }
+          const imgData = await imgResponse.json();
+          return imgData.imgProdUrl;
+        } catch (error) {
+          console.error('Erro ao carregar a imagem:', error);
+          return null;
+        }
+      }
 
     // Defina uma variável global para armazenar os cookies
     let cookies;

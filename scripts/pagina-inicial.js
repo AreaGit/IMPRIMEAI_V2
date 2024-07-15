@@ -230,12 +230,70 @@ subNews.addEventListener('click',  () => {
     })
     .catch(error => console.error('Erro:', error));
 });
-document.addEventListener('DOMContentLoaded', () => {
-    fetch('/api/produtos')
-        .then(response => response.json())
-        .then(produtos => {
+document.addEventListener('DOMContentLoaded', async () => {
+    const carouselSlide = document.getElementById('carouselSlide');
+
+    // Função para carregar os produtos do servidor
+    async function loadProducts() {
+        try {
+            const response = await fetch('/api/produtos');
+            const produtos = await response.json();
             produtos.forEach(produto => {
+                const produtoElement = document.createElement('div');
+                produtoElement.className = 'carousel-item';
+                const imgSrc = produto.imgProd; // Placeholder caso não haja imagem
+                produtoElement.innerHTML = `
+                    <a href="/detalhes-produtos?id=${produto.id}">
+                        <img src="${imgSrc}" alt="${produto.nomeProd}">
+                        <h2>${produto.nomeProd}</h2>
+                    </a>
+                `;
+                carouselSlide.appendChild(produtoElement);
             });
-        })
-        .catch(error => console.error('Erro ao carregar produtos:', error));
+            initializeCarousel();
+        } catch (error) {
+            console.error('Erro ao carregar produtos:', error);
+        }
+    }
+
+    // Função para converter ArrayBuffer em Base64
+    function arrayBufferToBase64(buffer) {
+        let binary = '';
+        const bytes = new Uint8Array(buffer);
+        const len = bytes.byteLength;
+        for (let i = 0; i < len; i++) {
+            binary += String.fromCharCode(bytes[i]);
+        }
+        return window.btoa(binary);
+    }
+
+    // Função para inicializar o carrossel
+    function initializeCarousel() {
+        const carouselItems = document.querySelectorAll('.carousel-item');
+        let counter = 0; // Start at the first item
+        const size = carouselItems[0].clientWidth;
+
+        const prevBtn = document.getElementById('prevBtn');
+        const nextBtn = document.getElementById('nextBtn');
+
+        carouselSlide.style.transform = 'translateX(' + (-size * counter) + 'px)';
+
+        // Listeners dos botões
+        nextBtn.addEventListener('click', () => {
+            if (counter >= carouselItems.length - 3) return; // Adjust boundary to prevent empty space
+            carouselSlide.style.transition = "transform 0.5s ease-in-out";
+            counter++;
+            carouselSlide.style.transform = 'translateX(' + (-size * counter) + 'px)';
+        });
+
+        prevBtn.addEventListener('click', () => {
+            if (counter <= 0) return; // Adjust boundary to prevent empty space
+            carouselSlide.style.transition = "transform 0.5s ease-in-out";
+            counter--;
+            carouselSlide.style.transform = 'translateX(' + (-size * counter) + 'px)';
+        });
+    }
+
+    // Carregar produtos ao iniciar
+    loadProducts();
 });

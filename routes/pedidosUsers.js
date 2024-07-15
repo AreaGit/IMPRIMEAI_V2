@@ -1438,29 +1438,20 @@ async function verificarGraficaMaisProximaEAtualizar2(itensPedido, enderecos) {
     try {
       const idDoProduto = req.params.id;
   
-      // Consulta o banco de dados para obter a imagem do produto pelo ID
+      // Consulta o banco de dados para obter a URL da imagem do produto pelo ID
       const produto = await Produtos.findByPk(idDoProduto);
   
       if (!produto || !produto.imgProd) {
-        // Se o produto não for encontrado ou não houver imagem, envie uma resposta de erro 404
+        // Se o produto não for encontrado ou não houver URL da imagem, envie uma resposta de erro 404
         return res.status(404).send('Imagem não encontrada');
       }
   
-      const imgBuffer = produto.imgProd;
+      const imgProdUrl = produto.imgProd;
   
-      // Detecta a extensão da imagem com base no tipo de arquivo
-      let extensao = 'jpg'; // Default para JPEG
-      if (imgBuffer[0] === 0x89 && imgBuffer[1] === 0x50 && imgBuffer[2] === 0x4E && imgBuffer[3] === 0x47) {
-        extensao = 'png'; // Se os primeiros bytes correspondem a PNG, use PNG
-      }
-  
-      // Define o cabeçalho da resposta com base na extensão
-      res.setHeader('Content-Type', `image/${extensao}`);
-  
-      // Envie a imagem como resposta
-      res.end(imgBuffer);
+      // Envie a URL da imagem como resposta
+      res.json({ imgProdUrl });
     } catch (error) {
-      console.error('Erro ao buscar imagem do produto:', error);
+      console.error('Erro ao buscar URL da imagem do produto:', error);
       res.status(500).send('Erro interno do servidor');
     }
   });

@@ -23,13 +23,20 @@ document.addEventListener('DOMContentLoaded', function() {
         if (produtos.length === 0) {
         } else {
           // Caso contrário, exiba os produtos do carrinho
-          produtos.forEach(produto => {
+          for (const produto of produtos) {
             if (!produto.downloadLink) {
             const produtoElement = document.createElement('div');
                 produtoElement.classList.add('produto-carrinho');
                 produtoElement.dataset.produtoId = produto.id; // Definindo o atributo data-produto-id
+                // Fetch the image URL for the product
+                const imgResponse = await fetch(`/imagens/${produto.produtoId}`);
+                if (!imgResponse.ok) {
+                  throw new Error('Erro ao obter a URL da imagem do produto');
+                }
+                const imgData = await imgResponse.json();
+                const srcDaImagem = imgData.imgProdUrl;
                 produtoElement.innerHTML = `
-                <img src="/imagens/${produto.produtoId}" alt="Imagem do Produto" id="imgProd">
+                <img src="${srcDaImagem}" alt="Imagem do Produto" id="imgProd">
                 <div id="inputsArt">
                     <div id="Depois">
                         <input type="checkbox" name="enviarDepois${produto.produtoId}" id="enviarDepois${produto.produtoId}" style="display:none">
@@ -165,7 +172,7 @@ document.addEventListener('DOMContentLoaded', function() {
                     
                 carrinhoProdutos.appendChild(produtoElement);
                 }
-            });
+              }
         }
       } catch (error) {
         console.error('Erro ao carregar produtos do carrinho:', error);

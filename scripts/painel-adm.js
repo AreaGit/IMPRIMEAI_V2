@@ -21,7 +21,6 @@ document.addEventListener('DOMContentLoaded', () => {
         window.location.href = '/login-adm';
     }
 });
-//função ao clicar em produtos
 document.getElementById('produtos').addEventListener('click', () => {
     const divAddGraficas = document.getElementById('divAddGraficas');
     const containerPedidos = document.getElementById('container-pedidos');
@@ -32,27 +31,45 @@ document.getElementById('produtos').addEventListener('click', () => {
     listaProdutos.style.display = 'block'
     listaGraficas.style.display = 'none';
     listaPedidos.style.display = 'none'
+
     fetch('/api/produtos')
         .then(response => response.json())
-        .then(produtos => {
-            const listaProdutos = document.getElementById('lista-produtos');
+        .then(async (produtos) => {
             listaProdutos.innerHTML = ''; // Limpa a lista de produtos
-            produtos.forEach(produto => {
+            for (const produto of produtos) {
                 const produtoDiv = document.createElement('div');
                 produtoDiv.classList.add('produto');
+                
+                const imgProdUrl = await pegarImagemProduto(produto.id);
+                
                 produtoDiv.innerHTML = `
-                    <img src="${produto.imagem}" alt="${produto.nome}">
-                    <h3>${produto.nome}</h3>
+                    <img src="${imgProdUrl}" alt="${produto.nome}">
+                    <h3>${produto.nomeProd}</h3>
                     <a href="/editar-produtos?id=${produto.id}">Editar Produto</a>
                 `;
+                
                 listaProdutos.appendChild(produtoDiv);
-                carregamento.style.display = 'none';
-            });
+            }
+            carregamento.style.display = 'none';
         })
         .catch(error => {
             console.error('Erro ao buscar produtos:', error);
         });
 });
+// Função para pegar a imagem do produto
+async function pegarImagemProduto(idProduto) {
+    try {
+        const imgResponse = await fetch(`/imagens/${idProduto}`);
+        if (!imgResponse.ok) {
+            throw new Error('Erro ao obter a URL da imagem do produto');
+        }
+        const imgData = await imgResponse.json();
+        return imgData.imgProdUrl;
+    } catch (error) {
+        console.error('Erro ao carregar a imagem:', error);
+        return null;
+    }
+}
 //função ao clicar em gráficas
 document.getElementById('graficas').addEventListener('click', () => {
     const carregamento = document.getElementById('carregamento');
@@ -156,51 +173,54 @@ document.getElementById('pedidos').addEventListener('click', () => {
     }
 
     // Função para atualizar a lista de pedidos de acordo com o status selecionado
-    function atualizarListaPedidos(status1, status2) {
+    async function atualizarListaPedidos(status1, status2) {
+        const carregamento = document.getElementById('carregamento');
+        const pedidosList = document.getElementById('pedidos-list');
         carregamento.style.display = 'block';
-
-        fetch('/pedidos-todos')
-            .then(response => response.json())
-            .then(data => {
-                const pedidosFiltrados = data.pedidos.filter(pedido => {
-                    if (pedido.itenspedidos && pedido.itenspedidos.length > 0) {
-                        return pedido.itenspedidos.some(item => item.statusPed === status1 || (status2 && item.statusPed === status2));
-                    }
-                    return false;
-                });
-
-                pedidosList.innerHTML = '';
-                carregamento.style.display = 'none';
-
-                pedidosFiltrados.forEach(pedido => {
-                    pedido.itenspedidos.forEach(item => {
-                        if (item.statusPed === status1 || (status2 && item.statusPed === status2)) {
-                            const li = document.createElement('div');
-                            li.id = `pedido${item.id}`;
-                            li.className = 'cxPedido';
-
-                            const dataCriacao = new Date(item.createdAt);
-                            const dataFormatada = dataCriacao.toLocaleString('pt-BR');
-                            const imgUrl = item.idProduto ? `/imagens/${item.idProduto}` : '/imagens/default.png';
-
-                            li.innerHTML = `
-                                <img src="${imgUrl}" alt="${item.nomeProd || 'Produto'}">
-                                <h2 class="ped-nome">${item.nomeProd}</h2>
-                                <p class="ped-id">ID ${item.id}</p>
-                                <p class="ped-valor">R$ ${parseFloat(item.valorProd).toFixed(2)}</p>
-                                <p class="ped-quant">${item.quantidade} unidades</p>
-                                <p id="dataCriacao">${dataFormatada}</p>
-                                <a href="detalhes-pedidoAdm?idPedido=${item.idPed}&idProduto=${item.idProduto}" id="verPed">Detalhes do Pedido</a>
-                            `;
-                            pedidosList.appendChild(li);
-                        }
-                    });
-                });
-            })
-            .catch(error => {
-                console.error('Erro ao buscar pedidos:', error);
-                carregamento.style.display = 'none';
+    
+        try {
+            const response = await fetch('/pedidos-todos');
+            const data = await response.json();
+    
+            const pedidosFiltrados = data.pedidos.filter(pedido => {
+                if (pedido.itenspedidos && pedido.itenspedidos.length > 0) {
+                    return pedido.itenspedidos.some(item => item.statusPed === status1 || (status2 && item.statusPed === status2));
+                }
+                return false;
             });
+    
+            pedidosList.innerHTML = '';
+            carregamento.style.display = 'none';
+    
+            for (const pedido of pedidosFiltrados) {
+                for (const item of pedido.itenspedidos) {
+                    if (item.statusPed === status1 || (status2 && item.statusPed === status2)) {
+                        const li = document.createElement('div');
+                        li.id = `pedido${item.id}`;
+                        li.className = 'cxPedido';
+    
+                        const dataCriacao = new Date(item.createdAt);
+                        const dataFormatada = dataCriacao.toLocaleString('pt-BR');
+                        const idProduto = item.idProduto;
+                        const imgUrl = await pegarImagemProduto(idProduto);
+    
+                        li.innerHTML = `
+                            <img src="${imgUrl}" alt="${item.nomeProd || 'Produto'}">
+                            <h2 class="ped-nome">${item.nomeProd}</h2>
+                            <p class="ped-id">ID ${item.id}</p>
+                            <p class="ped-valor">R$ ${parseFloat(item.valorProd).toFixed(2)}</p>
+                            <p class="ped-quant">${item.quantidade} unidades</p>
+                            <p id="dataCriacao">${dataFormatada}</p>
+                            <a href="detalhes-pedidoAdm?idPedido=${item.idPed}&idProduto=${item.idProduto}" id="verPed">Detalhes do Pedido</a>
+                        `;
+                        pedidosList.appendChild(li);
+                    }
+                }
+            }
+        } catch (error) {
+            console.error('Erro ao buscar pedidos:', error);
+            carregamento.style.display = 'none';
+        }
     }
 
     // Event listeners para cada status

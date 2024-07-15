@@ -19,7 +19,7 @@ document.addEventListener('DOMContentLoaded', () => {
           // Define o conteúdo da div do produto
           produtoDiv.innerHTML = `
             <h2>${produto.nomeProd}</h2>
-            <img src="/imagens/${produto.id}" alt="...">
+            <img src="${produto.imgProd}" alt="...">
             <p>A partir de <br> R$ ${produto.valorProd.toFixed(2)}</p>
             <a href="detalhes-produtos?id=${produto.id}">Comprar</a>
           `;

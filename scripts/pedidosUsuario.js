@@ -16,42 +16,47 @@ function getCookie(name) {
   console.log(userId);
 
 
-  // Fazer uma solicitação Fetch para obter os pedidos do usuário
+// Fazer uma solicitação Fetch para obter os pedidos do usuário
 fetch(`/pedidos-usuario/${userId}`)
-.then(response => response.json())
+    .then(response => response.json())
     .then(data => {
-        console.log(data)
-        data.pedidos.forEach(pedidos => {
+        console.log(data);
+        data.pedidos.forEach(async pedido => {
             const divPedido = document.createElement('div');
             divPedido.className = 'pedido';
-             
+            const idDoProduto = pedido.itenspedidos[0].idProduto;
+            
             // Criar uma imagem para o produto
             const imgProduto = document.createElement('img');
-            imgProduto.src = `/imagens/${pedidos.itenspedidos[0].idProduto}`;
+            const srcDaImagem = await pegarImagemDoProduto(idDoProduto);
+            if (srcDaImagem) {
+                imgProduto.src = srcDaImagem;
+            } else {
+                imgProduto.alt = 'Imagem não disponível';
+            }
             divPedido.appendChild(imgProduto);
             
             divPedido.innerHTML += `
-                <h2>${pedidos.itenspedidos[0].nomeProd}</h2>
-                <p>ID ${pedidos.id}</p>
-                <p>R$ ${pedidos.valorPed.toFixed(2)}</p>
-                <p>${pedidos.quantPed} unidade</p>
-                <a href="detalhesPedidosUser?idPedido=${pedidos.id}">Detalhes do pedido</a>
-            `
+                <h2>${pedido.itenspedidos[0].nomeProd}</h2>
+                <p>ID ${pedido.id}</p>
+                <p>R$ ${pedido.valorPed.toFixed(2)}</p>
+                <p>${pedido.quantPed} unidade${pedido.quantPed > 1 ? 's' : ''}</p>
+                <a href="detalhesPedidosUser?idPedido=${pedido.id}">Detalhes do pedido</a>
+            `;
             listaDePedidos.appendChild(divPedido);
-        })
+        });
     })
-.catch(error => console.error('Erro ao buscar pedidos:', error));
+    .catch(error => console.error('Erro ao buscar pedidos:', error));
 
 // Função para obter a URL da imagem do produto
 async function pegarImagemDoProduto(idDoProduto) {
     try {
-        const response = await fetch(`/imagens/${idDoProduto}`);
-        if (!response.ok) {
-            throw new Error('Erro ao carregar a imagem');
+        const imgResponse = await fetch(`/imagens/${idDoProduto}`);
+        if (!imgResponse.ok) {
+            throw new Error('Erro ao obter a URL da imagem do produto');
         }
-        const blob = await response.blob();
-        const imgUrl = URL.createObjectURL(blob);
-        return imgUrl;
+        const imgData = await imgResponse.json();
+        return imgData.imgProdUrl;
     } catch (error) {
         console.error('Erro ao carregar a imagem:', error);
         return null;

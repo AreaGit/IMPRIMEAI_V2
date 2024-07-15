@@ -155,10 +155,6 @@ app.get("/logout", (req, res) => {
 });
 
 app.post('/cadastrar-produto', upload.fields([
-  { name: 'imgProd', maxCount: 1 },
-  { name: 'imgProd2', maxCount: 1 },
-  { name: 'imgProd3', maxCount: 1 },
-  { name: 'imgProd4', maxCount: 1 },
   { name: 'gabaritoProd', maxCount: 1 }
 ]), async (req, res) => {
   try {
@@ -172,12 +168,12 @@ app.post('/cadastrar-produto', upload.fields([
       formato,
       enobrecimento,
       cor,
-      acabamento
+      acabamento,
+      imgProd,
+      imgProd2,
+      imgProd3,
+      imgProd4,
     } = req.body;
-    const imgProd = req.files['imgProd'] ? req.files['imgProd'][0] : null; // Main product image
-    const imgProd2 = req.files['imgProd2'] ? req.files['imgProd2'][0] : null; // Additional image 1
-    const imgProd3 = req.files['imgProd3'] ? req.files['imgProd3'][0] : null; // Additional image 2
-    const imgProd4 = req.files['imgProd4'] ? req.files['imgProd4'][0] : null; // Additional image 3
     const gabaritoProd = req.files['gabaritoProd'] ? req.files['gabaritoProd'][0] : null // Gabarito do produto
 
     console.log(imgProd2, imgProd3, imgProd4, gabaritoProd);
@@ -189,10 +185,10 @@ app.post('/cadastrar-produto', upload.fields([
       valorProd: valorProd,
       categProd: categoriaProd,
       raioProd: raioProd,
-      imgProd: imgProd ? imgProd.buffer : null,
-      imgProd2: imgProd2 ? imgProd2.buffer : null,
-      imgProd3: imgProd3 ? imgProd3.buffer : null,
-      imgProd4: imgProd4 ? imgProd4.buffer : null,
+      imgProd: imgProd,
+      imgProd2: imgProd2,
+      imgProd3: imgProd3,
+      imgProd4: imgProd4,
       gabaritoProd: gabaritoProd ? gabaritoProd.buffer : null,
     });
 

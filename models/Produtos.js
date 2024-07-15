@@ -24,23 +24,23 @@ const Produtos = db.define('produtos', {
     allowNull: true,
   },
   imgProd: {
-    type: Sequelize.BLOB('long'), // Use BLOB para armazenar imagens
+    type: Sequelize.STRING, // Use BLOB para armazenar imagens
     allowNull: true, // Alterado para não permitir valores nulos, se as imagens forem obrigatórias.
   },
   imgProd2: {
-    type: Sequelize.BLOB('long'), // Use BLOB para armazenar imagens
+    type: Sequelize.STRING, // Use BLOB para armazenar imagens
     allowNull: true, // Alterado para não permitir valores nulos, se as imagens forem obrigatórias.
   },
   imgProd3: {
-    type: Sequelize.BLOB('long'), // Use BLOB para armazenar imagens
+    type: Sequelize.STRING, // Use BLOB para armazenar imagens
     allowNull: true, // Alterado para não permitir valores nulos, se as imagens forem obrigatórias.
   },
   imgProd4: {
-    type: Sequelize.BLOB('long'), // Use BLOB para armazenar imagens
+    type: Sequelize.STRING, // Use BLOB para armazenar imagens
     allowNull: true, // Alterado para não permitir valores nulos, se as imagens forem obrigatórias.
   },
   gabaritoProd: {
-    type: Sequelize.BLOB('long'),
+    type: Sequelize.STRING,
     allowNull: true,
   },
 },  {

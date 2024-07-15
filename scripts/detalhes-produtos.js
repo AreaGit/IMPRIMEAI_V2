@@ -51,10 +51,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
                 const imgElements = document.querySelectorAll('.slides img');
                 slideshowImages.forEach((imgData, index) => {
-                    if (imgData && typeof imgData === 'object') {
-                        const base64String = arrayBufferToBase64(imgData.data);
-                        imgElements[index].src = `data:image/png;base64,${base64String}`;
-                    }
+                    imgElements[index].src = `${imgData}`;
                 });
                 
                 // Function to convert ArrayBuffer to Base64

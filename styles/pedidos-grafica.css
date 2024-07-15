@@ -267,6 +267,7 @@ main > h1 {
     top: 125px;
     left: 50%;
     transform: translate(-50%);
+    z-index: -1;
 }
 main > h2 {
     font-weight: 700;
