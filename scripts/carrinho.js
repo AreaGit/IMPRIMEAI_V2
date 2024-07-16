@@ -38,12 +38,8 @@ document.addEventListener('DOMContentLoaded', function() {
               produtoElement.classList.add('produto-carrinho');
     
               // Fetch the image URL for the product
-              const imgResponse = await fetch(`/imagens/${produto.produtoId}`);
-              if (!imgResponse.ok) {
-                throw new Error('Erro ao obter a URL da imagem do produto');
-              }
-              const imgData = await imgResponse.json();
-              const srcDaImagem = imgData.imgProdUrl;
+              const idDoProduto = produto.produtoId
+              const srcDaImagem = await pegarImagemDoProduto(idDoProduto);
     
               console.log(srcDaImagem);
               produtoElement.innerHTML = `
@@ -55,6 +51,20 @@ document.addEventListener('DOMContentLoaded', function() {
               `;
     
               carrinhoProdutos.appendChild(produtoElement);
+                // Função para obter a URL da imagem do produto
+                async function pegarImagemDoProduto(idDoProduto) {
+                  try {
+                      const imgResponse = await fetch(`/imagens/${idDoProduto}`);
+                      if (!imgResponse.ok) {
+                          throw new Error('Erro ao obter a URL da imagem do produto');
+                      }
+                      const imgData = await imgResponse.json();
+                      return imgData.imgProdUrl;
+                  } catch (error) {
+                      console.error('Erro ao carregar a imagem:', error);
+                      return null;
+                  }
+                }
     
               const removerProdutoBtn = produtoElement.querySelector('.remover-produto');
               removerProdutoBtn.addEventListener('click', async () => {

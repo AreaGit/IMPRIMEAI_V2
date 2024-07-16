@@ -29,6 +29,7 @@ const rp = require('request-promise');
 const Sequelize = require('sequelize');
 const fs = require('fs');
 const ItensPedidos = require('../models/ItensPedido');
+const { Console } = require('console');
 const apiKeyBingMaps = 'Ao6IBGy_Nf0u4t9E88BYDytyK5mK3kObchF4R0NV5h--iZ6YgwXPMJEckhAEaKlH';
 app.use(express.json());
 app.use(cookieParser());
@@ -194,7 +195,7 @@ async function getCoordinatesFromAddressEnd(enderecoEntregaInfo, apiKey) {
   
             if (distanciaMinima <= raioEndereco && graficaMaisProxima) {
               let produtosGrafica;
-  
+          
               // Verifica se graficaMaisProxima.produtos é uma string JSON
               if (typeof graficaMaisProxima.produtos === 'string') {
                   const fixedJsonString = graficaMaisProxima.produtos.replace(/'/g, '"'); // Substitui todas as aspas simples por aspas duplas
@@ -202,6 +203,8 @@ async function getCoordinatesFromAddressEnd(enderecoEntregaInfo, apiKey) {
               } else {
                   produtosGrafica = graficaMaisProxima.produtos;
               }
+              console.log(produtosGrafica)
+              console.log(pedido.nomeProd)
               if (pedido.graficaCancl == graficaMaisProxima.id) {
                 console.log(`Pedido cancelado pela gráfica atual. Redirecionando para outra gráfica próxima. Pedido ID: ${pedido.idPed}`);
           

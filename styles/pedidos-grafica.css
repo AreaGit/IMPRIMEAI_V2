@@ -315,9 +315,16 @@ main > h2 {
 div#pedidos-list {
   position: absolute;
   width: 80%;
-  top: 460px;
+  top: 470px;
   left: 50%;
   transform: translate(-50%);
+  max-height: 500px; /* Defina a altura máxima para permitir a rolagem */
+  overflow-y: scroll; /* Adicione a rolagem vertical */
+  -ms-overflow-style: none;  /* Internet Explorer 10+ */
+  scrollbar-width: none;  /* Firefox */
+}
+div#pedidos-list::-webkit-scrollbar { 
+  display: none;  /* Safari and Chrome */
 }
 .cxPedido {
     box-shadow: -1px 3px 5px black;
