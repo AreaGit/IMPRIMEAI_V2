@@ -1244,20 +1244,87 @@ app.get('/saldo-grafica', (req, res) => {
     res.status(500).send("Erro interno do servidor", err);
   }
 });
-//Rota get para obter saldo da gráfica
+// Rota GET para obter saldo da gráfica
 app.get('/api/saldo-grafica', async (req, res) => {
   try {
-    // Calcular o saldo total da grafica
+    // Calcular o saldo total da gráfica considerando pedidos entregues há pelo menos uma semana
+    const oneWeekAgo = new Date();
+    oneWeekAgo.setDate(oneWeekAgo.getDate() - 7);
+
     const adminBalance = await Saques.sum('valorGrafica', {
       where: {
-        admSacou: false
+        admSacou: false,
+        createdAt: {
+          [Op.lte]: oneWeekAgo
+        }
       }
     });
 
-    res.json({ adminBalance: adminBalance.toFixed(2) });
+    res.json({ adminBalance: adminBalance ? adminBalance.toFixed(2) : '0.00' });
   } catch (error) {
     console.error('Erro ao buscar saldo:', error);
     res.status(500).json({ error: 'Erro ao buscar saldo' });
+  }
+});
+// Rota para fazer o saque do valor disponível do Pagar.me
+app.post('/api/withdraw-grafica', async (req, res) => {
+  const { amount } = req.body; // valor a ser sacado
+  console.log(amount);
+  
+  try {
+    // Data de uma semana atrás
+    const oneWeekAgo = new Date();
+    oneWeekAgo.setDate(oneWeekAgo.getDate() - 7);
+
+    // Buscar os pedidos elegíveis para saque
+    const pedidosParaSaque = await Saques.findAll({
+      where: {
+        admSacou: false,
+        createdAt: {
+          [Op.lte]: oneWeekAgo
+        }
+      }
+    });
+
+    // Calcular o valor total disponível para saque
+    let totalDisponivel = 0;
+    for (const pedido of pedidosParaSaque) {
+      totalDisponivel += pedido.valorGrafica;
+    }
+
+    // Verificar se o valor solicitado está disponível
+    if (amount > totalDisponivel) {
+      return res.status(400).json({ error: 'Valor solicitado excede o saldo disponível' });
+    }
+
+    // Realizar o saque usando a API do Pagar.me
+    const response = await axios.post('https://api.pagar.me/1/transfers', {
+      api_key: apiKey,
+      amount: amount * 100, // convertendo para centavos
+      recipient_id: 're_clvchabno0fqc019tlus65sde' // Substitua com o ID do recebedor
+    });
+
+    // Marcar os pedidos como sacados até que o valor total sacado seja coberto
+    let totalSaque = 0;
+    for (const pedido of pedidosParaSaque) {
+      if (totalSaque + pedido.valorGrafica <= amount) {
+        totalSaque += pedido.valorGrafica;
+        pedido.admSacou = true;
+        await pedido.save();
+      } else {
+        break;
+      }
+    }
+
+    console.log(response);
+    res.json({
+      message: 'Saque realizado com sucesso',
+      totalSaque: totalSaque.toFixed(2),
+      response: response.data
+    });
+  } catch (error) {
+    console.error('Erro ao fazer saque:', error.response ? error.response.data : error.message);
+    res.status(500).json({ error: 'Erro ao fazer saque' });
   }
 });
 app.listen(PORT, () => {

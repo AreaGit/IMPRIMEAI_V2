@@ -609,7 +609,8 @@ app.post('/upload', upload.single('filePlanilha'), async (req, res) => {
       // Quebrar produtos com base nos endereços salvos
       const carrinhoQuebrado = [];
       let enderecoIndex = 0; // Índice para rastrear os endereços
-      
+      // Gera um número aleatório para ser usado como sufixo único ao ID do produto
+      const sufixoAleatorio = Math.floor(Math.random() * 1000000);
       carrinho.forEach((produto, produtoIndex) => {
         const produtoId = produto.produtoId;
         const quantidade = produto.quantidade;
@@ -618,10 +619,9 @@ app.post('/upload', upload.single('filePlanilha'), async (req, res) => {
           const endereco = enderecosSalvos[enderecoIndex];
           const frete = resultadosFrete[enderecoIndex].custoDoFrete; // Pegar o custo do frete correspondente ao endereço
           enderecoIndex = (enderecoIndex + 1) % enderecosSalvos.length; // Avança para o próximo endereço
-
           carrinhoQuebrado.push({
             // Adicionando sufixo único ao ID do produto
-            produtoId: `${produtoId}_${produtoIndex}_${i}`,
+            produtoId: `${produtoId}_${sufixoAleatorio}_${i}`,
             nomeProd: produto.nomeProd,
             quantidade: 1,
             valorUnitario: produto.valorUnitario,

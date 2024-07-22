@@ -1,0 +1,11 @@
+{
+  "version": "1.0",
+  "apis": [
+    {
+      "identifier": "pagarme",
+      "source": "@pagarme/v5#4l5m42ilxeu8jut",
+      "integrity": "sha512-B+eJKVqLbZ5pcxDr9qUVTsJVy15lmcpaANFLTiUchkDK6cibUvvEEuM4NgYiRw86CBpHX8FhTLmr6b2Bb0P/gw==",
+      "installerVersion": "6.1.2"
+    }
+  ]
+}

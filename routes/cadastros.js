@@ -10,6 +10,11 @@ const multer = require('multer');
 const nodemailer = require('nodemailer');
 const storage = multer.memoryStorage();
 const upload = multer({ storage: storage });
+const pagarmeKeyProd = "sk_e74e3fe1ccbe4ae080f70d85d94e2c68";
+const pagarmeKeyTest = "sk_test_05ddc95c6ce442a796c7ebbe2376185d";
+const axios = require('axios');
+const request = require('request-promise');
+require('dotenv').config();
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
@@ -264,6 +269,89 @@ app.post("/cadastro-graficas", async (req, res) => {
       });
 
       console.log(newGrafica)
+      // Criar recebedor no Pagar.me
+      const body =  {
+        register_information: {
+          main_address: {
+            street: endereçoCad,
+            complementary: 'Nenhum',
+            street_number: 'Nenhum',
+            neighborhood: 'Nenhum',
+            city: cidadeCad,
+            state: estadoCad,
+            zip_code: cepCad,
+            reference_point: 'Gráfica',
+          },
+          company_name: userCad,
+          trading_name: userCad,
+          email: emailCad,
+          document: cnpjCad,
+          type: 'corporation',
+          site_url: 'https://www.imprimeai.com.br',
+          annual_revenue: 0,
+          corporation_type: 'LTDA',
+          founding_date: "Nenhum",
+          phone_numbers: [
+            {
+              ddd: '21',
+              number: '994647568',
+              type: 'mobile',
+            },
+          ],
+          managing_partners: [
+            {
+              name: userCad,
+              email: emailCad,
+              document: cnpjCad,
+              type: 'individual',
+              monthly_income: 120000,
+              professional_occupation: 'Vendedor',
+              self_declared_legal_representative: true,
+              address: {
+                street: endereçoCad,
+                complementary: 'Nenhum',
+                street_number: 'Nenhum',
+                neighborhood: 'Nenhum',
+                city: cidadeCad,
+                state: estadoCad,
+                zip_code: cepCad,
+                reference_point: 'Gráfica',
+              },
+              phone_numbers: [
+                {
+                  ddd: '27',
+                  number: '999992628',
+                  type: 'mobile',
+                },
+              ],
+            },
+          ],
+        },
+        default_bank_account: {
+          holder_name: 'Tony Stark',
+          holder_type: 'individual',
+          holder_document: '26224451990',
+          bank: '341',
+          branch_number: '1234',
+          branch_check_digit: '6',
+          account_number: '12345',
+          account_check_digit: '6',
+          type: 'checking',
+        },
+        transfer_settings: {
+          transfer_enabled: false,
+          transfer_interval: 'Daily',
+          transfer_day: 0,
+        },
+        automatic_anticipation_settings: {
+          enabled: true,
+          type: 'full',
+          volume_percentage: 50,
+          delay: null,
+        },
+        code: '1234',
+      };
+      
       res.json({ message: 'Gráfica cadastrada com sucesso!', Graficas: newGrafica });
       
   } catch (error) {
@@ -303,5 +391,98 @@ app.post("/login-graficas", async (req, res) => {
   }
 });
 
+const options = {
+  method: 'POST',
+  url: 'https://api.pagar.me/core/v5/recipients',
+  headers: {
+    accept: 'application/json',
+    'content-type': 'application/json',
+    'Authorization': 'Basic ' + Buffer.from(`${pagarmeKeyProd}:`).toString('base64')
+  },
+  body: {
+    register_information: {
+      main_address: {
+        street: 'Av. General Justo',
+        complementary: 'Bloco A',
+        street_number: '375',
+        neighborhood: 'Centro',
+        city: 'Rio de Janeiro',
+        state: 'RJ',
+        zip_code: '20021130',
+        reference_point: 'Ao lado da banca de jornal'
+      },
+      company_name: 'Recebedor pessoa juridica',
+      trading_name: 'Empresa LTDA',
+      email: 'empresax@avengers.com',
+      document: '77699131000133',
+      type: 'corporation',
+      site_url: 'http://www.site.com',
+      annual_revenue: 1000000,
+      corporation_type: 'LTDA',
+      founding_date: '2010-10-30',
+      phone_numbers: [{ddd: '21', number: '994647568', type: 'mobile'}],
+      managing_partners: [
+        {
+          name: 'Tony Stark',
+          email: 'tstark@avengers.com',
+          document: '26224451990',
+          type: 'individual',
+          mother_name: 'Nome da mae',
+          birthdate: '1995-10-12', // Formato yyyy-mm-dd
+          monthly_income: 120000,
+          professional_occupation: 'Vendedor',
+          self_declared_legal_representative: true,
+          address: {
+            street: 'Av. General Justo',
+            complementary: 'Bloco A',
+            street_number: '375',
+            neighborhood: 'Centro',
+            city: 'Rio de Janeiro',
+            state: 'RJ',
+            zip_code: '20021130',
+            reference_point: 'Ao lado da banca de jornal'
+          },
+          phone_numbers: [{ddd: '27', number: '999992628', type: 'mobile'}]
+        }
+      ]
+    },
+    default_bank_account: {
+      holder_name: 'Tony Stark',
+      holder_type: 'individual',
+      holder_document: '26224451990',
+      bank: '341',
+      branch_number: '1234',
+      branch_check_digit: '6',
+      account_number: '12345',
+      account_check_digit: '6',
+      type: 'checking'
+    },
+    transfer_settings: {
+      transfer_enabled: false, // Boolean
+      transfer_interval: 'Daily',
+      transfer_day: 0
+    },
+    automatic_anticipation_settings: {
+      enabled: true, // Boolean
+      type: 'full',
+      volume_percentage: 50, // Integer
+      delay: null // Null value
+    },
+    code: '1234'
+  },
+  json: true
+};
+
+request(options, function (error, response, body) {
+  if (error) throw new Error(error);
+
+  console.log('Status:', response && response.statusCode);
+  console.log('Headers:', JSON.stringify(response.headers));
+  console.log('Response:', body);
+
+  if (response.statusCode === 403) {
+    console.error('Erro 403: Verifique suas credenciais e permissões.');
+  }
+});
 
 module.exports = app;

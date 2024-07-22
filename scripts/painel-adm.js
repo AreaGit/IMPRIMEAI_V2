@@ -3,6 +3,8 @@ const listaProdutos = document.getElementById('lista-produtos');
 const listaGraficas = document.getElementById('lista-graficas');
 const listaPedidos = document.getElementById('pedidos-list');
 const saldo = document.getElementById('container-valor');
+const avisoSaque = document.getElementById('avisoSaque');
+const erroSaque = document.getElementById('avisoErroSaque')
 // Função para obter o valor de um cookie pelo nome
 function getCookie(name) {
     const value = `; ${document.cookie}`;
@@ -296,10 +298,15 @@ document.getElementById('btnSacar').addEventListener('click', async () => {
 
         const data = await response.json();
         console.log('Withdrawal successful:', data);
-        alert('Saque realizado com sucesso!');
-        window.location.reload();
+        avisoSaque.style.display = 'block';
+        window.setTimeout(() => {
+            window.location.reload();
+        }, 5000);
     } catch (error) {
         console.error('Erro ao fazer saque:', error);
-        alert('Erro ao fazer saque');
+        erroSaque.style.display = 'block';
+        window.setTimeout(() => {
+            window.location.reload();
+        }, 5000);
     }
 });
