@@ -167,6 +167,7 @@ divMinhaCarteira.addEventListener('click', () => {
 
 
 btnContPag.addEventListener('click', () => {
+    carregamento.style.display = 'block'
     const divs = [divPix, divBoleto, divCartaoCredito, divMinhaCarteira];
     let divAtiva = null;
     divs.forEach(div => {
@@ -208,6 +209,7 @@ async function criarPedido(metodoPag) {
           if (xhr.status === 200) {
             // A solicitação foi bem-sucedida, você pode processar a resposta aqui
             const response = JSON.parse(xhr.responseText);
+            carregamento.style.display = 'none'
             pedidoCriado.style.display = 'block';
             setTimeout(() => {
               pedidoCriado.style.display = 'none';

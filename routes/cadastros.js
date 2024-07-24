@@ -402,54 +402,66 @@ const options = {
   body: {
     register_information: {
       main_address: {
-        street: 'Av. General Justo',
-        complementary: 'Bloco A',
-        street_number: '375',
-        neighborhood: 'Centro',
-        city: 'Rio de Janeiro',
-        state: 'RJ',
-        zip_code: '20021130',
-        reference_point: 'Ao lado da banca de jornal'
+        street: 'Conselheiro Justino',
+        complementary: 'Apto 81',
+        street_number: '336',
+        neighborhood: 'Campestre',
+        city: 'Santo André',
+        state: 'SP',
+        zip_code: '09070-580',
+        reference_point: 'Ao lado da Academia'
       },
-      company_name: 'Recebedor pessoa juridica',
-      trading_name: 'Empresa LTDA',
-      email: 'empresax@avengers.com',
-      document: '77699131000133',
+      company_name: 'Gráfica Gabriel ADM',
+      trading_name: 'Gráfica Gabriel ADM LTDA',
+      email: 'gabrieldiastrin63@gmail.com',
+      document: '05226702000101',
       type: 'corporation',
-      site_url: 'http://www.site.com',
+      site_url: 'https://www.imprimeai.com.br',
       annual_revenue: 1000000,
       corporation_type: 'LTDA',
-      founding_date: '2010-10-30',
-      phone_numbers: [{ddd: '21', number: '994647568', type: 'mobile'}],
+      founding_date: '2008-06-26',
+      phone_numbers: [
+        {
+          ddd: '11',
+          number: '959099039',
+          type: 'mobile'
+        }
+      ],
       managing_partners: [
         {
-          name: 'Tony Stark',
-          email: 'tstark@avengers.com',
-          document: '26224451990',
-          type: 'individual',
-          mother_name: 'Nome da mae',
-          birthdate: '1995-10-12', // Formato yyyy-mm-dd
+          name: 'Gabriel',
+          email: 'gabrieldiastrin63@gmail.com',
+          document: '05.226.702/0001-01',
+          type: 'corporatiom',
           monthly_income: 120000,
+          mother_name: 'Nome da mae',
+          birthdate: '12/10/1995',
           professional_occupation: 'Vendedor',
           self_declared_legal_representative: true,
           address: {
-            street: 'Av. General Justo',
-            complementary: 'Bloco A',
-            street_number: '375',
-            neighborhood: 'Centro',
-            city: 'Rio de Janeiro',
-            state: 'RJ',
-            zip_code: '20021130',
-            reference_point: 'Ao lado da banca de jornal'
+            street: 'Conselheiro Justino',
+            complementary: 'Apto 81',
+            street_number: '336',
+            neighborhood: 'Campestre',
+            city: 'Santo André',
+            state: 'SP',
+            zip_code: '09070-580',
+            reference_point: 'Ao lado da Academia'
           },
-          phone_numbers: [{ddd: '27', number: '999992628', type: 'mobile'}]
+          phone_numbers: [
+            {
+              ddd: '11',
+              number: '959099039',
+              type: 'mobile'
+            }
+          ]
         }
       ]
     },
     default_bank_account: {
-      holder_name: 'Tony Stark',
-      holder_type: 'individual',
-      holder_document: '26224451990',
+      holder_name: 'Gabriel',
+      holder_type: 'company', // Change holder_type to "company"
+      holder_document: '05226702000101',
       bank: '341',
       branch_number: '1234',
       branch_check_digit: '6',
@@ -458,31 +470,24 @@ const options = {
       type: 'checking'
     },
     transfer_settings: {
-      transfer_enabled: false, // Boolean
+      transfer_enabled: false,
       transfer_interval: 'Daily',
       transfer_day: 0
     },
     automatic_anticipation_settings: {
-      enabled: true, // Boolean
+      enabled: true,
       type: 'full',
-      volume_percentage: 50, // Integer
-      delay: null // Null value
+      volume_percentage: 50,
+      delay: null
     },
-    code: '1234'
+    code: '3421'
   },
   json: true
 };
 
 request(options, function (error, response, body) {
   if (error) throw new Error(error);
-
-  console.log('Status:', response && response.statusCode);
-  console.log('Headers:', JSON.stringify(response.headers));
-  console.log('Response:', body);
-
-  if (response.statusCode === 403) {
-    console.error('Erro 403: Verifique suas credenciais e permissões.');
-  }
+  console.log(body);
 });
 
 module.exports = app;
