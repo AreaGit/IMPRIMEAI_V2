@@ -515,7 +515,7 @@ section#quantidades {
 .checkQuant {
   cursor: pointer;
   background-color: white;
-  width: 323px;
+  width: 17vw;
   height: 61px;
   padding: 18px;
   transition: 0.8s;

@@ -431,11 +431,11 @@ const options = {
         {
           name: 'Gabriel',
           email: 'gabrieldiastrin63@gmail.com',
-          document: '05.226.702/0001-01',
-          type: 'corporatiom',
+          document: '05226702000101',
+          type: 'corporation',
           monthly_income: 120000,
-          mother_name: 'Nome da mae',
-          birthdate: '12/10/1995',
+          mother_name: 'Nome da mãe',
+          birthdate: '1995-10-12',
           professional_occupation: 'Vendedor',
           self_declared_legal_representative: true,
           address: {
@@ -460,7 +460,7 @@ const options = {
     },
     default_bank_account: {
       holder_name: 'Gabriel',
-      holder_type: 'company', // Change holder_type to "company"
+      holder_type: 'company',
       holder_document: '05226702000101',
       bank: '341',
       branch_number: '1234',
