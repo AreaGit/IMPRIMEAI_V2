@@ -80,7 +80,7 @@ const Graficas = db.define('graficas', {
 
 
 // CRIAR A TABELA
-//Graficas.sync();
-Graficas.sync({ force: true })
+Graficas.sync();
+//Graficas.sync({ force: true })
 // Exportar o modelo Grafica para uso em outros lugares
 module.exports = Graficas;
