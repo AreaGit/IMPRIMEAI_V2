@@ -16,9 +16,17 @@ const Graficas = db.define('graficas', {
         type : Sequelize.STRING(255),
         allowNull: true,
     },
+    compCad: {
+        type : Sequelize.STRING(255),
+        allowNull: false,
+    },
     cepCad: {
         type : Sequelize.STRING(255),
         allowNull: true,
+    },
+    bairroCad: {
+        type: Sequelize.STRING(255),
+        allowNull: false,
     },
     cidadeCad: {
         type : Sequelize.STRING(255),
@@ -28,15 +36,15 @@ const Graficas = db.define('graficas', {
         type : Sequelize.STRING(255),
         allowNull: true,
     },
+    numCad: {
+        type : Sequelize.STRING(255),
+        allowNull: false,
+    },
     cnpjCad: {
         type : Sequelize.STRING(255),
         allowNull: true,
     },
     telefoneCad: {
-        type : Sequelize.STRING(255),
-        allowNull: true,
-    },
-    inscricaoEstadualCad: {
         type : Sequelize.STRING(255),
         allowNull: true,
     },
@@ -56,6 +64,10 @@ const Graficas = db.define('graficas', {
         type: Sequelize.JSON,
         allowNull: false, // Certifique-se de que não seja nulo
     },
+    recipientId: {
+        type : Sequelize.STRING(255),
+        allowNull: false,
+    },
     emailCad: {
         type: Sequelize.STRING(255),
         allowNull: true
@@ -68,7 +80,7 @@ const Graficas = db.define('graficas', {
 
 
 // CRIAR A TABELA
-Graficas.sync();
-//Graficas.sync({ force: true })
+//Graficas.sync();
+Graficas.sync({ force: true })
 // Exportar o modelo Grafica para uso em outros lugares
 module.exports = Graficas;

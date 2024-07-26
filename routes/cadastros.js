@@ -232,131 +232,174 @@ app.post('/cadastrar-produto', upload.fields([
 });
 
 app.post("/cadastro-graficas", async (req, res) => { 
- 
   try {
-      const { userCad, cnpjCad, endereçoCad, cepCad, cidadeCad, estadoCad, inscricaoEstadualCad, telefoneCad, bancoCad, agenciaCad, contaCorrenteCad,produtos, emailCad, passCad } = req.body;
-      const hashedPassword = await bcrypt.hash(passCad, 10);
+    const { userCad, cnpjCad, endereçoCad, cepCad, cidadeCad, estadoCad, bairroCad, compCad, numCad, telefoneCad, bancoCad, agenciaCad, contaCorrenteCad, produtos, emailCad, passCad } = req.body;
+    const hashedPassword = await bcrypt.hash(passCad, 10);
+    const cnpjFormatado = cnpjCad.replace(/[^\d]+/g, '');
 
-      const existingGrafica = await Graficas.findOne({
-        where: {
-          [Op.or]: [
-            { emailCad: emailCad },
-          ],
-        },
+    // Validação do CNPJ
+    if (cnpjFormatado.length !== 14) {
+      return res.status(400).json({
+        message: "CNPJ inválido. Deve conter 14 dígitos."
       });
-  
-      if (existingGrafica) {
-        return res.status(400).json({
-          message: "Já existe uma Gráfica com este e-mail cadastrado",
-        });
-      }
+    }
 
-      const newGrafica = await Graficas.create({
-          userCad: userCad,
-          cnpjCad: cnpjCad,
-          enderecoCad: endereçoCad,
-          cepCad: cepCad,
-          cidadeCad: cidadeCad,
-          estadoCad: estadoCad,
-          inscricaoEstadualCad: inscricaoEstadualCad,
-          telefoneCad: telefoneCad,
-          bancoCad: bancoCad,
-          agenciaCad: agenciaCad,
-          contaCorrenteCad: contaCorrenteCad,
-          produtos: produtos,
-          emailCad: emailCad,
-          passCad: hashedPassword
+    const existingGrafica = await Graficas.findOne({
+      where: {
+        [Op.or]: [
+          { emailCad: emailCad },
+        ],
+      },
+    });
+
+    if (existingGrafica) {
+      return res.status(400).json({
+        message: "Já existe uma Gráfica com este e-mail cadastrado",
       });
+    }
 
-      console.log(newGrafica)
-      // Criar recebedor no Pagar.me
-      const body =  {
+    const today = new Date().toISOString().split('T')[0];
+
+    const generateRandomCode = () => {
+      return Math.floor(1000 + Math.random() * 9000).toString();
+    };
+
+    // Extração correta do DDD e número de telefone
+    const telefoneMatch = telefoneCad.match(/\((\d{2})\)\s*(\d{4,5}-\d{4})/);
+    if (!telefoneMatch) {
+      return res.status(400).json({
+        message: "Número de telefone inválido. O formato deve ser (DD) NNNNN-NNNN"
+      });
+    }
+    const ddd = telefoneMatch[1];
+    const telefone = telefoneMatch[2].replace('-', '');
+
+    const options = {
+      method: 'POST',
+      url: 'https://api.pagar.me/core/v5/recipients',
+      headers: {
+        accept: 'application/json',
+        'content-type': 'application/json',
+        'Authorization': 'Basic ' + Buffer.from(`${pagarmeKeyTest}:`).toString('base64')
+      },
+      body: {
         register_information: {
           main_address: {
-            street: endereçoCad,
-            complementary: 'Nenhum',
-            street_number: 'Nenhum',
-            neighborhood: 'Nenhum',
+            street: endereçoCad.split(',')[0],
+            complementary: compCad,
+            street_number: numCad,
+            neighborhood: bairroCad,
             city: cidadeCad,
             state: estadoCad,
             zip_code: cepCad,
-            reference_point: 'Gráfica',
+            reference_point: 'Nenhum'
           },
           company_name: userCad,
           trading_name: userCad,
           email: emailCad,
-          document: cnpjCad,
+          document: cnpjFormatado,
           type: 'corporation',
-          site_url: 'https://www.imprimeai.com.br',
-          annual_revenue: 0,
+          site_url: 'https://imprimeai.com.br',
+          annual_revenue: 1000000,
           corporation_type: 'LTDA',
-          founding_date: "Nenhum",
+          founding_date: today,
           phone_numbers: [
             {
-              ddd: '21',
-              number: '994647568',
-              type: 'mobile',
-            },
+              ddd: ddd,
+              number: telefone,
+              type: 'mobile'
+            }
           ],
           managing_partners: [
             {
               name: userCad,
               email: emailCad,
-              document: cnpjCad,
-              type: 'individual',
+              document: cnpjFormatado,
+              type: 'corporation',
               monthly_income: 120000,
-              professional_occupation: 'Vendedor',
+              mother_name: 'Nulo',
+              birthdate: today,
+              professional_occupation: 'Gráfica',
               self_declared_legal_representative: true,
               address: {
-                street: endereçoCad,
-                complementary: 'Nenhum',
-                street_number: 'Nenhum',
-                neighborhood: 'Nenhum',
+                street: endereçoCad.split(',')[0],
+                complementary: compCad,
+                street_number: numCad,
+                neighborhood: bairroCad,
                 city: cidadeCad,
                 state: estadoCad,
                 zip_code: cepCad,
-                reference_point: 'Gráfica',
+                reference_point: 'Nenhum'
               },
               phone_numbers: [
                 {
-                  ddd: '27',
-                  number: '999992628',
-                  type: 'mobile',
-                },
-              ],
-            },
-          ],
+                  ddd: ddd,
+                  number: telefone,
+                  type: 'mobile'
+                }
+              ]
+            }
+          ]
         },
         default_bank_account: {
-          holder_name: 'Tony Stark',
-          holder_type: 'individual',
-          holder_document: '26224451990',
+          holder_name: userCad,
+          holder_document: cnpjFormatado,
+          holder_type: 'company',
           bank: '341',
           branch_number: '1234',
           branch_check_digit: '6',
           account_number: '12345',
           account_check_digit: '6',
-          type: 'checking',
+          type: 'checking'
         },
         transfer_settings: {
           transfer_enabled: false,
           transfer_interval: 'Daily',
-          transfer_day: 0,
+          transfer_day: 0
         },
         automatic_anticipation_settings: {
           enabled: true,
           type: 'full',
           volume_percentage: 50,
-          delay: null,
+          delay: null
         },
-        code: '1234',
-      };
-      
-      res.json({ message: 'Gráfica cadastrada com sucesso!', Graficas: newGrafica });
-      
+        code: generateRandomCode()
+      },
+      json: true
+    };
+
+    try {
+      const pagarmeResponse = await request(options);
+      console.log(pagarmeResponse);
+      const newGrafica = await Graficas.create({
+        userCad,
+        cnpjCad,
+        enderecoCad: endereçoCad,
+        cepCad,
+        cidadeCad,
+        estadoCad,
+        bairroCad,
+        compCad,
+        numCad,
+        telefoneCad,
+        bancoCad,
+        agenciaCad,
+        contaCorrenteCad,
+        produtos,
+        recipientId: pagarmeResponse.id,
+        emailCad,
+        passCad: hashedPassword
+      });
+
+      console.log(newGrafica);
+      res.json({ message: 'Gráfica cadastrada com sucesso!', Graficas: newGrafica, PagarMe: pagarmeResponse });
+    } catch (pagarmeError) {
+      console.error('Erro ao criar recebedor no Pagar.me:', pagarmeError);
+      res.status(500).json({ message: 'Erro ao criar recebedor no Pagar.me', error: pagarmeError });
+    }
   } catch (error) {
-      console.error('Erro ao cadastrar grafica:', error);
-      res.status(500).json({ message: 'Erro ao cadastrar grafica' });
+    console.error('Erro ao cadastrar gráfica:', error);
+    res.status(500).json({ message: 'Erro ao cadastrar gráfica' });
   }
 });
 
@@ -389,105 +432,6 @@ app.post("/login-graficas", async (req, res) => {
     console.error("Erro ao fazer login:", error);
     res.status(500).json({ message: "Erro ao Fazer o Login <br> Preencha os Campos Corretamente" });
   }
-});
-
-const options = {
-  method: 'POST',
-  url: 'https://api.pagar.me/core/v5/recipients',
-  headers: {
-    accept: 'application/json',
-    'content-type': 'application/json',
-    'Authorization': 'Basic ' + Buffer.from(`${pagarmeKeyProd}:`).toString('base64')
-  },
-  body: {
-    register_information: {
-      main_address: {
-        street: 'Conselheiro Justino',
-        complementary: 'Apto 81',
-        street_number: '336',
-        neighborhood: 'Campestre',
-        city: 'Santo André',
-        state: 'SP',
-        zip_code: '09070-580',
-        reference_point: 'Ao lado da Academia'
-      },
-      company_name: 'Gráfica Gabriel ADM',
-      trading_name: 'Gráfica Gabriel ADM LTDA',
-      email: 'gabrieldiastrin63@gmail.com',
-      document: '05226702000101',
-      type: 'corporation',
-      site_url: 'https://www.imprimeai.com.br',
-      annual_revenue: 1000000,
-      corporation_type: 'LTDA',
-      founding_date: '2008-06-26',
-      phone_numbers: [
-        {
-          ddd: '11',
-          number: '959099039',
-          type: 'mobile'
-        }
-      ],
-      managing_partners: [
-        {
-          name: 'Gabriel',
-          email: 'gabrieldiastrin63@gmail.com',
-          document: '05226702000101',
-          type: 'corporation',
-          monthly_income: 120000,
-          mother_name: 'Nome da mãe',
-          birthdate: '1995-10-12',
-          professional_occupation: 'Vendedor',
-          self_declared_legal_representative: true,
-          address: {
-            street: 'Conselheiro Justino',
-            complementary: 'Apto 81',
-            street_number: '336',
-            neighborhood: 'Campestre',
-            city: 'Santo André',
-            state: 'SP',
-            zip_code: '09070-580',
-            reference_point: 'Ao lado da Academia'
-          },
-          phone_numbers: [
-            {
-              ddd: '11',
-              number: '959099039',
-              type: 'mobile'
-            }
-          ]
-        }
-      ]
-    },
-    default_bank_account: {
-      holder_name: 'Gabriel',
-      holder_type: 'company',
-      holder_document: '05226702000101',
-      bank: '341',
-      branch_number: '1234',
-      branch_check_digit: '6',
-      account_number: '12345',
-      account_check_digit: '6',
-      type: 'checking'
-    },
-    transfer_settings: {
-      transfer_enabled: false,
-      transfer_interval: 'Daily',
-      transfer_day: 0
-    },
-    automatic_anticipation_settings: {
-      enabled: true,
-      type: 'full',
-      volume_percentage: 50,
-      delay: null
-    },
-    code: '3421'
-  },
-  json: true
-};
-
-request(options, function (error, response, body) {
-  if (error) throw new Error(error);
-  console.log(body);
 });
 
 module.exports = app;
