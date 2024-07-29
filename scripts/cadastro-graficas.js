@@ -58,6 +58,8 @@ const avisoGeral = document.getElementById('avisoGeral');
 const avisoConta = document.getElementById('avisoConta');
 const avisoBanco = document.getElementById('avisoBanco');
 const avisoAgencia = document.getElementById('avisoAgencia');
+let digitoConta
+let codBanco
 //Formatando campos
 nomeUser.addEventListener('keyup', () => {
     if(nomeUser.value.length <= 4) {
@@ -115,25 +117,56 @@ cepUser.addEventListener('input', () => {
         validCepUser = false
     }
 });
-bancoUser.addEventListener('input', () => {
-    if(bancoUser.value.length <= 3) {
-        bancoUser.style.color = 'red';
-        bancoUser.style.borderColor = 'red';
-        validBancoUser = false;
-    } else {
-        bancoUser.style.color = 'black';
-        bancoUser.style.borderColor = 'green';
-        validBancoUser = true;
-    }
-});
+        // Função para normalizar o texto, removendo acentos e convertendo para minúsculas
+        // Função para normalizar o texto, removendo acentos e convertendo para minúsculas
+        function normalize(text) {
+            return text ? text.normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase() : '';
+        }
+
+        bancoUser.addEventListener('input', () => {
+            let bancoNome = normalize(bancoUser.value);
+
+            if (bancoNome.length >= 3) {
+                fetch('https://brasilapi.com.br/api/banks/v1')
+                    .then(response => response.json())
+                    .then(data => {
+                        const banco = data.find(b => b.name && normalize(b.name).includes(bancoNome));
+                        if (banco) {
+                            bancoUser.classList.remove('invalid');
+                            bancoUser.classList.add('valid');
+                            validBancoUser = true;
+                            codBanco = banco.code
+                        } else {
+                            bancoUser.classList.remove('valid');
+                            bancoUser.classList.add('invalid');
+                            validBancoUser = false;
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Erro ao buscar dados dos bancos:', error);
+                        bancoUser.classList.remove('valid');
+                        bancoUser.classList.add('invalid');
+                        validBancoUser = false;
+                    });
+            } else {
+                bancoUser.classList.remove('valid');
+                bancoUser.classList.add('invalid');
+                validBancoUser = false;
+            }
+        });
 
 contaUser.addEventListener('input', () => {
-    let contaValue = contaUser.value.replace(/\D/g, ''); // Remove todos os caracteres não numéricos
-    if (contaValue.length > 8) {
-        contaValue = contaValue.slice(0, 8); // Limite o comprimento a 8 caracteres
+    let contaValue = contaUser.value.replace(/[^a-zA-Z0-9]/g, ''); // Remove todos os caracteres não alfanuméricos
+
+    // Se a conta estiver sendo apagada, não formatar com hífen
+    if (contaValue.length === 0) {
+        contaUser.style.color = '';
+        contaUser.style.borderColor = '';
+        validContaUser = false;
+        return;
     }
 
-    if(contaUser.value.length <= 7) {
+    if (contaValue.length <= 5) {
         contaUser.style.color = 'red';
         contaUser.style.borderColor = 'red';
         validContaUser = false;
@@ -143,10 +176,13 @@ contaUser.addEventListener('input', () => {
         validContaUser = true;
     }
 
+    // Separa a parte numérica e o dígito verificador
+    let contaNumerica = contaValue.slice(0, -1);
+    let digitoVerificador = contaValue.slice(-1);
+    digitoConta = digitoVerificador
     // Formata a conta corrente com traço
-    contaValue = contaValue.replace(/^(\d{7})(\d{1})$/, '$1-$2');
-
-    contaUser.value = contaValue; // Define o valor formatado de volta no campo
+    let contaFormatada = `${contaNumerica}-${digitoVerificador}`;
+    contaUser.value = contaFormatada; // Define o valor formatado de volta no campo
 });
 
 agenciaUser.addEventListener('input', () => {
@@ -336,6 +372,8 @@ btnCad.addEventListener('click', async() => {
             agenciaCad: agenciaUser,
             bancoCad: bancoUser,
             contaCorrenteCad: contaUser,
+            digitoConta: digitoConta,
+            codBanco: codBanco,
             telefoneCad : telefoneUser,
             emailCad : emailUser,
             passCad : senhaUser,

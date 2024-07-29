@@ -233,10 +233,32 @@ app.post('/cadastrar-produto', upload.fields([
 
 app.post("/cadastro-graficas", async (req, res) => { 
   try {
-    const { userCad, cnpjCad, endereçoCad, cepCad, cidadeCad, estadoCad, bairroCad, compCad, numCad, telefoneCad, bancoCad, agenciaCad, contaCorrenteCad, produtos, emailCad, passCad } = req.body;
+    const { userCad, cnpjCad, endereçoCad, cepCad, cidadeCad, estadoCad, bairroCad, compCad, numCad, telefoneCad, bancoCad, agenciaCad, contaCorrenteCad, codBanco, digitoConta, produtos, emailCad, passCad } = req.body;
     const hashedPassword = await bcrypt.hash(passCad, 10);
     const cnpjFormatado = cnpjCad.replace(/[^\d]+/g, '');
+    const contaCorrenteSemHifen = contaCorrenteCad.replace(/-/g, '');
+    const digitoVerificador = calcularDigitoAgencia(agenciaCad);
 
+    function calcularDigitoAgencia(agencia) {
+      const pesos = [5, 4, 3, 2];  // Pesos fixos para cada dígito
+      let soma = 0;
+  
+      // Calcula a soma dos dígitos da agência multiplicados pelos seus pesos
+      for (let i = 0; i < agencia.length; i++) {
+          soma += parseInt(agencia[i]) * pesos[i];
+      }
+  
+      // Calcula o módulo da soma
+      const mod11 = soma % 11;
+  
+      // Define o dígito verificador
+      let digito = 11 - mod11;
+      if (digito === 10 || digito === 11) {
+          digito = 0;  // Se o resultado for 10 ou 11, o dígito é 0
+      }
+  
+      return digito.toString();
+  }
     // Validação do CNPJ
     if (cnpjFormatado.length !== 14) {
       return res.status(400).json({
@@ -280,7 +302,7 @@ app.post("/cadastro-graficas", async (req, res) => {
       headers: {
         accept: 'application/json',
         'content-type': 'application/json',
-        'Authorization': 'Basic ' + Buffer.from(`${pagarmeKeyTest}:`).toString('base64')
+        'Authorization': 'Basic ' + Buffer.from(`${pagarmeKeyProd}:`).toString('base64')
       },
       body: {
         register_information: {
@@ -345,11 +367,11 @@ app.post("/cadastro-graficas", async (req, res) => {
           holder_name: userCad,
           holder_document: cnpjFormatado,
           holder_type: 'company',
-          bank: '341',
-          branch_number: '1234',
-          branch_check_digit: '6',
-          account_number: '12345',
-          account_check_digit: '6',
+          bank: codBanco,
+          branch_number: agenciaCad,
+          branch_check_digit: digitoVerificador,
+          account_number: contaCorrenteSemHifen,
+          account_check_digit: digitoConta,
           type: 'checking'
         },
         transfer_settings: {
