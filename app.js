@@ -21,6 +21,8 @@ const { _ } = require('pagarme');
 const multer = require('multer');
 const axios = require('axios');
 const apiKey = 'sk_e74e3fe1ccbe4ae080f70d85d94e2c68'; // sua chave de API
+const pagarmeKeyTest = "sk_test_05ddc95c6ce442a796c7ebbe2376185d";
+const pagarmeKeyProd = "sk_e74e3fe1ccbe4ae080f70d85d94e2c68";
 const storage = multer.memoryStorage();
 const upload = multer({ storage: storage });
 const NodeCache = require('node-cache');
@@ -1080,7 +1082,7 @@ app.get('/api/graficas/:id', async (req, res) => {
   try {
     // Encontra a gráfica pelo ID
     const graficas = await Graficas.findByPk(graficaId, {
-      attributes: ['id', 'userCad', 'emailCad', 'estadoCad', 'cidadeCad', 'produtos', 'enderecoCad', 'cepCad', 'cnpjCad', 'telefoneCad', 'bancoCad', 'agenciaCad', 'contaCorrenteCad']
+      attributes: ['id', 'userCad', 'emailCad', 'estadoCad', 'cidadeCad', 'produtos', 'enderecoCad', 'cepCad', 'cnpjCad', 'telefoneCad', 'bancoCad', 'agenciaCad', 'contaCorrenteCad', 'recipientId']
     });
 
     if (!graficas) {
@@ -1101,7 +1103,8 @@ app.get('/api/graficas/:id', async (req, res) => {
       produtos: graficas.produtos,
       bancoCad: graficas.bancoCad,
       agenciaCad: graficas.agenciaCad,
-      contaCorrente: graficas.contaCorrenteCad
+      contaCorrente: graficas.contaCorrenteCad,
+      recipientId: graficas.recipientId
     };
 
     res.json(graficaFormatada);
@@ -1268,9 +1271,9 @@ app.get('/api/saldo-grafica', async (req, res) => {
 });
 // Rota para fazer o saque do valor disponível do Pagar.me
 app.post('/api/withdraw-grafica', async (req, res) => {
-  const { amount } = req.body; // valor a ser sacado
-  console.log(amount);
-  
+  const { amount, recipient_id } = req.body; // valor a ser sacado
+  amount = Math.round(amount * 100)
+  //const recipientTest = 're_clvchabno0fqc019tlus65sde' 
   try {
     // Data de uma semana atrás
     const oneWeekAgo = new Date();
@@ -1279,7 +1282,7 @@ app.post('/api/withdraw-grafica', async (req, res) => {
     // Buscar os pedidos elegíveis para saque
     const pedidosParaSaque = await Saques.findAll({
       where: {
-        admSacou: false,
+        graficaSacou: false,
         createdAt: {
           [Op.lte]: oneWeekAgo
         }
@@ -1294,36 +1297,42 @@ app.post('/api/withdraw-grafica', async (req, res) => {
 
     // Verificar se o valor solicitado está disponível
     if (amount > totalDisponivel) {
+      console.log("Valor solicitado execedo o saldo disponível")
       return res.status(400).json({ error: 'Valor solicitado excede o saldo disponível' });
     }
 
     // Realizar o saque usando a API do Pagar.me
-    const response = await axios.post('https://api.pagar.me/1/transfers', {
-      api_key: apiKey,
-      amount: amount * 100, // convertendo para centavos
-      recipient_id: 're_clvchabno0fqc019tlus65sde' // Substitua com o ID do recebedor
-    });
+    const response = await axios.post(
+      `https://api.pagar.me/core/v5/recipients/${recipient_id}/withdrawals`,
+      {
+        amount: amount
+      },
+      {
+        headers: {
+          'Authorization': `Basic ${Buffer.from(pagarmeKeyProd + ':').toString('base64')}`
+        }
+      }
+    );
 
     // Marcar os pedidos como sacados até que o valor total sacado seja coberto
     let totalSaque = 0;
     for (const pedido of pedidosParaSaque) {
       if (totalSaque + pedido.valorGrafica <= amount) {
         totalSaque += pedido.valorGrafica;
-        pedido.admSacou = true;
+        pedido.graficaSacou = true;
         await pedido.save();
       } else {
         break;
       }
     }
 
-    console.log(response);
     res.json({
       message: 'Saque realizado com sucesso',
-      totalSaque: totalSaque.toFixed(2),
+      totalSaque: totalSaque,
       response: response.data
     });
   } catch (error) {
-    console.error('Erro ao fazer saque:', error.response ? error.response.data : error.message);
+    console.error('Erro ao fazer saque:', error);
     res.status(500).json({ error: 'Erro ao fazer saque' });
   }
 });

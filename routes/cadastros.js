@@ -456,4 +456,22 @@ app.post("/login-graficas", async (req, res) => {
   }
 });
 
+const options = {
+  method: 'GET',
+  url: 'https://api.pagar.me/core/v5/recipients?page=1&size=10',
+  headers: {
+    'accept': 'application/json',
+    'Authorization': `Basic ${Buffer.from(pagarmeKeyProd + ':').toString('base64')}`
+  }
+};
+
+request(options, function (error, response, body) {
+  if (error) {
+    console.error('Erro ao listar recebedores:', error);
+    return;
+  }
+
+  console.log('Recebedores:', body);
+});
+
 module.exports = app;
