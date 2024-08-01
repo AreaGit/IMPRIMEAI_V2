@@ -456,7 +456,7 @@ app.post("/login-graficas", async (req, res) => {
   }
 });
 
-const options = {
+/*const options = {
   method: 'GET',
   url: 'https://api.pagar.me/core/v5/recipients?page=1&size=10',
   headers: {
@@ -472,6 +472,6 @@ request(options, function (error, response, body) {
   }
 
   console.log('Recebedores:', body);
-});
+});*/
 
 module.exports = app;
