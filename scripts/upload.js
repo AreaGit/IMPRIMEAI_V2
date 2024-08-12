@@ -136,15 +136,15 @@ document.addEventListener('DOMContentLoaded', function() {
                 const formData = new FormData();
             
                 files.forEach(fileInput => {
+                   const produtoId = 15456;
                   if (fileInput.files.length > 0) {
                     const produtoId = fileInput.dataset.produtoId;
                     formData.append('files', fileInput.files[0], produtoId);
                   }else {
                     // Criar um arquivo com nome "Enviar Arte Depois" para produtos sem arte
-                    const produtoId = fileInput.dataset.produtoId;
                     const blob = new Blob(['Enviar Arte Depois'], { type: 'text/plain' });
-                    const file = new File([blob], 'Enviar Arte Depois.txt');
-                    formData.append('files', file, "Enviar Arte Depois");
+                    const file = new File([blob], 'Enviar Arte Depois');
+                    formData.append('files', file, produtoId);
                   }
                 });
             
@@ -163,7 +163,7 @@ document.addEventListener('DOMContentLoaded', function() {
                     const responseBody = await response.text();
                     console.log(`Arquivos enviados com sucesso.`);
                     
-                    if (responseBody === 'Upload para o Google Drive concluído com sucesso') {
+                    if (responseBody === 'Upload concluído com sucesso') {
                       carregamento.style.display = 'none';
                       window.location.href = '/pagamento';
                     }

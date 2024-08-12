@@ -26,6 +26,7 @@ header {
     background-color: transparent;
     transition: 2s;
     width: 100%;
+    z-index: 1;
 }
 header.scrolled {
     position: fixed;
@@ -329,4 +330,63 @@ span#valorDisp {
     left: 50%;
     transform: translate(-50%);
     color: #F37160;
+}
+#liberarSaldo {
+    display: none;
+    position: absolute;
+    left: 50%;
+    transform: translate(-50%);
+    background-color: white;
+    width: 50%;
+    height: 490px;
+    box-shadow: -1px -1px 3px black;
+    border-radius: 5px;
+    top: 25%;
+    padding: 15px;
+}
+#liberarSaldo > h2 {
+    text-align: center;
+    position: relative;
+    top: 10px;
+    font-size: 28px;
+    font-weight: 500;
+}
+#left {
+    position: absolute;
+    left: 10%;
+    top: 20%;
+}
+#left > p {
+    font-size: 18px;
+    margin: 20px;
+}
+#rigth {
+    position: absolute;
+    left: 80%;
+    top: 20%;
+}
+#rigth > p {
+    font-size: 18px;
+    margin: 20px;
+    width: 70px;
+}
+#linhaHr2 {
+    border: 1px solid black;
+    width: 40vw;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%);
+}
+#btnSacarAnt {
+    position: absolute;
+    top: 55%;
+}
+#fechar-valores {
+    cursor: pointer;
+    position: absolute;
+    left: 90%;
+    width: 27px;
+    /* height: 63px; */
+    height: 48px;
 }

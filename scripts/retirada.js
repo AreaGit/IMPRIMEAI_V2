@@ -1,58 +1,65 @@
-// Função para carregar e exibir as gráficas na página
+let map;
+
+// Function to initialize the map
+function initMap() {
+    map = new Microsoft.Maps.Map('#map', {
+        center: new Microsoft.Maps.Location(-23.55052, -46.633308), // São Paulo, BR
+        zoom: 12
+    });
+}
+
+// Function to add a marker to the map
+function addMarker(location, title) {
+    const marker = new Microsoft.Maps.Pushpin(location, { title: title });
+    map.entities.push(marker);
+}
+
+// Function to load and display the printing shops on the page and map
 async function carregarGraficas() {
     try {
-        // Obtém os dados do usuário
+        // Fetch user data
         const responseUsuario = await fetch('/perfil/dados');
         if (!responseUsuario.ok) {
-            throw new Error('Erro ao buscar os dados do usuário');
+            throw new Error('Error fetching user data');
         }
 
         const data = await responseUsuario.json();
 
-        const nomeCliente = data.userCad;
-        const enderecoCad = data.endereçoCad;
-        const numCad = data.numCad;
-        const compCad = data.compCad;
-        const bairroCad = data.bairroCad;
-        const cepCad = data.cepCad;
-        const cidadeCad = data.cidadeCad;
-        const telefoneCad = data.telefoneCad;
-        const estadoCad = data.estadoCad;
-        const email = data.emailCad;
         const usuario = {
-            nomeCliente : nomeCliente,
-            rua : enderecoCad,
-            numeroRua : numCad,
-            complemento : compCad,
-            cep : cepCad,
-            estado : estadoCad,
-            cidade : cidadeCad,
-            bairro : bairroCad,
-            email : email,
-            telefone : telefoneCad
+            nomeCliente: data.userCad,
+            rua: data.endereçoCad,
+            numeroRua: data.numCad,
+            complemento: data.compCad,
+            cep: data.cepCad,
+            estado: data.estadoCad,
+            cidade: data.cidadeCad,
+            bairro: data.bairroCad,
+            email: data.emailCad,
+            telefone: data.telefoneCad
         };
 
-        // Converte os dados do usuário em uma string de consulta
+        // Convert user data to query string parameters
         const queryParams = new URLSearchParams(usuario).toString();
 
-        // Constrói a URL da rota /graficas com os dados do usuário como parâmetros de consulta
+        // Construct the URL for the /graficas route with user data as query parameters
         const urlGraficas = `/graficas?${queryParams}`;
 
-        // Faz uma solicitação GET para a rota /graficas
+        // Make a GET request to the /graficas route
         const responseGraficas = await fetch(urlGraficas);
         if (!responseGraficas.ok) {
-            throw new Error('Erro ao buscar as gráficas');
+            throw new Error('Error fetching printing shops');
         }
 
-        // Extrai os dados JSON da resposta
+        // Extract JSON data from the response
         const graficas = await responseGraficas.json();
+        console.log(graficas);
 
-        // Limpa o conteúdo atual da lista de gráficas
+        // Clear current content of the printing shops list
         const listaGraficas = document.getElementById('lista-graficas');
         listaGraficas.innerHTML = '';
 
-        // Itera sobre os dados das gráficas e cria elementos para exibição na página
-        graficas.forEach(grafica => {
+        // Iterate over the printing shops data and create elements to display on the page and add markers to the map
+        graficas.forEach(async (grafica) => {
             const nome = document.createElement('p');
             nome.textContent = grafica.userCad;
 
@@ -61,15 +68,48 @@ async function carregarGraficas() {
 
             const graficaDiv = document.createElement('div');
             graficaDiv.className = "caixa";
-            graficaDiv.appendChild(nome); 
-            graficaDiv.appendChild(endereco); 
+            graficaDiv.appendChild(nome);
+            graficaDiv.appendChild(endereco);
 
-            listaGraficas.appendChild(graficaDiv); 
+            listaGraficas.appendChild(graficaDiv);
+
+            // Get coordinates for the current printing shop
+            const graficaCoordinates = await getCoordinatesFromAddress({
+                endereco: grafica.enderecoCad,
+                cep: grafica.cepCad,
+                cidade: grafica.cidadeCad,
+                estado: grafica.estadoCad,
+            });
+
+            if (graficaCoordinates.latitude && graficaCoordinates.longitude) {
+                const location = new Microsoft.Maps.Location(graficaCoordinates.latitude, graficaCoordinates.longitude);
+                // Add a marker for each printing shop
+                addMarker(location, grafica.userCad);
+            }
+
+            graficaDiv.addEventListener('click', () => {
+                alert("Clicked");
+            });
         });
     } catch (error) {
-        console.error('Erro ao carregar as gráficas:', error);
+        console.error('Error loading printing shops:', error);
     }
 }
 
-// Chama a função para carregar as gráficas quando a página carrega
-document.addEventListener('DOMContentLoaded', carregarGraficas);
+// Function to get coordinates from address using Bing Maps API
+async function getCoordinatesFromAddress(address) {
+    const response = await fetch(`http://dev.virtualearth.net/REST/v1/Locations?locality=${address.cidade}&adminDistrict=${address.estado}&postalCode=${address.cep}&addressLine=${address.rua}&key=YOUR_BING_MAPS_API_KEY`);
+    const data = await response.json();
+    if (data.resourceSets.length > 0 && data.resourceSets[0].resources.length > 0) {
+        const location = data.resourceSets[0].resources[0].point.coordinates;
+        return { latitude: location[0], longitude: location[1] };
+    } else {
+        return { latitude: null, longitude: null };
+    }
+}
+
+// Call the function to load the printing shops when the page loads
+document.addEventListener('DOMContentLoaded', () => {
+    initMap();
+    carregarGraficas();
+});

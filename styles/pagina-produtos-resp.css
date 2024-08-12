@@ -316,7 +316,7 @@
 }
 @media screen and (min-width:2560px) {
     .cxProd {
-        margin: 30px;
+        margin: 84px;
         width: 19vw;
     }
     header {
@@ -334,7 +334,7 @@
         top: 0%;
         transition: 2s;
         color: white;
-        width: 714px;
+        width: 100%;
         z-index: 1000;
     }
     header.scrolled > #nav-bar > li > a {
@@ -376,7 +376,7 @@
         position: relative;
         left: 50%;
         top: 8px;
-        width: 568px;
+        width: 1050px;
         transform: translate(-50%);
     }
     #logo {

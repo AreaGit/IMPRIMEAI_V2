@@ -69,7 +69,7 @@ fetch(`/detalhes-pedidoUser/${idPedido}`)
             <p><strong>Enobrecimento:</strong> ${item.enobrecimento}</p>
             <p><strong>Formato:</strong> ${item.formato}</p>
             <p><strong>Material:</strong> ${item.material}</p>
-            <p><strong>Arte do Produto:</strong> ${item.nomeArquivo}</p>
+            <a href="${item.linkDownload}" download"arte"><strong>Arte do Produto:</strong> ${item.nomeArquivo}</a>
         `;
 
         if (item.linkDownload === 'Enviar Arte Depois') {

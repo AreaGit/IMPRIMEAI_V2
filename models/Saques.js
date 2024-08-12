@@ -27,6 +27,10 @@ const Saques = db.define('saques', {
         type: Sequelize.BOOLEAN,
         defaultValue: false
     },
+    dataElegibilidade: {
+        type: Sequelize.DATE,
+        allowNull: false
+    }
   }, {
     indexes: [
       {
@@ -34,11 +38,14 @@ const Saques = db.define('saques', {
       },
       {
         fields: ['idGrafica']
+      },
+      {
+        fields: ['dataElegibilidade']
       }
     ]
 });
 
-//Saques.sync({force: true});
+// Saques.sync({force: true});
 Saques.sync();
 
 module.exports = Saques;

@@ -469,18 +469,40 @@ async function getCoordinatesFromAddressEnd(enderecoEntregaInfo, apiKey) {
         const valorTotalPedido = tablePedidos.valorPed;
         const valorAdm = valorTotalPedido * 0.20;
         const valorGrafica = valorTotalPedido * 0.80;
-  
+      
+        const createdAt = new Date();
+        const calcularDataElegibilidade = (createdAt) => {
+          const date = new Date(createdAt);
+          const day = date.getDate();
+          const month = date.getMonth();
+          const year = date.getFullYear();
+          
+          let elegibilityDate;
+      
+          if (day <= 15) {
+            elegibilityDate = new Date(year, month + 1, 1);
+          } else {
+            elegibilityDate = new Date(year, month + 1, 15);
+          }
+      
+          return elegibilityDate;
+        };
+      
+        const dataElegibilidade = calcularDataElegibilidade(createdAt);
+      
         // Criar registro na tabela de saques
         await Saques.create({
           idPed: pedidoId,
           idGrafica: graficaId,
           valorGrafica: valorGrafica.toFixed(2), // Convertendo para formato monetário
-          valorAdm: valorAdm.toFixed(2) // Convertendo para formato monetário
+          valorAdm: valorAdm.toFixed(2), // Convertendo para formato monetário
+          dataElegibilidade: dataElegibilidade, // Adicionando a data de elegibilidade
+          createdAt: createdAt
         });
-  
+      
         pedido.graficaFin = graficaId;
         await pedido.save();
-      }
+      }      
 
       return res.json({ success: true, graficaAtend: graficaId, /*itensPedidos*/ });
     } catch (error) {

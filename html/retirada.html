@@ -17,11 +17,11 @@
 </head>
 <body>
     <header id="header">
-        <a href="/"><img src="../images/favicon-32x32.png" alt="..." id="logo"></a>      
+        <a href="/"><img src="images/logo-imprimeai.png" alt="..." id="logo2"></a>      
         <a href="#" id="menu-icon"><svg width="35" height="50" viewBox="0 0 18 18"><polyline id="globalnav-menutrigger-bread-bottom" class="globalnav-menutrigger-bread globalnav-menutrigger-bread-bottom" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round" points="2 12, 16 12"><animate id="globalnav-anim-menutrigger-bread-bottom-open" attributeName="points" keyTimes="0;0.5;1" dur="0.24s" begin="indefinite" fill="freeze" calcMode="spline" keySplines="0.42, 0, 1, 1;0, 0, 0.58, 1" values=" 2 12, 16 12; 2 9, 16 9; 3.5 15, 15 3.5"></animate><animate id="globalnav-anim-menutrigger-bread-bottom-close" attributeName="points" keyTimes="0;0.5;1" dur="0.24s" begin="indefinite" fill="freeze" calcMode="spline" keySplines="0.42, 0, 1, 1;0, 0, 0.58, 1" values=" 3.5 15, 15 3.5; 2 9, 16 9; 2 12, 16 12"></animate></polyline><polyline id="globalnav-menutrigger-bread-top" class="globalnav-menutrigger-bread globalnav-menutrigger-bread-top" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round" points="2 5, 16 5"><animate id="globalnav-anim-menutrigger-bread-top-open" attributeName="points" keyTimes="0;0.5;1" dur="0.24s" begin="indefinite" fill="freeze" calcMode="spline" keySplines="0.42, 0, 1, 1;0, 0, 0.58, 1" values=" 2 5, 16 5; 2 9, 16 9; 3.5 3.5, 15 15"></animate><animate id="globalnav-anim-menutrigger-bread-top-close" attributeName="points" keyTimes="0;0.5;1" dur="0.24s" begin="indefinite" fill="freeze" calcMode="spline" keySplines="0.42, 0, 1, 1;0, 0, 0.58, 1" values=" 3.5 3.5, 15 15; 2 9, 16 9; 2 5, 16 5"></animate></polyline></svg></a>
-        <a href="#"><img src="../images/icone-pesquisa.png" alt="..." id="icone-pesquisa"></a>
+        </div>
         <nav id="nav-bar">
-            <a href="/carrinho"><img src="../images/carrinho-compras.png" alt="..." id="carrinho-compras"></a>
+            <a href="/"><img src="images/logo-imprimeai.png" alt="..." id="logo"></a>
             <span class="material-symbols-outlined" id="fechar-menu">close</span>
             <li><a href="/">Início</a></li>
             <li><a href="/comunicacao-visual">Comunicação Visual</a></li>
@@ -29,6 +29,25 @@
             <li><a href="/papelaria">Papelaria</a></li>
             <li><a href="/brindes">Brindes</a></li>
             <li><a href="/adesivos">Adesivos</a></li>
+            <li><a href="/cartoes">Cartão de Visita</a></li>
+            <li><a href="/folders">Folders e Panfletos</a></li>
+            <li><a href="/pastas">Pastas</a></li>
+            <li><a href="/imas">Imãs</a></li>
+            <li><a href="/sacolas">Sacolas</a></li>
+            <a href="/carrinho"><img src="images/carrinho-compras.png" alt="..." id="carrinho-compras"></a>
+            <div id="icone-pesquisa">
+                <div class="input-wrapper">
+                    <button class="icon" id="searchButton"> 
+                      <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" height="22px" width="22px">
+                        <path stroke-linejoin="round" stroke-linecap="round" stroke-width="1.5" stroke="#101011" d="M11.5 21C16.7467 21 21 16.7467 21 11.5C21 6.25329 16.7467 2 11.5 2C6.25329 2 2 6.25329 2 11.5C2 16.7467 6.25329 21 11.5 21Z"></path>
+                        <path stroke-linejoin="round" stroke-linecap="round" stroke-width="1.5" stroke="#101011" d="M22 22L20 20"></path>
+                      </svg>
+                    </button>
+                    <input placeholder="Pesquisar..." id="searchInput" class="input" name="text" type="text">
+                </div>
+                <div id="sugestoes">
+                
+                </div>
         </nav>
     </header>
     <main>
@@ -38,7 +57,9 @@
         <div id="lista-graficas">
 
         </div>
+        <div id="map"></div>
     </main>
+        <script src="https://www.bing.com/api/maps/mapcontrol?key=Ao6IBGy_Nf0u4t9E88BYDytyK5mK3kObchF4R0NV5h--iZ6YgwXPMJEckhAEaKlH" async defer></script>
     <script src="../scripts/pagina-inicial.js"></script>
     <script src="../scripts/retirada.js"></script>
 </body>

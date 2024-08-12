@@ -1247,23 +1247,62 @@ app.get('/saldo-grafica', (req, res) => {
     res.status(500).send("Erro interno do servidor", err);
   }
 });
-// Rota GET para obter saldo da gráfica
 app.get('/api/saldo-grafica', async (req, res) => {
-  try {
-    // Calcular o saldo total da gráfica considerando pedidos entregues há pelo menos uma semana
-    const oneWeekAgo = new Date();
-    oneWeekAgo.setDate(oneWeekAgo.getDate() - 7);
+  const { graficaId } = req.query; // Recebe o ID da gráfica via query parameter
 
-    const adminBalance = await Saques.sum('valorGrafica', {
+  if (!graficaId) {
+    return res.status(400).json({ error: 'ID da gráfica é necessário' });
+  }
+
+  try {
+    // Obter a data atual
+    const now = new Date();
+    
+    // Calcular o saldo total da gráfica considerando a data de elegibilidade e o ID da gráfica
+    const graficaBalance = await Saques.sum('valorGrafica', {
       where: {
-        admSacou: false,
-        createdAt: {
-          [Op.lte]: oneWeekAgo
+        graficaSacou: false,
+        idGrafica: graficaId,
+        dataElegibilidade: {
+          [Op.lte]: now
         }
       }
     });
 
-    res.json({ adminBalance: adminBalance ? adminBalance.toFixed(2) : '0.00' });
+    res.json({ graficaBalance: graficaBalance ? graficaBalance.toFixed(2) : '0.00' });
+  } catch (error) {
+    console.error('Erro ao buscar saldo:', error);
+    res.status(500).json({ error: 'Erro ao buscar saldo' });
+  }
+});
+app.get('/api/full-balance-grafica', async (req, res) => {
+  const { graficaId } = req.query; // Recebe o ID da gráfica via query parameter
+
+  if (!graficaId) {
+    return res.status(400).json({ error: 'ID da gráfica é necessário' });
+  }
+
+  try {
+    // Calcular o saldo total da gráfica considerando a data de elegibilidade e o ID da gráfica
+    const graficaBalance = await Saques.sum('valorGrafica', {
+      where: {
+        graficaSacou: false,
+        idGrafica: graficaId
+      }
+    });
+
+    // Se não houver saldo, definir como 0
+    const total = graficaBalance ? parseFloat(graficaBalance) : 0.00;
+
+    // Calcular o valor com desconto de 3,5%
+    const desconto = total * 0.035;
+    const valorComDesconto = total - desconto;
+
+    res.json({
+      total: total.toFixed(2),
+      desconto: desconto.toFixed(2),
+      valorComDesconto: valorComDesconto.toFixed(2)
+    });
   } catch (error) {
     console.error('Erro ao buscar saldo:', error);
     res.status(500).json({ error: 'Erro ao buscar saldo' });
@@ -1271,20 +1310,21 @@ app.get('/api/saldo-grafica', async (req, res) => {
 });
 // Rota para fazer o saque do valor disponível do Pagar.me
 app.post('/api/withdraw-grafica', async (req, res) => {
-  const { amount, recipient_id } = req.body; // valor a ser sacado
-  amount = Math.round(amount * 100)
-  //const recipientTest = 're_clvchabno0fqc019tlus65sde' 
-  try {
-    // Data de uma semana atrás
-    const oneWeekAgo = new Date();
-    oneWeekAgo.setDate(oneWeekAgo.getDate() - 7);
+  let { amount, recipient_id } = req.body; // valor a ser sacado
+  amount = Math.round(amount * 100);
 
+  if (amount <= 0) {
+    return res.status(400).json({ error: 'O valor do saque deve ser positivo' });
+  }
+
+  try {
+    const now = new Date();
     // Buscar os pedidos elegíveis para saque
     const pedidosParaSaque = await Saques.findAll({
       where: {
         graficaSacou: false,
-        createdAt: {
-          [Op.lte]: oneWeekAgo
+        dataElegibilidade: {
+          [Op.lte]: now
         }
       }
     });
@@ -1292,12 +1332,12 @@ app.post('/api/withdraw-grafica', async (req, res) => {
     // Calcular o valor total disponível para saque
     let totalDisponivel = 0;
     for (const pedido of pedidosParaSaque) {
-      totalDisponivel += pedido.valorGrafica;
+      totalDisponivel += Number(pedido.valorGrafica);
     }
 
     // Verificar se o valor solicitado está disponível
     if (amount > totalDisponivel) {
-      console.log("Valor solicitado execedo o saldo disponível")
+      console.log("Valor solicitado excede o saldo disponível");
       return res.status(400).json({ error: 'Valor solicitado excede o saldo disponível' });
     }
 
@@ -1317,8 +1357,8 @@ app.post('/api/withdraw-grafica', async (req, res) => {
     // Marcar os pedidos como sacados até que o valor total sacado seja coberto
     let totalSaque = 0;
     for (const pedido of pedidosParaSaque) {
-      if (totalSaque + pedido.valorGrafica <= amount) {
-        totalSaque += pedido.valorGrafica;
+      if (totalSaque + Number(pedido.valorGrafica) <= amount) {
+        totalSaque += Number(pedido.valorGrafica);
         pedido.graficaSacou = true;
         await pedido.save();
       } else {
@@ -1332,8 +1372,80 @@ app.post('/api/withdraw-grafica', async (req, res) => {
       response: response.data
     });
   } catch (error) {
-    console.error('Erro ao fazer saque:', error);
+    console.error('Erro ao fazer saque:', error.response ? error.response.data : error.message);
     res.status(500).json({ error: 'Erro ao fazer saque' });
+  }
+});
+app.post('/api/full-withdraw-grafica', async (req, res) => {
+  let { amount, recipient_id } = req.body; // valor a ser sacado
+  amount = Math.round(amount * 100);
+
+  if (amount <= 0) {
+    return res.status(400).json({ error: 'O valor do saque deve ser positivo' });
+  }
+
+  try {
+        // Buscar os pedidos elegíveis para saque
+        const pedidosParaSaque = await Saques.findAll({
+          where: {
+            graficaSacou: false,
+          }
+        });
+    // Calcular o valor total disponível para saque
+    let totalDisponivel = 0;
+    for (const pedido of pedidosParaSaque) {
+      totalDisponivel += Number(pedido.valorGrafica);
+    }
+
+    // Verificar se o valor solicitado está disponível
+    if (amount > totalDisponivel) {
+      console.log("Valor solicitado excede o saldo disponível");
+      return res.status(400).json({ error: 'Valor solicitado excede o saldo disponível' });
+    }
+
+    // Realizar o saque usando a API do Pagar.me
+    const response = await axios.post(
+      `https://api.pagar.me/core/v5/recipients/${recipient_id}/withdrawals`,
+      {
+        amount: amount
+      },
+      {
+        headers: {
+          'Authorization': `Basic ${Buffer.from(pagarmeKeyProd + ':').toString('base64')}`
+        }
+      }
+    );
+
+    // Marcar os pedidos como sacados até que o valor total sacado seja coberto
+    let totalSaque = 0;
+    for (const pedido of pedidosParaSaque) {
+      if (totalSaque + Number(pedido.valorGrafica) <= amount) {
+        totalSaque += Number(pedido.valorGrafica);
+        pedido.graficaSacou = true;
+        await pedido.save();
+      } else {
+        break;
+      }
+    }
+
+    res.json({
+      message: 'Saque realizado com sucesso',
+      totalSaque: totalSaque,
+      response: response.data
+    });
+  } catch (error) {
+    console.error('Erro ao fazer saque:', error.response ? error.response.data : error.message);
+    res.status(500).json({ error: 'Erro ao fazer saque' });
+  }
+});
+//Rota get para mostrar a página de locais de retirada
+app.get('/retirada', (req, res) => {
+  try {
+    const retiradaContentHtml = fs.readFileSync(path.join(__dirname, "html", "retirada.html"), "utf-8");
+    res.send(retiradaContentHtml);
+  }catch(error) {
+    console.log("Erro ao ler o arquivo retirada.html", err);
+    res.status(500).send("Erro interno do servidor", err);
   }
 });
 app.listen(PORT, () => {

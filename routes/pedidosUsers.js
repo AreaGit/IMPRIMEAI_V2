@@ -32,6 +32,7 @@ const nodemailer = require('nodemailer');
 const rp = require('request-promise');
 const Sequelize = require('sequelize');
 const fs = require('fs');
+const path = require('path');
 app.use(express.json());
 app.use(cookieParser());
 app.use(express.urlencoded({ extended: true }));
@@ -657,16 +658,63 @@ app.post('/upload', upload.single('filePlanilha'), async (req, res) => {
     res.status(400).send('Nenhum arquivo enviado.');
   }
 });
-//Chamada para fazer o upload dos arquivos e salvar o link de download no carrinho
-app.post('/api/upload', upload.array('files'), async (req, res) => {
+// Mapeamento de MIME types para extensões de arquivo
+const mimeToExt = {
+  'application/pdf': '.pdf',
+  'image/jpeg': '.jpg',
+  'image/png': '.png',
+  // Adicione outros tipos MIME conforme necessário
+};
+
+const getExtensionFromMime = (mimetype) => mimeToExt[mimetype] || '';
+
+// Configuração do Multer para salvar os arquivos na pasta 'uploads'
+const storage2 = multer.diskStorage({
+  destination: (req, file, cb) => {
+    const uploadDir = path.join(__dirname, 'uploads');
+    if (!fs.existsSync(uploadDir)) {
+      fs.mkdirSync(uploadDir, { recursive: true });
+    }
+    cb(null, uploadDir);
+  },
+  filename: (req, file, cb) => {
+    if (file.originalname === '15456') {
+      const basename = 'Enviar Arte Depois';
+      const extension = ''; // Sem extensão
+      cb(null, `${basename}${extension}`);
+    } else {
+      const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9);
+      let extension = path.extname(file.originalname);
+
+      if (!extension) {
+        // Se o originalname não tem extensão, use a extensão do tipo MIME
+        extension = getExtensionFromMime(file.mimetype);
+      }
+
+      const basename = path.basename(file.originalname, extension);
+      cb(null, `${basename}-${uniqueSuffix}${extension}`);
+    }
+  }
+});
+
+const upload2 = multer({ 
+  storage: storage2,
+  fileFilter: (req, file, cb) => {
+    cb(null, true);
+  }
+});
+
+// Middleware para parsing de JSON
+app.use(express.json());
+
+// Rota para fazer o upload dos arquivos e salvar os links de download no carrinho
+app.post('/api/upload', upload2.array('files'), async (req, res) => {
   try {
     const files = req.files;
-    const uploadedFiles = [];
-
-    for (const file of files) {
-      const result = await uploadFile(file);
-      uploadedFiles.push(result);
-    }
+    const uploadedFiles = files.map(file => ({
+      nomeArquivo: file.originalname,
+      downloadLink: file.originalname === '15456' ? 'Enviar Arte Depois' : `/uploads/${file.filename}`
+    }));
 
     // Atualizar os links de download na sessão do carrinho
     const { session } = req;
@@ -674,24 +722,25 @@ app.post('/api/upload', upload.array('files'), async (req, res) => {
 
     uploadedFiles.forEach((file) => {
       const produtoIndex = carrinho.findIndex((produto) => !produto.downloadLink);
-      
       if (produtoIndex !== -1) {
         // Encontrou um produto sem link de download
-        carrinho[produtoIndex].downloadLink = file.webViewLink;
+        carrinho[produtoIndex].downloadLink = file.downloadLink;
         carrinho[produtoIndex].nomeArquivo = file.nomeArquivo;
       }
     });
 
     session.carrinho = carrinho;
 
-    console.log('Arquivos enviados para o Google Drive:', uploadedFiles);
+    console.log('Arquivos enviados:', uploadedFiles);
     console.log('Carrinho após Atualizado', carrinho);
-    res.status(200).send('Upload para o Google Drive concluído com sucesso');
+    res.status(200).send('Upload concluído com sucesso');
   } catch (error) {
-    console.error('Erro durante o upload para o Google Drive:', error);
-    res.status(500).send('Erro durante o upload para o Google Drive');
+    console.error('Erro durante o upload:', error);
+    res.status(500).send('Erro durante o upload');
   }
 });
+// Servir arquivos estáticos da pasta uploads
+app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 //Função para fazer upload dos arquivos ao google drive
 async function uploadFile(file) {
   console.log('File Object:', file);
@@ -866,7 +915,7 @@ app.post('/criar-pedidos', async (req, res) => {
         statusPed: carrinhoQuebrado.some(p => p.downloadLink === "Enviar Arte Depois") ? 'Pedido em Aberto' : 'Aguardando',
         statusPag: metodPag === 'Boleto' ? 'Esperando Pagamento' : metodPag === 'Carteira Usuário' ? 'Pago' : 'Aguardando',
         linkDownload: produto.downloadLink,
-        nomeArquivo: produto.arquivo,
+        nomeArquivo: produto.nomeArquivo,
         enderecoId: enderecos[index].id
       });
     });

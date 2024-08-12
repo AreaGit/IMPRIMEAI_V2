@@ -405,4 +405,27 @@
         top: -7px;
         width: 107px;
     }
+    #totalCarrinho > h1 {
+        font-weight: 600;
+        font-size: 40px;
+        position: absolute;
+        left: 50%;
+        width: 51%;
+        transform: translate(-50%);
+    }
+    #voltar {
+        border: 1px solid #EF4126;
+        color: #EF4126;
+        background-color: white;
+        box-shadow: -1px 2px 8px #000000a3;
+        padding: 18px 28px 18px 28px;
+        border-radius: 5px;
+        position: relative;
+        top: 90px;
+        left: 45%;
+        transform: translate(-45%);
+        transition: 0.8s;
+        font-weight: 500;
+        font-size: 17px;
+    }
 }
