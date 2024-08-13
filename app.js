@@ -1222,15 +1222,17 @@ app.get('/api/balance', async (req, res) => {
 });
 //Rota para fazer o saque do valor disponível do pagarme
 app.post('/api/withdraw', async (req, res) => {
-  const amount = req.body; // valor a ser sacado
-  console.log(amount)
+  const { amount } = req.body; // Extraindo amount de req.body
+  const amountNumber = Number(amount); // Convertendo amount para número
+  console.log(amountNumber);
   try {
     const response = await axios.post('https://api.pagar.me/1/transfers', {
       api_key: apiKey,
-      amount: amount * 100, // convertendo para centavos
+      amount: amountNumber * 100, // convertendo para centavos
       recipient_id: 're_clvchabno0fqc019tlus65sde' // Substitua com o ID do recebedor
     });
     console.log(response)
+    //if(response.data.status == )
     res.json(response.data);
   } catch (error) {
     console.error('Error making withdrawal:', error.response ? error.response.data : error.message);

@@ -1563,27 +1563,44 @@ async function verificarGraficaMaisProximaEAtualizar2(itensPedido, enderecos) {
 app.post('/processarPagamento-pix', (req, res) => {
   const perfilData = req.body.perfilData;
   const carrinho = req.session.carrinho;
+  // Calcular o valor total corretamente, respeitando as condições para frete
   const totalAmount = carrinho.reduce((total, item) => {
-    console.log(item.endereco.frete);
-    console.log(item.valorUnitario);
-    const subtotalComFrete = item.valorUnitario + item.endereco.frete;
-    return total + subtotalComFrete * item.quantidade * 100; // Multiplicando pelo número de itens
+    let subtotalComFrete;
+
+    if (item.endereco.tipoEntrega === "Único Endereço") {
+      subtotalComFrete = (item.valorUnitario + item.endereco.frete) * item.quantidade;
+    } else if (item.endereco.tipoEntrega === "Entrega a Retirar na Loja") {
+      subtotalComFrete = item.valorUnitario * item.quantidade; // Sem adicionar frete
+    } else {
+      subtotalComFrete = (item.valorUnitario + item.endereco.frete) * item.quantidade;
+    }
+
+    return total + subtotalComFrete * 100; // Convertendo para centavos
   }, 0);
-  console.log(totalAmount);
+
+  console.log('Total Amount (cents):', totalAmount);
 
   // Define o payload da requisição
   const body = {
-    "items": carrinho.map(item => ({
+    "items": carrinho.map(item => {
+      let amount;
+
+      if (item.endereco.tipoEntrega === "Único Endereço") {
+        amount = Math.round((item.valorUnitario + item.endereco.frete) * 100);
+      } else if (item.endereco.tipoEntrega === "Entrega a Retirar na Loja") {
+        amount = Math.round(item.valorUnitario * 100); // Sem adicionar frete
+      } else {
+        amount = Math.round((item.valorUnitario + item.endereco.frete) * 100);
+      }
+
+      return {
         "id": item.produtoId,
-        "amount": item.endereco.tipoEntrega === "Único Endereço" ?
-        Math.round((item.subtotal + item.endereco.frete) * 100) :
-        item.endereco.tipoEntrega === "Entrega a Retirar na Loja" ?
-        item.subtotal * 100 :
-        Math.round((item.valorUnitario + item.endereco.frete) * 100),
+        "amount": amount,
         "description": item.nomeProd,
         "quantity": item.quantidade,
         "code": item.produtoId
-    })),
+      };
+    }),
     "customer": {
         "name": perfilData.nomeCliente,
         "email": perfilData.emailCliente,
@@ -1673,19 +1690,44 @@ app.get('/charges/:chargeId', (req, res) => {
 app.post('/processarPagamento-boleto', (req, res) => {
   const perfilData = req.body.perfilData;
   const carrinho = req.session.carrinho;
-  // Define the request payload
+  // Calcular o valor total corretamente, respeitando as condições para frete
+  const totalAmount = carrinho.reduce((total, item) => {
+    let subtotalComFrete;
+
+    if (item.endereco.tipoEntrega === "Único Endereço") {
+      subtotalComFrete = (item.valorUnitario + item.endereco.frete) * item.quantidade;
+    } else if (item.endereco.tipoEntrega === "Entrega a Retirar na Loja") {
+      subtotalComFrete = item.valorUnitario * item.quantidade; // Sem adicionar frete
+    } else {
+      subtotalComFrete = (item.valorUnitario + item.endereco.frete) * item.quantidade;
+    }
+
+    return total + subtotalComFrete * 100; // Convertendo para centavos
+  }, 0);
+
+  console.log('Total Amount (cents):', totalAmount);
+
+  // Define o payload da requisição
   const body = {
-    "items": carrinho.map(item => ({
-      "id": item.produtoId,
-      "amount": item.endereco.tipoEntrega === "Único Endereço" ?
-      Math.round((item.subtotal + item.endereco.frete) * 100) :
-      item.endereco.tipoEntrega === "Entrega a Retirar na Loja" ?
-      item.subtotal * 100 :
-      Math.round((item.valorUnitario + item.endereco.frete) * 100),
-      "description": item.nomeProd,
-      "quantity": item.quantidade,
-      "code": item.produtoId
-  })),
+    "items": carrinho.map(item => {
+      let amount;
+
+      if (item.endereco.tipoEntrega === "Único Endereço") {
+        amount = Math.round((item.valorUnitario + item.endereco.frete) * 100);
+      } else if (item.endereco.tipoEntrega === "Entrega a Retirar na Loja") {
+        amount = Math.round(item.valorUnitario * 100); // Sem adicionar frete
+      } else {
+        amount = Math.round((item.valorUnitario + item.endereco.frete) * 100);
+      }
+
+      return {
+        "id": item.produtoId,
+        "amount": amount,
+        "description": item.nomeProd,
+        "quantity": item.quantidade,
+        "code": item.produtoId
+      };
+    }),
     "customer": {
       "name": perfilData.nomeCliente,
       "email": perfilData.emailCliente,
@@ -1744,20 +1786,44 @@ app.post('/processarPagamento-cartao', (req ,res) => {
   const perfilData = req.body.perfilData;
   const carrinho = req.session.carrinho;
   console.log(formData)
-  // Monte o body com os dados do usuário e do carrinho
+  // Calcular o valor total corretamente, respeitando as condições para frete
+  const totalAmount = carrinho.reduce((total, item) => {
+    let subtotalComFrete;
+
+    if (item.endereco.tipoEntrega === "Único Endereço") {
+      subtotalComFrete = (item.valorUnitario + item.endereco.frete) * item.quantidade;
+    } else if (item.endereco.tipoEntrega === "Entrega a Retirar na Loja") {
+      subtotalComFrete = item.valorUnitario * item.quantidade; // Sem adicionar frete
+    } else {
+      subtotalComFrete = (item.valorUnitario + item.endereco.frete) * item.quantidade;
+    }     
+
+    return total + subtotalComFrete * 100; // Convertendo para centavos
+  }, 0);
+
+  console.log('Total Amount (cents):', totalAmount);
+
+  // Define o payload da requisição
   const body = {
-    "items": carrinho.map(item => ({
-      "id": item.produtoId,
-        //"amount": Math.max(Math.round(parseFloat(perfilData.totalCompra) * 100), 1),
-        "amount": item.endereco.tipoEntrega === "Único Endereço" ?
-        Math.round((item.subtotal + item.endereco.frete) * 100) :
-        item.endereco.tipoEntrega === "Entrega a Retirar na Loja" ?
-        item.subtotal * 100 :
-        Math.round((item.valorUnitario + item.endereco.frete) * 100),
+    "items": carrinho.map(item => {
+      let amount;
+
+      if (item.endereco.tipoEntrega === "Único Endereço") {
+        amount = Math.round((item.valorUnitario + item.endereco.frete) * 100);
+      } else if (item.endereco.tipoEntrega === "Entrega a Retirar na Loja") {
+        amount = Math.round(item.valorUnitario * 100); // Sem adicionar frete
+      } else {
+        amount = Math.round((item.valorUnitario + item.endereco.frete) * 100);
+      }
+
+      return {
+        "id": item.produtoId,
+        "amount": amount,
         "description": item.nomeProd,
         "quantity": item.quantidade,
         "code": item.produtoId
-      })),
+      };
+    }),
       "customer": {
         "name": perfilData.nomeCliente,
         "email": perfilData.emailCliente,
