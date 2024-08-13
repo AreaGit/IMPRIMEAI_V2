@@ -119,10 +119,12 @@ a {
     color: #F37160;
 }
 #prods-header {
-    width: 849px;
-    height: 184px;
-    position: absolute;
-    top: 46%;
+  width: 151%;
+  height: 184px;
+  position: absolute;
+  top: 46%;
+  left: 50%;
+  transform: translate(-50%);
 }
 #prod1 {
     cursor: pointer;
@@ -1025,9 +1027,13 @@ div#lg {
   box-sizing: border-box;
   text-align: center;
 }
-
+.carousel-item > a > h2 {
+  width: 28%;
+  position: relative;
+  left: 35%;
+}
 .carousel-item img {
-  width: 40%;
+  width: 50%;
   height: auto;
 }
 

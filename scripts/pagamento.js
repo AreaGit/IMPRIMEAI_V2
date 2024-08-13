@@ -27,6 +27,7 @@ const avisoAguardeCancelamento = document.getElementById('avisoAguardeCancelamen
 const avisoTransacaoErro = document.getElementById('avisoTransacaoErro');
 const avisoFalhaTransacao = document.getElementById('avisoFalhaTransacao');
 const criacaoBoleto = document.getElementById('criacaoBoleto');
+const carregamento = document.getElementById('carregamento');
 function getCookie(name) {
   const value = `; ${document.cookie}`;
   const parts = value.split(`; ${name}=`);
@@ -180,6 +181,7 @@ btnContPag.addEventListener('click', () => {
     } else if (divAtiva === "boleto") {
         pagamentoBoleto();
     } else if (divAtiva === "cartaoCredito") {
+        carregamento.style.display = 'none'
         formCartao.style.display = 'block'
     } else if (divAtiva === "carteiraUser") {
         pagamentoCarteira();
@@ -382,6 +384,7 @@ const cpfCliente = cpf;
   const expiracao = responseData[0].last_transaction.expires_at;
   const expiracaoDate = new Date(expiracao);
   const formattedExpiracao = expiracaoDate.toLocaleString('pt-BR', { timeZone: 'UTC' });
+  carregamento.style.display = 'none'
   qrCodeContainer.style.display = 'block'
   qrCodeContainer.innerHTML = `
     <img src="${qrPix}">
@@ -520,6 +523,7 @@ async function pagamentoBoleto() {
     const chargeId = responseData[0].id;
     const qrCodeBoleto = responseData[0].last_transaction.qr_code;
     const pdfBoleto = responseData[0].last_transaction.pdf;
+    carregamento.style.display = 'none'
     divBoletoContainer.style.display = 'block';
     divBoletoContainer.innerHTML = `
       <img src="${qrCodeBoleto}">

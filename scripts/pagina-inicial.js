@@ -278,13 +278,19 @@ document.addEventListener('DOMContentLoaded', async () => {
 
         carouselSlide.style.transform = 'translateX(' + (-size * counter) + 'px)';
 
-        // Listeners dos botões
-        nextBtn.addEventListener('click', () => {
-            if (counter >= carouselItems.length - 3) return; // Adjust boundary to prevent empty space
+        // Função para avançar o carrossel
+        function moveCarousel() {
+            if (counter >= carouselItems.length - 3) { 
+                counter = 0; // Volta ao início se estiver no final
+            } else {
+                counter++;
+            }
             carouselSlide.style.transition = "transform 0.5s ease-in-out";
-            counter++;
             carouselSlide.style.transform = 'translateX(' + (-size * counter) + 'px)';
-        });
+        }
+
+        // Listeners dos botões
+        nextBtn.addEventListener('click', moveCarousel);
 
         prevBtn.addEventListener('click', () => {
             if (counter <= 0) return; // Adjust boundary to prevent empty space
@@ -292,6 +298,9 @@ document.addEventListener('DOMContentLoaded', async () => {
             counter--;
             carouselSlide.style.transform = 'translateX(' + (-size * counter) + 'px)';
         });
+
+        // Avanço automático do carrossel a cada 5 segundos
+        setInterval(moveCarousel, 5000);
     }
 
     // Carregar produtos ao iniciar
