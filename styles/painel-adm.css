@@ -449,6 +449,7 @@ div#valor {
 }
 #avisoErroSaque{display: none;}
 #avisoSaque{display: none;}
+#avisoValor{display: none;}
 .notifications-container {
   width: 320px;
   height: auto;

@@ -4,7 +4,8 @@ const listaGraficas = document.getElementById('lista-graficas');
 const listaPedidos = document.getElementById('pedidos-list');
 const saldo = document.getElementById('container-valor');
 const avisoSaque = document.getElementById('avisoSaque');
-const erroSaque = document.getElementById('avisoErroSaque')
+const erroSaque = document.getElementById('avisoErroSaque');
+const avisoValor = document.getElementById('avisoValor');
 // Função para obter o valor de um cookie pelo nome
 function getCookie(name) {
     const value = `; ${document.cookie}`;
@@ -286,27 +287,33 @@ document.getElementById('saldo').addEventListener('click', async() => {
 document.getElementById('btnSacar').addEventListener('click', async () => {
     const saldoAdm = document.getElementById('saldoAdm').textContent;
     const amount = parseFloat(saldoAdm);
-
-    try {
-        const response = await fetch('/api/withdraw', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({ amount }),
-        });
-
-        const data = await response.json();
-        console.log('Withdrawal successful:', data);
-        avisoSaque.style.display = 'block';
+    if(amount < 3.80) {
+        avisoValor.style.display = 'block';
         window.setTimeout(() => {
             window.location.reload();
         }, 5000);
-    } catch (error) {
-        console.error('Erro ao fazer saque:', error);
-        erroSaque.style.display = 'block';
-        window.setTimeout(() => {
-            window.location.reload();
-        }, 5000);
+    } else {
+        try {
+            const response = await fetch('/api/withdraw', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ amount }),
+            });
+
+            const data = await response.json();
+            console.log('Withdrawal successful:', data);
+            avisoSaque.style.display = 'block';
+            window.setTimeout(() => {
+                window.location.reload();
+            }, 5000);
+        } catch (error) {
+            console.error('Erro ao fazer saque:', error);
+            erroSaque.style.display = 'block';
+            window.setTimeout(() => {
+                window.location.reload();
+            }, 5000);
+        }
     }
 });
