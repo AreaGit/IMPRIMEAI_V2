@@ -96,6 +96,17 @@ a {
   transform: translate(-120%);
   top: -6px;
 }
+span#quantidadeCarrinho {
+  position: absolute;
+  left: 111%;
+  transform: translate(-111%);
+  background: black;
+  color: white;
+  padding: 3px;
+  font-size: 12px;
+  border-radius: 51%;
+  cursor: pointer;
+}
 #menu-icon {
     display: none;
 }

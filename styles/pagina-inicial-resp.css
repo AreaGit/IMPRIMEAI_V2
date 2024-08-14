@@ -86,6 +86,17 @@
         transform: translate(-120%);
         top: 6%;
     }
+    span#quantidadeCarrinho {
+        position: relative;
+        left: 25%;
+        top: -81%;
+        background: black;
+        color: white;
+        padding: 3px;
+        font-size: 12px;
+        border-radius: 51%;
+        cursor: pointer;
+    }
     #prods-header {
         z-index: -1;
         width: 100%;
@@ -453,6 +464,17 @@
         transform: translate(-112%);
         top: 1px;
     }
+    span#quantidadeCarrinho {
+        position: relative;
+        left: 59%;
+        top: -18px;
+        background: black;
+        color: white;
+        padding: 3px;
+        font-size: 12px;
+        border-radius: 51%;
+        cursor: pointer;
+    }
     #sec-header {
         width: 712px;
         height: 342px;
@@ -595,6 +617,17 @@
         width: 700px;
         transform: translate(-50%);
     }
+    span#quantidadeCarrinho {
+        position: relative;
+        left: 59%;
+        top: -18px;
+        background: black;
+        color: white;
+        padding: 3px;
+        font-size: 12px;
+        border-radius: 51%;
+        cursor: pointer;
+    }
     #logo {
         position: absolute;
         left: -14%;
@@ -713,6 +746,16 @@
         width: 1050px;
         transform: translate(-50%);
     }
+    span#quantidadeCarrinho {
+        position: relative;
+        left: 13%;
+        background: black;
+        color: white;
+        padding: 3px;
+        font-size: 12px;
+        border-radius: 51%;
+        cursor: pointer;
+    }
     #logo {
         position: absolute;
         left: -2%;
@@ -830,6 +873,16 @@
         top: 8px;
         width: 1050px;
         transform: translate(-50%);
+    }
+    span#quantidadeCarrinho {
+        position: relative;
+        left: 13%;
+        background: black;
+        color: white;
+        padding: 3px;
+        font-size: 12px;
+        border-radius: 51%;
+        cursor: pointer;
     }
     #logo {
         position: absolute;
@@ -994,6 +1047,16 @@
         left: 112%;
         transform: translate(-112%);
         top: 1px;
+    }
+    span#quantidadeCarrinho {
+        position: relative;
+        left: 13%;
+        background: black;
+        color: white;
+        padding: 3px;
+        font-size: 12px;
+        border-radius: 51%;
+        cursor: pointer;
     }
     #sec-header {
         width: 712px;

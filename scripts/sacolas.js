@@ -15,7 +15,7 @@ document.addEventListener('DOMContentLoaded', () => {
             window.location.href = `/detalhes-produtos?id=${produto.id}`;
           });
           produtoDiv.style.cursor = 'pointer';
-  w
+
           // Define o conteúdo da div do produto
           produtoDiv.innerHTML = `
             <h2>${produto.nomeProd}</h2>
@@ -30,3 +30,23 @@ document.addEventListener('DOMContentLoaded', () => {
       })
       .catch((error) => console.error(error));
 });
+async function obterQuantidadeCarrinho() {
+  try {
+      // Fazer uma requisição para a rota /api/carrinho
+      const response = await fetch('/api/carrinho');
+      const carrinho = await response.json();
+      
+      // Calcular a quantidade total de produtos no carrinho
+      const quantidadeTotal = carrinho.reduce((total, produto) => total + produto.quantidade, 0);
+      
+      // Exibir a quantidade total no elemento com id 'quantidadeCarrinho'
+      document.getElementById('quantidadeCarrinho').textContent = quantidadeTotal;
+  } catch (error) {
+      console.error('Erro ao obter a quantidade de produtos no carrinho:', error);
+  }
+}
+document.getElementById('quantidadeCarrinho').addEventListener('click', () => {
+  window.location.href = '/carrinho'
+});
+// Chamar a função ao carregar a página
+document.addEventListener('DOMContentLoaded', obterQuantidadeCarrinho);

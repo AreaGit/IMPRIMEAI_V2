@@ -86,6 +86,18 @@
         transform: translate(-120%);
         top: 6%;
     }
+    span#quantidadeCarrinho {
+        position: absolute;
+        left: 35%;
+        top: 8%;
+        transform: translate(-111%);
+        background: black;
+        color: white;
+        padding: 3px;
+        font-size: 12px;
+        border-radius: 51%;
+        cursor: pointer;
+    }
     img#imgProd {
         position: relative;
         top: 340px;
@@ -139,6 +151,18 @@
         left: 112%;
         transform: translate(-112%);
         top: 1px;
+    }
+    span#quantidadeCarrinho {
+        position: absolute;
+        left: 111%;
+        top: 8%;
+        transform: translate(-111%);
+        background: black;
+        color: white;
+        padding: 3px;
+        font-size: 12px;
+        border-radius: 51%;
+        cursor: pointer;
     }
     #carrinho-vazio {
         height: 165px;
@@ -194,6 +218,18 @@
         transform: translate(-112%);
         top: 1px;
     }
+    span#quantidadeCarrinho {
+        position: absolute;
+        left: 111%;
+        top: 8%;
+        transform: translate(-111%);
+        background: black;
+        color: white;
+        padding: 3px;
+        font-size: 12px;
+        border-radius: 51%;
+        cursor: pointer;
+    }
 }
 @media screen and (min-width:2560px) {
     #nav-bar {
@@ -216,5 +252,17 @@
         left: 112%;
         transform: translate(-112%);
         top: 1px;
+    }
+    span#quantidadeCarrinho {
+        position: absolute;
+        left: 111%;
+        top: 8%;
+        transform: translate(-111%);
+        background: black;
+        color: white;
+        padding: 3px;
+        font-size: 12px;
+        border-radius: 51%;
+        cursor: pointer;
     }
 }

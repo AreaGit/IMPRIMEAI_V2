@@ -86,6 +86,17 @@
         transform: translate(-120%);
         top: 6%;
     }
+    span#quantidadeCarrinho {
+        position: absolute;
+        left: 35%;
+        transform: translate(-111%);
+        background: black;
+        color: white;
+        padding: 3px;
+        font-size: 12px;
+        border-radius: 51%;
+        cursor: pointer;
+      }
     #logo2 {
         display: block;
     }
@@ -163,6 +174,17 @@
     }
 }
 @media screen and (min-width:1024px) and (max-width:1440px) {
+    span#quantidadeCarrinho {
+        position: absolute;
+        left: 111%;
+        transform: translate(-111%);
+        background: black;
+        color: white;
+        padding: 3px;
+        font-size: 12px;
+        border-radius: 51%;
+        cursor: pointer;
+      }
     #variacoes {
         position: relative;
         top: 10px;
@@ -252,6 +274,17 @@
     }
 }
 @media screen and (min-width:1441px) and (max-width:1635px) {
+    span#quantidadeCarrinho {
+        position: absolute;
+        left: 111%;
+        transform: translate(-111%);
+        background: black;
+        color: white;
+        padding: 3px;
+        font-size: 12px;
+        border-radius: 51%;
+        cursor: pointer;
+      }
     #nav-bar {
         position: relative;
         left: 50%;
@@ -291,6 +324,17 @@
     }
 }
 @media screen and (min-width:1635px) and (max-width:1879px) {
+    span#quantidadeCarrinho {
+        position: absolute;
+        left: 111%;
+        transform: translate(-111%);
+        background: black;
+        color: white;
+        padding: 3px;
+        font-size: 12px;
+        border-radius: 51%;
+        cursor: pointer;
+      }
     #nav-bar {
         position: relative;
         left: 50%;
@@ -346,6 +390,17 @@
     }
 }
 @media screen and (min-width:2560px) {
+    span#quantidadeCarrinho {
+        position: absolute;
+        left: 111%;
+        transform: translate(-111%);
+        background: black;
+        color: white;
+        padding: 3px;
+        font-size: 12px;
+        border-radius: 51%;
+        cursor: pointer;
+      }
     #nav-bar {
         position: relative;
         left: 50%;
