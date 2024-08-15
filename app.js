@@ -638,7 +638,25 @@ app.get('/produto/:id', async (req, res) => {
     res.status(500).json({ mensagem: 'Erro interno do servidor' });
   }
 }); 
+app.get('/produto/:id/gabarito', async (req, res) => {
+  try {
+    const productId = parseInt(req.params.id);
+    const produto = await Produtos.findByPk(productId);
 
+    if (!produto || !produto.gabaritoProd) {
+      return res.status(404).json({ mensagem: 'Gabarito não encontrado' });
+    }
+
+    // Tratamento do conteúdo do PDF
+    const pdfContent = Buffer.from(produto.gabaritoProd, 'binary'); // Assumindo que o conteúdo está armazenado como string
+    res.setHeader('Content-Type', 'application/pdf');
+    res.setHeader('Content-Disposition', `attachment; filename=${produto.nomeProd}_gabarito.pdf`);
+    res.send(pdfContent);
+  } catch (error) {
+    console.error('Erro ao baixar gabarito:', error);
+    res.status(500).json({ mensagem: 'Erro interno do servidor' });
+  }
+});
 app.get('/variacoes-produto/:id', async (req, res) => {
   try {
     const produtoId = parseInt(req.params.id);

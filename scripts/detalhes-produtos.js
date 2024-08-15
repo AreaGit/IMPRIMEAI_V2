@@ -30,17 +30,26 @@ document.addEventListener('DOMContentLoaded', function() {
                 imagemProdutoElement.src = `/imagens/${data.id}`;
                 // Evento de download do gabarito
                 downloadGab.addEventListener('click', () => {
-                  const buffer = new Uint8Array(data.gabaritoProd.data);
-                  const blob = new Blob([buffer], { type: 'application/pdf' });
-                  const url = window.URL.createObjectURL(blob);
-                  const a = document.createElement('a');
-                  a.style.display = 'none';
-                  a.href = url;
-                  a.download = `${data.nomeProd}_gabarito.pdf`;
-                  document.body.appendChild(a);
-                  a.click();
-                  window.URL.revokeObjectURL(url);
-              });
+                  const productId = produtoId; // Assumindo que o ID do produto está em data.id
+                  fetch(`/produto/${productId}/gabarito`)
+                    .then(response => {
+                      if (!response.ok) {
+                        throw new Error('Erro ao baixar o gabarito');
+                      }
+                      return response.blob();
+                    })
+                    .then(blob => {
+                      const url = window.URL.createObjectURL(blob);
+                      const a = document.createElement('a');
+                      a.style.display = 'none';
+                      a.href = url;
+                      a.download = `${data.nomeProd}_gabarito.pdf`;
+                      document.body.appendChild(a);
+                      a.click();
+                      window.URL.revokeObjectURL(url);
+                    })
+                    .catch(error => console.error('Erro ao baixar gabarito:', error));
+                });                
                   // Update slideshow images
                   const slideshowImages = [
                     data.imgProd,
