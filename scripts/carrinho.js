@@ -223,7 +223,7 @@ btnAvancar.addEventListener('click', () => {
   if(userId == null) {
     window.location.href = '/cadastro';
   }else {
-    window.location.href = '/formato-entrega';
+    window.location.href = '/upload';
   }    
 });
 async function obterQuantidadeCarrinho() {

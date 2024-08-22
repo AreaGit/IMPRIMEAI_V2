@@ -35,7 +35,7 @@ const form = document.getElementById('formEnviarPlanilha');
                     carregamento.style.display = 'none'
                     setTimeout(() => {
                         avisoGeral.style.display = 'none'
-                        window.location.href = "/upload";
+                        window.location.href = "/pagamento";
                     }, 5000);    
                 } else {
                 erroCarrinho.style.display = 'block'

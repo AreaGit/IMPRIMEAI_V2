@@ -97,8 +97,9 @@ a {
     top: -6px;
 }
 span#quantidadeCarrinho {
-  position: relative;
-  left: 11%;
+  position: absolute;
+  left: 111%;
+  transform: translate(-111%);
   background: black;
   color: white;
   padding: 3px;

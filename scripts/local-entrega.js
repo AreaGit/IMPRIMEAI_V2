@@ -11,7 +11,35 @@ const email = document.getElementById('email');
 const telefone = document.getElementById('telefone');
 const avisoGeral = document.getElementById('avisoGeral');
 const erroEndereco = document.getElementById('erroEndereco');
+let downloadLinks = []; // Array para armazenar todos os links de download
 
+document.addEventListener('DOMContentLoaded', async() => {
+    try {
+        const response = await fetch('/api/carrinho');
+
+        if (!response.ok) {
+            throw new Error('Erro ao buscar os dados do carrinho');
+        }
+
+        const data = await response.json();
+        console.log(data);
+
+        // Itera sobre todos os produtos no carrinho e armazena seus links de download
+        data.forEach(produto => {
+            if (produto.downloadLink) {
+                downloadLinks.push({
+                    produtoId: produto.produtoId,
+                    downloadLink: produto.downloadLink
+                });
+            }
+        });
+
+        console.log(downloadLinks); // Exibe todos os links de download no console
+
+    } catch(err) {
+        console.log(err);
+    }
+});
 nomeCliente.addEventListener("keyup", () => {
     if(nomeCliente.value.length <= 4) {
         nomeCliente.style.borderColor = "red";
@@ -144,7 +172,8 @@ btnEnviar.addEventListener("click", () => {
         cidade : cidade,
         bairro : bairro,
         email : email,
-        telefone : telefone
+        telefone : telefone,
+        downloadLinks : downloadLinks,
     };
     fetch('/salvar-endereco-no-carrinho', {
         method: 'POST',
@@ -159,7 +188,7 @@ btnEnviar.addEventListener("click", () => {
         avisoGeral.style.display = 'block';
         window.setTimeout(() => {
             avisoGeral.style.display = 'none';
-            window.location.href = '/upload'
+            window.location.href = '/pagamento'
         },5000);
     } else {
         erroEndereco.style.display = 'block';

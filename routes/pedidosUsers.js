@@ -202,7 +202,7 @@ app.get('/aplicar-desconto-cupom/:cupom', (req, res) => {
       res.status(400).json({ error: 'Cupom inválido' });
   }
 });
-//Rota post para salvar o endereço do usuário
+// Rota post para salvar o endereço do usuário
 app.post('/salvar-endereco-no-carrinho', async (req, res) => {
   try {
     const {
@@ -217,10 +217,12 @@ app.post('/salvar-endereco-no-carrinho', async (req, res) => {
         bairro,
         email,
         telefone,
+        downloadLinks, // Recebe o array de downloadLinks
       }
     } = req.body;
 
-    const endereco = {
+    // Criar um objeto de endereço base
+    const enderecoBase = {
       nomeCliente,
       rua,
       numeroRua,
@@ -234,27 +236,47 @@ app.post('/salvar-endereco-no-carrinho', async (req, res) => {
       tipoEntrega: 'Único Endereço'
     };
 
-    // Salve o endereço na sessão
-    req.session.endereco = endereco;
+    // Salve o endereço base na sessão
+    req.session.endereco = enderecoBase;
 
     // Calcule o frete e salve na sessão
-    const { graficaMaisProxima, distanciaMinima, custoDoFrete } = await encontrarGraficaMaisProxima(endereco);
+    const { graficaMaisProxima, distanciaMinima, custoDoFrete } = await encontrarGraficaMaisProxima(enderecoBase);
     console.log('Gráfica mais próxima:', graficaMaisProxima);
     console.log('Distância mínima:', distanciaMinima);
     console.log('Custo do Frete:', custoDoFrete);
 
     // Defina o frete na sessão
     req.session.frete = custoDoFrete;
-    endereco.frete = custoDoFrete;
+    enderecoBase.frete = custoDoFrete;
 
-    // Atualize o endereço de cada produto no carrinho com o endereço do usuário
+    // Crie um array para armazenar endereços quebrados
+    const enderecosQuebrados = [];
+
+    // Verificar se o carrinho já existe na sessão
     if (req.session.carrinho && req.session.carrinho.length > 0) {
-      req.session.carrinho.forEach((produto) => {
-        produto.endereco = { ...endereco }; // Copia o endereço do usuário para cada produto no carrinho
+      // Iterar sobre o carrinho e criar endereços quebrados
+      req.session.carrinho.forEach((produto, index) => {
+        const produtoLink = downloadLinks[index] ? downloadLinks[index].downloadLink : null;
+
+        for (let i = 0; i < produto.quantidade; i++) {
+          const enderecoQuebrado = { 
+            ...enderecoBase, 
+            downloadLink: produtoLink // Associa o link de download ao endereço quebrado
+          };
+          enderecosQuebrados.push(enderecoQuebrado);
+        }
       });
+
+      // Atualizar cada produto no carrinho com o endereço correspondente
+      req.session.carrinho.forEach((produto, index) => {
+        produto.endereco = enderecosQuebrados[index];
+      });
+
+      // Salve os endereços quebrados na sessão
+      req.session.endereco = enderecosQuebrados;
     }
     // Agora podemos enviar a resposta ao cliente com os dados da gráfica mais próxima e o custo do frete
-    console.log(endereco);
+    console.log(req.session.endereco);
     res.json({
       success: true,
       graficaMaisProxima,
@@ -317,8 +339,8 @@ app.get("/perfil/dados", async (req, res) => {
   }
 });
 
-app.post('/salvar-endereco-retirada-no-carrinho', async(req, res) => {
-  const enderecoData = {
+app.post('/salvar-endereco-retirada-no-carrinho', async (req, res) => {
+  const {
     nomeCliente,
     rua,
     numeroRua,
@@ -329,9 +351,11 @@ app.post('/salvar-endereco-retirada-no-carrinho', async(req, res) => {
     bairro,
     email,
     telefone,
+    downloadLinks // Recebe o array de downloadLinks
   } = req.body;
-  
-  const endereco = {
+
+  // Criar um objeto de endereço base
+  const enderecoBase = {
     nomeCliente,
     rua,
     numeroRua,
@@ -344,33 +368,38 @@ app.post('/salvar-endereco-retirada-no-carrinho', async(req, res) => {
     telefone,
     tipoEntrega: 'Entrega a Retirar na Loja'
   };
-  // Salve o endereço na sessão
-  req.session.endereco = endereco;
 
-  // Salve o endereço também no carrinho (lógica específica do aplicativo)
+  // Verificar se o carrinho já existe na sessão
   req.session.carrinho = req.session.carrinho || [];
 
-  // Crie um array para armazenar endereços quebrados com base na quantidade total de produtos no carrinho
+  // Criar um array para armazenar endereços quebrados
   const enderecosQuebrados = [];
 
-  // Itere sobre o carrinho e adicione os endereços quebrados ao array
-  req.session.carrinho.forEach((produto) => {
+  // Iterar sobre o carrinho e criar endereços quebrados
+  req.session.carrinho.forEach((produto, index) => {
+    const produtoLink = downloadLinks[index] ? downloadLinks[index].downloadLink : null;
+
     for (let i = 0; i < produto.quantidade; i++) {
-      const enderecoQuebrado = { ...endereco, tipoEntrega: 'Entrega a Retirar na Loja' };
+      const enderecoQuebrado = { 
+        ...enderecoBase, 
+        downloadLink: produtoLink // Associa o link de download ao endereço quebrado
+      };
       enderecosQuebrados.push(enderecoQuebrado);
     }
   });
 
-  // Atualize cada produto no carrinho com o endereço correspondente
+  // Atualizar cada produto no carrinho com o endereço correspondente
   req.session.carrinho.forEach((produto, index) => {
     produto.endereco = enderecosQuebrados[index];
   });
 
+  // Salvar os endereços quebrados na sessão
   req.session.endereco = enderecosQuebrados;
 
   console.log('Endereços Quebrados:', enderecosQuebrados);
   console.log('Conteúdo da Sessão:', req.session);
 
+  // Enviar uma resposta de sucesso
   res.json({ success: true });
 });
 
@@ -889,7 +918,7 @@ app.post('/criar-pedidos', async (req, res) => {
         raio: produto.raioProd,
         produtos: produto.produtoId,
         idProduto: produto.produtoId,
-        tipoEntrega: produto.tipoEntrega,
+        tipoEntrega: endereco.tipoEntrega,
         frete: produto.frete
       });
     });

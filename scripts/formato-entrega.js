@@ -1,8 +1,38 @@
 const btnRetirada = document.getElementById('btnRetirada');
 const avisoGeral = document.getElementById('avisoGeral');
 const erroEndereco = document.getElementById('erroEndereco');
+let downloadLinks = []; // Array para armazenar todos os links de download
+
+document.addEventListener('DOMContentLoaded', async() => {
+    try {
+        const response = await fetch('/api/carrinho');
+
+        if (!response.ok) {
+            throw new Error('Erro ao buscar os dados do carrinho');
+        }
+
+        const data = await response.json();
+        console.log(data);
+
+        // Itera sobre todos os produtos no carrinho e armazena seus links de download
+        data.forEach(produto => {
+            if (produto.downloadLink) {
+                downloadLinks.push({
+                    produtoId: produto.produtoId,
+                    downloadLink: produto.downloadLink
+                });
+            }
+        });
+
+        console.log(downloadLinks); // Exibe todos os links de download no console
+
+    } catch(err) {
+        console.log(err);
+    }
+});
 btnRetirada.addEventListener("click", async () => {
     try {
+        // Primeiro, obtenha os dados do perfil do usuário
         const response = await fetch('/perfil/dados');
 
         if (!response.ok) {
@@ -21,35 +51,29 @@ btnRetirada.addEventListener("click", async () => {
         const telefoneCad = data.telefoneCad;
         const estadoCad = data.estadoCad;
         const email = data.emailCad;
+
+        // Aqui você pode adicionar o downloadLink ao endereçoData
         const enderecoData = {
-            nomeCliente : nomeCliente,
-            rua : enderecoCad,
-            numeroRua : numCad,
-            complemento : compCad,
-            cep : cepCad,
-            estado : estadoCad,
-            cidade : cidadeCad,
-            bairro : bairroCad,
-            email : email,
-            telefone : telefoneCad
+            nomeCliente: nomeCliente,
+            rua: enderecoCad,
+            numeroRua: numCad,
+            complemento: compCad,
+            cep: cepCad,
+            estado: estadoCad,
+            cidade: cidadeCad,
+            bairro: bairroCad,
+            email: email,
+            telefone: telefoneCad,
+            downloadLinks: downloadLinks // Adiciona o downloadLink aqui
         };
+
+        // Enviar os dados para salvar no carrinho
         const saveResponse = await fetch('/salvar-endereco-retirada-no-carrinho', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
             },
-            body: JSON.stringify({
-                nomeCliente : nomeCliente,
-                rua : enderecoCad,
-                numeroRua : numCad,
-                complemento : compCad,
-                cep : cepCad,
-                estado : estadoCad,
-                cidade : cidadeCad,
-                bairro : bairroCad,
-                email : email,
-                telefone : telefoneCad
-            }),
+            body: JSON.stringify(enderecoData), // Envia o objeto completo, incluindo o downloadLink
         });
 
         if (!saveResponse.ok) {
@@ -58,22 +82,22 @@ btnRetirada.addEventListener("click", async () => {
 
         const saveData = await saveResponse.json();
 
+        // Verifica se a resposta foi bem-sucedida
         if (saveData.success) {
             avisoGeral.style.display = 'block';
             window.setTimeout(() => {
                 avisoGeral.style.display = 'none';
-                window.location.href = '/upload'
-            },5000);
+                window.location.href = '/pagamento'
+            }, 5000);
         } else {
             erroEndereco.style.display = 'block';
             window.setTimeout(() => {
                 erroEndereco.style.display = 'none';
                 window.location.reload();
-            },5000);
+            }, 5000);
         }
     } catch (error) {
         console.error('Erro ao fazer a solicitação:', error);
-
     }
 });
 

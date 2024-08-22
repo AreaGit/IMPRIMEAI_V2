@@ -165,7 +165,7 @@ document.addEventListener('DOMContentLoaded', function() {
                     
                     if (responseBody === 'Upload concluído com sucesso') {
                       carregamento.style.display = 'none';
-                      window.location.href = '/pagamento';
+                      window.location.href = '/formato-entrega';
                     }
                   } else {
                     console.error('Erro ao enviar arquivo para o servidor:', response.statusText);
