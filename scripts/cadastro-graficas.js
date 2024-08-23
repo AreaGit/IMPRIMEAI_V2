@@ -65,7 +65,11 @@ nomeUser.addEventListener('keyup', () => {
     if(nomeUser.value.length <= 4) {
         nomeUser.style.color = 'red';
         validNomeUser = false
-    } else {
+    }else if(nomeUser.value.length >= 29) {
+        nomeUser.style.color = 'red';
+        validNomeUser = false
+    }
+     else {
         nomeUser.style.borderColor = 'green';
         nomeUser.style.color = 'black';
         validNomeUser = true
@@ -229,27 +233,32 @@ cnpjUser.addEventListener('keyup', () => {
         validCnpjUser = true;
     }
 });
-//Formatando campo de Telefone do usuário
 telefoneUser.addEventListener('input', () => {
     let telefoneValue = telefoneUser.value.replace(/\D/g, ''); // Remove todos os caracteres não numéricos
+
     if (telefoneValue.length > 11) {
         telefoneValue = telefoneValue.slice(0, 11); // Limite o comprimento a 11 caracteres
     }
 
-    // Formata o telefone com parênteses e traço (por exemplo, (99) 99999-9999)
-    telefoneValue = telefoneValue.replace(/(\d{2})(\d{5})(\d{4})/, '($1) $2-$3');
+    // Verifica se o número tem 8 ou 9 dígitos após o DDD e formata adequadamente
+    if (telefoneValue.length <= 10) {
+        telefoneValue = telefoneValue.replace(/(\d{2})(\d{4})(\d{4})/, '($1) $2-$3'); // Formato (99) 9999-9999
+    } else {
+        telefoneValue = telefoneValue.replace(/(\d{2})(\d{5})(\d{4})/, '($1) $2-$3'); // Formato (99) 99999-9999
+    }
 
     telefoneUser.value = telefoneValue; // Define o valor formatado de volta no campo
 });
 
 telefoneUser.addEventListener('keyup', () => {
     const telefoneValue = telefoneUser.value.replace(/\D/g, ''); // Remove todos os caracteres não numéricos
-    if(telefoneUser.value.length <= 11) {
-        telefoneUser.setAttribute('style', 'color: red; border-color: red;')
-        validTelefoneUser = false
+    // Verifica se o comprimento está correto para um número de telefone (10 ou 11 dígitos após a remoção dos parênteses)
+    if (telefoneValue.length < 10 || telefoneValue.length > 11) {
+        telefoneUser.setAttribute('style', 'color: red; border-color: red;');
+        validTelefoneUser = false;
     } else {
-        telefoneUser.setAttribute('style', 'color: black; border-color: green;')
-        validTelefoneUser = true
+        telefoneUser.setAttribute('style', 'color: black; border-color: green;');
+        validTelefoneUser = true;
     }
 });
 //Formatando campo de E-mail do usuário
