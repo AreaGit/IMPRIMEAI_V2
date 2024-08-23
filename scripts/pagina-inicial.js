@@ -316,7 +316,11 @@ async function obterQuantidadeCarrinho() {
         const quantidadeTotal = carrinho.reduce((total, produto) => total + produto.quantidade, 0);
         
         // Exibir a quantidade total no elemento com id 'quantidadeCarrinho'
-        document.getElementById('quantidadeCarrinho').textContent = quantidadeTotal;
+        if(quantidadeTotal > 99) {
+            document.getElementById('quantidadeCarrinho').textContent = "99+";
+        }else {
+            document.getElementById('quantidadeCarrinho').textContent = quantidadeTotal;
+        }
     } catch (error) {
         console.error('Erro ao obter a quantidade de produtos no carrinho:', error);
     }
@@ -326,3 +330,35 @@ document.getElementById('quantidadeCarrinho').addEventListener('click', () => {
 });
 // Chamar a função ao carregar a página
 document.addEventListener('DOMContentLoaded', obterQuantidadeCarrinho);
+
+const banners = document.querySelectorAll('.banner');
+const prevBtn = document.getElementById('prevBtn1');
+const nextBtn = document.getElementById('nextBtn1');
+const progressDots = document.querySelectorAll('.progress-dot');
+let currentIndex = 0;
+
+function showBanner(index) {
+    banners.forEach((banner, i) => {
+        banner.classList.toggle('active', i === index);
+        progressDots[i].classList.toggle('active', i === index);
+    });
+}
+
+function nextBanner() {
+    currentIndex = (currentIndex < banners.length - 1) ? currentIndex + 1 : 0;
+    showBanner(currentIndex);
+}
+
+prevBtn.addEventListener('click', () => {
+    currentIndex = (currentIndex > 0) ? currentIndex - 1 : banners.length - 1;
+    showBanner(currentIndex);
+});
+
+nextBtn.addEventListener('click', () => {
+    nextBanner();
+});
+
+// Troca automática dos banners a cada 5 segundos
+setInterval(() => {
+    nextBanner();
+}, 5000);

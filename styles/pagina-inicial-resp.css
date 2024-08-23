@@ -97,6 +97,8 @@
         border-radius: 51%;
         cursor: pointer;
     }
+    #banners{display: none;}
+    #progress{display: none;}
     #prods-header {
         z-index: -1;
         width: 100%;
@@ -475,6 +477,25 @@
         border-radius: 51%;
         cursor: pointer;
     }
+    div#banners {
+        height: 370px;
+        position: relative;
+        top: 170px;
+        width: 846px;
+        left: -15%;
+        cursor: pointer;
+    }
+    .banner.active > img {
+        width: 111%;
+    }
+    #banners > #prevBtn1 {
+        left: -56px;
+    }
+    #progress {
+        display: flex;
+        justify-content: center;
+        margin-top: 122px;
+    }
     #sec-header {
         width: 712px;
         height: 342px;
@@ -485,7 +506,7 @@
     }
     main {
         position: absolute;
-        top: 700px;
+        top: 1125px;
         width: 812px;
         height: 1109px;
         left: 50%;
@@ -505,8 +526,9 @@
         width: 849px;
         height: 184px;
         position: absolute;
-        top: 46%;
+        top: 192%;
         left: 50%;
+        transform: translate(-50%);
     }
     #novidades {
         position: absolute;
@@ -595,7 +617,7 @@
     }
     footer {
         position: absolute;
-        top: 300%;
+        top: 345%;
         width: 102vw;
         height: 512px;
     }
@@ -642,6 +664,25 @@
         transform: translate(-112%);
         top: 1px;
     }
+    div#banners {
+        height: 370px;
+        position: relative;
+        top: 170px;
+        width: 846px;
+        left: -15%;
+        cursor: pointer;
+    }
+    .banner.active > img {
+        width: 111%;
+    }
+    #banners > #prevBtn1 {
+        left: -56px;
+    }
+    #progress {
+        display: flex;
+        justify-content: center;
+        margin-top: 122px;
+    }
     #sec-header {
         width: 712px;
         height: 342px;
@@ -652,7 +693,7 @@
     }
     main {
         position: absolute;
-        top: 700px;
+        top: 1200px;
         width: 812px;
         height: 1109px;
         left: 50%;
@@ -672,7 +713,7 @@
         width: 849px;
         height: 184px;
         position: absolute;
-        top: 46%;
+        top: 170%;
         left: 50%;
     }
     #novidades {
@@ -724,7 +765,7 @@
     }
     footer {
         position: absolute;
-        top: 300%;
+        top: 345%;
         width: 102vw;
         height: 512px;
     }
@@ -770,6 +811,25 @@
         transform: translate(-112%);
         top: 1px;
     }
+    div#banners {
+        height: 370px;
+        position: relative;
+        top: 170px;
+        width: 846px;
+        left: -15%;
+        cursor: pointer;
+    }
+    .banner.active > img {
+        width: 111%;
+    }
+    #banners > #prevBtn1 {
+        left: -56px;
+    }
+    #progress {
+        display: flex;
+        justify-content: center;
+        margin-top: 122px;
+    }
     #sec-header {
         width: 712px;
         height: 342px;
@@ -780,7 +840,7 @@
     }
     main {
         position: absolute;
-        top: 700px;
+        top: 1200px;
         width: 812px;
         height: 1109px;
         left: 50%;
@@ -800,7 +860,7 @@
         width: 849px;
         height: 184px;
         position: absolute;
-        top: 46%;
+        top: 170%;
         left: 50%;
     }
     #novidades {
@@ -852,7 +912,7 @@
     }
     footer {
         position: absolute;
-        top: 300%;
+        top: 350%;
         width: 102vw;
         height: 512px;
     }
@@ -906,9 +966,28 @@
         top: 16%;
         transform: translate(-50%);
     }
+    div#banners {
+        height: 370px;
+        position: relative;
+        top: 170px;
+        width: 846px;
+        left: -15%;
+        cursor: pointer;
+    }
+    .banner.active > img {
+        width: 111%;
+    }
+    #banners > #prevBtn1 {
+        left: -56px;
+    }
+    #progress {
+        display: flex;
+        justify-content: center;
+        margin-top: 122px;
+    }
     main {
         position: absolute;
-        top: 700px;
+        top: 1200px;
         width: 812px;
         height: 1109px;
         left: 50%;
@@ -928,7 +1007,7 @@
         width: 849px;
         height: 184px;
         position: absolute;
-        top: 46%;
+        top: 170%;
         left: 50%;
     }
     #novidades {
@@ -1012,7 +1091,7 @@
     }
     footer {
         position: absolute;
-        top: 310%;
+        top: 360%;
         width: 102vw;
         height: 512px;
     }
@@ -1066,9 +1145,53 @@
         top: 16%;
         transform: translate(-50%);
     }
+    div#banners {
+        height: 370px;
+        position: absolute;
+        top: 156px;
+        width: 1200px;
+        left: 50%;
+        transform: translate(-50%);
+        cursor: pointer;
+      }
+      .banner {
+        display: none;
+        width: 100%;
+        height: 100%;
+      }
+      .banner.active > img {
+        width: 1200px;
+      }
+      .banner.active {
+        display: block;
+      }
+      
+      #progress {
+        display: flex;
+        justify-content: center;
+        margin-top: 555px;
+      }
+      
+      .progress-dot {
+        width: 10px;
+        height: 10px;
+        margin: 0 5px;
+        border-radius: 50%;
+        background-color: #ddd;
+      }
+      
+      .progress-dot.active {
+        background-color: #333;
+      }
+      #banners > #nextBtn1 {
+        right: -145px;
+      }
+      #banners > #prevBtn1 {
+        left: -145px;
+      }
     main {
         position: absolute;
-        top: 700px;
+        top: 1200px;
         width: 812px;
         height: 1109px;
         left: 50%;
@@ -1088,7 +1211,7 @@
         width: 190%;
         height: 184px;
         position: absolute;
-        top: 46%;
+        top: 180%;
         left: 50%;
     }
     #nextBtn {
@@ -1146,7 +1269,7 @@
     }
     footer {
         position: absolute;
-        top: 260%;
+        top: 315%;
         width: 100%;
         height: 550px;
         background-color: #2B2B2B;

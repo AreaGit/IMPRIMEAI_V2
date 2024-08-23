@@ -129,11 +129,57 @@ span#quantidadeCarrinho {
     transition: 1s;
     color: #F37160;
 }
+div#banners {
+  height: 370px;
+  position: relative;
+  top: 20px;
+  width: 1200px;
+  left: -15%;
+  cursor: pointer;
+}
+.banner {
+  display: none;
+  width: 100%;
+  height: 100%;
+}
+.banner.active > img {
+  width: 1200px;
+}
+.banner.active {
+  display: block;
+}
+
+#progress {
+  display: flex;
+  justify-content: center;
+  margin-top: 35px;
+}
+
+.progress-dot {
+  width: 10px;
+  height: 10px;
+  margin: 0 5px;
+  border-radius: 50%;
+  background-color: #ddd;
+}
+
+.progress-dot.active {
+  background-color: #333;
+}
+#banners > #nextBtn1 {
+  right: -145px;
+}
+#banners > #prevBtn1 {
+  left: -145px;
+}
+#banners > button {
+  background-color: transparent;
+}
 #prods-header {
   width: 151%;
   height: 184px;
   position: absolute;
-  top: 46%;
+  top: 170%;
   left: 50%;
   transform: translate(-50%);
 }
@@ -240,7 +286,7 @@ span#quantidadeCarrinho {
 }
 main {
     position: relative;
-    top: 700px;
+    top: 1070px;
     width: 1286px;
     height: 1109px;
     left: 50%;
@@ -511,7 +557,7 @@ main {
 }
 footer {
     position: absolute;
-    top: 290%;
+    top: 315%;
     width: 100%;
     height: 550px;
     background-color: #2B2B2B;
