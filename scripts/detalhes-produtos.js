@@ -209,42 +209,52 @@ carregarVariacoesDoProduto();
 
 document.addEventListener('DOMContentLoaded', function () {
   const quantidadesSection = document.getElementById('quantidades');
-  const quantidades = [1, 10, 50, 100, 500, 1000];
+  const params = new URLSearchParams(window.location.search);
+  const produtoId = params.get('id'); // Substitua pelo ID real do produto
 
-  quantidades.forEach((quantidade, index) => {
-    const checkboxWrapper = document.createElement('div');
-    checkboxWrapper.className = 'checkQuant';
+  // Fetch para obter as quantidades da API
+  fetch(`/api/quantidades/${produtoId}`)
+    .then(response => response.json())
+    .then(data => {
+      const quantidades = data.quantidades;
 
-    const checkbox = document.createElement('input');
-    checkbox.type = 'checkbox';
-    checkbox.id = `quantidadeCheckbox${index + 1}`;
-    checkbox.value = quantidade;
-    checkbox.className = 'quantidade-checkbox';
-    checkboxWrapper.appendChild(checkbox);
-    // Marcar o checkbox de 1 unidade por padrão
-    if (quantidade === 1) {
-      checkbox.checked = true;
-    }
-    // Adicionar evento para desmarcar outros checkboxes ao selecionar um
-    checkbox.addEventListener('change', function () {
-      if (this.checked) {
-        document.querySelectorAll('.quantidade-checkbox').forEach(otherCheckbox => {
-          if (otherCheckbox !== this) {
-            otherCheckbox.checked = false;
+      quantidades.forEach((quantidade, index) => {
+        const checkboxWrapper = document.createElement('div');
+        checkboxWrapper.className = 'checkQuant';
+
+        const checkbox = document.createElement('input');
+        checkbox.type = 'checkbox';
+        checkbox.id = `quantidadeCheckbox${index + 1}`;
+        checkbox.value = quantidade;
+        checkbox.className = 'quantidade-checkbox';
+
+        // Marcar o checkbox da primeira quantidade por padrão
+        if (index === 0) {
+          checkbox.checked = true;
+        }
+
+        checkbox.addEventListener('change', function () {
+          if (this.checked) {
+            document.querySelectorAll('.quantidade-checkbox').forEach(otherCheckbox => {
+              if (otherCheckbox !== this) {
+                otherCheckbox.checked = false;
+              }
+            });
           }
         });
-      }
+
+        const label = document.createElement('label');
+        label.htmlFor = `quantidadeCheckbox${index + 1}`;
+        label.textContent = `${quantidade} un`;
+
+        checkboxWrapper.appendChild(checkbox);
+        checkboxWrapper.appendChild(label);
+        quantidadesSection.appendChild(checkboxWrapper);
+      });
+    })
+    .catch(error => {
+      console.error('Erro ao carregar as quantidades:', error);
     });
-
-    checkboxWrapper.appendChild(checkbox);
-    const label = document.createElement('label');
-    label.htmlFor = `quantidadeCheckbox${index + 1}`;
-    label.textContent = `${quantidade} un`;
-
-    checkboxWrapper.appendChild(checkbox);
-    checkboxWrapper.appendChild(label);
-    quantidadesSection.appendChild(checkboxWrapper);
-  });
 });
 
 // Função para obter a quantidade marcada no checkbox
@@ -427,3 +437,12 @@ document.getElementById('quantidadeCarrinho').addEventListener('click', () => {
 });
 // Chamar a função ao carregar a página
 document.addEventListener('DOMContentLoaded', obterQuantidadeCarrinho);
+
+fetch(`/api/quantidades/${1}`)
+  .then(response => response.json())
+  .then(data => {
+    console.log(data.quantidades); // Exibe as quantidades no console
+  })
+  .catch(error => {
+    console.error('Erro ao buscar as quantidades:', error);
+  });

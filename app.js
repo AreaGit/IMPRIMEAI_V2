@@ -610,6 +610,28 @@ app.get('/detalhes-produtos', (req, res) => {
     res.status(500).send("Erro interno do servidor");
   }
 });
+app.get('/api/quantidades/:produtoId', async (req, res) => {
+  try {
+    const { produtoId } = req.params;
+
+    // Encontre as variações do produto pelo ID do produto
+    const variacoesProduto = await VariacoesProduto.findOne({
+      where: { idProduto: produtoId },
+    });
+
+    if (!variacoesProduto) {
+      return res.status(404).json({ error: 'Produto não encontrado' });
+    }
+
+    // Converta as quantidades de volta para um array de números
+    const quantidades = JSON.parse(variacoesProduto.quantidades);
+
+    res.json({ quantidades });
+  } catch (error) {
+    console.error('Erro ao obter as quantidades:', error);
+    res.status(500).json({ error: 'Erro ao obter as quantidades' });
+  }
+});
 //Rotas get para mostrar o produto e as suas variações
 app.get('/produto/:id', async (req, res) => {
   try {

@@ -14,6 +14,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const enobrecimentoInput = document.getElementById('enobrecimento');
     const corInput = document.getElementById('cor');
     const acabamentoInput = document.getElementById('acabamento');
+    const quantidadesInput = document.getElementById('quantidades')
     const btnCadProd = document.getElementById('btnCadProd');
 
     btnCadProd.addEventListener('click', cadastrarProduto);
@@ -38,6 +39,7 @@ document.addEventListener('DOMContentLoaded', () => {
             enobrecimento: enobrecimentoInput.value,
             cor: corInput.value,
             acabamento: acabamentoInput.value,
+            quantidades: quantidadesInput.value,
         };
 
         // Converte os valores em arrays
@@ -46,6 +48,7 @@ document.addEventListener('DOMContentLoaded', () => {
         produto.enobrecimento = produto.enobrecimento.split(',').map(item => item.trim());
         produto.cor = produto.cor.split(',').map(item => item.trim());
         produto.acabamento = produto.acabamento.split(',').map(item => item.trim());
+        produto.quantidades = produto.quantidades.split(',').map(item => item.trim());
 
         const formData = new FormData();
         for (const key in produto) {
@@ -80,6 +83,7 @@ document.addEventListener('DOMContentLoaded', () => {
             enobrecimentoInput.value = '';
             corInput.value = '';
             acabamentoInput.value = '';
+            quantidadesInput.value = '';
         })
         .catch(error => console.error(error));
     }

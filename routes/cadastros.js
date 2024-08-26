@@ -178,6 +178,7 @@ app.post('/cadastrar-produto', upload.fields([
       imgProd2,
       imgProd3,
       imgProd4,
+      quantidades
     } = req.body;
     const gabaritoProd = req.files['gabaritoProd'] ? req.files['gabaritoProd'][0] : null // Gabarito do produto
 
@@ -203,6 +204,7 @@ app.post('/cadastrar-produto', upload.fields([
     const enobrecimentoJSON = JSON.stringify(enobrecimento.split(','));
     const corJSON = JSON.stringify(cor.split(','));
     const acabamentoJSON = JSON.stringify(acabamento.split(','));
+    const quantidadesJSON = JSON.stringify(quantidades.split(',')); // Processando as quantidades
 
     // Insira os dados na tabela de VariaçõesProduto
     const variacoesProduto = await VariacoesProduto.create({
@@ -212,6 +214,7 @@ app.post('/cadastrar-produto', upload.fields([
       enobrecimento: enobrecimentoJSON,
       cor: corJSON,
       acabamento: acabamentoJSON,
+      quantidades: quantidadesJSON, // Armazenando as quantidades
     });
 
     const categoria = categoriaProd.toLowerCase().replace(/ /g, '-');

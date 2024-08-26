@@ -362,3 +362,25 @@ nextBtn.addEventListener('click', () => {
 setInterval(() => {
     nextBanner();
 }, 5000);
+document.addEventListener('DOMContentLoaded', () => {
+    const boxes = document.querySelectorAll('.box');
+    let currentIndex = 0;
+
+    function animateBox() {
+        // Remove the animation class from the previous box
+        if (currentIndex > 0) {
+            boxes[currentIndex - 1].classList.remove('animate');
+        } else if (currentIndex === 0 && boxes.length > 1) {
+            boxes[boxes.length - 1].classList.remove('animate');
+        }
+
+        // Add the animation class to the current box
+        boxes[currentIndex].classList.add('animate');
+
+        // Update the index to the next box
+        currentIndex = (currentIndex + 1) % boxes.length;
+    }
+
+    // Start the animation loop
+    setInterval(animateBox, 3000);
+})

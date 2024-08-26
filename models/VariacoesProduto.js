@@ -26,6 +26,9 @@ const VariacoesProduto = db.define('variacoesproduto', {
     acabamento: {
         type: Sequelize.JSON, // Agora é JSON
     },
+    quantidades: {
+        type: Sequelize.JSON,  // Armazenará as quantidades possíveis em formato JSON
+    },
 });
 
 //VariacoesProduto.belongsTo(Produtos, { foreignKey: 'idProduto' });
