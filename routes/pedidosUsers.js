@@ -621,57 +621,63 @@ app.post('/upload', upload.single('filePlanilha'), async (req, res) => {
             estado: row[7],
             cuidados: row[8],
             telefone: row[9],
-            quantidade: row[0],
+            quantidade: row[0], // Quantidade especificada
           };
-          // Adicione o endereço à lista de endereços com base na quantidade especificada
-          for (let j = 0; j < row[0]; j++) {
-            enderecosSalvos.push(endereco);
-          }
+          enderecosSalvos.push(endereco);
         }
       }
+
       // Certifique-se de que o carrinho tenha produtos
       if (carrinho.length === 0) {
         return res.status(400).send('O carrinho está vazio. Adicione produtos antes de usar a planilha.');
       }
+
       // Encontrar os fretes para todos os endereços salvos e calcular a soma total dos fretes
       const { resultadosFrete, somaDosFretes } = await encontrarGraficaMaisProxima2(enderecosSalvos);
       
       // Quebrar produtos com base nos endereços salvos
       const carrinhoQuebrado = [];
       let enderecoIndex = 0; // Índice para rastrear os endereços
-      // Gera um número aleatório para ser usado como sufixo único ao ID do produto
       const sufixoAleatorio = Math.floor(Math.random() * 1000000);
+
       carrinho.forEach((produto, produtoIndex) => {
         const produtoId = produto.produtoId;
-        const quantidade = produto.quantidade;
+        const quantidadeTotal = produto.quantidade;
 
-        for (let i = 0; i < quantidade; i++) {
-          const endereco = enderecosSalvos[enderecoIndex];
-          const frete = resultadosFrete[enderecoIndex].custoDoFrete; // Pegar o custo do frete correspondente ao endereço
-          enderecoIndex = (enderecoIndex + 1) % enderecosSalvos.length; // Avança para o próximo endereço
-          carrinhoQuebrado.push({
-            // Adicionando sufixo único ao ID do produto
-            produtoId: `${produtoId}_${sufixoAleatorio}_${i}`,
-            nomeProd: produto.nomeProd,
-            quantidade: 1,
-            valorUnitario: produto.valorUnitario,
-            subtotal: produto.subtotal,
-            raioProd: produto.raioProd,
-            acabamento: produto.acabamento,
-            cor: produto.cor,
-            enobrecimento: produto.enobrecimento,
-            formato: produto.formato,
-            material: produto.material,
-            arquivo: produto.nomeArquivo,
-            downloadLink: produto.downloadLink,
-            tipoEntrega: 'Múltiplos Enderecos',
-            endereco: {
-              ...endereco, // Copy existing address properties
-              frete: frete, // Add shipping cost to the address object
-            },
-          });
-        }
+        enderecosSalvos.forEach((endereco, index) => {
+          const quantidadeEndereco = endereco.quantidade; // Quantidade especificada para esse endereço
+          
+          if (quantidadeEndereco > 0 && quantidadeEndereco <= quantidadeTotal) {
+            const frete = resultadosFrete[index].custoDoFrete; // Pegar o custo do frete correspondente ao endereço
+
+            carrinhoQuebrado.push({
+              produtoId: `${produtoId}_${sufixoAleatorio}_${index}`,
+              nomeProd: produto.nomeProd,
+              quantidade: quantidadeEndereco,
+              valorUnitario: produto.valorUnitario,
+              subtotal: produto.valorUnitario * quantidadeEndereco,
+              raioProd: produto.raioProd,
+              acabamento: produto.acabamento,
+              cor: produto.cor,
+              enobrecimento: produto.enobrecimento,
+              formato: produto.formato,
+              material: produto.material,
+              nomeArquivo: produto.nomeArquivo,
+              downloadLink: produto.downloadLink,
+              tipoEntrega: 'Múltiplos Enderecos',
+              endereco: {
+                ...endereco,
+                tipoEntrega: 'Múltiplos Enderecos',
+                frete: frete,
+              },
+            });
+
+            // Subtrai a quantidade já alocada
+            produto.quantidade -= quantidadeEndereco;
+          }
+        });
       });
+
       // Atualizar a sessão com o carrinho quebrado
       req.session.carrinho = carrinhoQuebrado;
 
@@ -886,6 +892,8 @@ app.post('/criar-pedidos', async (req, res) => {
     }
 
     const isMultipleAddresses = carrinhoQuebrado[0].tipoEntrega === 'Múltiplos Enderecos';
+    // Calcular o total de unidades de produtos no carrinho
+    const totalUnidades = carrinhoQuebrado.reduce((total, produto) => total + produto.quantidade, 0);
     const totalAPagar = await Promise.all(carrinhoQuebrado.map(async (produto) => {
       const produtoInfo = await Produtos.findByPk(produto.produtoId);
       return produtoInfo.valorProd * produto.quantidade;
@@ -894,7 +902,7 @@ app.post('/criar-pedidos', async (req, res) => {
     const pedido = await Pedidos.create({
       idUserPed: req.cookies.userId,
       nomePed: 'Pedido Geral',
-      quantPed: isMultipleAddresses ? carrinhoQuebrado.length : 1,
+      quantPed: totalUnidades,
       valorPed: totalAPagar,
       statusPed: metodPag === 'Boleto' ? 'Esperando Pagamento' : 'Pago',
       metodPag: metodPag,
@@ -919,7 +927,7 @@ app.post('/criar-pedidos', async (req, res) => {
         produtos: produto.produtoId,
         idProduto: produto.produtoId,
         tipoEntrega: endereco.tipoEntrega,
-        frete: produto.frete
+        frete: endereco.frete
       });
     });
 
@@ -961,7 +969,7 @@ app.post('/criar-pedidos', async (req, res) => {
       await verificarGraficaMaisProximaEAtualizar(itensPedido[0], enderecos[0]);
     }
 
-    res.json({ message: 'Pedido criado com sucesso', pedido });
+      
   } catch (error) {
     console.error('Erro ao criar pedidos:', error);
     res.status(500).json({ error: 'Erro ao criar pedidos' });
@@ -1141,6 +1149,9 @@ async function verificarGraficaMaisProximaEAtualizar2(itensPedido, enderecos) {
                     graficasNotificadas.push(graficaMaisProxima.id);
                   } else {
                     console.log(`A gráfica ${graficaMaisProxima.id} já foi notificada para o pedido ${pedidoCadastrado.id}`);
+                    await pedidoCadastrado.update({
+                      graficaAtend: graficaMaisProxima.id,
+                    });
                   }   
                 }
               }

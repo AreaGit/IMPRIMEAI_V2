@@ -300,8 +300,8 @@ main {
     width: 100%;
 }
 #novidades > h2 {
-    font-size: 28px;
-    font-weight: 600;
+    font-size: 33px;
+    font-weight: 300;
     color: #A7A9AC;
     width: fit-content;
     position: relative;
@@ -375,9 +375,10 @@ main {
     transform: translate(-50%);
 }
 #motivosCompra > h2 {
-    font-size: 28px;
-    font-weight: 600;
+    font-size: 33px;
+    font-weight: 300;
     color: #A7A9AC;
+    width: 106%;
 }
 #motivosCompra > h2 > strong {
     color: #EF4126;
