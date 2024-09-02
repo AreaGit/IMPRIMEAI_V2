@@ -1490,6 +1490,16 @@ app.get('/retirada', (req, res) => {
     res.status(500).send("Erro interno do servidor", err);
   }
 });
+//Rota get para página de tutoriais do usuário
+app.get('/tutoriais', (req, res) => {
+  try {
+    const tutoriaisContentHtml = fs.readFileSync(path.join(__dirname, "html", "tutoriais.html"), "utf-8");
+    res.send(tutoriaisContentHtml);
+  } catch(err) {
+    console.log("Erro ao ler o arquivo tutoriais.html", err);
+    res.status(500).send("Erro interno do servidor", err);
+  }
+});
 app.listen(PORT, () => {
   console.log(`Servidor rodando na porta ${PORT} https://localhost:${PORT}`);
 });
