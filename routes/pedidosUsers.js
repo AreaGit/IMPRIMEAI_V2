@@ -33,6 +33,61 @@ const rp = require('request-promise');
 const Sequelize = require('sequelize');
 const fs = require('fs');
 const path = require('path');
+const { Client, LocalAuth } = require('whatsapp-web.js');
+const qrcode = require('qrcode-terminal');
+
+// Configuração do cliente do WhatsApp
+const client = new Client({
+    authStrategy: new LocalAuth()
+});
+
+// Gera QR code para autenticação
+client.on('qr', (qr) => {
+    qrcode.generate(qr, { small: true });
+    console.log('QR code gerado, escaneie com o WhatsApp.');
+});
+
+client.on('disconnected', (reason) => {
+    console.log('O cliente foi desconectado:', reason);
+    setTimeout(() => client.initialize(), 5000);  // Tenta reconectar após 5 segundos
+});
+
+client.on('ready', () => {
+    console.log('Cliente conectado ao WhatsApp!');
+});
+
+client.on('error', (error) => {
+    console.error('Erro encontrado:', error);
+    setTimeout(() => client.destroy().then(() => client.initialize()), 5000);  // Tenta reiniciar após 5 segundos
+});
+
+// Inicia o cliente do WhatsApp
+client.initialize();
+
+async function sendMessage(rawNumber, message) {
+  if (!rawNumber || !message) {
+      throw new Error('Número ou mensagem não fornecidos.');
+  }
+
+  try {
+      // Remove todos os caracteres que não sejam dígitos
+      const cleanedNumber = rawNumber.replace(/\D/g, '');
+
+      // Adiciona o código do país (Brasil = 55) na frente do número
+      const completeNumber = `55${cleanedNumber}`;
+
+      const chatId = `${completeNumber}@c.us`;
+
+      console.log('Enviando mensagem para:', chatId); // Log para verificar o chatId
+      await client.sendMessage(chatId, message);
+
+      return { status: 'success', message: 'Mensagem enviada com sucesso.' };
+  } catch (error) {
+      console.error('Erro ao enviar a mensagem:', error.message);
+      throw new Error('Erro ao enviar a mensagem: ' + error.message);
+  }
+}
+
 app.use(express.json());
 app.use(cookieParser());
 app.use(express.urlencoded({ extended: true }));
@@ -892,7 +947,7 @@ app.post('/criar-pedidos', async (req, res) => {
     }
 
     const isMultipleAddresses = carrinhoQuebrado[0].tipoEntrega === 'Múltiplos Enderecos';
-    // Calcular o total de unidades de produtos no carrinho
+
     const totalUnidades = carrinhoQuebrado.reduce((total, produto) => total + produto.quantidade, 0);
     const totalAPagar = await Promise.all(carrinhoQuebrado.map(async (produto) => {
       const produtoInfo = await Produtos.findByPk(produto.produtoId);
@@ -959,9 +1014,6 @@ app.post('/criar-pedidos', async (req, res) => {
 
     const itensPedido = await Promise.all(itensPedidoPromises);
 
-    req.session.carrinho = [];
-    req.session.endereco = {};
-
     // Chamada da função de verificação da gráfica
     if (isMultipleAddresses) {
       await verificarGraficaMaisProximaEAtualizar2(itensPedido, enderecos);
@@ -969,7 +1021,13 @@ app.post('/criar-pedidos', async (req, res) => {
       await verificarGraficaMaisProximaEAtualizar(itensPedido[0], enderecos[0]);
     }
 
-      
+    // Limpar a sessão
+    req.session.carrinho = [];
+    req.session.endereco = {};
+
+    // Enviar resposta ao cliente
+    res.status(200).json({ message: 'Pedido criado com sucesso!' });
+
   } catch (error) {
     console.error('Erro ao criar pedidos:', error);
     res.status(500).json({ error: 'Erro ao criar pedidos' });
@@ -1186,14 +1244,14 @@ async function verificarGraficaMaisProximaEAtualizar2(itensPedido, enderecos) {
 
     async function enviarNotificacaoWhatsapp(destinatario, corpo) {
       try {
-          const response = await api.sendChatMessage(destinatario, corpo);
+          const response = await sendMessage(destinatario, corpo);
           console.log(`Mensagem enviada com sucesso para a gráfica ${destinatario}:`, response);
           return response;
       } catch (error) {
           console.error(`Erro ao enviar mensagem para a gráfica ${destinatario}:`, error);
           throw error;
       }
-  }
+  }  
 
   const transport = nodemailer.createTransport({
     host: 'smtp.gmail.com',
