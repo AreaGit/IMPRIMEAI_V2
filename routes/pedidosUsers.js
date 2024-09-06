@@ -35,36 +35,14 @@ const fs = require('fs');
 const path = require('path');
 const { Client, LocalAuth } = require('whatsapp-web.js');
 const qrcode = require('qrcode-terminal');
+const { client, sendMessage } = require('./api/whatsapp-web');
 
-// Configuração do cliente do WhatsApp
-const client = new Client({
-    authStrategy: new LocalAuth()
-});
-
-// Gera QR code para autenticação
-client.on('qr', (qr) => {
-    qrcode.generate(qr, { small: true });
-    console.log('QR code gerado, escaneie com o WhatsApp.');
-});
-
-client.on('disconnected', (reason) => {
-    console.log('O cliente foi desconectado:', reason);
-    setTimeout(() => client.initialize(), 5000);  // Tenta reconectar após 5 segundos
-});
-
+// Use o cliente conforme necessário
 client.on('ready', () => {
-    console.log('Cliente conectado ao WhatsApp!');
+    console.log('Cliente WhatsApp pronto para uso no pedidosUsers.js');
 });
 
-client.on('error', (error) => {
-    console.error('Erro encontrado:', error);
-    setTimeout(() => client.destroy().then(() => client.initialize()), 5000);  // Tenta reiniciar após 5 segundos
-});
-
-// Inicia o cliente do WhatsApp
-client.initialize();
-
-async function sendMessage(rawNumber, message) {
+/*async function sendMessage(rawNumber, message) {
   if (!rawNumber || !message) {
       throw new Error('Número ou mensagem não fornecidos.');
   }
@@ -86,7 +64,7 @@ async function sendMessage(rawNumber, message) {
       console.error('Erro ao enviar a mensagem:', error.message);
       throw new Error('Erro ao enviar a mensagem: ' + error.message);
   }
-}
+}*/
 
 app.use(express.json());
 app.use(cookieParser());

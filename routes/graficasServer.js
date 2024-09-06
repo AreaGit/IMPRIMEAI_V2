@@ -42,10 +42,16 @@ app.use(session({
   resave: false,
   saveUninitialized: true
 }));
+const { client, sendMessage } = require('./api/whatsapp-web');
+
+// Use o cliente conforme necessário
+client.on('ready', () => {
+    console.log('Cliente WhatsApp pronto para uso no graficaServer.js');
+});
 
 async function enviarNotificacaoWhatsapp(destinatario, corpo) {
   try {
-      const response = await api.sendChatMessage(destinatario, corpo);
+      const response = await sendMessage(destinatario, corpo);
       console.log(`Mensagem enviada com sucesso para a gráfica ${destinatario}:`, response);
       return response;
   } catch (error) {
