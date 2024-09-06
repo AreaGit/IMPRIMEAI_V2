@@ -434,8 +434,8 @@ async function getCoordinatesFromAddressEnd(enderecoEntregaInfo, apiKey) {
 
   app.post('/atualizar-status-pedido', async (req, res) => {
     try {
-      const { pedidoId, novoStatus } = req.body;
-  
+      const { pedidoId, novoStatus, tipoPed } = req.body;
+
       // Atualize o status do pedido na tabela Pedidos
       const graficaId = req.cookies.graficaId; // Assuming the graphics company's ID is stored in a cookie
       console.log(graficaId)
@@ -448,9 +448,38 @@ async function getCoordinatesFromAddressEnd(enderecoEntregaInfo, apiKey) {
       const ped = await ItensPedidos.findByPk(pedidoId);
       const userId = ped.idUserPed; // Ou qualquer forma que você tenha o id do usuário
       const user = await User.findByPk(userId);
-      pedido.statusPed = novoStatus;
-      pedido.graficaAtend = graficaId; // Save the graphics company's ID
-      await pedido.save();
+
+      if(tipoPed == "Mult") {
+        if (!pedido) {
+          return res.json({ success: false, message: 'Pedido não encontrado.' });
+        }
+        pedido.statusPed = novoStatus;
+        pedido.graficaAtend = graficaId; // Save the graphics company's ID
+        await pedido.save();
+      } else{
+        // Pega o ID da gráfica nos cookies
+        const graficaId = req.cookies.graficaId; // Assuming the graphics company's ID is stored in a cookie
+        console.log(graficaId);
+
+        // Procura o pedido com base no 'idPed' na tabela 'ItensPedido'
+        const pedido = await ItensPedido.findOne({ where: { idPed: pedidoId } });
+
+        // Também busca o pedido na tabela 'Pedidos' baseado em 'id'
+        const tablePedidos = await Pedidos.findOne({ where: { id: pedidoId } });
+
+        if (!pedido || !tablePedidos) {
+          return res.json({ success: false, message: 'Pedido não encontrado.' });
+        }
+
+        // Procura o usuário pelo 'idUserPed' do pedido
+        const userId = pedido.idUserPed;
+        const user = await User.findByPk(userId);
+
+        // Atualiza o status do pedido
+        pedido.statusPed = novoStatus;
+        pedido.graficaAtend = graficaId; // Salva o ID da gráfica que está atendendo o pedido
+        await pedido.save();
+      }
       
       if(novoStatus === "Pedido Aceito Pela Gráfica") {
         //mensagem whatsapp

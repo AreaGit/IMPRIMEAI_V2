@@ -74,6 +74,7 @@ document.addEventListener('DOMContentLoaded', async() => {
                 body: JSON.stringify({
                   pedidoId: idPedido,
                   novoStatus: novoStatus,
+                  tipoPed: "Mult",
                 }),
               });
                 // Verifica se a atualização foi bem-sucedida
@@ -117,6 +118,7 @@ document.addEventListener('DOMContentLoaded', async() => {
             body: JSON.stringify({
               pedidoId: idPedido,
               novoStatus: novoStatus,
+              tipoPed: "Norm",
             }),
           });
     
@@ -188,6 +190,7 @@ document.addEventListener('DOMContentLoaded', async() => {
                 body: JSON.stringify({
                   pedidoId: idPedido,
                   novoStatus: novoStatus,
+                  tipoPed: "Norm",
                 }),
               });
                 // Verifica se a atualização foi bem-sucedida
@@ -232,6 +235,7 @@ document.addEventListener('DOMContentLoaded', async() => {
               body: JSON.stringify({
                 pedidoId: idPedido,
                 novoStatus: novoStatus,
+                tipoPed: "Norm",
               }),
             });
       
