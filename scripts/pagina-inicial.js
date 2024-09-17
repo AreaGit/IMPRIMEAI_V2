@@ -3,8 +3,8 @@ document.addEventListener("DOMContentLoaded", function() {
     var navbar = document.getElementById('nav-bar'); // Renomeie para 'navbar' apenas uma vez
     var fecharMenu = document.getElementById('fechar-menu');
     var header = document.getElementById('header');
-    var searchInput = document.getElementById('searchInput');
-    var suggestionsContainer = document.getElementById('sugestoes');
+    var searchInput = document.getElementById('search-input');
+    var suggestionsContainer = document.getElementById('suggestions-container');
 
     // Verifique se todos os elementos existem antes de adicionar os event listeners
     if (header) {
@@ -57,88 +57,50 @@ document.addEventListener("DOMContentLoaded", function() {
         });
     }
 
-    if (suggestionsContainer) {
-        suggestionsContainer.addEventListener('mouseleave', () => {
-            suggestionsContainer.style.display = 'none';
-        });
+    async function fetchSuggestions(searchText) {
+        try {
+            const response = await fetch('/pesquisar-produtos', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ query: searchText })
+            });
+
+            const data = await response.json();
+            suggestionsContainer.innerHTML = ''; // Limpa as sugestões anteriores
+            suggestionsContainer.style.display = 'block'; // Mostra a lista
+
+            if (data.produtos && data.produtos.length > 0) {
+                const list = document.createElement('ul'); // Cria a lista dentro da div
+                data.produtos.forEach(produto => {
+                    const listItem = document.createElement('li');
+                    listItem.textContent = produto.nomeProd;
+                    listItem.addEventListener('click', () => {
+                        window.location.href = `/detalhes-produtos?id=${produto.id}`;
+                    });
+                    list.appendChild(listItem);
+                });
+                suggestionsContainer.appendChild(list); // Adiciona a lista na div
+            } else {
+                suggestionsContainer.textContent = 'Nenhum produto encontrado.';
+            }
+        } catch (error) {
+            console.error('Erro ao pesquisar produtos:', error);
+        }
     }
 
-    if (searchInput) {
-        async function activateButton(event) {
-            if (event.key === "Enter") {
-                const searchText = searchInput.value;
-                try {
-                    const response = await fetch('/pesquisar-produtos', {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/json'
-                        },
-                        body: JSON.stringify({ query: searchText })
-                    });
+    // Quando o usuário digitar no campo de pesquisa
+    searchInput.addEventListener('input', async () => {
+        const searchText = searchInput.value.trim();
 
-                    const data = await response.json();
-                    suggestionsContainer.innerHTML = '';
-                    suggestionsContainer.style.display = 'block';
-
-                    if (data.produtos && data.produtos.length > 0) {
-                        data.produtos.forEach(produto => {
-                            const listItem = document.createElement('li');
-                            listItem.textContent = produto.nomeProd;
-                            listItem.addEventListener('click', () => {
-                                window.location.href = `/detalhes-produtos?id=${produto.id}`;
-                            });
-                            suggestionsContainer.appendChild(listItem);
-                        });
-                    } else {
-                        suggestionsContainer.textContent = 'Nenhum produto encontrado.';
-                    }
-                } catch (error) {
-                    console.error('Erro ao pesquisar produtos:', error);
-                }
-            }
+        if (searchText === '') {
+            suggestionsContainer.style.display = 'none';
+            return;
         }
 
-        searchInput.addEventListener('keydown', activateButton);
-
-        searchInput.addEventListener('input', async () => {
-            const searchText = searchInput.value.trim();
-
-            if (searchText === '') {
-                suggestionsContainer.style.display = 'none';
-                suggestionsContainer.innerHTML = '';
-                return;
-            }
-
-            try {
-                const response = await fetch('/pesquisar-produtos', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify({ query: searchText })
-                });
-
-                const data = await response.json();
-                suggestionsContainer.innerHTML = '';
-                suggestionsContainer.style.display = 'block';
-
-                if (data.produtos && data.produtos.length > 0) {
-                    data.produtos.forEach(produto => {
-                        const listItem = document.createElement('li');
-                        listItem.textContent = produto.nomeProd;
-                        listItem.addEventListener('click', () => {
-                            window.location.href = `/detalhes-produtos?id=${produto.id}`;
-                        });
-                        suggestionsContainer.appendChild(listItem);
-                    });
-                } else {
-                    suggestionsContainer.textContent = 'Nenhum produto encontrado.';
-                }
-            } catch (error) {
-                console.error('Erro ao pesquisar produtos:', error);
-            }
-        });
-    }
+        await fetchSuggestions(searchText); // Busca as sugestões
+    }); 
 });
 
 const cx1 = document.getElementById('cx1');
@@ -230,81 +192,57 @@ subNews.addEventListener('click',  () => {
     })
     .catch(error => console.error('Erro:', error));
 });
-document.addEventListener('DOMContentLoaded', async () => {
-    const carouselSlide = document.getElementById('carouselSlide');
+document.addEventListener("DOMContentLoaded", () => {
+    const gap = 16;
+    const carousel = document.getElementById("carousel");
+    const content = document.getElementById("content");
+    const next = document.getElementById("next");
+    const prev = document.getElementById("prev");
 
-    // Função para carregar os produtos do servidor
-    async function loadProducts() {
-        try {
-            const response = await fetch('/api/produtos');
-            const produtos = await response.json();
-            produtos.forEach(produto => {
-                const produtoElement = document.createElement('div');
-                produtoElement.className = 'carousel-item';
-                const imgSrc = produto.imgProd; // Placeholder caso não haja imagem
-                produtoElement.innerHTML = `
-                    <a href="/detalhes-produtos?id=${produto.id}">
-                        <img src="${imgSrc}" alt="${produto.nomeProd}">
-                        <h2>${produto.nomeProd}</h2>
-                    </a>
-                `;
-                carouselSlide.appendChild(produtoElement);
-            });
-            initializeCarousel();
-        } catch (error) {
-            console.error('Erro ao carregar produtos:', error);
-        }
-    }
+    let width = carousel.offsetWidth; // Define width at the top
 
-    // Função para converter ArrayBuffer em Base64
-    function arrayBufferToBase64(buffer) {
-        let binary = '';
-        const bytes = new Uint8Array(buffer);
-        const len = bytes.byteLength;
-        for (let i = 0; i < len; i++) {
-            binary += String.fromCharCode(bytes[i]);
-        }
-        return window.btoa(binary);
-    }
+    // Smooth scroll function
+    function smoothScrollTo(element, target, duration) {
+        const start = element.scrollLeft;
+        const change = target - start;
+        let currentTime = 0;
+        const increment = 20;
 
-    // Função para inicializar o carrossel
-    function initializeCarousel() {
-        const carouselItems = document.querySelectorAll('.carousel-item');
-        let counter = 0; // Start at the first item
-        const size = carouselItems[0].clientWidth;
-
-        const prevBtn = document.getElementById('prevBtn');
-        const nextBtn = document.getElementById('nextBtn');
-
-        carouselSlide.style.transform = 'translateX(' + (-size * counter) + 'px)';
-
-        // Função para avançar o carrossel
-        function moveCarousel() {
-            if (counter >= carouselItems.length - 3) { 
-                counter = 0; // Volta ao início se estiver no final
-            } else {
-                counter++;
+        function animateScroll() {
+            currentTime += increment;
+            const val = easeInOutQuad(currentTime, start, change, duration);
+            element.scrollLeft = val;
+            if (currentTime < duration) {
+                requestAnimationFrame(animateScroll);
             }
-            carouselSlide.style.transition = "transform 0.5s ease-in-out";
-            carouselSlide.style.transform = 'translateX(' + (-size * counter) + 'px)';
         }
 
-        // Listeners dos botões
-        nextBtn.addEventListener('click', moveCarousel);
-
-        prevBtn.addEventListener('click', () => {
-            if (counter <= 0) return; // Adjust boundary to prevent empty space
-            carouselSlide.style.transition = "transform 0.5s ease-in-out";
-            counter--;
-            carouselSlide.style.transform = 'translateX(' + (-size * counter) + 'px)';
-        });
-
-        // Avanço automático do carrossel a cada 5 segundos
-        setInterval(moveCarousel, 5000);
+        animateScroll();
     }
 
-    // Carregar produtos ao iniciar
-    loadProducts();
+    // Easing function for smoother animation
+    function easeInOutQuad(t, b, c, d) {
+        t /= d / 2;
+        if (t < 1) return c / 2 * t * t + b;
+        t--;
+        return -c / 2 * (t * (t - 2) - 1) + b;
+    }
+
+    next.addEventListener("click", () => {
+        const target = carousel.scrollLeft + width + gap;
+        smoothScrollTo(carousel, target, 600); // Duration of 600ms for smooth scrolling
+        prev.style.display = "flex";
+    });
+
+    prev.addEventListener("click", () => {
+        const target = carousel.scrollLeft - width - gap;
+        smoothScrollTo(carousel, target, 600); // Duration of 600ms for smooth scrolling
+        next.style.display = "flex";
+    });
+
+    window.addEventListener("resize", () => {
+        width = carousel.offsetWidth;
+    });
 });
 async function obterQuantidadeCarrinho() {
     try {
@@ -384,3 +322,29 @@ document.addEventListener('DOMContentLoaded', () => {
     // Start the animation loop
     setInterval(animateBox, 3000);
 })
+document.addEventListener("DOMContentLoaded", async () => {
+    // Função para pegar o cookie pelo nome
+    function getCookie(name) {
+        const value = `; ${document.cookie}`;
+        const parts = value.split(`; ${name}=`);
+        if (parts.length === 2) return parts.pop().split(';').shift();
+    }
+
+    // Pega o username do cookie
+    const username = getCookie('username');
+    // Seleciona os elementos
+    const conviteCad = document.getElementById('conviteCad');
+    const userLog = document.getElementById('userLog');
+    const nameUserLog = document.getElementById('nameUserLog');
+
+        if (username === undefined) {
+            // Mostra o convite para cadastrar e esconde a área logada
+            conviteCad.style.display = 'block';
+            userLog.style.display = 'none';
+        } else {
+            // Esconde o convite e mostra o nome do usuário
+            conviteCad.style.display = 'none';
+            userLog.style.display = 'block';
+            nameUserLog.textContent = username;
+        }
+});

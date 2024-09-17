@@ -17,45 +17,64 @@
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" />
 </head>
 <body>
-    <header id="header">
-        <a href="/"><img src="images/logo-imprimeai.png" alt="..." id="logo2"></a>      
-        <a href="#" id="menu-icon"><svg width="35" height="50" viewBox="0 0 18 18"><polyline id="globalnav-menutrigger-bread-bottom" class="globalnav-menutrigger-bread globalnav-menutrigger-bread-bottom" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round" points="2 12, 16 12"><animate id="globalnav-anim-menutrigger-bread-bottom-open" attributeName="points" keyTimes="0;0.5;1" dur="0.24s" begin="indefinite" fill="freeze" calcMode="spline" keySplines="0.42, 0, 1, 1;0, 0, 0.58, 1" values=" 2 12, 16 12; 2 9, 16 9; 3.5 15, 15 3.5"></animate><animate id="globalnav-anim-menutrigger-bread-bottom-close" attributeName="points" keyTimes="0;0.5;1" dur="0.24s" begin="indefinite" fill="freeze" calcMode="spline" keySplines="0.42, 0, 1, 1;0, 0, 0.58, 1" values=" 3.5 15, 15 3.5; 2 9, 16 9; 2 12, 16 12"></animate></polyline><polyline id="globalnav-menutrigger-bread-top" class="globalnav-menutrigger-bread globalnav-menutrigger-bread-top" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round" points="2 5, 16 5"><animate id="globalnav-anim-menutrigger-bread-top-open" attributeName="points" keyTimes="0;0.5;1" dur="0.24s" begin="indefinite" fill="freeze" calcMode="spline" keySplines="0.42, 0, 1, 1;0, 0, 0.58, 1" values=" 2 5, 16 5; 2 9, 16 9; 3.5 3.5, 15 15"></animate><animate id="globalnav-anim-menutrigger-bread-top-close" attributeName="points" keyTimes="0;0.5;1" dur="0.24s" begin="indefinite" fill="freeze" calcMode="spline" keySplines="0.42, 0, 1, 1;0, 0, 0.58, 1" values=" 3.5 3.5, 15 15; 2 9, 16 9; 2 5, 16 5"></animate></polyline></svg></a>
-        </div>
-        <nav id="nav-bar">
-            <a href="/"><img src="images/logo-imprimeai.png" alt="..." id="logo"></a>
-            <span class="material-symbols-outlined" id="fechar-menu">close</span>
-            <li><a href="/">Início</a></li>
-            <li><a href="/comunicacao-visual">Comunicação Visual</a></li>
-            <li><a href="/cartazes">Cartazes</a></li>
-            <li><a href="/papelaria">Papelaria</a></li>
-            <li><a href="/brindes">Brindes</a></li>
-            <li><a href="/adesivos">Adesivos</a></li>
-            <li><a href="/cartoes">Cartão de Visita</a></li>
-            <li><a href="/folders">Folders e Panfletos</a></li>
-            <li><a href="/pastas">Pastas</a></li>
-            <li><a href="/imas">Imãs</a></li>
-            <li><a href="/sacolas">Sacolas</a></li>
-            <a href="/carrinho"><img src="images/carrinho-compras.png" alt="..." id="carrinho-compras"></a>
-            <span id="quantidadeCarrinho"></span>
-            <div id="icone-pesquisa">
-                <div class="input-wrapper">
-                    <button class="icon" id="searchButton"> 
-                      <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" height="22px" width="22px">
-                        <path stroke-linejoin="round" stroke-linecap="round" stroke-width="1.5" stroke="#101011" d="M11.5 21C16.7467 21 21 16.7467 21 11.5C21 6.25329 16.7467 2 11.5 2C6.25329 2 2 6.25329 2 11.5C2 16.7467 6.25329 21 11.5 21Z"></path>
-                        <path stroke-linejoin="round" stroke-linecap="round" stroke-width="1.5" stroke="#101011" d="M22 22L20 20"></path>
-                      </svg>
-                    </button>
-                    <input placeholder="Pesquisar..." id="searchInput" class="input" name="text" type="text">
-                </div>
-                <div id="sugestoes">
-                
-                </div>
-        </nav>
-    </header>
-    <img src="" alt="">
-    <section id="sec-header">
-        <h1>Tá com pressa?<br><strong>Imprimeaí</strong></h1>
-        <div id="banners">
+    <header>
+      <div class="sliderBanner-header">
+        <!--Slider Banner Ficará aqui-->
+      </div>
+      <div class="messageHeader">
+        <p>Tá com pressa?</p>
+      </div>
+      <div class="linksHeader">
+        <ul>
+          <li><a href="#">Meus Pedidos</a></li>
+          <li><a href="#">Minha Carteira</a></li>
+        </ul>
+      </div>
+      <div class="icons-mediaHeader">
+        <ul>
+          <li><img src="https://wbl.blob.core.windows.net/public/icon-whatsapp.png" alt="..."></li>
+          <li><img src="https://wbl.blob.core.windows.net/public/icon-instagram-black.png" alt="..."></li>
+          <li><img src="https://wbl.blob.core.windows.net/public/icon-youtube-black.png" alt="..."></li>
+          <li><img src="https://wbl.blob.core.windows.net/public/icon-facebook-black.png" alt="..."></li>
+        </ul>
+      </div>
+      <div class="logo-header">
+        <a href="/"><img src="images/logo-imprimeai.png" alt="..."></a>
+      </div>
+      <div class="search-input">
+        <input type="text" name="search-input" id="search-input" placeholder="O que você está procurando?">
+        <button><span class="material-symbols-outlined">
+          search
+          </span></button>
+          <div id="suggestions-container"></div>
+      </div>
+      <div class="notCad">
+          <p id="conviteCad">Olá!, bem-vindo! <br> <a href="/login">Entre</a> ou <a href="/cadastro">cadastre-se</a></p>
+      </div>
+      <div class="notCad" id="userLog">
+        <p>Olá!, bem-vindo! <br> <a href="/perfil" id="nameUserLog"></a></p>
+      </div>
+      <div class="carrinho">
+        <a href="/carrinho"><img src="https://wbl.blob.core.windows.net/public/icon-carrinho.png" alt="..."></a>
+        <span id="quantidadeCarrinho">0</span>
+      </div>
+      <div class="linhaAbInp"></div>
+      <nav id="nav-bar">
+        <span class="material-symbols-outlined" id="fechar-menu">close</span>
+        <li><a href="/">Início</a></li>
+        <li><a href="/comunicacao-visual">Comunicação Visual</a></li>
+        <li><a href="/cartazes">Cartazes</a></li>
+        <li><a href="/papelaria">Papelaria</a></li>
+        <li><a href="/brindes">Brindes</a></li>
+        <li><a href="/adesivos">Adesivos</a></li>
+        <li><a href="/cartoes">Cartão de Visita</a></li>
+        <li><a href="/folders">Folders e Panfletos</a></li>
+        <li><a href="/pastas">Pastas</a></li>
+        <li><a href="/imas">Imãs</a></li>
+        <li><a href="/sacolas">Sacolas</a></li>
+    </nav>
+    <div class="linhaAbNav"></div>
+      <div id="banners">
           <div class="banner active"><img src="https://i.imgur.com/gkQ8Acl.jpeg" alt="Banner 1"></div>
           <div class="banner"><img src="https://i.imgur.com/tfOHGhz.jpeg" alt="Banner 2"></div>
           <div class="banner"><img src="https://i.imgur.com/SuaycOv.jpeg" alt="Banner 3"></div>
@@ -73,36 +92,86 @@
             <path d="M23.5587,16.916 C24.1447,17.4999987 24.1467,18.446 23.5647,19.034 L16.6077,26.056 C16.3147,26.352 15.9287,26.4999987 15.5427,26.4999987 C15.1607,26.4999987 14.7787,26.355 14.4867,26.065 C13.8977,25.482 13.8947,24.533 14.4777,23.944 L20.3818,17.984 L14.4408,12.062 C13.8548,11.478 13.8528,10.5279 14.4378,9.941 C15.0218,9.354 15.9738,9.353 16.5588,9.938 L23.5588,16.916 L23.5587,16.916 Z"></path>
             </svg>
           </button>
+          <div id="progress">
+            <div class="progress-dot active"></div>
+            <div class="progress-dot"></div>
+            <div class="progress-dot"></div>
+            <div class="progress-dot"></div>
+            <div class="progress-dot"></div>
+            <div class="progress-dot"></div>
+            <div class="progress-dot"></div>
+            <div class="progress-dot"></div>
         </div>
-        <div id="progress">
-          <div class="progress-dot active"></div>
-          <div class="progress-dot"></div>
-          <div class="progress-dot"></div>
-          <div class="progress-dot"></div>
-          <div class="progress-dot"></div>
-          <div class="progress-dot"></div>
-          <div class="progress-dot"></div>
-          <div class="progress-dot"></div>
-      </div>
-        <div id="prods-header">
-          <section id="carousel">
-            <div class="carousel-container">
-                <div class="carousel-slide" id="carouselSlide">
-                    <!-- Produtos serão inseridos aqui dinamicamente -->
-                </div>
-            </div>
-            <button id="prevBtn">
-              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 36 36">
-              <path d="M21.559,12.062 L15.618,17.984 L21.5221,23.944 C22.105,24.533 22.1021,25.482 21.5131,26.065 C21.2211,26.355 20.8391,26.4999987 20.4571,26.4999987 C20.0711,26.4999987 19.6851,26.352 19.3921,26.056 L12.4351,19.034 C11.8531,18.446 11.8551,17.4999987 12.4411,16.916 L19.4411,9.938 C20.0261,9.353 20.9781,9.354 21.5621,9.941 C22.1471,10.528 22.1451,11.478 21.5591,12.062 L21.559,12.062 Z"></path>
-              </svg>
-            </button>
-            <button id="nextBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 36 36">
-              <path d="M23.5587,16.916 C24.1447,17.4999987 24.1467,18.446 23.5647,19.034 L16.6077,26.056 C16.3147,26.352 15.9287,26.4999987 15.5427,26.4999987 C15.1607,26.4999987 14.7787,26.355 14.4867,26.065 C13.8977,25.482 13.8947,24.533 14.4777,23.944 L20.3818,17.984 L14.4408,12.062 C13.8548,11.478 13.8528,10.5279 14.4378,9.941 C15.0218,9.354 15.9738,9.353 16.5588,9.938 L23.5588,16.916 L23.5587,16.916 Z"></path>
-              </svg>
-            </button>
-        </section>
         </div>
-    </section>
+      <div id="wrapper">
+        <div id="carousel">
+          <div id="content">
+            <img
+              class="item"
+              src="https://i.imgur.com/LHCDLTE.png"
+            />
+            <img
+              src="https://i.imgur.com/YZKvkhd.png"
+              class="item"
+            />
+            <img
+              src="https://i.imgur.com/BxQiBiS.png"
+              class="item"
+            />
+            <img
+              src="https://i.imgur.com/9irl1JE.png"
+              class="item"
+            />
+            <img
+              src="https://i.imgur.com/UioTR4f.png"
+              class="item"
+            />
+            <img
+              src="https://i.imgur.com/MJFhPNI.png"
+              class="item"
+            />
+            <img
+              src="https://i.imgur.com/nUObTny.png"
+              class="item"
+            />
+            <img
+              src="https://i.imgur.com/viI38Cd.png"
+              class="item"
+            />
+            <img
+              src="https://i.imgur.com/Us3bWSa.png"
+              class="item"
+            />
+            <img
+              src="https://i.imgur.com/4C71hRV.png"
+              class="item"
+            />
+          </div>
+        </div>
+        <button id="prev">
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="24"
+            height="24"
+            viewBox="0 0 24 24"
+          >
+            <path fill="none" d="M0 0h24v24H0V0z" />
+            <path d="M15.61 7.41L14.2 6l-6 6 6 6 1.41-1.41L11.03 12l4.58-4.59z" />
+          </svg>
+        </button>
+        <button id="next">
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="24"
+            height="24"
+            viewBox="0 0 24 24"
+          >
+            <path fill="none" d="M0 0h24v24H0V0z" />
+            <path d="M10.02 6L8.61 7.41 13.19 12l-4.58 4.59L10.02 18l6-6-6-6z" />
+          </svg>
+        </button>
+      </div> 
+    </header>
     <main>
         <section id="novidades">
             <h2><strong>Se liga nas novidades.</strong> Veja o que acabou de chegar.</h2>

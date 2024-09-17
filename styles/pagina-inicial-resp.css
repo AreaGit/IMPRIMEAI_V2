@@ -3,23 +3,109 @@
         z-index: 999;
         position: absolute;
         width: 99%;
-        left: 50%;
-    }
-    header.scrolled {
-        position: inherit;
-        top: 0%;
-        border-bottom: 0px solid transparent;
-        color: white;
-        width: 0%;
-        z-index: -1;
-    }
-    div#lg {
-        width: 50px;
-        height: 50px;
-        position: absolute;
         left: 0%;
-        top: 0px;
-        z-index: 999;
+    }
+    .messageHeader {
+        position: relative;
+        left: 1%;
+        top: 20px;
+        width: fit-content;
+    }
+    .linksHeader {
+        width: fit-content;
+        position: relative;
+        left: 70%;
+    }
+    .linksHeader > ul > li {
+        padding-right: 10px;
+    }
+    .icons-mediaHeader {
+        display: none;
+    }
+    .logo-header {
+        position: relative;
+        left: 10%;
+        top: 30px;
+        width: fit-content;
+    }
+    .logo-header > a > img {
+        cursor: pointer;
+        width: 60vw;
+    }
+    .notCad {
+        width: fit-content;
+        position: relative;
+        left: 85%;
+        top: -22px;
+    }
+    .notCad > a {
+        font-weight: 300;
+        font-size: 12px;
+    }
+    .carrinho {
+        width: fit-content;
+        position: relative;
+        left: 80%;
+        top: -7px;
+    }
+    .linhaAbInp {display: none;}
+    .linhaAbNav {display: none;}
+    .search-input {
+        position: absolute;
+        left: 45%;
+        transform: translate(-45%);
+        top: 45%;
+        width: fit-content;
+        height: auto;
+        z-index: 1;
+    }
+    div#suggestions-container {
+        display: none;
+        background-color: white;
+        width: 70vw;
+        box-shadow: -1px -1px 3px black;
+        height: auto;
+        z-index: 1;
+        position: relative;
+        top: -40px;
+        left: 50%;
+        transform: translate(-50%);
+        border-radius: 5px;
+        padding: 20px;
+        max-height: 455px;
+        overflow-y: auto;
+    }
+    .search-input > input {
+        border: 1px solid #A8A8A8;
+        background-color: transparent;
+        width: 80vw;
+        padding: 15px;
+        border-radius: 30px;
+    }
+    .search-input > button {
+        background-color: transparent;
+        display: block;
+        position: relative;
+        left: 85%;
+        top: -22px;
+    }
+    #wrapper {
+        width: 70%;
+        max-width: 1127px;
+        position: relative;
+        left: 50%;
+        transform: translate(-50%);
+        top: 110px;
+    }
+    #prev {
+        top: 85%;
+        left: -50px;
+        transform: translate(50%, -50%);
+    }
+    #next {
+        top: 85%;
+        right: 19px;
+        transform: translate(50%, -50%);
     }
     #nav-bar {
         display: none;
@@ -86,17 +172,6 @@
         transform: translate(-120%);
         top: 6%;
     }
-    span#quantidadeCarrinho {
-        position: relative;
-        left: 25%;
-        top: -81%;
-        background: black;
-        color: white;
-        padding: 3px;
-        font-size: 12px;
-        border-radius: 51%;
-        cursor: pointer;
-    }
     #banners{display: none;}
     #progress{display: none;}
     #prods-header {
@@ -109,9 +184,9 @@
     }
     footer {
         position: absolute;
-        top: 520%;
-        width: 131vw;
-        height: 625px;
+        top: 485%;
+        width: 100vw;
+        height: 675px;
     }
     footer > a {
         font-size: 17px;
@@ -155,7 +230,8 @@
         width: 100%;
         height: 108px;
         padding: 0px;
-        left: 20%;
+        left: 45%;
+        transform: translate(-50%);
     }
     #linksRapidos > h2 {
         font-size: 36px;
@@ -241,7 +317,7 @@
         width: fit-content;
         position: absolute;
         left: 3%;
-        width: 92%;
+        width: 80%;
     }
     #prevButton {
         cursor: pointer;
@@ -354,40 +430,48 @@
     #cx1 {
         box-shadow: -1px -1px 8px #434344;
         border-radius: 5px;
-        width: 388px;
+        width: 80vw;
         height: 456px;
         position: absolute;
         top: 12%;
         transition: transform 0.8s;
+        left: 20%;
+        transform: translate(-20%);
     }
     #cx2 {
         box-shadow: -1px -1px 8px #434344;
         border-radius: 5px;
-        width: 388px;
+        width: 80vw;
         height: 456px;
         position: absolute;
         top: 58%;
         transition: transform 0.8s;
+        left: 20%;
+        transform: translate(-20%);
     }
     #cx3 {
         box-shadow: -1px -1px 8px #434344;
         border-radius: 5px;
-        width: 388px;
+        width: 80vw;
         height: 456px;
         position: absolute;
         top: 104%;
         transition: transform 0.8s;
         overflow-x: hidden;
+        left: 20%;
+        transform: translate(-20%);
     }
     #cx4 {
         box-shadow: -1px -1px 8px #434344;
         border-radius: 5px;
-        width: 388px;
+        width: 80vw;
         height: 456px;
         position: absolute;
         top: 150%;
         transition: transform 0.8s;
         overflow-x: hidden;
+        left: 20%;
+        transform: translate(-20%);
     }
     main {
         position: absolute;
@@ -435,7 +519,7 @@
       #novidades {
         position: relative;
         left: -25px;
-        width: 120%;
+        width: 100%;
       }
       #cx5 {
         display: none;
@@ -443,58 +527,93 @@
       #cx6 {
         display: none;
       }
-}
-@media screen and (min-width:1024px) and (max-width:1300px) {   
-    #nav-bar {
+      .carousel-item > a > h2 {
+        width: 0%;
         position: relative;
+        left: 35%;
+    }
+}
+@media screen and (min-width:1024px) and (max-width:1300px) {  
+    .logo-header {
+        position: absolute;
+        left: 17%;
+        transform: translate(-17%);
+        top: 14%;
+        width: fit-content;
+    }
+    .logo-header > a > img {
+        cursor: pointer;
+        width: 56%;
+    }
+    .search-input {
+        position: absolute;
         left: 50%;
-        top: 8px;
+        transform: translate(-55%);
+        top: 16%;
+        width: fit-content;
+        height: auto;
+        z-index: 1;
+    }
+    .notCad {
+        width: fit-content;
+        position: absolute;
+        left: 80%;
+        transform: translate(-80%);
+        top: 16%;
+    }
+    .carrinho {
+        width: fit-content;
+        position: absolute;
+        left: 90%;
+        transform: translate(-90%);
+        top: 16%;
+    }
+    #nav-bar {
+        position: absolute;
+        left: 50%;
+        top: 25%;
         width: 700px;
         transform: translate(-50%);
     }
-    #logo {
-        position: absolute;
-        left: -14%;
-        top: -2px;
-        width: 107px;
-    }
-    #icone-pesquisa {
-        width: 22px;
-        height: 24px;
-        position: absolute;
-        left: 112%;
-        transform: translate(-112%);
-        top: 1px;
-    }
-    span#quantidadeCarrinho {
+    #wrapper {
+        width: 100%;
+        max-width: 900px;
         position: relative;
-        left: 59%;
-        top: -18px;
-        background: black;
-        color: white;
-        padding: 3px;
-        font-size: 12px;
-        border-radius: 51%;
-        cursor: pointer;
+        left: 50%;
+        transform: translate(-50%);
+        top: 400px;
+    }
+    #prev {
+        top: 65%;
+        left: -100px;
+        transform: translate(50%, -50%);
+    }
+    #next {
+        top: 65%;
+        right: -100px;
+        transform: translate(-50%, -50%);
     }
     div#banners {
-        height: 370px;
+        height: 270px;
         position: relative;
-        top: 170px;
+        top: 235px;
         width: 846px;
-        left: -15%;
+        left: 50%;
         cursor: pointer;
+        transform: translate(-50%);
     }
     .banner.active > img {
-        width: 111%;
+        width: 100%;
     }
     #banners > #prevBtn1 {
         left: -56px;
     }
+    #banners > #nextBtn1 {
+        right: -56px;
+    }
     #progress {
         display: flex;
         justify-content: center;
-        margin-top: 122px;
     }
     #sec-header {
         width: 712px;
@@ -594,13 +713,19 @@
         overflow-x: hidden;
     }
     #motivosCompra {
-        width: 1050px;
+        width: 985px;
         height: 313px;
         position: absolute;
         top: 105%;
         padding: 15px;
         left: 50%;
         transform: translate(-50%);
+    }
+    #motivosCompra > h2 {
+        font-size: 33px;
+        font-weight: 300;
+        color: #A7A9AC;
+        width: 95%;
     }
     #linksRapidos {
         position: absolute;
@@ -618,7 +743,7 @@
     footer {
         position: absolute;
         top: 365%;
-        width: 102vw;
+        width: 100vw;
         height: 512px;
     }
     footer > a {
@@ -629,59 +754,95 @@
         position: relative;
         left: 40%;
         top: 35%;
+    }
+    #institucional {
+        width: 30%;
+        position: relative;
+        left: 10%;
+        top: 70px;
     }
 }
 @media screen and (min-width:1301px) and (max-width:1440px) {
-    #nav-bar {
-        position: relative;
+    .logo-header {
+        position: absolute;
+        left: 17%;
+        transform: translate(-17%);
+        top: 14%;
+        width: fit-content;
+    }
+    .logo-header > a > img {
+        cursor: pointer;
+        width: 56%;
+    }
+    .search-input {
+        position: absolute;
         left: 50%;
-        top: 8px;
+        transform: translate(-55%);
+        top: 16%;
+        width: fit-content;
+        height: auto;
+        z-index: 1;
+    }
+    .notCad {
+        width: fit-content;
+        position: absolute;
+        left: 80%;
+        transform: translate(-80%);
+        top: 16%;
+    }
+    .carrinho {
+        width: fit-content;
+        position: absolute;
+        left: 90%;
+        transform: translate(-90%);
+        top: 16%;
+    }
+    #nav-bar {
+        position: absolute;
+        left: 50%;
+        top: 25%;
         width: 700px;
         transform: translate(-50%);
     }
-    span#quantidadeCarrinho {
+    #wrapper {
+        width: 100%;
+        max-width: 900px;
         position: relative;
-        left: 59%;
-        top: -18px;
-        background: black;
-        color: white;
-        padding: 3px;
-        font-size: 12px;
-        border-radius: 51%;
-        cursor: pointer;
+        left: 50%;
+        transform: translate(-50%);
+        top: 400px;
     }
-    #logo {
-        position: absolute;
-        left: -14%;
-        top: -2px;
-        width: 107px;
+    #prev {
+        top: 65%;
+        left: -100px;
+        transform: translate(50%, -50%);
     }
-    #icone-pesquisa {
-        width: 22px;
-        height: 24px;
-        position: absolute;
-        left: 112%;
-        transform: translate(-112%);
-        top: 1px;
+    #next {
+        top: 65%;
+        right: -100px;
+        transform: translate(-50%, -50%);
     }
     div#banners {
-        height: 370px;
+        height: 270px;
         position: relative;
-        top: 170px;
+        top: 235px;
         width: 846px;
-        left: -15%;
+        left: 50%;
         cursor: pointer;
+        transform: translate(-50%);
     }
     .banner.active > img {
-        width: 111%;
+        width: 100%;
     }
     #banners > #prevBtn1 {
         left: -56px;
     }
+    #banners > #nextBtn1 {
+        right: -56px;
+    }
     #progress {
         display: flex;
         justify-content: center;
-        margin-top: 122px;
     }
     #sec-header {
         width: 712px;
@@ -693,12 +854,12 @@
     }
     main {
         position: absolute;
-        top: 1200px;
+        top: 1125px;
         width: 812px;
         height: 1109px;
         left: 50%;
-        transform: translate(-50%);
         padding: 15px;
+        transform: translate(-50%);
     }
     #sec-header > h1 {
         font-weight: lighter;
@@ -713,302 +874,9 @@
         width: 849px;
         height: 184px;
         position: absolute;
-        top: 170%;
-        left: 50%;
-    }
-    #novidades {
-        position: absolute;
-        left: 50%;
-        height: 1095px;
-        width: 160%;
-        transform: translate(-50%);
-    }
-    #novidades > h2 {
-        font-size: 28px;
-        font-weight: 600;
-        color: #A7A9AC;
-        position: absolute;
-        left: 11%;
-        top: -30px;
-    }
-    .box {
-        display: inline-flex;
-        box-shadow: -1px -1px 8px #434344;
-        border-radius: 5px;
-        width: 376px;
-        height: 456px;
-        transition: transform 0.8s;
-        margin: 25px;
-        cursor: pointer;
-    }
-    #motivosCompra {
-        width: 1050px;
-        height: 313px;
-        position: absolute;
-        top: 105%;
-        padding: 15px;
+        top: 192%;
         left: 50%;
         transform: translate(-50%);
-    }
-    #linksRapidos {
-        position: absolute;
-        top: 140%;
-        width: 420px;
-        height: 108px;
-        padding: 10px;
-        left: 30%;
-        transform: translate(-30%);
-    }
-    #linksRapidos > h2 {
-        font-size: 28px;
-        font-weight: 600;
-    }
-    footer {
-        position: absolute;
-        top: 365%;
-        width: 102vw;
-        height: 512px;
-    }
-    footer > a {
-        color: white;
-        font-size: 12px;
-        position: absolute;
-        transition: 1s;
-        position: relative;
-        left: 40%;
-        top: 35%;
-    }
-}
-@media screen and (min-width:1441px) and (max-width:1635px) {
-    #nav-bar {
-        position: relative;
-        left: 50%;
-        top: 8px;
-        width: 1050px;
-        transform: translate(-50%);
-    }
-    span#quantidadeCarrinho {
-        position: relative;
-        left: 13%;
-        background: black;
-        color: white;
-        padding: 3px;
-        font-size: 12px;
-        border-radius: 51%;
-        cursor: pointer;
-    }
-    #logo {
-        position: absolute;
-        left: -2%;
-        top: -7px;
-        width: 107px;
-    }
-    #icone-pesquisa {
-        width: 22px;
-        height: 24px;
-        position: absolute;
-        left: 112%;
-        transform: translate(-112%);
-        top: 1px;
-    }
-    div#banners {
-        height: 370px;
-        position: relative;
-        top: 170px;
-        width: 846px;
-        left: -15%;
-        cursor: pointer;
-    }
-    .banner.active > img {
-        width: 111%;
-    }
-    #banners > #prevBtn1 {
-        left: -56px;
-    }
-    #progress {
-        display: flex;
-        justify-content: center;
-        margin-top: 122px;
-    }
-    #sec-header {
-        width: 712px;
-        height: 342px;
-        position: absolute;
-        left: 50%;
-        top: 16%;
-        transform: translate(-50%);
-    }
-    main {
-        position: absolute;
-        top: 1200px;
-        width: 812px;
-        height: 1109px;
-        left: 50%;
-        transform: translate(-50%);
-        padding: 15px;
-    }
-    #sec-header > h1 {
-        font-weight: lighter;
-        font-size: 49px;
-        color: #020202;
-        line-height: 62px;
-        width: 49%;
-        position: absolute;
-        left: -10%;
-    }
-    #prods-header {
-        width: 849px;
-        height: 184px;
-        position: absolute;
-        top: 170%;
-        left: 50%;
-    }
-    #novidades {
-        position: absolute;
-        left: 50%;
-        height: 1095px;
-        width: 160%;
-        transform: translate(-50%);
-    }
-    #novidades > h2 {
-        font-size: 28px;
-        font-weight: 600;
-        color: #A7A9AC;
-        position: absolute;
-        left: 11%;
-        top: -20px;
-    }
-    .box {
-        display: inline-flex;
-        box-shadow: -1px -1px 8px #434344;
-        border-radius: 5px;
-        width: 376px;
-        height: 456px;
-        transition: transform 0.8s;
-        margin: 25px;
-        cursor: pointer;
-    }
-    #motivosCompra {
-        width: 1050px;
-        height: 313px;
-        position: absolute;
-        top: 105%;
-        padding: 15px;
-        left: 50%;
-        transform: translate(-50%);
-    }
-    #linksRapidos {
-        position: absolute;
-        top: 140%;
-        width: 420px;
-        height: 108px;
-        padding: 10px;
-        left: 30%;
-        transform: translate(-30%);
-    }
-    #linksRapidos > h2 {
-        font-size: 28px;
-        font-weight: 600;
-    }
-    footer {
-        position: absolute;
-        top: 380%;
-        width: 102vw;
-        height: 512px;
-    }
-    footer > a {
-        color: white;
-        font-size: 12px;
-        position: absolute;
-        transition: 1s;
-        position: relative;
-        left: 40%;
-        top: 35%;
-    }
-}
-@media screen and (min-width:1635px) and (max-width:1789px) {
-    #nav-bar {
-        position: relative;
-        left: 50%;
-        top: 8px;
-        width: 1050px;
-        transform: translate(-50%);
-    }
-    span#quantidadeCarrinho {
-        position: relative;
-        left: 13%;
-        background: black;
-        color: white;
-        padding: 3px;
-        font-size: 12px;
-        border-radius: 51%;
-        cursor: pointer;
-    }
-    #logo {
-        position: absolute;
-        left: -2%;
-        top: -7px;
-        width: 107px;
-    }
-    #icone-pesquisa {
-        width: 22px;
-        height: 24px;
-        position: absolute;
-        left: 112%;
-        transform: translate(-112%);
-        top: 1px;
-    }
-    #sec-header {
-        width: 712px;
-        height: 342px;
-        position: absolute;
-        left: 50%;
-        top: 16%;
-        transform: translate(-50%);
-    }
-    div#banners {
-        height: 370px;
-        position: relative;
-        top: 170px;
-        width: 846px;
-        left: -15%;
-        cursor: pointer;
-    }
-    .banner.active > img {
-        width: 111%;
-    }
-    #banners > #prevBtn1 {
-        left: -56px;
-    }
-    #progress {
-        display: flex;
-        justify-content: center;
-        margin-top: 122px;
-    }
-    main {
-        position: absolute;
-        top: 1200px;
-        width: 812px;
-        height: 1109px;
-        left: 50%;
-        transform: translate(-50%);
-        padding: 15px;
-    }
-    #sec-header > h1 {
-        font-weight: lighter;
-        font-size: 49px;
-        color: #020202;
-        line-height: 62px;
-        width: 49%;
-        position: absolute;
-        left: -10%;
-    }
-    #prods-header {
-        width: 849px;
-        height: 184px;
-        position: absolute;
-        top: 170%;
-        left: 50%;
     }
     #novidades {
         position: absolute;
@@ -1023,6 +891,12 @@
         color: #A7A9AC;
         position: absolute;
         left: -11%;
+    }
+    #cx5 {
+        display: none;
+    }
+    #cx6 {
+        display: none;
     }
     #cx1 {
         box-shadow: -1px -1px 8px #434344;
@@ -1068,13 +942,19 @@
         overflow-x: hidden;
     }
     #motivosCompra {
-        width: 1050px;
+        width: 985px;
         height: 313px;
         position: absolute;
         top: 105%;
         padding: 15px;
         left: 50%;
         transform: translate(-50%);
+    }
+    #motivosCompra > h2 {
+        font-size: 33px;
+        font-weight: 300;
+        color: #A7A9AC;
+        width: 95%;
     }
     #linksRapidos {
         position: absolute;
@@ -1091,8 +971,8 @@
     }
     footer {
         position: absolute;
-        top: 380%;
-        width: 102vw;
+        top: 365%;
+        width: 100vw;
         height: 512px;
     }
     footer > a {
@@ -1104,38 +984,94 @@
         left: 40%;
         top: 35%;
     }
-}
-@media screen and (min-width:2560px) {
-    #nav-bar {
+    #institucional {
+        width: 30%;
         position: relative;
+        left: 10%;
+        top: 70px;
+    }
+}
+@media screen and (min-width:1441px) and (max-width:1635px) {
+    .logo-header {
+        position: absolute;
+        left: 17%;
+        transform: translate(-17%);
+        top: 14%;
+        width: fit-content;
+    }
+    .logo-header > a > img {
+        cursor: pointer;
+        width: 56%;
+    }
+    .search-input {
+        position: absolute;
         left: 50%;
-        top: 8px;
-        width: 1050px;
+        transform: translate(-55%);
+        top: 16%;
+        width: fit-content;
+        height: auto;
+        z-index: 1;
+    }
+    .notCad {
+        width: fit-content;
+        position: absolute;
+        left: 80%;
+        transform: translate(-80%);
+        top: 16%;
+    }
+    .carrinho {
+        width: fit-content;
+        position: absolute;
+        left: 90%;
+        transform: translate(-90%);
+        top: 16%;
+    }
+    #nav-bar {
+        position: absolute;
+        left: 50%;
+        top: 25%;
+        width: 700px;
         transform: translate(-50%);
     }
-    #logo {
-        position: absolute;
-        left: -2%;
-        top: -7px;
-        width: 107px;
-    }
-    #icone-pesquisa {
-        width: 22px;
-        height: 24px;
-        position: absolute;
-        left: 112%;
-        transform: translate(-112%);
-        top: 1px;
-    }
-    span#quantidadeCarrinho {
+    #wrapper {
+        width: 100%;
+        max-width: 900px;
         position: relative;
-        left: 13%;
-        background: black;
-        color: white;
-        padding: 3px;
-        font-size: 12px;
-        border-radius: 51%;
+        left: 50%;
+        transform: translate(-50%);
+        top: 400px;
+    }
+    #prev {
+        top: 65%;
+        left: -100px;
+        transform: translate(50%, -50%);
+    }
+    #next {
+        top: 65%;
+        right: -100px;
+        transform: translate(-50%, -50%);
+    }
+    div#banners {
+        height: 270px;
+        position: relative;
+        top: 235px;
+        width: 846px;
+        left: 50%;
         cursor: pointer;
+        transform: translate(-50%);
+    }
+    .banner.active > img {
+        width: 100%;
+    }
+    #banners > #prevBtn1 {
+        left: -56px;
+    }
+    #banners > #nextBtn1 {
+        right: -56px;
+    }
+    #progress {
+        display: flex;
+        justify-content: center;
     }
     #sec-header {
         width: 712px;
@@ -1145,53 +1081,9 @@
         top: 16%;
         transform: translate(-50%);
     }
-    div#banners {
-        height: 370px;
-        position: absolute;
-        top: 156px;
-        width: 1200px;
-        left: 50%;
-        transform: translate(-50%);
-        cursor: pointer;
-      }
-      .banner {
-        display: none;
-        width: 100%;
-        height: 100%;
-      }
-      .banner.active > img {
-        width: 1200px;
-      }
-      .banner.active {
-        display: block;
-      }
-      
-      #progress {
-        display: flex;
-        justify-content: center;
-        margin-top: 555px;
-      }
-      
-      .progress-dot {
-        width: 10px;
-        height: 10px;
-        margin: 0 5px;
-        border-radius: 50%;
-        background-color: #ddd;
-      }
-      
-      .progress-dot.active {
-        background-color: #333;
-      }
-      #banners > #nextBtn1 {
-        right: -145px;
-      }
-      #banners > #prevBtn1 {
-        left: -145px;
-      }
     main {
         position: absolute;
-        top: 1200px;
+        top: 1125px;
         width: 812px;
         height: 1109px;
         left: 50%;
@@ -1208,51 +1100,90 @@
         left: -10%;
     }
     #prods-header {
-        width: 190%;
+        width: 849px;
         height: 184px;
         position: absolute;
-        top: 180%;
+        top: 192%;
         left: 50%;
-    }
-    #nextBtn {
-        right: 12px;
-    }
-    #prevBtn {
-        left: 56px;
+        transform: translate(-50%);
     }
     #novidades {
         position: absolute;
         left: 50%;
         height: 1095px;
-        width: 160%;
+        width: 100%;
         transform: translate(-50%);
     }
     #novidades > h2 {
-        font-size: 33px;
-        font-weight: 300;
+        font-size: 28px;
+        font-weight: 600;
         color: #A7A9AC;
         position: absolute;
-        left: 4%;
-        top: -57px;
+        left: -11%;
     }
-    .box {
-        display: inline-flex;
+    #cx5 {
+        display: none;
+    }
+    #cx6 {
+        display: none;
+    }
+    #cx1 {
         box-shadow: -1px -1px 8px #434344;
         border-radius: 5px;
-        width: 376px;
+        width: 360px;
         height: 456px;
+        position: absolute;
+        top: 12%;
+        left: 3%;
         transition: transform 0.8s;
-        margin: 25px;
-        cursor: pointer;
+    }
+    #cx2 {
+        box-shadow: -1px -1px 8px #434344;
+        border-radius: 5px;
+        width: 360px;
+        height: 456px;
+        position: absolute;
+        top: 12%;
+        left: 53%;
+        transition: transform 0.8s;
+    }    
+    #cx3 {
+        box-shadow: -1px -1px 8px #434344;
+        border-radius: 5px;
+        width: 360px;
+        height: 456px;
+        position: absolute;
+        top: 57%;
+        left: 6%;
+        transition: transform 0.8s;
+        overflow-x: hidden;
+        transform: translate(-7%);
+    }
+    #cx4 {
+        box-shadow: -1px -1px 8px #434344;
+        border-radius: 5px;
+        width: 360px;
+        height: 456px;
+        position: absolute;
+        top: 57%;
+        left: 53%;
+        transition: transform 0.8s;
+        overflow-x: hidden;
     }
     #motivosCompra {
-        width: 1050px;
+        width: 985px;
         height: 313px;
         position: absolute;
         top: 105%;
         padding: 15px;
         left: 50%;
         transform: translate(-50%);
+    }
+    #motivosCompra > h2 {
+        font-size: 33px;
+        font-weight: 300;
+        color: #A7A9AC;
+        width: 95%;
     }
     #linksRapidos {
         position: absolute;
@@ -1269,12 +1200,9 @@
     }
     footer {
         position: absolute;
-        top: 315%;
-        width: 100%;
-        height: 550px;
-        background-color: #2B2B2B;
-        border: 1px solid;
-        padding: 15px;
+        top: 365%;
+        width: 100vw;
+        height: 512px;
     }
     footer > a {
         color: white;
@@ -1282,7 +1210,298 @@
         position: absolute;
         transition: 1s;
         position: relative;
+        left: 40%;
+        top: 35%;
+    }
+    #institucional {
+        width: 30%;
+        position: relative;
+        left: 10%;
+        top: 70px;
+    }
+}
+@media screen and (min-width:1635px) and (max-width:1789px) {
+    .logo-header {
+        position: absolute;
+        left: 17%;
+        transform: translate(-17%);
+        top: 14%;
+        width: fit-content;
+    }
+    .logo-header > a > img {
+        cursor: pointer;
+        width: 56%;
+    }
+    .search-input {
+        position: absolute;
+        left: 50%;
+        transform: translate(-55%);
+        top: 16%;
+        width: fit-content;
+        height: auto;
+        z-index: 1;
+    }
+    .notCad {
+        width: fit-content;
+        position: absolute;
+        left: 80%;
+        transform: translate(-80%);
+        top: 16%;
+    }
+    .carrinho {
+        width: fit-content;
+        position: absolute;
+        left: 90%;
+        transform: translate(-90%);
+        top: 16%;
+    }
+    #nav-bar {
+        position: absolute;
+        left: 50%;
+        top: 26%;
+        width: 70%;
+        transform: translate(-50%);
+    }
+    #wrapper {
+        width: 100%;
+        max-width: 900px;
+        position: relative;
+        left: 50%;
+        transform: translate(-50%);
+        top: 400px;
+    }
+    #prev {
+        top: 65%;
+        left: -100px;
+        transform: translate(50%, -50%);
+    }
+    #next {
+        top: 65%;
+        right: -100px;
+        transform: translate(-50%, -50%);
+    }
+    div#banners {
+        height: 270px;
+        position: relative;
+        top: 235px;
+        width: 846px;
+        left: 50%;
+        cursor: pointer;
+        transform: translate(-50%);
+    }
+    .banner.active > img {
+        width: 100%;
+    }
+    #banners > #prevBtn1 {
+        left: -56px;
+    }
+    #banners > #nextBtn1 {
+        right: -56px;
+    }
+    #progress {
+        display: flex;
+        justify-content: center;
+    }
+    #sec-header {
+        width: 712px;
+        height: 342px;
+        position: absolute;
+        left: 50%;
+        top: 16%;
+        transform: translate(-50%);
+    }
+    main {
+        position: absolute;
+        top: 1125px;
+        width: 812px;
+        height: 1109px;
+        left: 50%;
+        padding: 15px;
+        transform: translate(-50%);
+    }
+    #sec-header > h1 {
+        font-weight: lighter;
+        font-size: 49px;
+        color: #020202;
+        line-height: 62px;
+        width: 49%;
+        position: absolute;
+        left: -10%;
+    }
+    #prods-header {
+        width: 849px;
+        height: 184px;
+        position: absolute;
+        top: 192%;
+        left: 50%;
+        transform: translate(-50%);
+    }
+    #novidades {
+        position: absolute;
+        left: 50%;
+        height: 1095px;
+        width: 100%;
+        transform: translate(-50%);
+    }
+    #novidades > h2 {
+        font-size: 28px;
+        font-weight: 600;
+        color: #A7A9AC;
+        position: absolute;
+        left: -11%;
+    }
+    #cx5{display: none;}
+    #cx6{display: none;}
+    #cx1 {
+        box-shadow: -1px -1px 8px #434344;
+        border-radius: 5px;
+        width: 360px;
+        height: 456px;
+        position: absolute;
+        top: 12%;
+        left: 3%;
+        transition: transform 0.8s;
+    }
+    #cx2 {
+        box-shadow: -1px -1px 8px #434344;
+        border-radius: 5px;
+        width: 360px;
+        height: 456px;
+        position: absolute;
+        top: 12%;
+        left: 53%;
+        transition: transform 0.8s;
+    }    
+    #cx3 {
+        box-shadow: -1px -1px 8px #434344;
+        border-radius: 5px;
+        width: 360px;
+        height: 456px;
+        position: absolute;
+        top: 57%;
+        left: 6%;
+        transition: transform 0.8s;
+        overflow-x: hidden;
+        transform: translate(-7%);
+    }
+    #cx4 {
+        box-shadow: -1px -1px 8px #434344;
+        border-radius: 5px;
+        width: 360px;
+        height: 456px;
+        position: absolute;
+        top: 57%;
+        left: 53%;
+        transition: transform 0.8s;
+        overflow-x: hidden;
+    }
+    #motivosCompra {
+        width: 985px;
+        height: 313px;
+        position: absolute;
+        top: 105%;
+        padding: 15px;
+        left: 50%;
+        transform: translate(-50%);
+    }
+    #motivosCompra > h2 {
+        font-size: 33px;
+        font-weight: 300;
+        color: #A7A9AC;
+        width: 95%;
+    }
+    #linksRapidos {
+        position: absolute;
+        top: 140%;
+        width: 420px;
+        height: 108px;
+        padding: 10px;
+        left: 30%;
+        transform: translate(-30%);
+    }
+    #linksRapidos > h2 {
+        font-size: 28px;
+        font-weight: 600;
+    }
+    footer {
+        position: absolute;
+        top: 365%;
+        width: 100vw;
+        height: 512px;
+    }
+    footer > a {
+        color: white;
+        font-size: 12px;
+        position: absolute;
+        transition: 1s;
+        position: relative;
+        left: 40%;
+        top: 35%;
+    }
+    #institucional {
+        width: 30%;
+        position: relative;
+        left: 10%;
+        top: 70px;
+    }
+}
+@media screen and (min-width:2560px) {
+    #nav-bar {
+        position: absolute;
+        left: 50%;
+        transform: translate(-50%);
+        top: 26%;
+        width: 54%;
+    }
+    div#banners {
+        height: 370px;
+        position: absolute;
+        top: 35%;
+        width: 1200px;
+        left: 50%;
+        transform: translate(-50%);
+        cursor: pointer;
+    }
+    #wrapper {
+        width: 100%;
+        max-width: 1127px;
+        position: absolute;
+        left: 50%;
+        transform: translate(-50%);
+        top: 90%;
+    }
+    #prev {
+        top: 65%;
+        left: -150px;
+        transform: translate(50%, -50%);
+    }
+    #next {
+        top: 65%;
+        right: -150px;
+        transform: translate(-50%, -50%);
+    }
+    .search-input {
+        position: absolute;
         left: 45%;
-        top: 40%;
+        transform: translate(-45%);
+        top: 16%;
+        width: fit-content;
+        height: auto;
+    }
+    .notCad {
+        width: fit-content;
+        position: absolute;
+        left: 75%;
+        transform: translate(-75%);
+        top: 16%;
+    }
+    main {
+        position: absolute;
+        top: 125%;
+        width: 1286px;
+        height: 1109px;
+        left: 50%;
+        transform: translate(-50%);
+        padding: 15px;
     }
 }

@@ -38,6 +38,7 @@ btnCad.addEventListener('click', () => {
       .then(data => {
         if (data.message === 'Login bem-sucedido') {
           avisoSucesso.style.display = 'block';
+          document.cookie = `username=${data.userCad}; path=/;`;
           setTimeout(() => {
             avisoSucesso.style.display = 'none';
             window.location.href = '/';

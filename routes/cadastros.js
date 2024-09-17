@@ -136,7 +136,7 @@ app.post("/login", async (req, res) => {
     // Gere um token de autenticação (exemplo simples)
     const token = Math.random().toString(16).substring(2);
 
-    res.json({ message: "Login bem-sucedido", token: token });
+    res.json({ message: "Login bem-sucedido", token: token, userCad: user.userCad });
     console.log(token)
   } catch (error) {
     console.error("Erro ao fazer login:", error);
