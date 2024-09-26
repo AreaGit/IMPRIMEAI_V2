@@ -242,6 +242,7 @@ section#infoPol {
     font-weight: 300;
     width: 48vw;
     margin: 18px;
+    text-align: justify;
 }
 #infoPol > ul > li {
     list-style: none;

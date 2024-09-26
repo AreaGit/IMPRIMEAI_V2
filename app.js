@@ -1500,6 +1500,16 @@ app.get('/tutoriais', (req, res) => {
     res.status(500).send("Erro interno do servidor", err);
   }
 });
+//Rota get para página de cadastro de produtos via planilha
+app.get('/cadastro-planilha', (req, res) => {
+  try {
+    const cadastroPlanilhaContentHtml = fs.readFileSync(path.join(__dirname, "html", "cadastro-produtos-planilha.html"), "utf-8");
+    res.send(cadastroPlanilhaContentHtml);
+  } catch(err) {
+    console.log("Erro ao ler o arquivo cadatro-produtos-planilha.html", err);
+    res.status(500).send("Erro interno do servidor", err)
+  }
+});
 app.listen(PORT, () => {
   console.log(`Servidor rodando na porta ${PORT} https://localhost:${PORT}`);
 });

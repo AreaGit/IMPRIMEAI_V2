@@ -173,7 +173,7 @@ label > a {
 }
 #popup {
     display: none;
-    width: 20%;
+    width: 70vw;
     padding: 28px;
     text-indent: 5px;
     border-radius: 5px;
@@ -183,7 +183,14 @@ label > a {
     left: 50%;
     transform: translate(-50%);
     top: 30%;
-    box-shadow: -1px -1px 12px #F69896;
+    box-shadow: -1px -1px 3px black;
+}
+ol {
+  width: 70%;
+  margin: 20px;
+}
+div#popup > ol > li {
+  text-align: justify;
 }
 #fechar-menu {
     cursor: pointer;

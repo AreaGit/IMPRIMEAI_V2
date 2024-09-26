@@ -27,7 +27,7 @@ const VariacoesProduto = db.define('variacoesproduto', {
         type: Sequelize.JSON, // Agora é JSON
     },
     quantidades: {
-        type: Sequelize.JSON,  // Armazenará as quantidades possíveis em formato JSON
+        type: Sequelize.STRING,  // Armazenará as quantidades possíveis em formato JSON
     },
 });
 

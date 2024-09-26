@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Upload de Planilha</title>
+</head>
+<body>
+    <h1>Cadastro de Produtos via Planilha</h1>
+    
+    <form id="uploadForm" enctype="multipart/form-data">
+        <label for="fileInput">Selecione a planilha:</label>
+        <input type="file" id="fileInput" name="file" accept=".xlsx,.xls" required>
+        <button type="submit">Enviar Planilha</button>
+    </form>
+
+    <p id="status"></p>
+
+    <script>
+        document.getElementById('uploadForm').addEventListener('submit', async (e) => {
+            e.preventDefault(); // Previne o envio padrão do formulário
+
+            const fileInput = document.getElementById('fileInput');
+            const file = fileInput.files[0]; // Obtem o arquivo selecionado
+
+            if (!file) {
+                document.getElementById('status').innerText = "Nenhum arquivo selecionado.";
+                return;
+            }
+
+            // Cria um FormData para enviar o arquivo via AJAX
+            const formData = new FormData();
+            formData.append('file', file);
+
+            try {
+                // Envia a requisição POST para o backend
+                const response = await fetch('/cadastrar-produtos-planilha', {
+                    method: 'POST',
+                    body: formData
+                });
+
+                if (response.ok) {
+                    const data = await response.json();
+                    document.getElementById('status').innerText = data.message;
+                } else {
+                    const errorData = await response.json();
+                    document.getElementById('status').innerText = `Erro: ${errorData.message}`;
+                }
+            } catch (error) {
+                console.error('Erro ao enviar planilha:', error);
+                document.getElementById('status').innerText = 'Erro ao enviar planilha.';
+            }
+        });
+    </script>
+</body>
+</html>

@@ -1,5 +1,5 @@
 document.addEventListener("DOMContentLoaded", function() {
-    var menuIcon = document.getElementById('menu-icon');
+    var menuIcon = document.getElementById('iconMenuMob');
     var navbar = document.getElementById('nav-bar'); // Renomeie para 'navbar' apenas uma vez
     var fecharMenu = document.getElementById('fechar-menu');
     var header = document.getElementById('header');
@@ -347,4 +347,59 @@ document.addEventListener("DOMContentLoaded", async () => {
             userLog.style.display = 'block';
             nameUserLog.textContent = username;
         }
+});
+document.addEventListener('DOMContentLoaded', () => {
+    const toggleMenu = document.getElementById('toggleMenu');
+    const categs = document.getElementById('categs');
+    const parentCategs = document.querySelectorAll('.parentCateg');
+
+    // Exibir ou ocultar o menu de categorias principais
+    toggleMenu.addEventListener('click', (e) => {
+        e.preventDefault();
+        categs.style.display = categs.style.display === 'block' ? 'none' : 'block';
+    });
+
+    // Função para fechar todas as subcategorias
+    const closeAllSubcategories = () => {
+        const subCategs = document.querySelectorAll('.subCategAll');
+        subCategs.forEach(sub => sub.style.display = 'none');
+    };
+
+    // Função para ajustar colunas dinamicamente se a altura ultrapassar 445px
+    const adjustColumns = (subCateg) => {
+        const subCategHeight = subCateg.scrollHeight; // Altura real da lista
+        const maxHeight = 445;
+
+        // Se a altura ultrapassar o limite, ajustar para colunas
+        if (subCategHeight > maxHeight) {
+            subCateg.style.height = '470px'
+            subCateg.style.columnCount = 2;
+            subCateg.style.columnGap = '20px';
+            subCateg.style.width = '70%'
+            subCateg.style.left = '85%'
+            subCateg.style.transform = 'translate(-85%)'
+            subCateg.style.textAlign = 'justify'
+        }
+    };
+
+    // Adicionar evento de clique nas categorias para abrir/fechar
+    parentCategs.forEach(parent => {
+        parent.addEventListener('click', (e) => {
+            e.preventDefault();
+            const subCateg = parent.nextElementSibling;
+
+            // Fecha todas as subcategorias antes de abrir a nova
+            closeAllSubcategories();
+
+            // Abre ou fecha a subcategoria clicada
+            if (subCateg) {
+                subCateg.style.display = subCateg.style.display === 'block' ? 'none' : 'block';
+
+                // Ajusta colunas dinamicamente baseado na altura
+                if (subCateg.style.display === 'block') {
+                    adjustColumns(subCateg);
+                }
+            }
+        });
+    });
 });

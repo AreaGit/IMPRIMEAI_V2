@@ -93,8 +93,15 @@
         left: 3%;
         transform: translate(0%);
         top: 30%;
-        box-shadow: -1px -1px 12px #F69896;
+        box-shadow: -1px -1px 3px black;
     }
+    ol {
+        width: 70%;
+        margin: 20px;
+      }
+      div#popup > ol > li {
+        text-align: justify;
+      }
     .notifications-container {
         width: 320px;
         height: auto;
@@ -342,7 +349,7 @@
     }
     #popup {
         display: none;
-        width: 29%;
+        width: 40vw;
         padding: 28px;
         text-indent: 5px;
         border-radius: 5px;
@@ -352,9 +359,16 @@
         left: 50%;
         transform: translate(-50%);
         top: 30%;
-        box-shadow: -1px -1px 12px #F69896;
+        box-shadow: -1px -1px 3px black;
         font-size: 24px;
     }
+    ol {
+        width: 70%;
+        margin: 20px;
+      }
+      div#popup > ol > li {
+        text-align: justify;
+      }
     .error-prompt-heading {
         color: #991B1B;
         font-size: 21px;

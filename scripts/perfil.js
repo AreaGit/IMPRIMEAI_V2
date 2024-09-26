@@ -9,6 +9,7 @@ const cepUser = document.getElementById('cepUser');
 const compUser = document.getElementById('compUser');
 const estadoUser = document.getElementById('estadoUser');
 const cidadeUser = document.getElementById('cidadeUser');
+const sairConta = document.getElementById('sairConta');
 
 async function carregarInfoUsers() {
     try {
@@ -40,3 +41,16 @@ async function carregarInfoUsers() {
 }
 
 carregarInfoUsers();
+
+sairConta.addEventListener('click', async() => {
+    try {
+        const response = await fetch('/logout');
+        if(!response.ok) {
+            throw new Error('Erro ao sair da conta');
+        }
+        window.location.href = '/login';
+    } catch(err) {
+        console.log(err);
+        window.location.reload();
+    }
+});

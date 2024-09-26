@@ -14,6 +14,12 @@ const pagarmeKeyProd = "sk_e74e3fe1ccbe4ae080f70d85d94e2c68";
 const pagarmeKeyTest = "sk_test_05ddc95c6ce442a796c7ebbe2376185d";
 const axios = require('axios');
 const request = require('request-promise');
+const xlsx = require('xlsx');
+const upload2 = multer({ storage: multer.memoryStorage() });
+const { client, sendMessage } = require('./api/whatsapp-web');
+client.on('ready', () => {
+  console.log('Cliente WhatsApp pronto para uso no cadastros.js');
+})
 require('dotenv').config();
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
@@ -38,6 +44,17 @@ async function enviarEmailNotificacao(destinatario, assunto, corpo) {
 
   console.log('E-mail enviado:', info);
 }
+
+async function enviarNotificacaoWhatsapp(destinatario, corpo) {
+  try {
+      const response = await sendMessage(destinatario, corpo);
+      console.log(`Mensagem de código de verificação enviada com sucesso para o cliente ${destinatario}:`, response);
+      return response;
+  } catch (error) {
+      console.error(`Erro ao enviar mensagem para o cliente ${destinatario}:`, error);
+      throw error;
+  }
+} 
 
 app.post("/cadastrar", async (req, res) => { 
     try {
@@ -79,6 +96,7 @@ app.post("/cadastrar", async (req, res) => {
         });
         const mensagemStatus = `Seu código de verificação é: ${verificationCode}`
         await enviarEmailNotificacao(emailCad, `Código de Verificação do usuário ${userCad}`, mensagemStatus);
+        await enviarNotificacaoWhatsapp(telefoneCad, `Seu código de verificação é: ${verificationCode}`);
         res.json({ message: 'Usuário cadastrado com sucesso!', user: newUser });
         
     } catch (error) {
@@ -145,18 +163,13 @@ app.post("/login", async (req, res) => {
 });
 
 app.get("/logout", (req, res) => {
-  // Verifique se o usuário está autenticado (você pode usar middleware de autenticação aqui)
-  if (!req.cookies.userCad) {
-      // Se o usuário não estiver autenticado, redirecione para a página de login ou onde desejar
-      return res.redirect("/login");
-  }
-
   // Excluir o cookie "userCad"
-  res.clearCookie("userCad");
+  res.clearCookie("username");
+  res.clearCookie("userCad")
   res.clearCookie("userId");
 
   // Redirecionar para a página de login ou para onde desejar
-  res.redirect("/");
+  res.redirect("/login");
 });
 
 app.post('/cadastrar-produto', upload.fields([
@@ -233,6 +246,82 @@ app.post('/cadastrar-produto', upload.fields([
     });
   }
 });
+
+app.post('/cadastrar-produtos-planilha', upload.single('file'), async (req, res) => {
+  try {
+    if (!req.file) {
+      return res.status(400).json({ message: 'Arquivo de planilha não enviado.' });
+    }
+
+    // Ler a planilha carregada
+    const workbook = xlsx.read(req.file.buffer, { type: 'buffer' });
+    const sheetName = workbook.SheetNames[0]; // Lê a primeira aba da planilha
+    const sheet = workbook.Sheets[sheetName];
+
+    // Converte a planilha para um array de objetos
+    const produtos = xlsx.utils.sheet_to_json(sheet);
+
+    // Itera sobre os produtos e cadastra cada um no banco de dados
+    for (const produto of produtos) {
+      const {
+        nomeProd,
+        descProd,
+        valorProd,
+        categoriaProd,
+        raioProd,
+        material,
+        formato,
+        enobrecimento,
+        cor,
+        acabamento,
+        quantidades,
+        imgProd,
+        imgProd2,
+        imgProd3,
+        imgProd4,
+      } = produto;
+
+      // Insere o produto na tabela Produtos
+      const novoProduto = await Produtos.create({
+        nomeProd: nomeProd,
+        descProd: descProd,
+        valorProd: valorProd,
+        categProd: categoriaProd,
+        raioProd: raioProd,
+        imgProd: imgProd,
+        imgProd2: imgProd2,
+        imgProd3: imgProd3,
+        imgProd4: imgProd4,
+      });
+
+      // Converte arrays para strings JSON
+      const materialJSON = JSON.stringify(material.split(','));
+      const formatoJSON = JSON.stringify(formato.split(','));
+      const enobrecimentoJSON = JSON.stringify(enobrecimento.split(','));
+      const corJSON = JSON.stringify(cor.split(','));
+      const acabamentoJSON = JSON.stringify(acabamento.split(','));
+      // Converte quantidades para string se não for string
+      const quantidadesString = Array.isArray(quantidades)
+        ? `[${quantidades.join(',')}]` // Se for array, transforma em string com colchetes
+        : `[${quantidades.toString().replace(/\./g, '')}]`; // Remove pontos da string
+      // Insira as variações do produto na tabela VariacoesProduto
+      await VariacoesProduto.create({
+        idProduto: novoProduto.id,
+        material: materialJSON,
+        formato: formatoJSON,
+        enobrecimento: enobrecimentoJSON,
+        cor: corJSON,
+        acabamento: acabamentoJSON,
+        quantidades: quantidadesString, // Armazenando as quantidades
+      });
+    }
+
+    res.json({ message: 'Produtos cadastrados com sucesso!' });
+  } catch (error) {
+    console.error('Erro ao cadastrar produtos:', error);
+    res.status(500).json({ message: 'Erro ao cadastrar produtos', error: error.message });
+  }
+}); 
 
 app.post("/cadastro-graficas", async (req, res) => { 
   try {

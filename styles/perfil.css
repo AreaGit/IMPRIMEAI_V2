@@ -266,3 +266,16 @@ main > h2 {
     border-radius: 5px;
     margin-bottom: 25px;
 }
+#sairConta {
+  border: none;
+  text-decoration: underline;
+  color: #EF4126;
+  font-size: 18px;
+  font-weight: 300;
+  position: absolute;
+  left: 90%;
+  transform: translate(-90%);
+  top: 90%;
+  cursor: pointer;
+  background-color: transparent;
+}
