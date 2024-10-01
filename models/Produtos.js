@@ -19,6 +19,12 @@ const Produtos = db.define('produtos', {
     type: Sequelize.STRING, // Use STRING para categorias
     allowNull: false,
   },
+  categProd2: {
+    type: Sequelize.STRING,
+  },
+  categProd3: {
+    type: Sequelize.STRING,
+  },
   raioProd: {
     type: Sequelize.INTEGER,
     allowNull: true,

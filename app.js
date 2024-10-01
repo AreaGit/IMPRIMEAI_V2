@@ -70,7 +70,7 @@ const getCachedAdesivosProducts = async (page, limit) => {
   }
 
   const produtos = await Produtos.findAndCountAll({
-    where: { categProd: 'Adesivos e Etiquetas' },
+    where: { categProd: 'Adesivos' },
     offset: (page - 1) * limit,
     limit: parseInt(limit),
     order: [['nomeProd', 'ASC']]
@@ -340,7 +340,7 @@ app.get('/adesivos', (req, res) => {
 });
 //Rota para renderizar os produtos de adesivos
 app.get('/api/produtos/adesivos-etiquetas', async (req, res) => {
-  const { page = 1, limit = 10 } = req.query;
+  const { page = 1, limit = 1000 } = req.query;
   try {
     const produtos = await getCachedAdesivosProducts(page, limit);
     res.json({

@@ -268,7 +268,10 @@ app.post('/cadastrar-produtos-planilha', upload.single('file'), async (req, res)
         descProd,
         valorProd,
         categoriaProd,
+        categoriaProd2,
+        categoriaProd3,
         raioProd,
+        modelo,
         material,
         formato,
         enobrecimento,
@@ -287,6 +290,8 @@ app.post('/cadastrar-produtos-planilha', upload.single('file'), async (req, res)
         descProd: descProd,
         valorProd: valorProd,
         categProd: categoriaProd,
+        categProd2: categoriaProd2,
+        categProd3: categoriaProd3, 
         raioProd: raioProd,
         imgProd: imgProd,
         imgProd2: imgProd2,
@@ -294,7 +299,13 @@ app.post('/cadastrar-produtos-planilha', upload.single('file'), async (req, res)
         imgProd4: imgProd4,
       });
 
+      let modeloJSON
       // Converte arrays para strings JSON
+      if(modelo == null) {
+         modeloJSON = "Não há"
+      } else {
+         modeloJSON = JSON.stringify(modelo.split(','));
+      }
       const materialJSON = JSON.stringify(material.split(','));
       const formatoJSON = JSON.stringify(formato.split(','));
       const enobrecimentoJSON = JSON.stringify(enobrecimento.split(','));
@@ -307,6 +318,7 @@ app.post('/cadastrar-produtos-planilha', upload.single('file'), async (req, res)
       // Insira as variações do produto na tabela VariacoesProduto
       await VariacoesProduto.create({
         idProduto: novoProduto.id,
+        modelo: modeloJSON,
         material: materialJSON,
         formato: formatoJSON,
         enobrecimento: enobrecimentoJSON,
