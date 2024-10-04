@@ -20,6 +20,7 @@ header {
     background-color: transparent;
     transition: 2s;
     width: 100%;
+    position: absolute;
 }
 /*header.scrolled {
     position: fixed;
@@ -78,7 +79,7 @@ a {
   left: 50%;
   transform: translate(-50%);
   width: max-content;
-  top: 26%;
+  top: 36%;
   z-index: 1;
 }
 #categs {
@@ -170,6 +171,114 @@ li > a:hover {
   text-decoration: none;
 }
 #categs {display: none;}
+ul {
+  list-style: none;
+}
+#menuToggle {
+  display: none;
+}
+/* Wrapper principal do menu */
+.menu-wrapper {
+  z-index: 1;
+  display: none;
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  width: max-content;
+  top: 53%;
+}
+
+/* Ícone de hambúrguer */
+.menu-wrapper > .hamburger-icon {
+  font-size: 30px;
+  cursor: pointer;
+  display: none; /* Não mostrar o ícone em telas grandes */
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  z-index: 1000;
+}
+
+/* Estilos principais do menu */
+.menu-wrapper > nav > ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.menu-wrapper > nav > ul > li {
+  cursor: pointer;
+  padding: 10px 0;
+}
+
+.menu-wrapper > nav > ul > li > a {
+  text-decoration: none;
+  color: #555555;
+  padding: 15px;
+  display: inline-block;
+  width: 100%;
+  transition: background 0.3s;
+}
+
+.menu-wrapper > nav > ul > li > a:hover {
+  background-color: #f37160;
+  color: white;
+}
+
+/* Estilos para lista de subcategorias */
+.menu-wrapper > nav > ul > li > ul.subcategory-list {
+  display: none;
+  position: absolute;
+  left: 25%;
+  transform: translate(-25%);
+  top: 5%;
+  max-height: 445px;
+  overflow-y: auto;
+  width: auto;
+}
+
+/* Estilos para subcategorias */
+.menu-wrapper > nav > ul > li > ul.subcategory-list > li {
+  padding: 10px 0;
+}
+
+.menu-wrapper > nav > ul > li > ul.subcategory-list > li > a {
+  text-decoration: none;
+  color: #333;
+  
+  display: block;
+}
+
+/* Estilo do container das categorias */
+.menu-wrapper > nav > ul > li > ul#category-list {
+  display: none;
+  position: absolute;
+  background: white;
+  width: 100%;
+  border-radius: 10px;
+  box-shadow: 0 0 5px rgba(0, 0, 0, 0.2);
+  z-index: 1;
+  padding: 20px;
+  margin-top: 15px;
+  max-height: 445px;
+  overflow-y: auto;
+}
+#category-list > li > a {
+  text-decoration: none;
+  color: #555555;
+  padding: 15px;
+  display: inline-block;
+  width: 100%;
+  transition: background 0.3s;
+}
+#category-list ul > li > a {
+  text-decoration: none;
+  color: #555555;
+  padding: 15px;
+  display: inline-block;
+  width: 100%;
+  transition: background 0.3s;
+}
 #icone-pesquisa {
     width: 22px;
     height: 24px;
@@ -272,7 +381,7 @@ div#banners {
 .messageHeader{
   position: absolute;
   left: 20%;
-  top: 6%;
+  top: 10%;
   width: fit-content;
 }
 .messageHeader > p {
@@ -284,7 +393,7 @@ div#banners {
   position: absolute;
   left: 60%;
   transform: translate(-60%);
-  top: 6%;
+  top: 10%;
 }
 .linksHeader > ul {
   display: flex;
@@ -303,7 +412,7 @@ div#banners {
   position: absolute;
   left: 75%;
   transform: translate(-75%);
-  top: 6%;
+  top: 10%;
 }
 .icons-mediaHeader > ul {
   display: flex;
@@ -322,7 +431,7 @@ div#banners {
   position: absolute;
   left: 17%;
   transform: translate(-17%);
-  top: 13%;
+  top: 21%;
   width: fit-content;
 }
 .logo-header > a > img {
@@ -333,7 +442,7 @@ div#banners {
   position: absolute;
   left: 45%;
   transform: translate(-45%);
-  top: 15%;
+  top: 24%;
   width: fit-content;
   height: auto;
   z-index: 10;
@@ -401,7 +510,7 @@ div#suggestions-container {
   position: absolute;
   left: 75%;
   transform: translate(-75%);
-  top: 15%;
+  top: 24%;
 }
 .notCad > p {
   font-weight: 300;
@@ -418,7 +527,7 @@ div#suggestions-container {
   position: absolute;
   left: 80%;
   transform: translate(-80%);
-  top: 16%;
+  top: 24%;
 }
 .carrinho > span {
   background: black;
@@ -436,14 +545,14 @@ div#suggestions-container {
   position: absolute;
   left: 50%;
   transform: translate(-50%);
-  top: 24%;
+  top: 34%;
 }
 .linhaAbNav {
   border: 1px solid #e0e0e0;
   width: 70vw;
   position: absolute;
   left: 50%;
-  top: 30%;
+  top: 41%;
   transform: translate(-50%);
 }
 .content-carrousel {
@@ -616,7 +725,7 @@ div#suggestions-container {
 }
 main {
   position: relative;
-  top: 535px;
+  top: 1182px;
   width: 1286px;
   height: 1109px;
   left: 50%;
@@ -1458,4 +1567,90 @@ button:focus {
 
 svg {
   width: 47px;
+}
+/* From Uiverse.io by david-mohseni */ 
+.wrapper2 {
+  display: inline-flex;
+  list-style: none;
+  height: 120px;
+  width: 100%;
+  padding-top: 10px;
+  font-family: "Poppins", sans-serif;
+  justify-content: center;
+}
+
+.wrapper2 .icon {
+  position: relative;
+  background: #fff;
+  border-radius: 50%;
+  margin: 10px;
+  width: 30px;
+  height: 30px;
+  font-size: 18px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  box-shadow: 0 10px 10px rgba(0, 0, 0, 0.1);
+  cursor: pointer;
+  transition: all 0.2s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+}
+
+.wrapper2 .tooltip {
+  position: absolute;
+  top: 0;
+  font-size: 14px;
+  background: #fff;
+  color: #fff;
+  padding: 5px 8px;
+  border-radius: 5px;
+  box-shadow: 0 10px 10px rgba(0, 0, 0, 0.1);
+  opacity: 0;
+  pointer-events: none;
+  transition: all 0.3s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+}
+
+.wrapper2 .tooltip::before {
+  position: absolute;
+  content: "";
+  height: 8px;
+  width: 8px;
+  background: #fff;
+  bottom: -3px;
+  left: 50%;
+  transform: translate(-50%) rotate(45deg);
+  transition: all 0.3s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+}
+
+.wrapper2 .icon:hover .tooltip {
+  top: -45px;
+  opacity: 1;
+  visibility: visible;
+  pointer-events: auto;
+}
+
+.wrapper2 .icon:hover span,
+.wrapper2 .icon:hover .tooltip {
+  text-shadow: 0px -1px 0px rgba(0, 0, 0, 0.1);
+}
+
+.wrapper2 .facebook:hover,
+.wrapper2 .facebook:hover .tooltip,
+.wrapper2 .facebook:hover .tooltip::before {
+  background: #1877f2;
+  color: #fff;
+}
+
+.wrapper2 .twitter:hover,
+.wrapper2 .twitter:hover .tooltip,
+.wrapper2 .twitter:hover .tooltip::before {
+  background: #1da1f2;
+  color: #fff;
+}
+
+.wrapper2 .instagram:hover,
+.wrapper2 .instagram:hover .tooltip,
+.wrapper2 .instagram:hover .tooltip::before {
+  background: #e4405f;
+  color: #fff;
 }

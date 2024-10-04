@@ -1,4 +1,4 @@
-@media screen and (min-width:320px) and (max-width:863px){
+@media screen and (min-width:320px) and (max-width:767px){
     .popup {
         display: none;
         position: fixed;
@@ -23,13 +23,28 @@
         top: 20px;
         width: fit-content;
     }
+    li > a {
+        text-decoration: none;
+        color: #555555;
+        padding: 5px;
+        transition: 0.8s;
+    }
     .linksHeader {
         width: fit-content;
         position: relative;
         left: 70%;
     }
     .linksHeader > ul > li {
-        padding-right: 10px;
+        padding-right: 0px;
+    }
+    .notCad > p {
+        font-weight: 300;
+        font-size: 12px;
+    }
+    .notCad > p > a {
+        font-weight: 300;
+        font-size: 12px;
+        text-decoration: underline;
     }
     .icons-mediaHeader {
         display: none;
@@ -48,7 +63,7 @@
         width: fit-content;
         position: relative;
         left: 85%;
-        top: -22px;
+        top: -17px;
     }
     .notCad > a {
         font-weight: 300;
@@ -62,8 +77,14 @@
     }
     .linhaAbInp {display: none;}
     .linhaAbNav {display: none;}
-    #iconMenuMob {
+    .menu {
+        display: none;
+    }
+    .menu-wrapper {
         display: block;
+    }
+    #iconMenuMob {
+        display: none;
         position: absolute;
         top: 11%;
         left: 95%;
@@ -110,8 +131,7 @@
         top: -22px;
     }
     #wrapper {
-        width: 70%;
-        max-width: 1127px;
+        width: 220px;
         position: relative;
         left: 50%;
         transform: translate(-50%);
@@ -207,7 +227,7 @@
         position: absolute;
         top: 485%;
         width: 100vw;
-        height: 675px;
+        height: 760px;
     }
     footer > a {
         font-size: 17px;
@@ -231,7 +251,7 @@
         width: fit-content;
         position: relative;
         left: 0%;
-        top: 170px;
+        top: 200px;
     }
     #canaisAtendimento {
         width: fit-content;
@@ -337,7 +357,7 @@
         color: #A7A9AC;
         width: fit-content;
         position: absolute;
-        left: 3%;
+        left: 15%;
         width: 80%;
     }
     #prevButton {
@@ -554,6 +574,227 @@
         left: 35%;
     }
 }
+@media screen and (min-width: 768px) and (max-width: 1024px) {
+    div#banners {
+        height: 165px;
+        position: relative;
+        top: 300px;
+        width: 65%;
+        left: 18%;
+        cursor: pointer;
+    }
+    .banner.active > img {
+        width: 530px;
+    }
+    .menu {
+        display: none;
+    }
+    .menu-wrapper {
+        z-index: 1;
+        display: block;
+        top: 42%;
+    }
+    .linhaAbInp {
+        border: 1px solid #e0e0e0;
+        width: 70vw;
+        position: absolute;
+        left: 50%;
+        transform: translate(-50%);
+        top: 44%;
+    }
+    .linhaAbNav {
+        border: 1px solid #e0e0e0;
+        width: 70vw;
+        position: absolute;
+        left: 50%;
+        top: 55%;
+        transform: translate(-50%);
+    }
+    .messageHeader {
+        position: absolute;
+        left: 20%;
+        top: 15%;
+        width: fit-content;
+    }
+    .linksHeader {
+        width: fit-content;
+        position: absolute;
+        left: 60%;
+        transform: translate(-60%);
+        top: 15%;
+    }
+    .icons-mediaHeader {
+        width: fit-content;
+        position: absolute;
+        left: 85%;
+        transform: translate(-85%);
+        top: 15%;
+    }
+    .logo-header {
+        position: absolute;
+        left: 0%;
+        transform: translate(0%);
+        top: 25%;
+        width: fit-content;
+    }
+    .logo-header > a > img {
+        cursor: pointer;
+        width: 65%;
+    }
+    .search-input {
+        position: absolute;
+        left: 50%;
+        transform: translate(-50%);
+        top: 30%;
+        width: fit-content;
+        height: auto;
+        z-index: 10;
+    }
+    .search-input > button {
+        background-color: transparent;
+        display: block;
+        position: relative;
+        left: 85%;
+        top: -22px;
+    }
+    .notCad {
+        width: fit-content;
+        position: absolute;
+        left: 85%;
+        transform: translate(-85%);
+        top: 30%;
+    }
+    .carrinho {
+        width: 6%;
+        position: absolute;
+        left: 95%;
+        transform: translate(-85%);
+        top: 30%;
+    }
+    #banners > #nextBtn1 {
+        right: -125px;
+    }
+    #wrapper {
+        width: 100%;
+        max-width: 452px;
+        position: relative;
+        left: 50%;
+        transform: translate(-50%);
+        top: 435px;
+        cursor: pointer;
+    }
+    main {
+        position: relative;
+        top: 970px;
+        width: 100%;
+        height: 1109px;
+        left: 50%;
+        transform: translate(-50%);
+        padding: 15px;
+    }
+    #novidades > h2 {
+        font-size: 33px;
+        font-weight: 300;
+        color: #A7A9AC;
+        width: 85%;
+        position: relative;
+        left: 10%;
+        margin-bottom: 15px;
+    }
+    .box {
+        display: inline-flex;
+        box-shadow: -1px -1px 8px #434344;
+        border-radius: 11px;
+        width: 350px;
+        height: 459px;
+        transition: transform 0.8s;
+        margin: 14px;
+        cursor: pointer;
+    }
+    #motivosCompra {
+        width: 100%;
+        height: 313px;
+        position: absolute;
+        top: 150%;
+        padding: 15px;
+        left: 50%;
+        transform: translate(-50%);
+    }
+    #motivosCompra > h2 {
+        font-size: 33px;
+        font-weight: 300;
+        color: #A7A9AC;
+        width: 100%;
+    }
+    #mot1 {
+        width: 240px;
+        height: 194px;
+        box-shadow: -1px -1px 8px #434344;
+        border-radius: 5px;
+        position: absolute;
+        top: 35%;
+        transition: 1s;
+    } 
+    #mot2 {
+        width: 240px;
+        height: 194px;
+        box-shadow: -1px -1px 8px #434344;
+        border-radius: 5px;
+        position: absolute;
+        top: 35%;
+        left: 35%;
+        transition: 1s;
+    }
+    #mot3 {
+        width: 230px;
+        height: 194px;
+        box-shadow: -1px -1px 8px #434344;
+        border-radius: 5px;
+        position: absolute;
+        top: 35%;
+        left: 69%;
+        transition: 1s;
+    }
+    #mot3 > h3 {
+        font-weight: 600;
+        font-size: 22px;
+        position: absolute;
+        left: 50%;
+        transform: translate(-50%);
+        width: max-content;
+        top: 55%;
+    }
+    #linksRapidos {
+        position: absolute;
+        top: 191%;
+        width: 420px;
+        height: 108px;
+        padding: 10px;
+        left: 30%;
+        transform: translate(-30%);
+    }
+    footer {
+        position: absolute;
+        top: 388%;
+        width: 100%;
+        height: 550px;
+        background-color: #2B2B2B;
+        border: 1px solid;
+        padding: 15px;
+    }
+    #institucional {
+        width: fit-content;
+        position: relative;
+        left: 0%;
+        top: 70px;
+    }
+    #formasDePagamento {
+        width: fit-content;
+        position: relative;
+        left: 0%;
+        top: 170px;
+    }
+}
 @media screen and (min-width:1024px) and (max-width:1300px) {  
     .popup {
         display: none;
@@ -567,103 +808,122 @@
         box-shadow: 0px 187px 75px rgba(0, 0, 0, 0.01), 0px 105px 63px rgba(0, 0, 0, 0.05), 0px 47px 47px rgba(0, 0, 0, 0.09), 0px 12px 26px rgba(0, 0, 0, 0.1), 0px 0px 0px rgba(0, 0, 0, 0.1);
         border-radius: 13px;
     }
+    div#banners {
+        height: 165px;
+        position: relative;
+        top: 300px;
+        width: 65%;
+        left: 18%;
+        cursor: pointer;
+    }
+    .banner.active > img {
+        width: 665px;
+    }
+    .menu {
+        display: none;
+    }
+    .menu-wrapper {
+        z-index: 1;
+        display: block;
+        top: 42%;
+    }
+    .linhaAbInp {
+        border: 1px solid #e0e0e0;
+        width: 70vw;
+        position: absolute;
+        left: 50%;
+        transform: translate(-50%);
+        top: 44%;
+    }
+    .linhaAbNav {
+        border: 1px solid #e0e0e0;
+        width: 70vw;
+        position: absolute;
+        left: 50%;
+        top: 55%;
+        transform: translate(-50%);
+    }
+    .messageHeader {
+        position: absolute;
+        left: 20%;
+        top: 15%;
+        width: fit-content;
+    }
+    .linksHeader {
+        width: fit-content;
+        position: absolute;
+        left: 60%;
+        transform: translate(-60%);
+        top: 15%;
+    }
+    .icons-mediaHeader {
+        width: fit-content;
+        position: absolute;
+        left: 85%;
+        transform: translate(-85%);
+        top: 15%;
+    }
     .logo-header {
         position: absolute;
-        left: 17%;
-        transform: translate(-17%);
-        top: 14%;
+        left: 0%;
+        transform: translate(0%);
+        top: 25%;
         width: fit-content;
     }
     .logo-header > a > img {
         cursor: pointer;
-        width: 56%;
+        width: 65%;
     }
     .search-input {
         position: absolute;
         left: 50%;
-        transform: translate(-55%);
-        top: 16%;
+        transform: translate(-50%);
+        top: 30%;
         width: fit-content;
         height: auto;
-        z-index: 1;
+        z-index: 10;
+    }
+    .search-input > button {
+        background-color: transparent;
+        display: block;
+        position: relative;
+        left: 85%;
+        top: -22px;
     }
     .notCad {
         width: fit-content;
         position: absolute;
-        left: 80%;
-        transform: translate(-80%);
-        top: 16%;
+        left: 85%;
+        transform: translate(-85%);
+        top: 30%;
     }
     .carrinho {
-        width: fit-content;
+        width: 6%;
         position: absolute;
-        left: 90%;
-        transform: translate(-90%);
-        top: 16%;
+        left: 95%;
+        transform: translate(-85%);
+        top: 30%;
     }
-    #nav-bar {
-        position: absolute;
-        left: 50%;
-        top: 25%;
-        width: 700px;
-        transform: translate(-50%);
+    #banners > #nextBtn1 {
+        right: -125px;
     }
     #wrapper {
         width: 100%;
-        max-width: 900px;
+        max-width: 676px;
         position: relative;
         left: 50%;
         transform: translate(-50%);
-        top: 400px;
-    }
-    #prev {
-        top: 65%;
-        left: -100px;
-        transform: translate(50%, -50%);
-    }
-    #next {
-        top: 65%;
-        right: -100px;
-        transform: translate(-50%, -50%);
-    }
-    div#banners {
-        height: 270px;
-        position: relative;
-        top: 235px;
-        width: 846px;
-        left: 50%;
+        top: 435px;
         cursor: pointer;
-        transform: translate(-50%);
-    }
-    .banner.active > img {
-        width: 100%;
-    }
-    #banners > #prevBtn1 {
-        left: -56px;
-    }
-    #banners > #nextBtn1 {
-        right: -56px;
-    }
-    #progress {
-        display: flex;
-        justify-content: center;
-    }
-    #sec-header {
-        width: 712px;
-        height: 342px;
-        position: absolute;
-        left: 50%;
-        top: 16%;
-        transform: translate(-50%);
     }
     main {
-        position: absolute;
-        top: 1125px;
-        width: 812px;
+        position: relative;
+        top: 970px;
+        width: 100%;
         height: 1109px;
         left: 50%;
-        padding: 15px;
         transform: translate(-50%);
+        padding: 15px;
     }
     #sec-header > h1 {
         font-weight: lighter;
@@ -694,7 +954,7 @@
         font-weight: 600;
         color: #A7A9AC;
         position: absolute;
-        left: -11%;
+        left: 5%;
     }
     #cx5 {
         display: none;
@@ -1491,62 +1751,17 @@
     }
 }
 @media screen and (min-width:2560px) {
-    #nav-bar {
-        position: absolute;
-        left: 50%;
-        transform: translate(-50%);
-        top: 26%;
-        width: 54%;
-    }
     div#banners {
         height: 370px;
-        position: absolute;
-        top: 35%;
+        position: relative;
+        top: 300px;
         width: 1200px;
         left: 50%;
         transform: translate(-50%);
         cursor: pointer;
     }
-    #wrapper {
-        width: 100%;
-        max-width: 1127px;
-        position: absolute;
-        left: 50%;
-        transform: translate(-50%);
-        top: 90%;
-    }
-    #prev {
-        top: 65%;
-        left: -150px;
-        transform: translate(50%, -50%);
-    }
-    #next {
-        top: 65%;
-        right: -150px;
-        transform: translate(-50%, -50%);
-    }
-    .search-input {
-        position: absolute;
-        left: 45%;
-        transform: translate(-45%);
-        top: 16%;
-        width: fit-content;
-        height: auto;
-    }
-    .notCad {
-        width: fit-content;
-        position: absolute;
-        left: 75%;
-        transform: translate(-75%);
-        top: 16%;
-    }
-    main {
-        position: absolute;
-        top: 125%;
-        width: 1286px;
-        height: 1109px;
-        left: 50%;
-        transform: translate(-50%);
-        padding: 15px;
+    .logo-header > a > img {
+        cursor: pointer;
+        width: 10vw;
     }
 }

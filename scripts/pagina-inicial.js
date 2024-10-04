@@ -251,7 +251,7 @@ async function obterQuantidadeCarrinho() {
         const carrinho = await response.json();
         
         // Calcular a quantidade total de produtos no carrinho
-        const quantidadeTotal = carrinho.reduce((total, produto) => total + produto.quantidade, 0);
+        const quantidadeTotal = carrinho.length;
         
         // Exibir a quantidade total no elemento com id 'quantidadeCarrinho'
         if(quantidadeTotal > 99) {
@@ -398,6 +398,70 @@ document.addEventListener('DOMContentLoaded', () => {
                 // Ajusta colunas dinamicamente baseado na altura
                 if (subCateg.style.display === 'block') {
                     adjustColumns(subCateg);
+                }
+            }
+        });
+    });
+});
+document.addEventListener('DOMContentLoaded', () => {
+    const menuToggle = document.getElementById('menuToggle');
+    const menuContainer = document.getElementById('menuContainer');
+    const toggleMainMenu = document.getElementById('toggleMainMenu');
+    const categoryList = document.getElementById('category-list');
+    const parentCategories = document.querySelectorAll('.parent-category');
+
+    // Exibir ou ocultar o menu ao clicar no ícone hambúrguer
+    menuToggle.addEventListener('click', () => {
+        menuContainer.style.display = menuContainer.style.display === 'block' ? 'none' : 'block';
+    });
+
+    // Exibir ou ocultar o menu de categorias principais
+    toggleMainMenu.addEventListener('click', (e) => {
+        e.preventDefault();
+        categoryList.style.display = categoryList.style.display === 'block' ? 'none' : 'block';
+    });
+
+    // Função para fechar todas as subcategorias
+    const closeAllSubcategories = () => {
+        const subCategories = document.querySelectorAll('.subcategory-list');
+        subCategories.forEach(sub => sub.style.display = 'none');
+    };
+
+    // Função para ajustar colunas dinamicamente se a altura ultrapassar 445px
+    const adjustColumns = (subCategory) => {
+        const subCategoryHeight = subCategory.scrollHeight; // Altura real da lista
+        const maxHeight = 445;
+        const columnWidth = 300; // Largura de cada coluna
+
+        // Se a altura ultrapassar o limite, ajustar para colunas
+        if (subCategoryHeight > maxHeight) {
+            const numColumns = Math.ceil(subCategoryHeight / maxHeight);
+            subCategory.style.columnCount = numColumns;
+            subCategory.style.columnGap = '20px';
+            subCategory.style.width = `${numColumns * columnWidth}px`;
+        } else {
+            // Reseta para uma coluna se a altura estiver dentro do limite
+            subCategory.style.columnCount = 1;
+            subCategory.style.width = 'auto';
+        }
+    };
+
+    // Adicionar evento de clique nas categorias para abrir/fechar
+    parentCategories.forEach(parent => {
+        parent.addEventListener('click', (e) => {
+            e.preventDefault();
+            const subCategory = parent.nextElementSibling;
+
+            // Fecha todas as subcategorias antes de abrir a nova
+            closeAllSubcategories();
+
+            // Abre ou fecha a subcategoria clicada
+            if (subCategory) {
+                subCategory.style.display = subCategory.style.display === 'block' ? 'none' : 'block';
+
+                // Ajusta colunas dinamicamente baseado na altura
+                if (subCategory.style.display === 'block') {
+                    adjustColumns(subCategory);
                 }
             }
         });

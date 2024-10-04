@@ -315,7 +315,7 @@ app.get('/comunicacao-visual', async(req, res) => {
 });
 //Rota get para renderizar os produtos na página de comunicacao-visual
 app.get('/api/produtos/comunicacao-visual', async (req, res) => {
-  const { page = 1, limit = 10 } = req.query;
+  const { page = 1, limit = 1000 } = req.query;
   try {
     const produtos = await getCachedComunicacaoVisualProducts(page, limit);
     res.json({
@@ -365,7 +365,7 @@ app.get('/brindes', (req, res) => {
 });
 //Rota get para renderizar os produtos de brindes
 app.get('/api/produtos/brindes', async (req, res) => {
-  const { page = 1, limit = 10 } = req.query;
+  const { page = 1, limit = 1000 } = req.query;
   try {
     const produtos = await getCachedBrindesProducts(page, limit);
     res.json({
@@ -390,7 +390,7 @@ app.get('/cartazes', (req ,res) => {
 });
 //Rota get para renderizar os produtos de cartazes
 app.get('/api/produtos/cartazes', async (req, res) => {
-  const { page = 1, limit = 10 } = req.query;
+  const { page = 1, limit = 1000 } = req.query;
   try {
     const produtos = await getCachedCartazesProducts(page, limit);
     res.json({
@@ -415,7 +415,7 @@ app.get('/papelaria', (req, res) => {
 });
 // Rota com paginação e caching para produtos de papelaria
 app.get('/api/produtos/papelaria', async (req, res) => {
-  const { page = 1, limit = 10 } = req.query;
+  const { page = 1, limit = 1000 } = req.query;
 
   try {
     const produtos = await getCachedPapelariaProducts(page, limit);
@@ -441,7 +441,7 @@ app.get('/cartoes', (req, res) => {
 });
 // Rota com paginação e caching para produtos de cartões de visita
 app.get('/api/produtos/cartoes', async (req, res) => {
-  const { page = 1, limit = 10 } = req.query;
+  const { page = 1, limit = 1000 } = req.query;
 
   try {
     const produtos = await getCachedCartoesProducts(page, limit);
@@ -467,7 +467,7 @@ app.get('/folders', (req, res) => {
 });
 // Rota com paginação e caching para produtos de folders
 app.get('/api/produtos/folders', async (req, res) => {
-  const { page = 1, limit = 10 } = req.query;
+  const { page = 1, limit = 1000 } = req.query;
 
   try {
     const produtos = await getCachedFoldersProducts(page, limit);
@@ -493,7 +493,7 @@ app.get('/pastas', (req, res) => {
 });
 // Rota com paginação e caching para produtos pastas
 app.get('/api/produtos/pastas', async (req, res) => {
-  const { page = 1, limit = 10 } = req.query;
+  const { page = 1, limit = 1000 } = req.query;
 
   try {
     const produtos = await getCachedPastasProducts(page, limit);
@@ -519,7 +519,7 @@ app.get('/imas', (req, res) => {
 });
 // Rota com paginação e caching para produtos imas
 app.get('/api/produtos/imas', async (req, res) => {
-  const { page = 1, limit = 10 } = req.query;
+  const { page = 1, limit = 1000 } = req.query;
 
   try {
     const produtos = await getCachedImasProducts(page, limit);
@@ -545,7 +545,7 @@ app.get('/sacolas', (req, res) => {
 });
 // Rota com paginação e caching para produtos sacolas
 app.get('/api/produtos/sacolas', async (req, res) => {
-  const { page = 1, limit = 10 } = req.query;
+  const { page = 1, limit = 1000 } = req.query;
 
   try {
     const produtos = await getCachedSacolasProducts(page, limit);
@@ -559,7 +559,66 @@ app.get('/api/produtos/sacolas', async (req, res) => {
     res.status(500).json({ error: error.message });
   }
 });
+// Função para renderizar os produtos com caching
+app.get('/api/produtos/:categoria', async (req, res) => {
+  const { page = 1, limit = 1000 } = req.query;
+  const categoria = req.params.categoria;
 
+  try {
+    const produtos = await getCachedProductsByCategory(categoria, page, limit);
+    res.json({
+      totalItems: produtos.count,
+      totalPages: Math.ceil(produtos.count / limit),
+      currentPage: parseInt(page),
+      produtos: produtos.rows
+    });
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+});
+
+// Função para obter produtos de uma categoria específica com caching
+const getCachedProductsByCategory = async (categoria, page, limit) => {
+  //categoria = "Folhetos"
+  console.log("Categoria buscada: ", categoria)
+  const cacheKey = `${categoria}:products:${page}:${limit}`;
+  const cachedData = await client.get(cacheKey);
+
+  if (cachedData) {
+    return JSON.parse(cachedData);
+  }
+
+  // Busca produtos onde qualquer uma das colunas de categoria corresponde à categoria enviada
+  const produtos = await Produtos.findAndCountAll({
+    where: {
+      [Op.or]: [
+        { categProd: categoria },
+        { categProd2: categoria },
+        { categProd3: categoria }
+      ]
+    },
+    offset: (page - 1) * limit,
+    limit: parseInt(limit),
+    order: [['nomeProd', 'ASC']]
+  });
+
+  await client.set(cacheKey, JSON.stringify(produtos), {
+    EX: 3600, // Expira após 1 hora
+  });
+
+  return produtos;
+};
+
+// Rota para servir a página HTML de categorias de produtos
+app.get('/categorias', (req, res) => {
+  try {
+    const categoriasHtmlContent = fs.readFileSync(path.join(__dirname, "html", "categorias-produtos.html"), "utf8");
+    res.send(categoriasHtmlContent);
+  } catch (err) {
+    console.error("Erro ao ler o arquivo categorias-produtos.html:", err);
+    res.status(500).send("Erro interno do servidor");
+  }
+});
 //Rota get da página de carrinho
 app.get('/carrinho', (req, res) => {
   try {
