@@ -139,10 +139,13 @@ async function carregarVariacoesDoProduto() {
         // Faça uma solicitação AJAX para obter as variações do produto com base no ID
         const responseVar = await fetch(`/variacoes-produto/${produtoId}`);
         const variacoes = await responseVar.json();
-
+        console.log(variacoes)
         // Verifica se existem variações antes de continuar
         if (variacoes && variacoes.length > 0) {
             // Chame a função para criar os selects
+            if(!variacoes.modelo) {
+              criarSelect(variacoes, 'modelo', 'Modelo');
+            }
             criarSelect(variacoes, 'material', 'Material');
             criarSelect(variacoes, 'formato', 'Formato');
             criarSelect(variacoes, 'cor', 'Cor');
@@ -158,50 +161,55 @@ async function carregarVariacoesDoProduto() {
 
 // Função para criar os selects
 function criarSelect(variacoes, tipo, labelText) {
-    // Obtém a seção onde o select será adicionado
-    const secao = document.getElementById('variacoes');
-    
-     // Cria a label correspondente
-     const label = document.createElement('label');
-     label.textContent = labelText;
-     secao.appendChild(label);
+  // Obtém a seção onde o select será adicionado
+  const secao = document.getElementById('variacoes');
+  
+  // Itera sobre as variações para criar os options
+  variacoes.forEach(variacao => {
+      try {
+          // Remove barras invertidas duplicadas e formata a string removendo colchetes e aspas
+          const valorFormatado = variacao[tipo].replace(/\\+/g, '').replace(/[\[\]"']/g, '');
 
-    // Adiciona uma quebra de linha
-    const br = document.createElement('br');
-    secao.appendChild(br);
+          // Se o valor formatado for "Não há", interrompe a execução
+          if (valorFormatado.includes("Não há")) {
+              return;
+          }
 
-     // Cria um select element
-     const select = document.createElement('select');
-     select.name = tipo;
-     select.id = tipo;
- 
-     // Itera sobre as variações para criar os options
-     variacoes.forEach(variacao => {
-         try {
-             // Remove barras invertidas duplicadas e formata a string removendo colchetes e aspas
-             const valorFormatado = variacao[tipo].replace(/\\+/g, '').replace(/[\[\]"']/g, '');
- 
-             // Quebra os valores de acordo com as vírgulas
-             const valoresQuebrados = valorFormatado.split(',');
- 
-             // Adiciona cada valor quebrado como uma opção no formato correto
-             valoresQuebrados.forEach((valorQuebrado, index) => {
-                 const option = document.createElement('option');
-                 option.value = valorQuebrado.trim(); // Remove espaços em branco adicionais
-                 option.text = valorQuebrado.trim();
-                 if (index === 0) {
-                     // Define o primeiro option como selecionado
-                     option.selected = true;
-                 }
-                 select.add(option);
-             });
-         } catch (error) {
-             console.error('Erro ao processar variação:', error);
-         }
-     });
- 
-     // Adiciona o select à seção
-     secao.appendChild(select);
+          // Cria a label correspondente
+          const label = document.createElement('label');
+          label.textContent = labelText;
+          secao.appendChild(label);
+
+          // Adiciona uma quebra de linha
+          const br = document.createElement('br');
+          secao.appendChild(br);
+
+          // Cria um select element
+          const select = document.createElement('select');
+          select.name = tipo;
+          select.id = tipo;
+
+          // Quebra os valores de acordo com as vírgulas
+          const valoresQuebrados = valorFormatado.split(',');
+
+          // Adiciona cada valor quebrado como uma opção no formato correto
+          valoresQuebrados.forEach((valorQuebrado, index) => {
+              const option = document.createElement('option');
+              option.value = valorQuebrado.trim(); // Remove espaços em branco adicionais
+              option.text = valorQuebrado.trim();
+              if (index === 0) {
+                  // Define o primeiro option como selecionado
+                  option.selected = true;
+              }
+              select.add(option);
+          });
+
+          // Adiciona o select à seção
+          secao.appendChild(select);
+      } catch (error) {
+          console.error('Erro ao processar variação:', error);
+      }
+  });
 }
 
 // Chame a função
@@ -298,6 +306,7 @@ adicionarAoCarrinhoBtn.addEventListener('click', async () => {
     const corSelecionada = document.getElementById('cor').value;
     const enobrecimentoSelecionado = document.getElementById('enobrecimento').value;
     const acabamentoSelecionado = document.getElementById('acabamento').value;
+    const modeloSelecionado = document.getElementById('modelo').value;
 
     const variacoesSelecionadas = {
       idProduto: produtoId,
@@ -305,7 +314,8 @@ adicionarAoCarrinhoBtn.addEventListener('click', async () => {
       formato: formatoSelecionado,
       cor: corSelecionada,
       enobrecimento: enobrecimentoSelecionado,
-      acabamento: acabamentoSelecionado
+      acabamento: acabamentoSelecionado,
+      modelo: modeloSelecionado,
     };
 
     // Faça uma solicitação POST para adicionar o produto ao carrinho
@@ -424,7 +434,7 @@ async function obterQuantidadeCarrinho() {
       const carrinho = await response.json();
       
       // Calcular a quantidade total de produtos no carrinho
-      const quantidadeTotal = carrinho.reduce((total, produto) => total + produto.quantidade, 0);
+      const quantidadeTotal = carrinho.length;
       
       // Exibir a quantidade total no elemento com id 'quantidadeCarrinho'
       document.getElementById('quantidadeCarrinho').textContent = quantidadeTotal;
@@ -446,3 +456,29 @@ fetch(`/api/quantidades/${1}`)
   .catch(error => {
     console.error('Erro ao buscar as quantidades:', error);
   });
+  document.addEventListener("DOMContentLoaded", async () => {
+    // Função para pegar o cookie pelo nome
+    function getCookie(name) {
+        const value = `; ${document.cookie}`;
+        const parts = value.split(`; ${name}=`);
+        if (parts.length === 2) return parts.pop().split(';').shift();
+    }
+
+    // Pega o username do cookie
+    const username = getCookie('username');
+    // Seleciona os elementos
+    const conviteCad = document.getElementById('conviteCad');
+    const userLog = document.getElementById('userLog');
+    const nameUserLog = document.getElementById('nameUserLog');
+
+        if (username === undefined) {
+            // Mostra o convite para cadastrar e esconde a área logada
+            conviteCad.style.display = 'block';
+            userLog.style.display = 'none';
+        } else {
+            // Esconde o convite e mostra o nome do usuário
+            conviteCad.style.display = 'none';
+            userLog.style.display = 'block';
+            nameUserLog.textContent = username;
+        }
+});

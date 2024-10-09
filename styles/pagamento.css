@@ -17,16 +17,11 @@ body {
   background-color: #F5F5F7;
 }
 header {
-  height: 42px;
-  position: fixed;
-  left: 50%;
-  transform: translate(-50%);
-  top: 1%;
   background-color: transparent;
   transition: 2s;
   width: 100%;
 }
-header.scrolled {
+/*header.scrolled {
   position: fixed;
   top: 0%;
   transition: 2s;
@@ -35,7 +30,7 @@ header.scrolled {
   z-index: 1000;
   background-color: white;
   height: 40px;
-}
+}*/
 header.scrolled > #nav-bar > li > a {
   color: #6E6E73;
 }
@@ -136,6 +131,76 @@ main > h1 {
     top: 900px;
     left: 50%;
     transform: translate(-50%);
+}
+.logo-header {
+  position: absolute;
+  left: 49%;
+  transform: translate( -50%); 
+  width: fit-content;
+  }
+ .logo-header > a > img {
+  cursor: pointer;
+  width: 12vw;
+  }
+  .passosCompra  {
+    position: absolute;
+    left: 50%;
+    transform: translate(-50%);
+    top: 10%;
+}
+.passosCompra > ul {
+    list-style: none;
+    display: flex;
+}
+.passosCompra > ul >  li {
+    padding-right: 35px;
+    text-align: center;
+}
+.circleactive {
+    border: 1px solid #EF4126;
+    height: 50px;
+    width: 50px;
+    border-radius: 50%;
+    margin: auto;
+    margin-top: 10px;
+    cursor: pointer;
+}
+.circleactive > span {
+    background-color: #EF4126;
+    color: white;
+    display: flex;
+    justify-content: center;
+    margin: auto;
+    margin-top: 2px;
+    padding: 10px;
+    width: 44px;
+    height: 44px;
+    border-radius: 75%;
+}   
+.circlenonactive {
+    border: 1px solid #C9C9C9;
+    height: 50px;
+    width: 50px;
+    border-radius: 50%;
+    margin: auto;
+    margin-top: 10px;
+    cursor: pointer;
+}
+.circlenonactive > span {
+    background-color: white;
+    color: #C9C9C9;
+    display: flex;
+    justify-content: center;
+    margin: auto;
+    margin-top: 2px;
+    padding: 10px;
+    width: 44px;
+    height: 44px;
+    border-radius: 75%;
+} 
+main {
+  position: relative;
+  top: 95px;
 }
 main > h2 {
     font-weight: 700;

@@ -180,6 +180,111 @@ li > a:hover {
   text-decoration: none;
 }
 #categs {display: none;}
+#menuToggle {
+  display: none;
+}
+/* Wrapper principal do menu */
+.menu-wrapper {
+  z-index: 1;
+  display: none;
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  width: max-content;
+  top: 53%;
+}
+
+/* Ícone de hambúrguer */
+.menu-wrapper > .hamburger-icon {
+  font-size: 30px;
+  cursor: pointer;
+  display: none; /* Não mostrar o ícone em telas grandes */
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  z-index: 1000;
+}
+
+/* Estilos principais do menu */
+.menu-wrapper > nav > ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.menu-wrapper > nav > ul > li {
+  cursor: pointer;
+  padding: 10px 0;
+}
+
+.menu-wrapper > nav > ul > li > a {
+  text-decoration: none;
+  color: #555555;
+  padding: 15px;
+  display: inline-block;
+  width: 100%;
+  transition: background 0.3s;
+}
+
+.menu-wrapper > nav > ul > li > a:hover {
+  background-color: #f37160;
+  color: white;
+}
+
+/* Estilos para lista de subcategorias */
+.menu-wrapper > nav > ul > li > ul.subcategory-list {
+  display: none;
+  position: absolute;
+  left: 25%;
+  transform: translate(-25%);
+  top: 5%;
+  max-height: 445px;
+  overflow-y: auto;
+  width: auto;
+}
+
+/* Estilos para subcategorias */
+.menu-wrapper > nav > ul > li > ul.subcategory-list > li {
+  padding: 10px 0;
+}
+
+.menu-wrapper > nav > ul > li > ul.subcategory-list > li > a {
+  text-decoration: none;
+  color: #333;
+  
+  display: block;
+}
+
+/* Estilo do container das categorias */
+.menu-wrapper > nav > ul > li > ul#category-list {
+  display: none;
+  position: absolute;
+  background: white;
+  width: 100%;
+  border-radius: 10px;
+  box-shadow: 0 0 5px rgba(0, 0, 0, 0.2);
+  z-index: 1;
+  padding: 20px;
+  margin-top: 15px;
+  max-height: 445px;
+  overflow-y: auto;
+}
+#category-list > li > a {
+  text-decoration: none;
+  color: #555555;
+  padding: 15px;
+  display: inline-block;
+  width: 100%;
+  transition: background 0.3s;
+}
+#category-list ul > li > a {
+  text-decoration: none;
+  color: #555555;
+  padding: 15px;
+  display: inline-block;
+  width: 100%;
+  transition: background 0.3s;
+}
 #icone-pesquisa {
     width: 22px;
     height: 24px;

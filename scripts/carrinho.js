@@ -42,6 +42,7 @@ document.addEventListener('DOMContentLoaded', function() {
               const srcDaImagem = await pegarImagemDoProduto(idDoProduto);
     
               console.log(srcDaImagem);
+              produto.nomeProd = produto.nomeProd.substring(0, 40)
               produtoElement.innerHTML = `
                 <img src="${srcDaImagem}" alt="Imagem do Produto">
                 <h2 class="nomeProduto">${produto.nomeProd}</h2>
@@ -233,7 +234,7 @@ async function obterQuantidadeCarrinho() {
       const carrinho = await response.json();
       
       // Calcular a quantidade total de produtos no carrinho
-      const quantidadeTotal = carrinho.reduce((total, produto) => total + produto.quantidade, 0);
+      const quantidadeTotal = carrinho.length;
       
       // Exibir a quantidade total no elemento com id 'quantidadeCarrinho'
       document.getElementById('quantidadeCarrinho').textContent = quantidadeTotal;
@@ -246,3 +247,30 @@ document.getElementById('quantidadeCarrinho').addEventListener('click', () => {
 });
 // Chamar a função ao carregar a página
 document.addEventListener('DOMContentLoaded', obterQuantidadeCarrinho);
+
+document.addEventListener("DOMContentLoaded", async () => {
+  // Função para pegar o cookie pelo nome
+  function getCookie(name) {
+      const value = `; ${document.cookie}`;
+      const parts = value.split(`; ${name}=`);
+      if (parts.length === 2) return parts.pop().split(';').shift();
+  }
+
+  // Pega o username do cookie
+  const username = getCookie('username');
+  // Seleciona os elementos
+  const conviteCad = document.getElementById('conviteCad');
+  const userLog = document.getElementById('userLog');
+  const nameUserLog = document.getElementById('nameUserLog');
+
+      if (username === undefined) {
+          // Mostra o convite para cadastrar e esconde a área logada
+          conviteCad.style.display = 'block';
+          userLog.style.display = 'none';
+      } else {
+          // Esconde o convite e mostra o nome do usuário
+          conviteCad.style.display = 'none';
+          userLog.style.display = 'block';
+          nameUserLog.textContent = username;
+      }
+});

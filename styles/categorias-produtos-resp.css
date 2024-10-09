@@ -1,0 +1,204 @@
+@media screen and (min-width: 2560px) {
+    .cxProd {
+        cursor: pointer;
+        padding: 15px;
+        display: inline-flex;
+        box-shadow: -1px -1px 8px #434344;
+        border-radius: 5px;
+        width: calc(22% - 20px);
+        overflow: hidden;
+        height: 456px;
+        position: relative;
+        top: 12%;
+        left: 15%;
+        transition: transform 0.8s;
+        margin: 50px;
+        transition: 0.8s;
+        background-color: white;
+    }
+    .logo-header > a > img {
+        cursor: pointer;
+        width: 10vw;
+    }
+} 
+@media screen and (min-width:320px) and (max-width:767px){
+    .popup {
+        display: none;
+        position: fixed;
+        left: 50%;
+        transform: translate(-50%);
+        top: 70%;
+        width: 90vw;
+        height: fit-content;
+        background: #FFFFFF;
+        box-shadow: 0px 187px 75px rgba(0, 0, 0, 0.01), 0px 105px 63px rgba(0, 0, 0, 0.05), 0px 47px 47px rgba(0, 0, 0, 0.09), 0px 12px 26px rgba(0, 0, 0, 0.1), 0px 0px 0px rgba(0, 0, 0, 0.1);
+        border-radius: 13px;
+    }
+    header {
+        z-index: 999;
+        position: absolute;
+        width: 99%;
+        left: 0%;
+    }
+    .messageHeader {
+        position: relative;
+        left: 1%;
+        top: 20px;
+        width: fit-content;
+    }
+    li > a {
+        text-decoration: none;
+        color: #555555;
+        padding: 5px;
+        transition: 0.8s;
+    }
+    .linksHeader {
+        width: fit-content;
+        position: relative;
+        left: 70%;
+    }
+    .linksHeader > ul > li {
+        padding-right: 0px;
+    }
+    .notCad > p {
+        font-weight: 300;
+        font-size: 12px;
+    }
+    .notCad > p > a {
+        font-weight: 300;
+        font-size: 12px;
+        text-decoration: underline;
+    }
+    .icons-mediaHeader {
+        display: none;
+    }
+    .logo-header {
+        position: relative;
+        left: 10%;
+        top: 30px;
+        width: fit-content;
+    }
+    .logo-header > a > img {
+        cursor: pointer;
+        width: 60vw;
+    }
+    .notCad {
+        width: fit-content;
+        position: relative;
+        left: 85%;
+        top: -17px;
+    }
+    .notCad > a {
+        font-weight: 300;
+        font-size: 12px;
+    }
+    .carrinho {
+        width: fit-content;
+        position: relative;
+        left: 80%;
+        top: -7px;
+    }
+    .linhaAbInp {display: none;}
+    .linhaAbNav {display: none;}
+    .menu {
+        display: none;
+    }
+    .menu-wrapper {
+        z-index: 1;
+        display: block;
+        position: absolute;
+        left: 50%;
+        transform: translateX(-50%);
+        width: max-content;
+        top: 120%;
+    }
+    #iconMenuMob {
+        display: none;
+        position: absolute;
+        top: 11%;
+        left: 95%;
+        transform: translate(-95%);
+        font-size: 28px;
+    }
+    .search-input {
+        position: absolute;
+        left: 45%;
+        transform: translate(-45%);
+        top: 97%;
+        width: fit-content;
+        height: 50px;
+        z-index: 1;
+    }
+    div#suggestions-container {
+        display: none;
+        background-color: white;
+        width: 70vw;
+        box-shadow: -1px -1px 3px black;
+        height: auto;
+        z-index: 1;
+        position: relative;
+        top: -40px;
+        left: 50%;
+        transform: translate(-50%);
+        border-radius: 5px;
+        padding: 20px;
+        max-height: 455px;
+        overflow-y: auto;
+    }
+    .search-input > input {
+        border: 1px solid #A8A8A8;
+        background-color: transparent;
+        width: 80vw;
+        padding: 15px;
+        border-radius: 30px;
+    }
+    .search-input > button {
+        background-color: transparent;
+        display: block;
+        position: relative;
+        left: 85%;
+        top: -22px;
+    }
+    .bannerCateg > img {
+        width: 320px;
+    }
+    .bannerCateg {
+        position: absolute;
+        top: 160%;
+        left: 50%;
+        transform: translate(-50%);
+    }
+    .cxProd {
+        cursor: pointer;
+        padding: 15px;
+        display: inline-flex;
+        box-shadow: -1px -1px 8px #434344;
+        border-radius: 5px;
+        width: calc(90% - 20px);
+        overflow: hidden;
+        height: 456px;
+        position: relative;
+        top: 12%;
+        left: 0%;
+        transition: transform 0.8s;
+        margin: 20px;
+        transition: 0.8s;
+        background-color: white;
+    }
+    .cxProd > a {
+        position: absolute;
+        top: 89%;
+        left: 65%;
+        background-color: #F37160;
+        color: white;
+        padding: 8px 18px 8px 18px;
+        font-size: 14px;
+        font-weight: 400;
+        border-radius: 2px;
+    }
+}
+@media screen and (min-width: 768px) and (max-width: 1440px) {
+    .bannerCateg > img {
+        width: 730px;
+    }
+}

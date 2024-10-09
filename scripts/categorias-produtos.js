@@ -211,6 +211,7 @@ document.addEventListener("DOMContentLoaded", function() {
                         produtoDiv.addEventListener("click", () => {
                             window.location.href = `/detalhes-produtos?id=${produto.id}`;
                         })
+                        produto.nomeProd = produto.nomeProd.substring(0, 40)
                         produtoDiv.innerHTML = `
                             <h2>${produto.nomeProd}</h2>
                             <img src="${produto.imgProd}" alt="${produto.nomeProd}">
@@ -227,4 +228,96 @@ document.addEventListener("DOMContentLoaded", function() {
         document.addEventListener('DOMContentLoaded', () => {
             definirTituloCategoria(); // Altera o título da página e o H1
             carregarProdutos(); // Carrega os produtos da categoria
+        });
+
+        document.addEventListener("DOMContentLoaded", async () => {
+            // Função para pegar o cookie pelo nome
+            function getCookie(name) {
+                const value = `; ${document.cookie}`;
+                const parts = value.split(`; ${name}=`);
+                if (parts.length === 2) return parts.pop().split(';').shift();
+            }
+        
+            // Pega o username do cookie
+            const username = getCookie('username');
+            // Seleciona os elementos
+            const conviteCad = document.getElementById('conviteCad');
+            const userLog = document.getElementById('userLog');
+            const nameUserLog = document.getElementById('nameUserLog');
+        
+                if (username === undefined) {
+                    // Mostra o convite para cadastrar e esconde a área logada
+                    conviteCad.style.display = 'block';
+                    userLog.style.display = 'none';
+                } else {
+                    // Esconde o convite e mostra o nome do usuário
+                    conviteCad.style.display = 'none';
+                    userLog.style.display = 'block';
+                    nameUserLog.textContent = username;
+                }
+        });
+        
+        document.addEventListener('DOMContentLoaded', () => {
+            const menuToggle = document.getElementById('menuToggle');
+            const menuContainer = document.getElementById('menuContainer');
+            const toggleMainMenu = document.getElementById('toggleMainMenu');
+            const categoryList = document.getElementById('category-list');
+            const parentCategories = document.querySelectorAll('.parent-category');
+        
+            // Exibir ou ocultar o menu ao clicar no ícone hambúrguer
+            menuToggle.addEventListener('click', () => {
+                menuContainer.style.display = menuContainer.style.display === 'block' ? 'none' : 'block';
+            });
+        
+            // Exibir ou ocultar o menu de categorias principais
+            toggleMainMenu.addEventListener('click', (e) => {
+                e.preventDefault();
+                categoryList.style.display = categoryList.style.display === 'block' ? 'none' : 'block';
+            });
+        
+            // Função para fechar todas as subcategorias
+            const closeAllSubcategories = () => {
+                const subCategories = document.querySelectorAll('.subcategory-list');
+                subCategories.forEach(sub => sub.style.display = 'none');
+            };
+        
+            // Função para ajustar colunas dinamicamente se a altura ultrapassar 445px
+            const adjustColumns = (subCategory) => {
+                const subCategoryHeight = subCategory.scrollHeight; // Altura real da lista
+                const maxHeight = 445;
+                const columnWidth = 300; // Largura de cada coluna
+        
+                // Se a altura ultrapassar o limite, ajustar para colunas
+                if (subCategoryHeight > maxHeight) {
+                    const numColumns = Math.ceil(subCategoryHeight / maxHeight);
+                    subCategory.style.columnCount = numColumns;
+                    subCategory.style.columnGap = '20px';
+                    subCategory.style.width = `${numColumns * columnWidth}px`;
+                } else {
+                    // Reseta para uma coluna se a altura estiver dentro do limite
+                    subCategory.style.columnCount = 1;
+                    subCategory.style.width = 'auto';
+                }
+            };
+        
+            // Adicionar evento de clique nas categorias para abrir/fechar
+            parentCategories.forEach(parent => {
+                parent.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    const subCategory = parent.nextElementSibling;
+        
+                    // Fecha todas as subcategorias antes de abrir a nova
+                    closeAllSubcategories();
+        
+                    // Abre ou fecha a subcategoria clicada
+                    if (subCategory) {
+                        subCategory.style.display = subCategory.style.display === 'block' ? 'none' : 'block';
+        
+                        // Ajusta colunas dinamicamente baseado na altura
+                        if (subCategory.style.display === 'block') {
+                            adjustColumns(subCategory);
+                        }
+                    }
+                });
+            });
         });
