@@ -17,6 +17,12 @@
         width: 99%;
         left: 0%;
     }
+    .mainContentHeader {
+        position: absolute;
+        height: 500px;
+        width: 100%;
+        z-index: -1;
+    }
     .messageHeader {
         position: relative;
         left: 1%;
@@ -57,7 +63,7 @@
     }
     .logo-header > a > img {
         cursor: pointer;
-        width: 60vw;
+        width: 65%;
     }
     .notCad {
         width: fit-content;
@@ -215,26 +221,89 @@
     }
     #banners{display: none;}
     #progress{display: none;}
-    #prods-header {
-        z-index: -1;
-        width: 100%;
-        height: 418px;
-        position: absolute;
-        top: 70%;
-        left: 50%;
+    main {
+        width: 95%; /* Aumenta a largura do main para telas pequenas */
+        padding: 10px; /* Ajusta o padding */
+        top: 90%;
+      }
+    
+      #novidades > h2 {
+        font-size: 24px; /* Ajusta o tamanho da fonte do título */
+        left: 5%; /* Ajusta a posição */
+        text-align: center; /* Centraliza o texto */
+        margin-bottom: 10px;
+      }
+    
+      .contentImagesNovidades {
+        flex-direction: column; /* Alinha as caixas verticalmente */
+        align-items: center; /* Centraliza horizontalmente */
+      }
+    
+      .box {
+        width: 90%; /* Ajusta a largura das caixas */
+        height: auto; /* Permite que a altura se ajuste ao conteúdo */
+        margin: 10px 0; /* Ajusta a margem */
+      }
+    
+      #motivosCompra > h2 {
+        font-size: 24px; /* Ajusta o tamanho do título */
+        text-align: center; /* Centraliza o texto */
+      }
+    
+      .contentMotivos {
+        flex-direction: column; /* Alinha os motivos verticalmente */
+        align-items: center; /* Centraliza horizontalmente */
+      }
+    
+      .motivos {
+        width: 80%; /* Ajusta a largura das divs de motivos */
+        height: 90%;
+        padding: 15px;
+        margin: 10px 0; /* Ajusta a margem */
+      }
+    
+      .motivos > img {
+        width: 20%;
+      }
+
+      #linksRapidos {
+        width: 90%; /* Aumenta a largura da seção de links */
+        margin: 0 auto; /* Centraliza a seção na tela */
+      }
+    
+      #linksRapidos > h2 {
+        font-size: 20px; /* Ajusta o tamanho do título dos links */
+        text-align: center; /* Centraliza o texto */
+      }
+    
+      .links {
+        width: 95%;
+        margin: 10px;
+        padding: 10px;
     }
-    footer {
-        position: absolute;
-        top: 485%;
-        width: 100vw;
-        height: 760px;
-    }
-    footer > a {
-        font-size: 17px;
+    
+      .links > h3 {
+        font-size: 14px; /* Ajusta o tamanho da fonte dos links */
+        text-align: center; /* Centraliza o texto */
+      }
+      .contentFooter {
+        height: 700px;
+        background-color: #2B2B2B;
         position: relative;
-        top: 240px;
-        left: 4%;
-    }
+        top: 20px;
+        left: 50%;
+        transform: translate(-50%);
+        width: 105vw;
+      }
+      footer > a {
+        color: white;
+        font-size: 12px;
+        transition: 1s;
+        position: absolute;
+        left: 50%;
+        transform: translate(-50%);
+        top: 92%;
+      }
     #institucional {
         width: fit-content;
         position: relative;
@@ -264,101 +333,6 @@
         position: relative;
         left: 10%;
         top: 230px;
-    }
-    #linksRapidos {
-        position: absolute;
-        top: 205%;
-        width: 100%;
-        height: 108px;
-        padding: 0px;
-        left: 45%;
-        transform: translate(-50%);
-    }
-    #linksRapidos > h2 {
-        font-size: 36px;
-        position: relative;
-        left: 12%;
-        width: 57%;
-    }
-    #meus-pedidos {
-        position: relative;
-        top: 15px;
-        width: 45vw;
-    }
-    #meus-pedidos > h3 {
-        font-size: 20px;
-    }
-    #minha-carteira {
-        position: relative;
-        top: -32px;
-        left: 57%;
-        width: 45vw;
-    }
-    #minha-carteira > h3 {
-        font-size: 20px;
-    }
-    #meu-perfil {
-        position: relative;
-        top: -20px;
-        left: 32%;
-        width: 45vw;
-    }    
-    #meu-perfil > h3 {
-        font-size: 20px;
-    }
-    #mot1 {
-        width: 250px;
-        height: 194px;
-        box-shadow: -1px -1px 8px #434344;
-        border-radius: 5px;
-        position: absolute;
-        top: 50%;
-        transition: 1s;
-        left: 13%;
-    }
-    #mot2 {
-        width: 250px;
-        height: 194px;
-        box-shadow: -1px -1px 8px #434344;
-        border-radius: 5px;
-        position: absolute;
-        top: 117%;
-        left: 13%;
-        transition: 1s;
-    }
-    #mot3 {
-        width: 250px;
-        height: 194px;
-        box-shadow: -1px -1px 8px #434344;
-        border-radius: 5px;
-        position: absolute;
-        top: 184%;
-        left: 13%;
-        transition: 1s;
-    }
-    #motivosCompra {
-        width: 100%;
-        height: 315px;
-        position: absolute;
-        top: 145%;
-        padding: 15px;
-        left: 50%;
-        transform: translate(-50%);
-    }
-    #motivosCompra > h2 {
-        font-size: 27px;
-        font-weight: 600;
-        color: #A7A9AC;
-        width: 100%;
-    }
-    #novidades > h2 {
-        font-size: 28px;
-        font-weight: 600;
-        color: #A7A9AC;
-        width: fit-content;
-        position: absolute;
-        left: 15%;
-        width: 80%;
     }
     #prevButton {
         cursor: pointer;
@@ -393,175 +367,6 @@
         overflow-x: hidden;
         white-space: nowrap;
     }
-    #sec-header {
-        width: 94vw;
-        height: 342px;
-        position: absolute;
-        left: 50%;
-        top: 16%;
-        transform: translate(-50%);
-    }
-    #prod1 {
-        cursor: pointer;
-        width: 179px;
-        height: 129px;
-        position: absolute;
-        top: 30px;
-        left: 4%;
-    }
-    #prod3 {
-        cursor: pointer;
-        width: 179px;
-        height: 129px;
-        position: absolute;
-        top: 50%;
-        left: 5%;
-    }
-    #prod4 {
-        cursor: pointer;
-        width: 179px;
-        height: 129px;
-        position: absolute;
-        top: 50%;
-        left: 60%;
-    }
-    #sec-header > h1 {
-        font-weight: lighter;
-        font-size: 43px;
-        color: #020202;
-        line-height: 62px;
-    }
-    #prod1 > h2 {
-        font-weight: 600;
-        font-size: 12px;
-        position: absolute;
-        left: 17%;
-        transform: translate(-6%);
-    }
-    #prod2 > h2 {
-        font-weight: 600;
-        font-size: 12px;
-        position: absolute;
-        left: 17%;
-        transform: translate(-6%);
-    }
-    #prod2 {
-        cursor: pointer;
-        width: 179px;
-        height: 129px;
-        position: absolute;
-        top: 20px;
-        left: 60%;
-    }
-    #prod3 > h2 {
-        font-weight: 600;
-        font-size: 12px;
-        position: absolute;
-        left: 20%;
-        transform: translate(-10%);
-    }
-    #prod4 > h2 {
-        width: max-content;
-        font-weight: 600;
-        font-size: 12px;
-        position: absolute;
-        left: 10%;
-        transform: translate(-10%);
-    }
-    #cx1 {
-        box-shadow: -1px -1px 8px #434344;
-        border-radius: 5px;
-        width: 80vw;
-        height: 456px;
-        position: absolute;
-        top: 12%;
-        transition: transform 0.8s;
-        left: 20%;
-        transform: translate(-20%);
-    }
-    #cx2 {
-        box-shadow: -1px -1px 8px #434344;
-        border-radius: 5px;
-        width: 80vw;
-        height: 456px;
-        position: absolute;
-        top: 58%;
-        transition: transform 0.8s;
-        left: 20%;
-        transform: translate(-20%);
-    }
-    #cx3 {
-        box-shadow: -1px -1px 8px #434344;
-        border-radius: 5px;
-        width: 80vw;
-        height: 456px;
-        position: absolute;
-        top: 104%;
-        transition: transform 0.8s;
-        overflow-x: hidden;
-        left: 20%;
-        transform: translate(-20%);
-    }
-    #cx4 {
-        box-shadow: -1px -1px 8px #434344;
-        border-radius: 5px;
-        width: 80vw;
-        height: 456px;
-        position: absolute;
-        top: 150%;
-        transition: transform 0.8s;
-        overflow-x: hidden;
-        left: 20%;
-        transform: translate(-20%);
-    }
-    main {
-        position: absolute;
-        top: 700px;
-        width: 100%;
-        height: 1550px;
-        left: 50%;
-        transform: translate(-50%);
-        padding: 15px;
-    }
-    .input-wrapper {
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        gap: 15px;
-        position: absolute;
-        left: 25%;
-        top: -4px;
-    }
-    .input {
-        border-style: none;
-        height: 40px;
-        width: 40px;
-        padding: 10px;
-        outline: none;
-        border-radius: 50%;
-        transition: .5s ease-in-out;
-        background-color: transparent;
-        box-shadow: 0px 0px 3px transparent;
-        padding-right: 40px;
-        color: #020202;
-      }
-      .icon:focus ~ .input,
-      .input:focus {
-        box-shadow: none;
-        width: 150px;
-        border-radius: 0px;
-        background-color: transparent;
-        border-bottom: 2px solid #020202;
-        transition: all 500ms cubic-bezier(0, 0.110, 0.35, 2);
-      }
-      #sugestoes {
-        background-color: white;
-      }
-      #novidades {
-        position: relative;
-        left: -25px;
-        width: 100%;
-      }
       #cx5 {
         display: none;
       }
@@ -575,6 +380,12 @@
     }
 }
 @media screen and (min-width: 768px) and (max-width: 1024px) {
+    .mainContentHeader {
+        position: absolute;
+        height: 460px;
+        width: 100%;
+        z-index: -1;
+    }
     div#banners {
         height: 165px;
         position: relative;
@@ -584,7 +395,7 @@
         cursor: pointer;
     }
     .banner.active > img {
-        width: 530px;
+        width: 100%;
     }
     .menu {
         display: none;
@@ -683,96 +494,6 @@
         top: 435px;
         cursor: pointer;
     }
-    main {
-        position: relative;
-        top: 970px;
-        width: 900%;
-        height: 1109px;
-        left: 50%;
-        transform: translate(-50%);
-        padding: 15px;
-    }
-    #novidades > h2 {
-        font-size: 33px;
-        font-weight: 300;
-        color: #A7A9AC;
-        width: 85%;
-        position: relative;
-        left: 10%;
-        margin-bottom: 15px;
-    }
-    .box {
-        display: inline-flex;
-        box-shadow: -1px -1px 8px #434344;
-        border-radius: 11px;
-        width: 350px;
-        height: 459px;
-        transition: transform 0.8s;
-        margin: 14px;
-        cursor: pointer;
-    }
-    #motivosCompra {
-        width: 100%;
-        height: 313px;
-        position: absolute;
-        top: 150%;
-        padding: 15px;
-        left: 50%;
-        transform: translate(-50%);
-    }
-    #motivosCompra > h2 {
-        font-size: 33px;
-        font-weight: 300;
-        color: #A7A9AC;
-        width: 100%;
-    }
-    #mot1 {
-        width: 240px;
-        height: 194px;
-        box-shadow: -1px -1px 8px #434344;
-        border-radius: 5px;
-        position: absolute;
-        top: 35%;
-        transition: 1s;
-    } 
-    #mot2 {
-        width: 240px;
-        height: 194px;
-        box-shadow: -1px -1px 8px #434344;
-        border-radius: 5px;
-        position: absolute;
-        top: 35%;
-        left: 35%;
-        transition: 1s;
-    }
-    #mot3 {
-        width: 230px;
-        height: 194px;
-        box-shadow: -1px -1px 8px #434344;
-        border-radius: 5px;
-        position: absolute;
-        top: 35%;
-        left: 69%;
-        transition: 1s;
-    }
-    #mot3 > h3 {
-        font-weight: 600;
-        font-size: 22px;
-        position: absolute;
-        left: 50%;
-        transform: translate(-50%);
-        width: max-content;
-        top: 55%;
-    }
-    #linksRapidos {
-        position: absolute;
-        top: 191%;
-        width: 420px;
-        height: 108px;
-        padding: 10px;
-        left: 30%;
-        transform: translate(-30%);
-    }
     footer {
         position: absolute;
         top: 388%;
@@ -808,6 +529,12 @@
         box-shadow: 0px 187px 75px rgba(0, 0, 0, 0.01), 0px 105px 63px rgba(0, 0, 0, 0.05), 0px 47px 47px rgba(0, 0, 0, 0.09), 0px 12px 26px rgba(0, 0, 0, 0.1), 0px 0px 0px rgba(0, 0, 0, 0.1);
         border-radius: 13px;
     }
+    .mainContentHeader {
+        position: absolute;
+        height: 460px;
+        width: 100%;
+        z-index: -1;
+    }
     div#banners {
         height: 165px;
         position: relative;
@@ -817,7 +544,7 @@
         cursor: pointer;
     }
     .banner.active > img {
-        width: 665px;
+        width: 100%;
     }
     .menu {
         display: none;
@@ -916,128 +643,14 @@
         top: 435px;
         cursor: pointer;
     }
-    main {
+    .contentFooter {
+        height: 490px;
+        background-color: #2B2B2B;
         position: relative;
-        top: 970px;
-        width: 100%;
-        height: 1109px;
-        left: 50%;
+        top: 20px;
+        left: 49%;
         transform: translate(-50%);
-        padding: 15px;
-    }
-    #sec-header > h1 {
-        font-weight: lighter;
-        font-size: 49px;
-        color: #020202;
-        line-height: 62px;
-        width: 49%;
-        position: absolute;
-        left: -10%;
-    }
-    #prods-header {
-        width: 849px;
-        height: 184px;
-        position: absolute;
-        top: 192%;
-        left: 50%;
-        transform: translate(-50%);
-    }
-    #novidades {
-        position: absolute;
-        left: 50%;
-        height: 1095px;
-        width: 100%;
-        transform: translate(-50%);
-    }
-    #novidades > h2 {
-        font-size: 28px;
-        font-weight: 600;
-        color: #A7A9AC;
-        position: absolute;
-        left: 5%;
-    }
-    #cx5 {
-        display: none;
-    }
-    #cx6 {
-        display: none;
-    }
-    #cx1 {
-        box-shadow: -1px -1px 8px #434344;
-        border-radius: 5px;
-        width: 360px;
-        height: 456px;
-        position: absolute;
-        top: 12%;
-        left: 3%;
-        transition: transform 0.8s;
-    }
-    #cx2 {
-        box-shadow: -1px -1px 8px #434344;
-        border-radius: 5px;
-        width: 360px;
-        height: 456px;
-        position: absolute;
-        top: 12%;
-        left: 53%;
-        transition: transform 0.8s;
-    }    
-    #cx3 {
-        box-shadow: -1px -1px 8px #434344;
-        border-radius: 5px;
-        width: 360px;
-        height: 456px;
-        position: absolute;
-        top: 57%;
-        left: 6%;
-        transition: transform 0.8s;
-        overflow-x: hidden;
-        transform: translate(-7%);
-    }
-    #cx4 {
-        box-shadow: -1px -1px 8px #434344;
-        border-radius: 5px;
-        width: 360px;
-        height: 456px;
-        position: absolute;
-        top: 57%;
-        left: 53%;
-        transition: transform 0.8s;
-        overflow-x: hidden;
-    }
-    #motivosCompra {
-        width: 985px;
-        height: 313px;
-        position: absolute;
-        top: 105%;
-        padding: 15px;
-        left: 50%;
-        transform: translate(-50%);
-    }
-    #motivosCompra > h2 {
-        font-size: 33px;
-        font-weight: 300;
-        color: #A7A9AC;
-        width: 95%;
-    }
-    #linksRapidos {
-        position: absolute;
-        top: 140%;
-        width: 420px;
-        height: 108px;
-        padding: 10px;
-        left: 30%;
-        transform: translate(-30%);
-    }
-    #linksRapidos > h2 {
-        font-size: 28px;
-        font-weight: 600;
-    }
-    footer {
-        position: absolute;
-        top: 365%;
-        width: 100vw;
-        height: 512px;
+        width: 101vw;
     }
     footer > a {
         color: white;
@@ -1046,7 +659,7 @@
         transition: 1s;
         position: relative;
         left: 40%;
-        top: 35%;
+        top: 8%;
     }
     #institucional {
         width: 30%;
@@ -1149,136 +762,14 @@
         display: flex;
         justify-content: center;
     }
-    #sec-header {
-        width: 712px;
-        height: 342px;
-        position: absolute;
-        left: 50%;
-        top: 16%;
+    .contentFooter {
+        height: 490px;
+        background-color: #2B2B2B;
+        position: relative;
+        top: 20px;
+        left: 49%;
         transform: translate(-50%);
-    }
-    main {
-        position: absolute;
-        top: 1125px;
-        width: 812px;
-        height: 1109px;
-        left: 50%;
-        padding: 15px;
-        transform: translate(-50%);
-    }
-    #sec-header > h1 {
-        font-weight: lighter;
-        font-size: 49px;
-        color: #020202;
-        line-height: 62px;
-        width: 49%;
-        position: absolute;
-        left: -10%;
-    }
-    #prods-header {
-        width: 849px;
-        height: 184px;
-        position: absolute;
-        top: 192%;
-        left: 50%;
-        transform: translate(-50%);
-    }
-    #novidades {
-        position: absolute;
-        left: 50%;
-        height: 1095px;
-        width: 100%;
-        transform: translate(-50%);
-    }
-    #novidades > h2 {
-        font-size: 28px;
-        font-weight: 600;
-        color: #A7A9AC;
-        position: absolute;
-        left: -11%;
-    }
-    #cx5 {
-        display: none;
-    }
-    #cx6 {
-        display: none;
-    }
-    #cx1 {
-        box-shadow: -1px -1px 8px #434344;
-        border-radius: 5px;
-        width: 360px;
-        height: 456px;
-        position: absolute;
-        top: 12%;
-        left: 3%;
-        transition: transform 0.8s;
-    }
-    #cx2 {
-        box-shadow: -1px -1px 8px #434344;
-        border-radius: 5px;
-        width: 360px;
-        height: 456px;
-        position: absolute;
-        top: 12%;
-        left: 53%;
-        transition: transform 0.8s;
-    }    
-    #cx3 {
-        box-shadow: -1px -1px 8px #434344;
-        border-radius: 5px;
-        width: 360px;
-        height: 456px;
-        position: absolute;
-        top: 57%;
-        left: 6%;
-        transition: transform 0.8s;
-        overflow-x: hidden;
-        transform: translate(-7%);
-    }
-    #cx4 {
-        box-shadow: -1px -1px 8px #434344;
-        border-radius: 5px;
-        width: 360px;
-        height: 456px;
-        position: absolute;
-        top: 57%;
-        left: 53%;
-        transition: transform 0.8s;
-        overflow-x: hidden;
-    }
-    #motivosCompra {
-        width: 985px;
-        height: 313px;
-        position: absolute;
-        top: 105%;
-        padding: 15px;
-        left: 50%;
-        transform: translate(-50%);
-    }
-    #motivosCompra > h2 {
-        font-size: 33px;
-        font-weight: 300;
-        color: #A7A9AC;
-        width: 95%;
-    }
-    #linksRapidos {
-        position: absolute;
-        top: 140%;
-        width: 420px;
-        height: 108px;
-        padding: 10px;
-        left: 30%;
-        transform: translate(-30%);
-    }
-    #linksRapidos > h2 {
-        font-size: 28px;
-        font-weight: 600;
-    }
-    footer {
-        position: absolute;
-        top: 365%;
-        width: 100vw;
-        height: 512px;
+        width: 101vw;
     }
     footer > a {
         color: white;
@@ -1287,7 +778,7 @@
         transition: 1s;
         position: relative;
         left: 40%;
-        top: 35%;
+        top: 8%;
     }
     #institucional {
         width: 30%;
@@ -1378,136 +869,14 @@
         display: flex;
         justify-content: center;
     }
-    #sec-header {
-        width: 712px;
-        height: 342px;
-        position: absolute;
-        left: 50%;
-        top: 16%;
+    .contentFooter {
+        height: 490px;
+        background-color: #2B2B2B;
+        position: relative;
+        top: 20px;
+        left: 49%;
         transform: translate(-50%);
-    }
-    main {
-        position: absolute;
-        top: 1125px;
-        width: 812px;
-        height: 1109px;
-        left: 50%;
-        padding: 15px;
-        transform: translate(-50%);
-    }
-    #sec-header > h1 {
-        font-weight: lighter;
-        font-size: 49px;
-        color: #020202;
-        line-height: 62px;
-        width: 49%;
-        position: absolute;
-        left: -10%;
-    }
-    #prods-header {
-        width: 849px;
-        height: 184px;
-        position: absolute;
-        top: 192%;
-        left: 50%;
-        transform: translate(-50%);
-    }
-    #novidades {
-        position: absolute;
-        left: 50%;
-        height: 1095px;
-        width: 100%;
-        transform: translate(-50%);
-    }
-    #novidades > h2 {
-        font-size: 28px;
-        font-weight: 600;
-        color: #A7A9AC;
-        position: absolute;
-        left: -11%;
-    }
-    #cx5 {
-        display: none;
-    }
-    #cx6 {
-        display: none;
-    }
-    #cx1 {
-        box-shadow: -1px -1px 8px #434344;
-        border-radius: 5px;
-        width: 360px;
-        height: 456px;
-        position: absolute;
-        top: 12%;
-        left: 3%;
-        transition: transform 0.8s;
-    }
-    #cx2 {
-        box-shadow: -1px -1px 8px #434344;
-        border-radius: 5px;
-        width: 360px;
-        height: 456px;
-        position: absolute;
-        top: 12%;
-        left: 53%;
-        transition: transform 0.8s;
-    }    
-    #cx3 {
-        box-shadow: -1px -1px 8px #434344;
-        border-radius: 5px;
-        width: 360px;
-        height: 456px;
-        position: absolute;
-        top: 57%;
-        left: 6%;
-        transition: transform 0.8s;
-        overflow-x: hidden;
-        transform: translate(-7%);
-    }
-    #cx4 {
-        box-shadow: -1px -1px 8px #434344;
-        border-radius: 5px;
-        width: 360px;
-        height: 456px;
-        position: absolute;
-        top: 57%;
-        left: 53%;
-        transition: transform 0.8s;
-        overflow-x: hidden;
-    }
-    #motivosCompra {
-        width: 985px;
-        height: 313px;
-        position: absolute;
-        top: 105%;
-        padding: 15px;
-        left: 50%;
-        transform: translate(-50%);
-    }
-    #motivosCompra > h2 {
-        font-size: 33px;
-        font-weight: 300;
-        color: #A7A9AC;
-        width: 95%;
-    }
-    #linksRapidos {
-        position: absolute;
-        top: 140%;
-        width: 420px;
-        height: 108px;
-        padding: 10px;
-        left: 30%;
-        transform: translate(-30%);
-    }
-    #linksRapidos > h2 {
-        font-size: 28px;
-        font-weight: 600;
-    }
-    footer {
-        position: absolute;
-        top: 365%;
-        width: 100vw;
-        height: 512px;
+        width: 101vw;
     }
     footer > a {
         color: white;
@@ -1516,7 +885,7 @@
         transition: 1s;
         position: relative;
         left: 40%;
-        top: 35%;
+        top: 8%;
     }
     #institucional {
         width: 30%;
@@ -1607,132 +976,14 @@
         display: flex;
         justify-content: center;
     }
-    #sec-header {
-        width: 712px;
-        height: 342px;
-        position: absolute;
-        left: 50%;
-        top: 16%;
+    .contentFooter {
+        height: 490px;
+        background-color: #2B2B2B;
+        position: relative;
+        top: 20px;
+        left: 49%;
         transform: translate(-50%);
-    }
-    main {
-        position: absolute;
-        top: 1125px;
-        width: 812px;
-        height: 1109px;
-        left: 50%;
-        padding: 15px;
-        transform: translate(-50%);
-    }
-    #sec-header > h1 {
-        font-weight: lighter;
-        font-size: 49px;
-        color: #020202;
-        line-height: 62px;
-        width: 49%;
-        position: absolute;
-        left: -10%;
-    }
-    #prods-header {
-        width: 849px;
-        height: 184px;
-        position: absolute;
-        top: 192%;
-        left: 50%;
-        transform: translate(-50%);
-    }
-    #novidades {
-        position: absolute;
-        left: 50%;
-        height: 1095px;
-        width: 100%;
-        transform: translate(-50%);
-    }
-    #novidades > h2 {
-        font-size: 28px;
-        font-weight: 600;
-        color: #A7A9AC;
-        position: absolute;
-        left: -11%;
-    }
-    #cx5{display: none;}
-    #cx6{display: none;}
-    #cx1 {
-        box-shadow: -1px -1px 8px #434344;
-        border-radius: 5px;
-        width: 360px;
-        height: 456px;
-        position: absolute;
-        top: 12%;
-        left: 3%;
-        transition: transform 0.8s;
-    }
-    #cx2 {
-        box-shadow: -1px -1px 8px #434344;
-        border-radius: 5px;
-        width: 360px;
-        height: 456px;
-        position: absolute;
-        top: 12%;
-        left: 53%;
-        transition: transform 0.8s;
-    }    
-    #cx3 {
-        box-shadow: -1px -1px 8px #434344;
-        border-radius: 5px;
-        width: 360px;
-        height: 456px;
-        position: absolute;
-        top: 57%;
-        left: 6%;
-        transition: transform 0.8s;
-        overflow-x: hidden;
-        transform: translate(-7%);
-    }
-    #cx4 {
-        box-shadow: -1px -1px 8px #434344;
-        border-radius: 5px;
-        width: 360px;
-        height: 456px;
-        position: absolute;
-        top: 57%;
-        left: 53%;
-        transition: transform 0.8s;
-        overflow-x: hidden;
-    }
-    #motivosCompra {
-        width: 985px;
-        height: 313px;
-        position: absolute;
-        top: 105%;
-        padding: 15px;
-        left: 50%;
-        transform: translate(-50%);
-    }
-    #motivosCompra > h2 {
-        font-size: 33px;
-        font-weight: 300;
-        color: #A7A9AC;
-        width: 95%;
-    }
-    #linksRapidos {
-        position: absolute;
-        top: 140%;
-        width: 420px;
-        height: 108px;
-        padding: 10px;
-        left: 30%;
-        transform: translate(-30%);
-    }
-    #linksRapidos > h2 {
-        font-size: 28px;
-        font-weight: 600;
-    }
-    footer {
-        position: absolute;
-        top: 365%;
-        width: 100vw;
-        height: 512px;
+        width: 101vw;
     }
     footer > a {
         color: white;
@@ -1741,7 +992,7 @@
         transition: 1s;
         position: relative;
         left: 40%;
-        top: 35%;
+        top: 8%;
     }
     #institucional {
         width: 30%;
@@ -1764,4 +1015,55 @@
         cursor: pointer;
         width: 10vw;
     }
+    .mainContentHeader {
+        position: absolute;
+        height: 37vw;
+        width: 100%;
+        z-index: -1;
+    }
+    main {
+        width: 100%; /* Aumenta a largura do main */
+        margin: 0 auto; /* Centraliza o main na tela */
+      }
+    
+      #novidades > h2 {
+        font-size: 40px; /* Aumenta o tamanho da fonte do título */
+      }
+    
+      .box {
+        width: 440px; /* Aumenta a largura das caixas */
+        height: 500px; /* Aumenta a altura das caixas */
+        margin: 40px; /* Ajusta a margem */
+      }
+    
+      #motivosCompra > h2 {
+        font-size: 40px; /* Aumenta o tamanho do título */
+      }
+    
+      .motivos {
+        width: 350px; /* Aumenta a largura das divs de motivos */
+        max-width: 350px; /* Mantém a largura máxima */
+      }
+    
+      #linksRapidos {
+        margin-top: 30px;
+        width: 50vw; /* Aumenta a largura da seção de links */
+      }
+    
+      #linksRapidos > h2 {
+        font-size: 32px; /* Aumenta o tamanho do título dos links */
+      }
+    
+      .links > h3 {
+        font-size: 20px; /* Aumenta o tamanho da fonte dos links */
+      }
+      footer > a {
+        color: white;
+        font-size: 12px;
+        transition: 1s;
+        position: absolute;
+        left: 50%;
+        transform: translate(-50%);
+        top: 95%;
+      }
 }

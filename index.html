@@ -18,1126 +18,57 @@
 </head>
 <body>
     <header>
-      <div class="sliderBanner-header">
-        <!--Slider Banner Ficará aqui-->
-      </div>
-      <div class="messageHeader">
-        <p>Tá com pressa?</p>
-      </div>
-      <div class="linksHeader">
-        <ul>
-          <li><a href="/pedidosUsuario">Meus Pedidos</a></li>
-          <li><a href="/carteira">Minha Carteira</a></li>
-        </ul>
-      </div>
-      <div class="icons-mediaHeader">
-        <ul>
-          <li><img src="https://wbl.blob.core.windows.net/public/icon-whatsapp.png" alt="..."></li>
-          <li><img src="https://wbl.blob.core.windows.net/public/icon-instagram-black.png" alt="..."></li>
-          <li><img src="https://wbl.blob.core.windows.net/public/icon-youtube-black.png" alt="..."></li>
-          <li><img src="https://wbl.blob.core.windows.net/public/icon-facebook-black.png" alt="..."></li>
-        </ul>
-      </div>
-      <div class="logo-header">
-        <a href="/"><img src="images/logo-imprimeai.png" alt="..."></a>
-      </div>
-      <div class="search-input">
-        <input type="text" name="search-input" id="search-input" placeholder="O que você está procurando?">
-        <button><span class="material-symbols-outlined">
-          search
-          </span></button>
-          <div id="suggestions-container"></div>
-      </div>
-      <div class="notCad">
-          <p id="conviteCad">Olá!, bem-vindo! <br> <a href="/login">Entre</a> ou <a href="/cadastro">cadastre-se</a></p>
-      </div>
-      <div class="notCad" id="userLog">
-        <p>Olá!, bem-vindo! <br> <a href="/perfil" id="nameUserLog"></a></p>
-      </div>
-      <div class="carrinho">
-        <a href="/carrinho"><img src="https://wbl.blob.core.windows.net/public/icon-carrinho.png" alt="..."></a>
-        <span id="quantidadeCarrinho">0</span>
-      </div>
-      <div class="linhaAbInp"></div>
-      <span id="iconMenuMob" class="material-symbols-outlined">
-        menu
-        </span>
-        <div class="menu">
-          <nav>
-             <ul id="mainMenu">
-                  <li id="allCateg">
-                      <a href="#" id="toggleMenu">☰ Todos os Produtos</a>
-                  <ul id="categs" class="categorias">
-                      <li id="maisVendidos">
-                          <a href="#" class="parentCateg">Mais Vendidos</a>
-                          <ul id="categsMaisVendidos" class="subCategAll">
-                              <li>
-                                  <a href="/categorias?categoria=adesivos">Adesivo</a>
-                              </li>
-                              <li>
-                                  <a href="/categorias?categoria=banners">Banner</a>
-                              </li>
-                              <li>
-                                  <a href="/categorias?categoria=cartoes">Cartão de Visita</a>
-                              </li>
-                              <li>
-                                  <a href="/categorias?categoria=envelopes">Envelope</a>
-                              </li>
-                              <li>
-                                  <a href="/detalhes-produtos?id=37">Wind Banner</a>
-                              </li>
-                              <li>
-                                  <a href="/categorias?categoria=folhetos">Folheto</a>
-                              </li>
-                              <li>
-                                  <a href="/categorias?categoria=pastas">Pasta Personalizada</a>
-                              </li>
-                              <li>
-                                  <a href="/categorias?categoria=tags">Tags</a>
-                              </li>
-                          </ul>
-                      </li>
-                      <li>
-                          <a href="#" class="parentCateg">Cartões de Visita</a>
-                          <ul class="subCategAll">
-                              <li>
-                                  <a href="/categorias?categoria=cartoes">Cartão de Visita</a>
-                              </li>
-                              <li>
-                                  <a href="/detalhes-produtos?id=1">Cartão de Visita Verniz Localizado</a>
-                              </li>
-                              <li>
-                                  <a href="detalhes-produtos?id=2">Cartão de Visita com Brilho</a>
-                              </li>
-                              <li>
-                                  <a href="detalhes-produtos?id=3">Cartão de Visita Corte Especial</a>
-                              </li>
-                              <li>
-                                  <a href="/detalhes-produtos?id=4">Cartão de Visita em Hot Stamping</a>
-                              </li>
-                              <li>
-                                  <a href="/detalhes-produtos?id=5">Cartão de Visita em Plástico</a>
-                              </li>
-                              <li>
-                                  <a href="detalhes-produtos?id=3">Cartão de Visita Fosco</a>
-                              </li>
-                              <li>
-                                  <a href="/detalhes-produtos?id=6">Cartão de Visita Premium</a>
-                              </li>
-                              <li>
-                                  <a href="/detalhes-produtos?id=7">Cartão Fidelidade</a>
-                              </li>
-                              <li>
-                                  <a href="/detalhes-produtos?id=8">Mini Cartão de Visita</a>
-                              </li>
-                              <li>
-                                  <a href="/detalhes-produtos?id=9">Porta Cartão de Visita</a>
-                              </li>
-                          </ul>
-                      </li>
-                      <li>
-                          <a href="#" class="parentCateg">Folhetos e Folders</a>
-                          <ul class="subCategAll">
-                              <li>
-                                  <a href="/categorias?categoria=flyer">Flyer</a>
-                              </li>
-                              <li>
-                                  <a href="/detalhes-produtos?id=12">Folheto</a>
-                              </li>
-                              <li>
-                                  <a href="/categorias?categoria=panfletos">Panfleto</a>
-                              </li>
-                              <li>
-                                  <a href="/detalhes-produtos?id=17">Folder</a>
-                              </li>
-                              <li>
-                                  <a href="/categorias?categoria=folders">Folders e Panfletos</a>
-                              </li>
-                              <li>
-                                  <a href="/detalhes-produtos?id=16">Tabloide</a>
-                              </li>
-                          </ul>
-                      </li>
-                      <li>
-                          <a href="/categorias?categoria=envelopes">Envelopes</a>
-                      </li>
-                      <li>
-                          <a href="/categorias?categoria=pastas">Pastas</a>
-                      </li>
-                      <li>
-                          <a href="#" class="parentCateg">Imãs</a>
-                          <ul class="subCategAll">
-                              <li>
-                                  <a href="#">Imã Personalizado</a>
-                              </li>
-                              <li>
-                                  <a href="#">Imã com Calendário</a>
-                              </li>
-                              <li>
-                                  <a href="#">Imã para Carros</a>
-                              </li>
-                              <li>
-                                  <a href="#">Lembrancinha</a>
-                              </li>
-                              <li>
-                                  <a href="#">Quebra Cabeça Personalizado</a>
-                              </li>
-                          </ul>
-                      </li>
-                      <li>
-                          <a href="#" class="parentCateg">Adesivos e Rótulos</a>
-                          <ul class="subCategAll">
-                              <li>
-                                  <a href="/categorias?categoria=adesivos">Adesivo</a>
-                              </li>
-                              <li>
-                                  <a href="/detalhes-produtos?id=21">Adesivo Vinil</a>
-                              </li>
-                              <li>
-                                  <a href="/detalhes-produtos?id=22">Adesivo Redondo</a>
-                              </li>
-                              <li>
-                                  <a href="/detalhes-produtos?id=21">Adesivo em Papel</a>
-                              </li>
-                              <li>
-                                  <a href="/detalhes-produtos?id=26">Adesivo Cartão de Crédito</a>
-                              </li>
-                              <li>
-                                  <a href="/detalhes-produtos?id=30">Adesivo Decorativo</a>
-                              </li>
-                              <li>
-                                  <a href="/detalhes-produtos?id=23">Adesivo Eletrostático</a>
-                              </li>
-                              <li>
-                                  <a href="/detalhes-produtos?id=27">Adesivo em BOPP</a>
-                              </li>
-                              <li>
-                                  <a href="/detalhes-produtos?id=25">Adesivo para Fechar Sacola</a>
-                              </li>
-                              <li>
-                                  <a href="/detalhes-produtos?id=24">Adesivo para Troca de Óleo</a>
-                              </li>
-                              <li>
-                                  <a href="/detalhes-produtos?id=30">Adesivo para Vitrine</a>
-                              </li>
-                              <li>
-                                  <a href="#">Adesivo Perfurado</a>
-                              </li>
-                              <li>
-                                  <a href="#">Adesivo Resinado</a>
-                              </li>
-                              <li>
-                                  <a href="/detalhes-produtos?id=31">Adesivo Termocolante</a>
-                              </li>
-                              <li>
-                                  <a href="/detalhes-produtos?id=22">Cartela de Adesivos</a>
-                              </li>
-                              <li>
-                                  <a href="/detalhes-produtos?id=32">Etiquetas</a>
-                              </li>
-                              <li>
-                                  <a href="/detalhes-produtos?id=32">Etiquetas Escolares</a>
-                              </li>
-                              <li>
-                                  <a href="/detalhes-produtos?id=24">Lacre de Segurança</a>
-                              </li>
-                              <li>
-                                  <a href="/detalhes-produtos?id=23">Rótulos</a>
-                              </li>
-                              <li>
-                                  <a href="/detalhes-produtos?id=34">Stickers</a>
-                              </li>
-                          </ul>
-                      </li>
-                      <li>
-                          <a href="#" class="parentCateg">Banner</a>
-                          <ul class="subCategAll">
-                              <li>
-                                  <a href="/detalhes-produtos?id=35">Banner</a>
-                              </li>
-                              <li>
-                                  <a href="/detalhes-produtos?id=37">Wind Banner</a>
-                              </li>
-                              <li>
-                                  <a href="/detalhes-produtos?id=38">Backdrop</a>
-                              </li>
-                              <li>
-                                  <a href="/detalhes-produtos?id=36">Bandeira</a>
-                              </li>
-                              <li>
-                                  <a href="/detalhes-produtos?id=40">Banner com Suporte</a>
-                              </li>
-                              <li>
-                                  <a href="/detalhes-produtos?id=39">Banner em Tecido</a>
-                              </li>
-                              <li>
-                                  <a href="/detalhes-produtos?id=39">Capa de Antena</a>
-                              </li>
-                              <li>
-                                  <a href="/detalhes-produtos?id=36">Faixas</a>
-                              </li>
-                              <li>
-                                  <a href="/detalhes-produtos?id=40">Suporte para Banner</a>
-                              </li>
-                          </ul>
-                      </li>
-                      <li>
-                          <a href="#" class="parentCateg">Blocos, Fichas e Talões</a>
-                          <ul class="subCategAll">
-                              <li>
-                                  <a href="#">Bloco Autocopiativo</a>
-                              </li>
-                              <li>
-                                  <a href="#">Bloco de Notas Personalizado</a>
-                              </li>
-                              <li>
-                                  <a href="#">Comandas</a>
-                              </li>
-                              <li>
-                                  <a href="#">Ficha de Anamnese</a>
-                              </li>
-                              <li>
-                                  <a href="#">Fichas</a>
-                              </li>
-                              <li>
-                                  <a href="#">Receituários</a>
-                              </li>
-                              <li>
-                                  <a href="#">Talão de Pedidos</a>
-                              </li>
-                              <li>
-                                  <a href="#">Talões</a>
-                              </li>
-                          </ul>
-                      </li>
-                      <li>
-                          <a href="#" class="parentCateg">Brindes e Presentes</a>
-                          <ul class="subCategAll">
-                              <li>
-                                  <a href="#">Brindes para Clientes</a>
-                                  <ul>
-                                      <li>
-                                          <a href="#">Baralho Personalizado</a>
-                                      </li>
-                                      <li>
-                                          <a href="#">Cartão Fio Dental</a>
-                                      </li>
-                                      <li>
-                                          <a href="/detalhes-produtos?id=41">Cortador de Pizza</a>
-                                      </li>
-                                      <li>
-                                          <a href="#">Estojo Personalizado</a>
-                                      </li>
-                                      <li>
-                                          <a href="#">Lixeira para Carro</a>
-                                      </li>
-                                      <li>
-                                          <a href="/detalhes-produtos?id=42">Suporte para Celular</a>
-                                      </li>
-                                      <li>
-                                          <a href="#">Tatuagem Temporária</a>
-                                      </li>
-                                      <li>
-                                          <a href="#">Ventarola</a>
-                                      </li>
-                                  </ul>
-                                  <li>
-                                      <a href="#">Copos e Taças</a>
-                                      <ul>
-                                          <li>
-                                              <a href="#">Caneca Personalizada</a>
-                                          </li>
-                                          <li>
-                                              <a href="#">Copo Personalizado</a>
-                                          </li>
-                                          <li>
-                                              <a href="/detalhes-produtos?id=43">Copo Térmico</a>
-                                          </li>
-                                          <li>
-                                              <a href="#">Garrafa Personalizada</a>
-                                          </li>
-                                          <li>
-                                              <a href="#">Squeeze</a>
-                                          </li>
-                                      </ul>
-                                  </li>
-                                  <li>
-                                      <a href="#">Decoração</a>
-                                      <ul>
-                                          <li>
-                                              <a href="#">Azulejo Personalizado</a>
-                                          </li>
-                                          <li>
-                                              <a href="#">Painel de Parede</a>
-                                          </li>
-                                          <li>
-                                              <a href="/detalhes-produtos?id=44">Quadros Decorativos</a>
-                                          </li>
-                                      </ul>
-                                  </li>
-                                  <li>
-                                      <a href="#">Itens de Escritório</a>
-                                      <ul>
-                                          <li>
-                                              <a href="#">Agenda Personalizada</a>
-                                          </li>
-                                          <li>
-                                              <a href="/detalhes-produtos?id=46">Caderneta</a>
-                                          </li>
-                                          <li>
-                                              <a href="#">Caderno</a>
-                                          </li>
-                                          <li>
-                                              <a href="#">Canetas</a>
-                                          </li>
-                                          <li>
-                                              <a href="/detalhes-produtos?id=47">Lápis</a>
-                                          </li>
-                                          <li>
-                                              <a href="#">Marca Texto</a>
-                                          </li>
-                                          <li>
-                                              <a href="#">Mouse Pad</a>
-                                          </li>
-                                          <li>
-                                              <a href="/detalhes-produtos?id=48">Porta Bolsa</a>
-                                          </li>
-                                          <li>
-                                              <a href="#">Porta Cartão de Visita</a>
-                                          </li>
-                                          <li>
-                                              <a href="#">Régua</a>
-                                          </li>
-                                      </ul>
-                                  </li>
-                                  <li>
-                                      <a href="#">Presentes Corporativos</a>
-                                      <ul>
-                                          <li>
-                                              <a href="/detalhes-produtos?id=49">Abridor de Garrafa</a>
-                                          </li>
-                                          <li>
-                                              <a href="#">Bottons</a>
-                                          </li>
-                                          <li>
-                                              <a href="#">Chaveiros</a>
-                                          </li>
-                                          <li>
-                                              <a href="#">Fone de Ouvido Personalizado</a>
-                                          </li>
-                                          <li>
-                                              <a href="#">Pen Card</a>
-                                          </li>
-                                      </ul>
-                                  </li>
-                                  <li>
-                                      <a href="#">Albúm de Figurinhs Personalizado</a>
-                                  </li>
-                                  <li>
-                                      <a href="#">Boné Personalizado</a>
-                                  </li>
-                                  <li>
-                                      <a href="/categorias?categoria=brindes">Brindes</a>
-                                  </li>
-                                  <li>
-                                      <a href="/detalhes-produtos?id=50">Camiseta Personalizada</a>
-                                  </li>
-                                  <li>
-                                      <a href="#">Capinha de Celular</a>
-                                  </li>
-                                  <li>
-                                      <a href="#">Porta Copos</a>
-                                  </li>
-                                  <li>
-                                      <a href="#">Revelação de Fotos</a>
-                                  </li>
-                              </li>
-                          </ul>
-                      </li>
-                      <li>
-                          <a href="#" class="parentCateg">Calendários e Agendas</a>
-                          <ul class="subCategAll">
-                              <li>
-                                  <a href="#">Calendário</a>
-                                  <ul class="subCategAll">
-                                      <li>
-                                          <a href="#">Bloco de Calendário 2025</a>
-                                      </li>
-                                      <li>
-                                          <a href="#">Calendário de Bolso</a>
-                                      </li>
-                                      <li>
-                                          <a href="#">Calendário de Mesa</a>
-                                      </li>
-                                  </ul>
-                              </li>
-                              <li>
-                                  <a href="#">Agenda Personalizada</a>
-                              </li>
-                          </ul>
-                      </li>
-                      <li>
-                          <a href="#" class="parentCateg">Comunicação Visual</a>
-                          <ul class="subCategAll">
-                              <li>
-                                  <a href="#">Banner</a>
-                              </li>
-                              <li>
-                                  <a href="#">Wind Banner</a>
-                              </li>
-                              <li>
-                                  <a href="#">Adesivo Vitrine</a>
-                              </li>
-                              <li>
-                                  <a href="#">Bandeira</a>
-                              </li>
-                              <li>
-                                  <a href="#">Bandeira e Bandeirola</a>
-                              </li>
-                              <li>
-                                  <a href="#">Cartaz</a>
-                              </li>
-                              <li>
-                                  <a href="#">Cavaletes</a>
-                              </li>
-                              <li>
-                                  <a href="#">Cordão para Crachá</a>
-                              </li>
-                              <li>
-                                  <a href="#">Crachá</a>
-                              </li>
-                              <li>
-                                  <a href="#">Credencial</a>
-                              </li>
-                              <li>
-                                  <a href="#">Ecobag</a>
-                              </li>
-                              <li>
-                                  <a href="#">Faixas</a>
-                              </li>
-                              <li>
-                                  <a href="#">Mapa para Evento</a>
-                              </li>
-                              <li>
-                                  <a href="#">Móbile</a>
-                              </li>
-                              <li>
-                                  <a href="#">Placa Personalizada</a>
-                              </li>
-                              <li>
-                                  <a href="#">Suporte para Banner</a>
-                              </li>
-                              <li>
-                                  <a href="#">Urna</a>
-                              </li>
-                              <li>
-                                  <a href="#">Ventarola</a>
-                              </li>
-                          </ul>
-                      </li>
-                      <li>
-                          <a href="#" class="parentCateg">Embalagens e Sacolas</a>
-                          <ul class="subCategAll">
-                              <li>
-                                  <a href="#">Embalagem para Delivery</a>
-                                  <ul>
-                                      <li>
-                                          <a href="#">Cinta para Embalagem</a>
-                                      </li>
-                                      <li>
-                                          <a href="#">Embalagem para Confeitaria</a>
-                                      </li>
-                                      <li>
-                                          <a href="#">Embalagem para Doces</a>
-                                      </li>
-                                      <li>
-                                          <a href="#">Embalagem para Hambúrguer</a>
-                                      </li>
-                                      <li>
-                                          <a href="#">Embalagens para Datas Comemorativas</a>
-                                      </li>
-                                      <li>
-                                          <a href="#">Lacre para Sacola</a>
-                                      </li>
-                                      <li>
-                                          <a href="#">Saco Delivery</a>
-                                      </li>
-                                  </ul>
-                              </li>
-                              <li>
-                                  <a href="#" class="parentCateg">Sacolas Personalizadas</a>
-                                  <ul class="subCategAll">
-                                      <li>
-                                          <a href="#">Sacola de Papel</a>
-                                      </li>
-                                      <li>
-                                          <a href="#">Sacola para Evento</a>
-                                      </li>
-                                      <li>
-                                          <a href="#">Sacola para Garrafa</a>
-                                      </li>
-                                      <li>
-                                          <a href="#">Sacola Personalizada para Loja</a>
-                                      </li>
-                                      <li>
-                                          <a href="#">Sacola Plástica Personalizada</a>
-                                      </li>
-                                  </ul>
-                              </li>
-                              <li>
-                                  <a href="#">Embalagem para Correios</a>
-                              </li>
-                              <li>
-                                  <a href="#">Embalagens para Bijuterias</a>
-                              </li>
-                              <li>
-                                  <a href="#">Embalagens para Presente</a>
-                              </li>
-                          </ul>
-                      </li>
-                      <li>
-                          <a href="#" class="parentCateg">Festas e Eventos</a>
-                          <ul class="subCategAll">
-                              <li>
-                                  <a href="#">Convite Personalizado</a>
-                              </li>
-                              <li>
-                                  <a href="#">Convites de Casamento</a>
-                              </li>
-                              <li>
-                                  <a href="#">Copo Personalizado</a>
-                              </li>
-                              <li>
-                                  <a href="#">Credencial</a>
-                              </li>
-                              <li>
-                                  <a href="#">Feiras e Eventos</a>
-                              </li>
-                              <li>
-                                  <a href="#">Lembrancinha</a>
-                              </li>
-                              <li>
-                                  <a href="#">Personalizados para Casamento</a>
-                              </li>
-                              <li>
-                                  <a href="#">Personalizado para Festa</a>
-                              </li>
-                          </ul>
-                      </li>
-                      <li>
-                          <a href="#" class="parentCateg">Impressão Têxtil</a>
-                          <ul class="subCategAll">
-                              <li>
-                                  <a href="#">Adesivo Termocolante</a>
-                              </li>
-                              <li>
-                                  <a href="#">Bandeira</a>
-                              </li>
-                              <li>
-                                  <a href="#">Banner em Tecido</a>
-                              </li>
-                              <li>
-                                  <a href="#">Boné Personalizado</a>
-                              </li>
-                              <li>
-                                  <a href="#">Camiseta Personalizada</a>
-                              </li>
-                              <li>
-                                  <a href="#">Capa de Antena</a>
-                              </li>
-                              <li>
-                                  <a href="#">Ecobag</a>
-                              </li>
-                              <li>
-                                  <a href="#">Faixas</a>
-                              </li>
-                              <li>
-                                  <a href="#">Quadros Decorativos</a>
-                              </li>
-                          </ul>
-                      </li>
-                      <li>
-                          <a href="#" class="parentCateg">Papelaria</a>
-                          <ul class="subCategAll">
-                              <li>
-                                  <a href="#">Cartão de Visita</a>
-                              </li>
-                              <li>
-                                  <a href="#">Envelope</a>
-                              </li>
-                              <li>
-                                  <a href="#">Agenda Personalizada</a>
-                              </li>
-                              <li>
-                                  <a href="#">Bloco de Notas Personalizado</a>
-                              </li>
-                              <li>
-                                  <a href="#">Caderno</a>
-                              </li>
-                              <li>
-                                  <a href="#">Canetas</a>
-                              </li>
-                              <li>
-                                  <a href="#">Carimbos</a>
-                              </li>
-                              <li>
-                                  <a href="#">Carnê</a>
-                              </li>
-                              <li>
-                                  <a href="#">Cartaz</a>
-                              </li>
-                              <li>
-                                  <a href="#">Carteirinhas Personalizadas</a>
-                              </li>
-                              <li>
-                                  <a href="#">CDs e DVDs</a>
-                              </li>
-                              <li>
-                                  <a href="#">Certificados</a>
-                              </li>
-                              <li>
-                                  <a href="#">Comandas</a>
-                              </li>
-                              <li>
-                                  <a href="#">Cordão para Crachá</a>
-                              </li>
-                              <li>
-                                  <a href="#">Crachá</a>
-                              </li>
-                              <li>
-                                  <a href="#">Credencial</a>
-                              </li>
-                              <li>
-                                  <a href="#">Ingressos Personalizados</a>
-                              </li>
-                              <li>
-                                  <a href="#">Lacre de Segurança</a>
-                              </li>
-                              <li>
-                                  <a href="#">Lápis</a>
-                              </li>
-                              <li>
-                                  <a href="#">Marcador de Página</a>
-                              </li>
-                              <li>
-                                  <a href="#">Papel Timbrado</a>
-                              </li>
-                              <li>
-                                  <a href="#">Papelaria Personalizada</a>
-                              </li>
-                              <li>
-                                  <a href="#">Pasta Personalizada</a>
-                              </li>
-                              <li>
-                                  <a href="#">Placa Não Perturbe</a>
-                              </li>
-                              <li>
-                                  <a href="#">Placa Personalizada</a>
-                              </li>
-                              <li>
-                                  <a href="#">Porta Copos</a>
-                              </li>
-                              <li>
-                                  <a href="#">Postais</a>
-                              </li>
-                              <li>
-                                  <a href="#">Régua</a>
-                              </li>
-                              <li>
-                                  <a href="#">Solapa</a>
-                              </li>
-                              <li>
-                                  <a href="#">Tags</a>
-                              </li>
-                              <li>
-                                  <a href="#">Talões</a>
-                              </li>
-                          </ul>
-                      </li>
-                      <li>
-                          <a href="#" class="parentCateg">Revistas, Catálogos e Livros</a>
-                          <ul class="subCategAll">
-                              <li>
-                                  <a href="#">Apostilas</a>
-                              </li>
-                              <li>
-                                  <a href="#">Catálogos</a>
-                              </li>
-                              <li>
-                                  <a href="#">Livros</a>
-                              </li>
-                              <li>
-                                  <a href="#">Revista Personalizada</a>
-                              </li>
-                          </ul>
-                      </li>
-                      <li>
-                          <a href="#" class="parentCateg">Tags e Cartelas</a>
-                          <ul class="subCategAll">
-                              <li>
-                                  <a href="#">Cartela para Bijuteria</a>
-                              </li>
-                              <li>
-                                  <a href="#">Embalagens para Bijuterias</a>
-                              </li>
-                              <li>
-                                  <a href="#">Tag para Roupas</a>
-                              </li>
-                              <li>
-                                  <a href="#">Tag para Garrafa</a>
-                              </li>
-                              <li>
-                                  <a href="#">Tags</a>
-                              </li>
-                          </ul>
-                      </li>
-                  </ul>
-              </li>
-              <li>
-                  <a href="/categorias?categoria=cartoes">Cartão de Visita</a>
-                  <ul class="categStatic" id="categCart">
-                      <li>
-                          <a href="#">Cartão de Visita</a>
-                      </li>
-                      <li>
-                          <a href="#">Cartão de Visita Verniz Localizado</a>
-                      </li>
-                      <li>
-                          <a href="#">Cartão de Visita com Brilho</a>
-                      </li>
-                      <li>
-                          <a href="#">Cartão de Visita Corte Especial</a>
-                      </li>
-                      <li>
-                          <a href="#">Cartão de Visita em Hot Stamping</a>
-                      </li>
-                      <li>
-                          <a href="#">Cartão de Visita em Plástico</a>
-                      </li>
-                      <li>
-                          <a href="#">Cartão de Visita Fosco</a>
-                      </li>
-                      <li>
-                          <a href="#">Cartão de Visita Premium</a>
-                      </li>
-                      <li>
-                          <a href="#">Cartão Fidelidade</a>
-                      </li>
-                      <li>
-                          <a href="#">Mini Cartão de Visita</a>
-                      </li>
-                      <li>
-                          <a href="#">Porta Cartão de Visita</a>
-                      </li>
-                  </ul>
-              </li>
-              <li>
-                  <a href="/categorias?categoria=folders">Folders e Panfletos</a>
-                  <ul class="categStatic" id="categFold">
-                      <li>
-                          <a href="#">Flyer</a>
-                      </li>
-                      <li>
-                          <a href="#">Folheto</a>
-                      </li>
-                      <li>
-                          <a href="#">Panfleto</a>
-                      </li>
-                      <li>
-                          <a href="#">Folder</a>
-                      </li>
-                      <li>
-                          <a href="#">Folders e Panfletos</a>
-                      </li>
-                      <li>
-                          <a href="#">Tabloide</a>
-                      </li>
-                  </ul>
-              </li>
-              <li>
-                  <a href="/categorias?categoria=adesivos">Adesivos</a>
-                  <ul class="categStatic" id="categAdes">
-                      <li>
-                          <a href="#">Adesivo</a>
-                      </li>
-                      <li>
-                          <a href="#">Adesivo Vinil</a>
-                      </li>
-                      <li>
-                          <a href="#">Adesivo Redondo</a>
-                      </li>
-                      <li>
-                          <a href="#">Adesivo em Papel</a>
-                      </li>
-                      <li>
-                          <a href="#">Adesivo Cartão de Crédito</a>
-                      </li>
-                      <li>
-                          <a href="#">Adesivo Decorativo</a>
-                      </li>
-                      <li>
-                          <a href="#">Adesivo Eletrostático</a>
-                      </li>
-                      <li>
-                          <a href="#">Adesivo em BOPP</a>
-                      </li>
-                      <li>
-                          <a href="#">Adesivo para Fechar Sacola</a>
-                      </li>
-                      <li>
-                          <a href="#">Adesivo para Troca de Óleo</a>
-                      </li>
-                      <li>
-                          <a href="#">Adesivo para Vitrine</a>
-                      </li>
-                      <li>
-                          <a href="#">Adesivo Perfurado</a>
-                      </li>
-                      <li>
-                          <a href="#">Adesivo Resinado</a>
-                      </li>
-                      <li>
-                          <a href="#">Adesivo Termocolante</a>
-                      </li>
-                      <li>
-                          <a href="#">Cartela de Adesivos</a>
-                      </li>
-                      <li>
-                          <a href="#">Etiquetas</a>
-                      </li>
-                      <li>
-                          <a href="#">Etiquetas Escolares</a>
-                      </li>
-                      <li>
-                          <a href="#">Lacre de Segurança</a>
-                      </li>
-                      <li>
-                          <a href="#">Rótulos</a>
-                      </li>
-                      <li>
-                          <a href="#">Stickers</a>
-                      </li>
-                  </ul>
-              </li>
-              <li>
-                  <a href="/categorias?categoria=banners">Banner</a>
-                  <ul class="categStatic" id="categBann">
-                      <li>
-                          <a href="#">Banner</a>
-                      </li>
-                      <li>
-                          <a href="#">Wind Banner</a>
-                      </li>
-                      <li>
-                          <a href="#">Backdrop</a>
-                      </li>
-                      <li>
-                          <a href="#">Bandeira</a>
-                      </li>
-                      <li>
-                          <a href="#">Banner com Suporte</a>
-                      </li>
-                      <li>
-                          <a href="#">Banner em Tecido</a>
-                      </li>
-                      <li>
-                          <a href="#">Capa de Antena</a>
-                      </li>
-                      <li>
-                          <a href="#">Faixas</a>
-                      </li>
-                      <li>
-                          <a href="#">Suporte para Banner</a>
-                      </li>
-                  </ul>
-              </li>
-              <li>
-                  <a href="/categorias?categoria=brindes">Brindes</a>
-                  <ul class="categStatic" id="categBrind">
-                      <li>
-                          <a href="#">Brindes para Clientes</a>
-                          <ul>
-                              <li>
-                                  <a href="#">Baralho Personalizado</a>
-                              </li>
-                              <li>
-                                  <a href="#">Cartão Fio Dental</a>
-                              </li>
-                              <li>
-                                  <a href="#">Cortador de Pizza</a>
-                              </li>
-                              <li>
-                                  <a href="#">Estojo Personalizado</a>
-                              </li>
-                              <li>
-                                  <a href="#">Lixeira para Carro</a>
-                              </li>
-                              <li>
-                                  <a href="#">Suporte para Celular</a>
-                              </li>
-                              <li>
-                                  <a href="#">Tatuagem Temporária</a>
-                              </li>
-                              <li>
-                                  <a href="#">Ventarola</a>
-                              </li>
-                          </ul>
-                          <li>
-                              <a href="#">Copos e Taças</a>
-                              <ul>
-                                  <li>
-                                      <a href="#">Caneca Personalizada</a>
-                                  </li>
-                                  <li>
-                                      <a href="#">Copo Personalizado</a>
-                                  </li>
-                                  <li>
-                                      <a href="#">Copo Térmico</a>
-                                  </li>
-                                  <li>
-                                      <a href="#">Garrafa Personalizada</a>
-                                  </li>
-                                  <li>
-                                      <a href="#">Squeeze</a>
-                                  </li>
-                              </ul>
-                          </li>
-                          <li>
-                              <a href="#">Decoração</a>
-                              <ul>
-                                  <li>
-                                      <a href="#">Azulejo Personalizado</a>
-                                  </li>
-                                  <li>
-                                      <a href="#">Painel de Parede</a>
-                                  </li>
-                                  <li>
-                                      <a href="#">Quadros Decorativos</a>
-                                  </li>
-                              </ul>
-                          </li>
-                          <li>
-                              <a href="#">Itens de Escritório</a>
-                              <ul>
-                                  <li>
-                                      <a href="#">Agenda Personalizada</a>
-                                  </li>
-                                  <li>
-                                      <a href="#">Caderneta</a>
-                                  </li>
-                                  <li>
-                                      <a href="#">Caderno</a>
-                                  </li>
-                                  <li>
-                                      <a href="#">Canetas</a>
-                                  </li>
-                                  <li>
-                                      <a href="#">Lápis</a>
-                                  </li>
-                                  <li>
-                                      <a href="#">Marca Texto</a>
-                                  </li>
-                                  <li>
-                                      <a href="#">Mouse Pad</a>
-                                  </li>
-                                  <li>
-                                      <a href="#">Porta Bolsa</a>
-                                  </li>
-                                  <li>
-                                      <a href="#">Porta Cartão de Visita</a>
-                                  </li>
-                                  <li>
-                                      <a href="#">Régua</a>
-                                  </li>
-                              </ul>
-                          </li>
-                          <li>
-                              <a href="#">Presentes Corporativos</a>
-                              <ul>
-                                  <li>
-                                      <a href="#">Abridor de Garrafa</a>
-                                  </li>
-                                  <li>
-                                      <a href="#">Bottons</a>
-                                  </li>
-                                  <li>
-                                      <a href="#">Chaveiros</a>
-                                  </li>
-                                  <li>
-                                      <a href="#">Fone de Ouvido Personalizado</a>
-                                  </li>
-                                  <li>
-                                      <a href="#">Pen Card</a>
-                                  </li>
-                              </ul>
-                          </li>
-                          <li>
-                              <a href="#">Albúm de Figurinhs Personalizado</a>
-                          </li>
-                          <li>
-                              <a href="#">Boné Personalizado</a>
-                          </li>
-                          <li>
-                              <a href="#">Brindes</a>
-                          </li>
-                          <li>
-                              <a href="#">Camiseta Personalizada</a>
-                          </li>
-                          <li>
-                              <a href="#">Capinha de Celular</a>
-                          </li>
-                          <li>
-                              <a href="#">Porta Copos</a>
-                          </li>
-                          <li>
-                              <a href="#">Revelação de Fotos</a>
-                          </li>
-                      </li>
-                  </ul>
-              </li>
-              <li>
-                  <a href="/categorias?categoria=pastas">Pastas</a>
-              </li>
-              <li>
-                  <a href="/categorias?categoria=imas">Imãs</a>
-                  <ul class="categStatic" id="categIm">
-                      <li>
-                          <a href="#">Imã Personalizado</a>
-                      </li>
-                      <li>
-                          <a href="#">Imã com Calendário</a>
-                      </li>
-                      <li>
-                          <a href="#">Imã para Carros</a>
-                      </li>
-                      <li>
-                          <a href="#">Lembrancinha</a>
-                      </li>
-                      <li>
-                          <a href="#">Quebra Cabeça Personalizado</a>
-                      </li>
-                  </ul>
-              </li>
-              <li>
-                  <a href="/categorias?categoria=banners">Wind Banner</a>
-              </li>
-              <li>
-                  <a href="/categorias?categoria=tags">Tags</a>
-              </li>
-              <li>
-                  <a href="/categorias?categoria=sacolas">Sacolas</a>
-              </li>
-             </ul> 
-          </nav>
-      </div>
-      <span class="material-symbols-outlined hamburger-icon" id="menuToggle">menu</span>
-
-      <div class="menu-wrapper" id="menuContainer">
-          <nav>
-              <ul id="mainCategory">
-                  <li id="allCategories">
-                      <a href="#" id="toggleMainMenu">☰ Todos os Produtos</a>
-                      <ul id="category-list" class="category-content">
+      <div class="mainContentHeader">
+          <div class="sliderBanner-header">
+            <!--Slider Banner Ficará aqui-->
+          </div>
+          <div class="messageHeader">
+            <p>Tá com pressa?</p>
+          </div>
+          <div class="linksHeader">
+            <ul>
+              <li><a href="/pedidosUsuario">Meus Pedidos</a></li>
+              <li><a href="/carteira">Minha Carteira</a></li>
+            </ul>
+          </div>
+          <div class="icons-mediaHeader">
+            <ul>
+              <li><img src="https://wbl.blob.core.windows.net/public/icon-whatsapp.png" alt="..."></li>
+              <li><img src="https://wbl.blob.core.windows.net/public/icon-instagram-black.png" alt="..."></li>
+              <li><img src="https://wbl.blob.core.windows.net/public/icon-youtube-black.png" alt="..."></li>
+              <li><img src="https://wbl.blob.core.windows.net/public/icon-facebook-black.png" alt="..."></li>
+            </ul>
+          </div>
+          <div class="logo-header">
+            <a href="/"><img src="images/logo-imprimeai.png" alt="..."></a>
+          </div>
+          <div class="search-input">
+            <input type="text" name="search-input" id="search-input" placeholder="O que você está procurando?">
+            <button><span class="material-symbols-outlined">
+              search
+              </span></button>
+              <div id="suggestions-container"></div>
+          </div>
+          <div class="notCad">
+              <p id="conviteCad">Olá!, bem-vindo! <br> <a href="/login">Entre</a> ou <a href="/cadastro">cadastre-se</a></p>
+          </div>
+          <div class="notCad" id="userLog">
+            <p>Olá!, bem-vindo! <br> <a href="/perfil" id="nameUserLog"></a></p>
+          </div>
+          <div class="carrinho">
+            <a href="/carrinho"><img src="https://wbl.blob.core.windows.net/public/icon-carrinho.png" alt="..."></a>
+            <span id="quantidadeCarrinho">0</span>
+          </div>
+          <div class="linhaAbInp"></div>
+          <span id="iconMenuMob" class="material-symbols-outlined">
+            menu
+            </span>
+            <div class="menu">
+              <nav>
+                 <ul id="mainMenu">
+                      <li id="allCateg">
+                          <a href="#" id="toggleMenu">☰ Todos os Produtos</a>
+                      <ul id="categs" class="categorias">
                           <li id="maisVendidos">
                               <a href="#" class="parentCateg">Mais Vendidos</a>
                               <ul id="categsMaisVendidos" class="subCategAll">
@@ -1863,279 +794,1359 @@
                           </li>
                       </ul>
                   </li>
-              </ul>
-          </nav>
-      </div>
-    <div class="linhaAbNav"></div>
-      <div id="banners">
-          <div class="banner active"><img src="https://i.imgur.com/gkQ8Acl.jpeg" alt="Banner 1"></div>
-          <div class="banner"><img src="https://i.imgur.com/tfOHGhz.jpeg" alt="Banner 2"></div>
-          <div class="banner"><img src="https://i.imgur.com/SuaycOv.jpeg" alt="Banner 3"></div>
-          <div class="banner"><img src="https://i.imgur.com/63D2egI.jpeg" alt="Banner 4"></div>
-          <div class="banner"><img src="https://i.imgur.com/pHluGRb.jpeg" alt="Banner 5"></div>
-          <div class="banner"><img src="https://i.imgur.com/BrH3Wln.png" alt="Banner 6"></div>
-          <div class="banner"><img src="https://placehold.co/1200x370" alt="Banner 7"></div>
-          <div class="banner"><img src="https://placehold.co/1200x370" alt="Banner 8"></div>
-          <button id="prevBtn1">
-            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 36 36">
-            <path d="M21.559,12.062 L15.618,17.984 L21.5221,23.944 C22.105,24.533 22.1021,25.482 21.5131,26.065 C21.2211,26.355 20.8391,26.4999987 20.4571,26.4999987 C20.0711,26.4999987 19.6851,26.352 19.3921,26.056 L12.4351,19.034 C11.8531,18.446 11.8551,17.4999987 12.4411,16.916 L19.4411,9.938 C20.0261,9.353 20.9781,9.354 21.5621,9.941 C22.1471,10.528 22.1451,11.478 21.5591,12.062 L21.559,12.062 Z"></path>
-            </svg>
-          </button>
-          <button id="nextBtn1"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 36 36">
-            <path d="M23.5587,16.916 C24.1447,17.4999987 24.1467,18.446 23.5647,19.034 L16.6077,26.056 C16.3147,26.352 15.9287,26.4999987 15.5427,26.4999987 C15.1607,26.4999987 14.7787,26.355 14.4867,26.065 C13.8977,25.482 13.8947,24.533 14.4777,23.944 L20.3818,17.984 L14.4408,12.062 C13.8548,11.478 13.8528,10.5279 14.4378,9.941 C15.0218,9.354 15.9738,9.353 16.5588,9.938 L23.5588,16.916 L23.5587,16.916 Z"></path>
-            </svg>
-          </button>
-          <div id="progress">
-            <div class="progress-dot active"></div>
-            <div class="progress-dot"></div>
-            <div class="progress-dot"></div>
-            <div class="progress-dot"></div>
-            <div class="progress-dot"></div>
-            <div class="progress-dot"></div>
-            <div class="progress-dot"></div>
-            <div class="progress-dot"></div>
-        </div>
-        </div>
-      <div id="wrapper">
-        <div id="carousel">
-          <div id="content">
-            <img
-              class="item"
-              src="https://i.imgur.com/LHCDLTE.png"
-            />
-            <img
-              src="https://i.imgur.com/YZKvkhd.png"
-              class="item"
-            />
-            <img
-              src="https://i.imgur.com/BxQiBiS.png"
-              class="item"
-            />
-            <img
-              src="https://i.imgur.com/9irl1JE.png"
-              class="item"
-            />
-            <img
-              src="https://i.imgur.com/UioTR4f.png"
-              class="item"
-            />
-            <img
-              src="https://i.imgur.com/MJFhPNI.png"
-              class="item"
-            />
-            <img
-              src="https://i.imgur.com/nUObTny.png"
-              class="item"
-            />
-            <img
-              src="https://i.imgur.com/viI38Cd.png"
-              class="item"
-            />
-            <img
-              src="https://i.imgur.com/Us3bWSa.png"
-              class="item"
-            />
-            <img
-              src="https://i.imgur.com/4C71hRV.png"
-              class="item"
-            />
+                  <li>
+                      <a href="/categorias?categoria=cartoes">Cartão de Visita</a>
+                      <ul class="categStatic" id="categCart">
+                          <li>
+                              <a href="#">Cartão de Visita</a>
+                          </li>
+                          <li>
+                              <a href="#">Cartão de Visita Verniz Localizado</a>
+                          </li>
+                          <li>
+                              <a href="#">Cartão de Visita com Brilho</a>
+                          </li>
+                          <li>
+                              <a href="#">Cartão de Visita Corte Especial</a>
+                          </li>
+                          <li>
+                              <a href="#">Cartão de Visita em Hot Stamping</a>
+                          </li>
+                          <li>
+                              <a href="#">Cartão de Visita em Plástico</a>
+                          </li>
+                          <li>
+                              <a href="#">Cartão de Visita Fosco</a>
+                          </li>
+                          <li>
+                              <a href="#">Cartão de Visita Premium</a>
+                          </li>
+                          <li>
+                              <a href="#">Cartão Fidelidade</a>
+                          </li>
+                          <li>
+                              <a href="#">Mini Cartão de Visita</a>
+                          </li>
+                          <li>
+                              <a href="#">Porta Cartão de Visita</a>
+                          </li>
+                      </ul>
+                  </li>
+                  <li>
+                      <a href="/categorias?categoria=folders">Folders e Panfletos</a>
+                      <ul class="categStatic" id="categFold">
+                          <li>
+                              <a href="#">Flyer</a>
+                          </li>
+                          <li>
+                              <a href="#">Folheto</a>
+                          </li>
+                          <li>
+                              <a href="#">Panfleto</a>
+                          </li>
+                          <li>
+                              <a href="#">Folder</a>
+                          </li>
+                          <li>
+                              <a href="#">Folders e Panfletos</a>
+                          </li>
+                          <li>
+                              <a href="#">Tabloide</a>
+                          </li>
+                      </ul>
+                  </li>
+                  <li>
+                      <a href="/categorias?categoria=adesivos">Adesivos</a>
+                      <ul class="categStatic" id="categAdes">
+                          <li>
+                              <a href="#">Adesivo</a>
+                          </li>
+                          <li>
+                              <a href="#">Adesivo Vinil</a>
+                          </li>
+                          <li>
+                              <a href="#">Adesivo Redondo</a>
+                          </li>
+                          <li>
+                              <a href="#">Adesivo em Papel</a>
+                          </li>
+                          <li>
+                              <a href="#">Adesivo Cartão de Crédito</a>
+                          </li>
+                          <li>
+                              <a href="#">Adesivo Decorativo</a>
+                          </li>
+                          <li>
+                              <a href="#">Adesivo Eletrostático</a>
+                          </li>
+                          <li>
+                              <a href="#">Adesivo em BOPP</a>
+                          </li>
+                          <li>
+                              <a href="#">Adesivo para Fechar Sacola</a>
+                          </li>
+                          <li>
+                              <a href="#">Adesivo para Troca de Óleo</a>
+                          </li>
+                          <li>
+                              <a href="#">Adesivo para Vitrine</a>
+                          </li>
+                          <li>
+                              <a href="#">Adesivo Perfurado</a>
+                          </li>
+                          <li>
+                              <a href="#">Adesivo Resinado</a>
+                          </li>
+                          <li>
+                              <a href="#">Adesivo Termocolante</a>
+                          </li>
+                          <li>
+                              <a href="#">Cartela de Adesivos</a>
+                          </li>
+                          <li>
+                              <a href="#">Etiquetas</a>
+                          </li>
+                          <li>
+                              <a href="#">Etiquetas Escolares</a>
+                          </li>
+                          <li>
+                              <a href="#">Lacre de Segurança</a>
+                          </li>
+                          <li>
+                              <a href="#">Rótulos</a>
+                          </li>
+                          <li>
+                              <a href="#">Stickers</a>
+                          </li>
+                      </ul>
+                  </li>
+                  <li>
+                      <a href="/categorias?categoria=banners">Banner</a>
+                      <ul class="categStatic" id="categBann">
+                          <li>
+                              <a href="#">Banner</a>
+                          </li>
+                          <li>
+                              <a href="#">Wind Banner</a>
+                          </li>
+                          <li>
+                              <a href="#">Backdrop</a>
+                          </li>
+                          <li>
+                              <a href="#">Bandeira</a>
+                          </li>
+                          <li>
+                              <a href="#">Banner com Suporte</a>
+                          </li>
+                          <li>
+                              <a href="#">Banner em Tecido</a>
+                          </li>
+                          <li>
+                              <a href="#">Capa de Antena</a>
+                          </li>
+                          <li>
+                              <a href="#">Faixas</a>
+                          </li>
+                          <li>
+                              <a href="#">Suporte para Banner</a>
+                          </li>
+                      </ul>
+                  </li>
+                  <li>
+                      <a href="/categorias?categoria=brindes">Brindes</a>
+                      <ul class="categStatic" id="categBrind">
+                          <li>
+                              <a href="#">Brindes para Clientes</a>
+                              <ul>
+                                  <li>
+                                      <a href="#">Baralho Personalizado</a>
+                                  </li>
+                                  <li>
+                                      <a href="#">Cartão Fio Dental</a>
+                                  </li>
+                                  <li>
+                                      <a href="#">Cortador de Pizza</a>
+                                  </li>
+                                  <li>
+                                      <a href="#">Estojo Personalizado</a>
+                                  </li>
+                                  <li>
+                                      <a href="#">Lixeira para Carro</a>
+                                  </li>
+                                  <li>
+                                      <a href="#">Suporte para Celular</a>
+                                  </li>
+                                  <li>
+                                      <a href="#">Tatuagem Temporária</a>
+                                  </li>
+                                  <li>
+                                      <a href="#">Ventarola</a>
+                                  </li>
+                              </ul>
+                              <li>
+                                  <a href="#">Copos e Taças</a>
+                                  <ul>
+                                      <li>
+                                          <a href="#">Caneca Personalizada</a>
+                                      </li>
+                                      <li>
+                                          <a href="#">Copo Personalizado</a>
+                                      </li>
+                                      <li>
+                                          <a href="#">Copo Térmico</a>
+                                      </li>
+                                      <li>
+                                          <a href="#">Garrafa Personalizada</a>
+                                      </li>
+                                      <li>
+                                          <a href="#">Squeeze</a>
+                                      </li>
+                                  </ul>
+                              </li>
+                              <li>
+                                  <a href="#">Decoração</a>
+                                  <ul>
+                                      <li>
+                                          <a href="#">Azulejo Personalizado</a>
+                                      </li>
+                                      <li>
+                                          <a href="#">Painel de Parede</a>
+                                      </li>
+                                      <li>
+                                          <a href="#">Quadros Decorativos</a>
+                                      </li>
+                                  </ul>
+                              </li>
+                              <li>
+                                  <a href="#">Itens de Escritório</a>
+                                  <ul>
+                                      <li>
+                                          <a href="#">Agenda Personalizada</a>
+                                      </li>
+                                      <li>
+                                          <a href="#">Caderneta</a>
+                                      </li>
+                                      <li>
+                                          <a href="#">Caderno</a>
+                                      </li>
+                                      <li>
+                                          <a href="#">Canetas</a>
+                                      </li>
+                                      <li>
+                                          <a href="#">Lápis</a>
+                                      </li>
+                                      <li>
+                                          <a href="#">Marca Texto</a>
+                                      </li>
+                                      <li>
+                                          <a href="#">Mouse Pad</a>
+                                      </li>
+                                      <li>
+                                          <a href="#">Porta Bolsa</a>
+                                      </li>
+                                      <li>
+                                          <a href="#">Porta Cartão de Visita</a>
+                                      </li>
+                                      <li>
+                                          <a href="#">Régua</a>
+                                      </li>
+                                  </ul>
+                              </li>
+                              <li>
+                                  <a href="#">Presentes Corporativos</a>
+                                  <ul>
+                                      <li>
+                                          <a href="#">Abridor de Garrafa</a>
+                                      </li>
+                                      <li>
+                                          <a href="#">Bottons</a>
+                                      </li>
+                                      <li>
+                                          <a href="#">Chaveiros</a>
+                                      </li>
+                                      <li>
+                                          <a href="#">Fone de Ouvido Personalizado</a>
+                                      </li>
+                                      <li>
+                                          <a href="#">Pen Card</a>
+                                      </li>
+                                  </ul>
+                              </li>
+                              <li>
+                                  <a href="#">Albúm de Figurinhs Personalizado</a>
+                              </li>
+                              <li>
+                                  <a href="#">Boné Personalizado</a>
+                              </li>
+                              <li>
+                                  <a href="#">Brindes</a>
+                              </li>
+                              <li>
+                                  <a href="#">Camiseta Personalizada</a>
+                              </li>
+                              <li>
+                                  <a href="#">Capinha de Celular</a>
+                              </li>
+                              <li>
+                                  <a href="#">Porta Copos</a>
+                              </li>
+                              <li>
+                                  <a href="#">Revelação de Fotos</a>
+                              </li>
+                          </li>
+                      </ul>
+                  </li>
+                  <li>
+                      <a href="/categorias?categoria=pastas">Pastas</a>
+                  </li>
+                  <li>
+                      <a href="/categorias?categoria=imas">Imãs</a>
+                      <ul class="categStatic" id="categIm">
+                          <li>
+                              <a href="#">Imã Personalizado</a>
+                          </li>
+                          <li>
+                              <a href="#">Imã com Calendário</a>
+                          </li>
+                          <li>
+                              <a href="#">Imã para Carros</a>
+                          </li>
+                          <li>
+                              <a href="#">Lembrancinha</a>
+                          </li>
+                          <li>
+                              <a href="#">Quebra Cabeça Personalizado</a>
+                          </li>
+                      </ul>
+                  </li>
+                  <li>
+                      <a href="/categorias?categoria=banners">Wind Banner</a>
+                  </li>
+                  <li>
+                      <a href="/categorias?categoria=tags">Tags</a>
+                  </li>
+                  <li>
+                      <a href="/categorias?categoria=sacolas">Sacolas</a>
+                  </li>
+                 </ul>
+              </nav>
           </div>
-        </div>
-        <button id="prev">
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            width="24"
-            height="24"
-            viewBox="0 0 24 24"
-          >
-            <path fill="none" d="M0 0h24v24H0V0z" />
-            <path d="M15.61 7.41L14.2 6l-6 6 6 6 1.41-1.41L11.03 12l4.58-4.59z" />
-          </svg>
-        </button>
-        <button id="next">
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            width="24"
-            height="24"
-            viewBox="0 0 24 24"
-          >
-            <path fill="none" d="M0 0h24v24H0V0z" />
-            <path d="M10.02 6L8.61 7.41 13.19 12l-4.58 4.59L10.02 18l6-6-6-6z" />
-          </svg>
-        </button>
-      </div> 
+          <span class="material-symbols-outlined hamburger-icon" id="menuToggle">menu</span>
+          <div class="menu-wrapper" id="menuContainer">
+              <nav>
+                  <ul id="mainCategory">
+                      <li id="allCategories">
+                          <a href="#" id="toggleMainMenu">☰ Todos os Produtos</a>
+                          <ul id="category-list" class="category-content">
+                              <li id="maisVendidos">
+                                  <a href="#" class="parentCateg">Mais Vendidos</a>
+                                  <ul id="categsMaisVendidos" class="subCategAll">
+                                      <li>
+                                          <a href="/categorias?categoria=adesivos">Adesivo</a>
+                                      </li>
+                                      <li>
+                                          <a href="/categorias?categoria=banners">Banner</a>
+                                      </li>
+                                      <li>
+                                          <a href="/categorias?categoria=cartoes">Cartão de Visita</a>
+                                      </li>
+                                      <li>
+                                          <a href="/categorias?categoria=envelopes">Envelope</a>
+                                      </li>
+                                      <li>
+                                          <a href="/detalhes-produtos?id=37">Wind Banner</a>
+                                      </li>
+                                      <li>
+                                          <a href="/categorias?categoria=folhetos">Folheto</a>
+                                      </li>
+                                      <li>
+                                          <a href="/categorias?categoria=pastas">Pasta Personalizada</a>
+                                      </li>
+                                      <li>
+                                          <a href="/categorias?categoria=tags">Tags</a>
+                                      </li>
+                                  </ul>
+                              </li>
+                              <li>
+                                  <a href="#" class="parentCateg">Cartões de Visita</a>
+                                  <ul class="subCategAll">
+                                      <li>
+                                          <a href="/categorias?categoria=cartoes">Cartão de Visita</a>
+                                      </li>
+                                      <li>
+                                          <a href="/detalhes-produtos?id=1">Cartão de Visita Verniz Localizado</a>
+                                      </li>
+                                      <li>
+                                          <a href="detalhes-produtos?id=2">Cartão de Visita com Brilho</a>
+                                      </li>
+                                      <li>
+                                          <a href="detalhes-produtos?id=3">Cartão de Visita Corte Especial</a>
+                                      </li>
+                                      <li>
+                                          <a href="/detalhes-produtos?id=4">Cartão de Visita em Hot Stamping</a>
+                                      </li>
+                                      <li>
+                                          <a href="/detalhes-produtos?id=5">Cartão de Visita em Plástico</a>
+                                      </li>
+                                      <li>
+                                          <a href="detalhes-produtos?id=3">Cartão de Visita Fosco</a>
+                                      </li>
+                                      <li>
+                                          <a href="/detalhes-produtos?id=6">Cartão de Visita Premium</a>
+                                      </li>
+                                      <li>
+                                          <a href="/detalhes-produtos?id=7">Cartão Fidelidade</a>
+                                      </li>
+                                      <li>
+                                          <a href="/detalhes-produtos?id=8">Mini Cartão de Visita</a>
+                                      </li>
+                                      <li>
+                                          <a href="/detalhes-produtos?id=9">Porta Cartão de Visita</a>
+                                      </li>
+                                  </ul>
+                              </li>
+                              <li>
+                                  <a href="#" class="parentCateg">Folhetos e Folders</a>
+                                  <ul class="subCategAll">
+                                      <li>
+                                          <a href="/categorias?categoria=flyer">Flyer</a>
+                                      </li>
+                                      <li>
+                                          <a href="/detalhes-produtos?id=12">Folheto</a>
+                                      </li>
+                                      <li>
+                                          <a href="/categorias?categoria=panfletos">Panfleto</a>
+                                      </li>
+                                      <li>
+                                          <a href="/detalhes-produtos?id=17">Folder</a>
+                                      </li>
+                                      <li>
+                                          <a href="/categorias?categoria=folders">Folders e Panfletos</a>
+                                      </li>
+                                      <li>
+                                          <a href="/detalhes-produtos?id=16">Tabloide</a>
+                                      </li>
+                                  </ul>
+                              </li>
+                              <li>
+                                  <a href="/categorias?categoria=envelopes">Envelopes</a>
+                              </li>
+                              <li>
+                                  <a href="/categorias?categoria=pastas">Pastas</a>
+                              </li>
+                              <li>
+                                  <a href="#" class="parentCateg">Imãs</a>
+                                  <ul class="subCategAll">
+                                      <li>
+                                          <a href="#">Imã Personalizado</a>
+                                      </li>
+                                      <li>
+                                          <a href="#">Imã com Calendário</a>
+                                      </li>
+                                      <li>
+                                          <a href="#">Imã para Carros</a>
+                                      </li>
+                                      <li>
+                                          <a href="#">Lembrancinha</a>
+                                      </li>
+                                      <li>
+                                          <a href="#">Quebra Cabeça Personalizado</a>
+                                      </li>
+                                  </ul>
+                              </li>
+                              <li>
+                                  <a href="#" class="parentCateg">Adesivos e Rótulos</a>
+                                  <ul class="subCategAll">
+                                      <li>
+                                          <a href="/categorias?categoria=adesivos">Adesivo</a>
+                                      </li>
+                                      <li>
+                                          <a href="/detalhes-produtos?id=21">Adesivo Vinil</a>
+                                      </li>
+                                      <li>
+                                          <a href="/detalhes-produtos?id=22">Adesivo Redondo</a>
+                                      </li>
+                                      <li>
+                                          <a href="/detalhes-produtos?id=21">Adesivo em Papel</a>
+                                      </li>
+                                      <li>
+                                          <a href="/detalhes-produtos?id=26">Adesivo Cartão de Crédito</a>
+                                      </li>
+                                      <li>
+                                          <a href="/detalhes-produtos?id=30">Adesivo Decorativo</a>
+                                      </li>
+                                      <li>
+                                          <a href="/detalhes-produtos?id=23">Adesivo Eletrostático</a>
+                                      </li>
+                                      <li>
+                                          <a href="/detalhes-produtos?id=27">Adesivo em BOPP</a>
+                                      </li>
+                                      <li>
+                                          <a href="/detalhes-produtos?id=25">Adesivo para Fechar Sacola</a>
+                                      </li>
+                                      <li>
+                                          <a href="/detalhes-produtos?id=24">Adesivo para Troca de Óleo</a>
+                                      </li>
+                                      <li>
+                                          <a href="/detalhes-produtos?id=30">Adesivo para Vitrine</a>
+                                      </li>
+                                      <li>
+                                          <a href="#">Adesivo Perfurado</a>
+                                      </li>
+                                      <li>
+                                          <a href="#">Adesivo Resinado</a>
+                                      </li>
+                                      <li>
+                                          <a href="/detalhes-produtos?id=31">Adesivo Termocolante</a>
+                                      </li>
+                                      <li>
+                                          <a href="/detalhes-produtos?id=22">Cartela de Adesivos</a>
+                                      </li>
+                                      <li>
+                                          <a href="/detalhes-produtos?id=32">Etiquetas</a>
+                                      </li>
+                                      <li>
+                                          <a href="/detalhes-produtos?id=32">Etiquetas Escolares</a>
+                                      </li>
+                                      <li>
+                                          <a href="/detalhes-produtos?id=24">Lacre de Segurança</a>
+                                      </li>
+                                      <li>
+                                          <a href="/detalhes-produtos?id=23">Rótulos</a>
+                                      </li>
+                                      <li>
+                                          <a href="/detalhes-produtos?id=34">Stickers</a>
+                                      </li>
+                                  </ul>
+                              </li>
+                              <li>
+                                  <a href="#" class="parentCateg">Banner</a>
+                                  <ul class="subCategAll">
+                                      <li>
+                                          <a href="/detalhes-produtos?id=35">Banner</a>
+                                      </li>
+                                      <li>
+                                          <a href="/detalhes-produtos?id=37">Wind Banner</a>
+                                      </li>
+                                      <li>
+                                          <a href="/detalhes-produtos?id=38">Backdrop</a>
+                                      </li>
+                                      <li>
+                                          <a href="/detalhes-produtos?id=36">Bandeira</a>
+                                      </li>
+                                      <li>
+                                          <a href="/detalhes-produtos?id=40">Banner com Suporte</a>
+                                      </li>
+                                      <li>
+                                          <a href="/detalhes-produtos?id=39">Banner em Tecido</a>
+                                      </li>
+                                      <li>
+                                          <a href="/detalhes-produtos?id=39">Capa de Antena</a>
+                                      </li>
+                                      <li>
+                                          <a href="/detalhes-produtos?id=36">Faixas</a>
+                                      </li>
+                                      <li>
+                                          <a href="/detalhes-produtos?id=40">Suporte para Banner</a>
+                                      </li>
+                                  </ul>
+                              </li>
+                              <li>
+                                  <a href="#" class="parentCateg">Blocos, Fichas e Talões</a>
+                                  <ul class="subCategAll">
+                                      <li>
+                                          <a href="#">Bloco Autocopiativo</a>
+                                      </li>
+                                      <li>
+                                          <a href="#">Bloco de Notas Personalizado</a>
+                                      </li>
+                                      <li>
+                                          <a href="#">Comandas</a>
+                                      </li>
+                                      <li>
+                                          <a href="#">Ficha de Anamnese</a>
+                                      </li>
+                                      <li>
+                                          <a href="#">Fichas</a>
+                                      </li>
+                                      <li>
+                                          <a href="#">Receituários</a>
+                                      </li>
+                                      <li>
+                                          <a href="#">Talão de Pedidos</a>
+                                      </li>
+                                      <li>
+                                          <a href="#">Talões</a>
+                                      </li>
+                                  </ul>
+                              </li>
+                              <li>
+                                  <a href="#" class="parentCateg">Brindes e Presentes</a>
+                                  <ul class="subCategAll">
+                                      <li>
+                                          <a href="#">Brindes para Clientes</a>
+                                          <ul>
+                                              <li>
+                                                  <a href="#">Baralho Personalizado</a>
+                                              </li>
+                                              <li>
+                                                  <a href="#">Cartão Fio Dental</a>
+                                              </li>
+                                              <li>
+                                                  <a href="/detalhes-produtos?id=41">Cortador de Pizza</a>
+                                              </li>
+                                              <li>
+                                                  <a href="#">Estojo Personalizado</a>
+                                              </li>
+                                              <li>
+                                                  <a href="#">Lixeira para Carro</a>
+                                              </li>
+                                              <li>
+                                                  <a href="/detalhes-produtos?id=42">Suporte para Celular</a>
+                                              </li>
+                                              <li>
+                                                  <a href="#">Tatuagem Temporária</a>
+                                              </li>
+                                              <li>
+                                                  <a href="#">Ventarola</a>
+                                              </li>
+                                          </ul>
+                                          <li>
+                                              <a href="#">Copos e Taças</a>
+                                              <ul>
+                                                  <li>
+                                                      <a href="#">Caneca Personalizada</a>
+                                                  </li>
+                                                  <li>
+                                                      <a href="#">Copo Personalizado</a>
+                                                  </li>
+                                                  <li>
+                                                      <a href="/detalhes-produtos?id=43">Copo Térmico</a>
+                                                  </li>
+                                                  <li>
+                                                      <a href="#">Garrafa Personalizada</a>
+                                                  </li>
+                                                  <li>
+                                                      <a href="#">Squeeze</a>
+                                                  </li>
+                                              </ul>
+                                          </li>
+                                          <li>
+                                              <a href="#">Decoração</a>
+                                              <ul>
+                                                  <li>
+                                                      <a href="#">Azulejo Personalizado</a>
+                                                  </li>
+                                                  <li>
+                                                      <a href="#">Painel de Parede</a>
+                                                  </li>
+                                                  <li>
+                                                      <a href="/detalhes-produtos?id=44">Quadros Decorativos</a>
+                                                  </li>
+                                              </ul>
+                                          </li>
+                                          <li>
+                                              <a href="#">Itens de Escritório</a>
+                                              <ul>
+                                                  <li>
+                                                      <a href="#">Agenda Personalizada</a>
+                                                  </li>
+                                                  <li>
+                                                      <a href="/detalhes-produtos?id=46">Caderneta</a>
+                                                  </li>
+                                                  <li>
+                                                      <a href="#">Caderno</a>
+                                                  </li>
+                                                  <li>
+                                                      <a href="#">Canetas</a>
+                                                  </li>
+                                                  <li>
+                                                      <a href="/detalhes-produtos?id=47">Lápis</a>
+                                                  </li>
+                                                  <li>
+                                                      <a href="#">Marca Texto</a>
+                                                  </li>
+                                                  <li>
+                                                      <a href="#">Mouse Pad</a>
+                                                  </li>
+                                                  <li>
+                                                      <a href="/detalhes-produtos?id=48">Porta Bolsa</a>
+                                                  </li>
+                                                  <li>
+                                                      <a href="#">Porta Cartão de Visita</a>
+                                                  </li>
+                                                  <li>
+                                                      <a href="#">Régua</a>
+                                                  </li>
+                                              </ul>
+                                          </li>
+                                          <li>
+                                              <a href="#">Presentes Corporativos</a>
+                                              <ul>
+                                                  <li>
+                                                      <a href="/detalhes-produtos?id=49">Abridor de Garrafa</a>
+                                                  </li>
+                                                  <li>
+                                                      <a href="#">Bottons</a>
+                                                  </li>
+                                                  <li>
+                                                      <a href="#">Chaveiros</a>
+                                                  </li>
+                                                  <li>
+                                                      <a href="#">Fone de Ouvido Personalizado</a>
+                                                  </li>
+                                                  <li>
+                                                      <a href="#">Pen Card</a>
+                                                  </li>
+                                              </ul>
+                                          </li>
+                                          <li>
+                                              <a href="#">Albúm de Figurinhs Personalizado</a>
+                                          </li>
+                                          <li>
+                                              <a href="#">Boné Personalizado</a>
+                                          </li>
+                                          <li>
+                                              <a href="/categorias?categoria=brindes">Brindes</a>
+                                          </li>
+                                          <li>
+                                              <a href="/detalhes-produtos?id=50">Camiseta Personalizada</a>
+                                          </li>
+                                          <li>
+                                              <a href="#">Capinha de Celular</a>
+                                          </li>
+                                          <li>
+                                              <a href="#">Porta Copos</a>
+                                          </li>
+                                          <li>
+                                              <a href="#">Revelação de Fotos</a>
+                                          </li>
+                                      </li>
+                                  </ul>
+                              </li>
+                              <li>
+                                  <a href="#" class="parentCateg">Calendários e Agendas</a>
+                                  <ul class="subCategAll">
+                                      <li>
+                                          <a href="#">Calendário</a>
+                                          <ul class="subCategAll">
+                                              <li>
+                                                  <a href="#">Bloco de Calendário 2025</a>
+                                              </li>
+                                              <li>
+                                                  <a href="#">Calendário de Bolso</a>
+                                              </li>
+                                              <li>
+                                                  <a href="#">Calendário de Mesa</a>
+                                              </li>
+                                          </ul>
+                                      </li>
+                                      <li>
+                                          <a href="#">Agenda Personalizada</a>
+                                      </li>
+                                  </ul>
+                              </li>
+                              <li>
+                                  <a href="#" class="parentCateg">Comunicação Visual</a>
+                                  <ul class="subCategAll">
+                                      <li>
+                                          <a href="#">Banner</a>
+                                      </li>
+                                      <li>
+                                          <a href="#">Wind Banner</a>
+                                      </li>
+                                      <li>
+                                          <a href="#">Adesivo Vitrine</a>
+                                      </li>
+                                      <li>
+                                          <a href="#">Bandeira</a>
+                                      </li>
+                                      <li>
+                                          <a href="#">Bandeira e Bandeirola</a>
+                                      </li>
+                                      <li>
+                                          <a href="#">Cartaz</a>
+                                      </li>
+                                      <li>
+                                          <a href="#">Cavaletes</a>
+                                      </li>
+                                      <li>
+                                          <a href="#">Cordão para Crachá</a>
+                                      </li>
+                                      <li>
+                                          <a href="#">Crachá</a>
+                                      </li>
+                                      <li>
+                                          <a href="#">Credencial</a>
+                                      </li>
+                                      <li>
+                                          <a href="#">Ecobag</a>
+                                      </li>
+                                      <li>
+                                          <a href="#">Faixas</a>
+                                      </li>
+                                      <li>
+                                          <a href="#">Mapa para Evento</a>
+                                      </li>
+                                      <li>
+                                          <a href="#">Móbile</a>
+                                      </li>
+                                      <li>
+                                          <a href="#">Placa Personalizada</a>
+                                      </li>
+                                      <li>
+                                          <a href="#">Suporte para Banner</a>
+                                      </li>
+                                      <li>
+                                          <a href="#">Urna</a>
+                                      </li>
+                                      <li>
+                                          <a href="#">Ventarola</a>
+                                      </li>
+                                  </ul>
+                              </li>
+                              <li>
+                                  <a href="#" class="parentCateg">Embalagens e Sacolas</a>
+                                  <ul class="subCategAll">
+                                      <li>
+                                          <a href="#">Embalagem para Delivery</a>
+                                          <ul>
+                                              <li>
+                                                  <a href="#">Cinta para Embalagem</a>
+                                              </li>
+                                              <li>
+                                                  <a href="#">Embalagem para Confeitaria</a>
+                                              </li>
+                                              <li>
+                                                  <a href="#">Embalagem para Doces</a>
+                                              </li>
+                                              <li>
+                                                  <a href="#">Embalagem para Hambúrguer</a>
+                                              </li>
+                                              <li>
+                                                  <a href="#">Embalagens para Datas Comemorativas</a>
+                                              </li>
+                                              <li>
+                                                  <a href="#">Lacre para Sacola</a>
+                                              </li>
+                                              <li>
+                                                  <a href="#">Saco Delivery</a>
+                                              </li>
+                                          </ul>
+                                      </li>
+                                      <li>
+                                          <a href="#" class="parentCateg">Sacolas Personalizadas</a>
+                                          <ul class="subCategAll">
+                                              <li>
+                                                  <a href="#">Sacola de Papel</a>
+                                              </li>
+                                              <li>
+                                                  <a href="#">Sacola para Evento</a>
+                                              </li>
+                                              <li>
+                                                  <a href="#">Sacola para Garrafa</a>
+                                              </li>
+                                              <li>
+                                                  <a href="#">Sacola Personalizada para Loja</a>
+                                              </li>
+                                              <li>
+                                                  <a href="#">Sacola Plástica Personalizada</a>
+                                              </li>
+                                          </ul>
+                                      </li>
+                                      <li>
+                                          <a href="#">Embalagem para Correios</a>
+                                      </li>
+                                      <li>
+                                          <a href="#">Embalagens para Bijuterias</a>
+                                      </li>
+                                      <li>
+                                          <a href="#">Embalagens para Presente</a>
+                                      </li>
+                                  </ul>
+                              </li>
+                              <li>
+                                  <a href="#" class="parentCateg">Festas e Eventos</a>
+                                  <ul class="subCategAll">
+                                      <li>
+                                          <a href="#">Convite Personalizado</a>
+                                      </li>
+                                      <li>
+                                          <a href="#">Convites de Casamento</a>
+                                      </li>
+                                      <li>
+                                          <a href="#">Copo Personalizado</a>
+                                      </li>
+                                      <li>
+                                          <a href="#">Credencial</a>
+                                      </li>
+                                      <li>
+                                          <a href="#">Feiras e Eventos</a>
+                                      </li>
+                                      <li>
+                                          <a href="#">Lembrancinha</a>
+                                      </li>
+                                      <li>
+                                          <a href="#">Personalizados para Casamento</a>
+                                      </li>
+                                      <li>
+                                          <a href="#">Personalizado para Festa</a>
+                                      </li>
+                                  </ul>
+                              </li>
+                              <li>
+                                  <a href="#" class="parentCateg">Impressão Têxtil</a>
+                                  <ul class="subCategAll">
+                                      <li>
+                                          <a href="#">Adesivo Termocolante</a>
+                                      </li>
+                                      <li>
+                                          <a href="#">Bandeira</a>
+                                      </li>
+                                      <li>
+                                          <a href="#">Banner em Tecido</a>
+                                      </li>
+                                      <li>
+                                          <a href="#">Boné Personalizado</a>
+                                      </li>
+                                      <li>
+                                          <a href="#">Camiseta Personalizada</a>
+                                      </li>
+                                      <li>
+                                          <a href="#">Capa de Antena</a>
+                                      </li>
+                                      <li>
+                                          <a href="#">Ecobag</a>
+                                      </li>
+                                      <li>
+                                          <a href="#">Faixas</a>
+                                      </li>
+                                      <li>
+                                          <a href="#">Quadros Decorativos</a>
+                                      </li>
+                                  </ul>
+                              </li>
+                              <li>
+                                  <a href="#" class="parentCateg">Papelaria</a>
+                                  <ul class="subCategAll">
+                                      <li>
+                                          <a href="#">Cartão de Visita</a>
+                                      </li>
+                                      <li>
+                                          <a href="#">Envelope</a>
+                                      </li>
+                                      <li>
+                                          <a href="#">Agenda Personalizada</a>
+                                      </li>
+                                      <li>
+                                          <a href="#">Bloco de Notas Personalizado</a>
+                                      </li>
+                                      <li>
+                                          <a href="#">Caderno</a>
+                                      </li>
+                                      <li>
+                                          <a href="#">Canetas</a>
+                                      </li>
+                                      <li>
+                                          <a href="#">Carimbos</a>
+                                      </li>
+                                      <li>
+                                          <a href="#">Carnê</a>
+                                      </li>
+                                      <li>
+                                          <a href="#">Cartaz</a>
+                                      </li>
+                                      <li>
+                                          <a href="#">Carteirinhas Personalizadas</a>
+                                      </li>
+                                      <li>
+                                          <a href="#">CDs e DVDs</a>
+                                      </li>
+                                      <li>
+                                          <a href="#">Certificados</a>
+                                      </li>
+                                      <li>
+                                          <a href="#">Comandas</a>
+                                      </li>
+                                      <li>
+                                          <a href="#">Cordão para Crachá</a>
+                                      </li>
+                                      <li>
+                                          <a href="#">Crachá</a>
+                                      </li>
+                                      <li>
+                                          <a href="#">Credencial</a>
+                                      </li>
+                                      <li>
+                                          <a href="#">Ingressos Personalizados</a>
+                                      </li>
+                                      <li>
+                                          <a href="#">Lacre de Segurança</a>
+                                      </li>
+                                      <li>
+                                          <a href="#">Lápis</a>
+                                      </li>
+                                      <li>
+                                          <a href="#">Marcador de Página</a>
+                                      </li>
+                                      <li>
+                                          <a href="#">Papel Timbrado</a>
+                                      </li>
+                                      <li>
+                                          <a href="#">Papelaria Personalizada</a>
+                                      </li>
+                                      <li>
+                                          <a href="#">Pasta Personalizada</a>
+                                      </li>
+                                      <li>
+                                          <a href="#">Placa Não Perturbe</a>
+                                      </li>
+                                      <li>
+                                          <a href="#">Placa Personalizada</a>
+                                      </li>
+                                      <li>
+                                          <a href="#">Porta Copos</a>
+                                      </li>
+                                      <li>
+                                          <a href="#">Postais</a>
+                                      </li>
+                                      <li>
+                                          <a href="#">Régua</a>
+                                      </li>
+                                      <li>
+                                          <a href="#">Solapa</a>
+                                      </li>
+                                      <li>
+                                          <a href="#">Tags</a>
+                                      </li>
+                                      <li>
+                                          <a href="#">Talões</a>
+                                      </li>
+                                  </ul>
+                              </li>
+                              <li>
+                                  <a href="#" class="parentCateg">Revistas, Catálogos e Livros</a>
+                                  <ul class="subCategAll">
+                                      <li>
+                                          <a href="#">Apostilas</a>
+                                      </li>
+                                      <li>
+                                          <a href="#">Catálogos</a>
+                                      </li>
+                                      <li>
+                                          <a href="#">Livros</a>
+                                      </li>
+                                      <li>
+                                          <a href="#">Revista Personalizada</a>
+                                      </li>
+                                  </ul>
+                              </li>
+                              <li>
+                                  <a href="#" class="parentCateg">Tags e Cartelas</a>
+                                  <ul class="subCategAll">
+                                      <li>
+                                          <a href="#">Cartela para Bijuteria</a>
+                                      </li>
+                                      <li>
+                                          <a href="#">Embalagens para Bijuterias</a>
+                                      </li>
+                                      <li>
+                                          <a href="#">Tag para Roupas</a>
+                                      </li>
+                                      <li>
+                                          <a href="#">Tag para Garrafa</a>
+                                      </li>
+                                      <li>
+                                          <a href="#">Tags</a>
+                                      </li>
+                                  </ul>
+                              </li>
+                          </ul>
+                      </li>
+                  </ul>
+              </nav>
+          </div>
+              <div class="linhaAbNav"></div>
+              <div id="banners">
+                <div class="banner active"><img src="https://i.imgur.com/gkQ8Acl.jpeg" alt="Banner 1"></div>
+                <div class="banner"><img src="https://i.imgur.com/tfOHGhz.jpeg" alt="Banner 2"></div>
+                <div class="banner"><img src="https://i.imgur.com/SuaycOv.jpeg" alt="Banner 3"></div>
+                <div class="banner"><img src="https://i.imgur.com/63D2egI.jpeg" alt="Banner 4"></div>
+                <div class="banner"><img src="https://i.imgur.com/pHluGRb.jpeg" alt="Banner 5"></div>
+                <div class="banner"><img src="https://i.imgur.com/BrH3Wln.png" alt="Banner 6"></div>
+                <div class="banner"><img src="https://imgur.com/4N9eSFV.png" alt="Banner 7"></div>
+                <div class="banner"><img src="https://placehold.co/1200x370" alt="Banner 8"></div>
+                <button id="prevBtn1">
+                  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 36 36">
+                  <path d="M21.559,12.062 L15.618,17.984 L21.5221,23.944 C22.105,24.533 22.1021,25.482 21.5131,26.065 C21.2211,26.355 20.8391,26.4999987 20.4571,26.4999987 C20.0711,26.4999987 19.6851,26.352 19.3921,26.056 L12.4351,19.034 C11.8531,18.446 11.8551,17.4999987 12.4411,16.916 L19.4411,9.938 C20.0261,9.353 20.9781,9.354 21.5621,9.941 C22.1471,10.528 22.1451,11.478 21.5591,12.062 L21.559,12.062 Z"></path>
+                  </svg>
+                </button>
+                <button id="nextBtn1"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 36 36">
+                  <path d="M23.5587,16.916 C24.1447,17.4999987 24.1467,18.446 23.5647,19.034 L16.6077,26.056 C16.3147,26.352 15.9287,26.4999987 15.5427,26.4999987 C15.1607,26.4999987 14.7787,26.355 14.4867,26.065 C13.8977,25.482 13.8947,24.533 14.4777,23.944 L20.3818,17.984 L14.4408,12.062 C13.8548,11.478 13.8528,10.5279 14.4378,9.941 C15.0218,9.354 15.9738,9.353 16.5588,9.938 L23.5588,16.916 L23.5587,16.916 Z"></path>
+                  </svg>
+                </button>
+                <div id="progress">
+                  <div class="progress-dot active"></div>
+                  <div class="progress-dot"></div>
+                  <div class="progress-dot"></div>
+                  <div class="progress-dot"></div>
+                  <div class="progress-dot"></div>
+                  <div class="progress-dot"></div>
+                  <div class="progress-dot"></div>
+                  <div class="progress-dot"></div>
+              </div>
+              </div>
+              <div id="wrapper">
+                <div id="carousel">
+                  <div id="content">
+                    <img
+                      class="item"
+                      src="https://i.imgur.com/LHCDLTE.png"
+                    />
+                    <img
+                      src="https://i.imgur.com/YZKvkhd.png"
+                      class="item"
+                    />
+                    <img
+                      src="https://i.imgur.com/BxQiBiS.png"
+                      class="item"
+                    />
+                    <img
+                      src="https://i.imgur.com/9irl1JE.png"
+                      class="item"
+                    />
+                    <img
+                      src="https://i.imgur.com/UioTR4f.png"
+                      class="item"
+                    />
+                    <img
+                      src="https://i.imgur.com/MJFhPNI.png"
+                      class="item"
+                    />
+                    <img
+                      src="https://i.imgur.com/nUObTny.png"
+                      class="item"
+                    />
+                    <img
+                      src="https://i.imgur.com/viI38Cd.png"
+                      class="item"
+                    />
+                    <img
+                      src="https://i.imgur.com/Us3bWSa.png"
+                      class="item"
+                    />
+                    <img
+                      src="https://i.imgur.com/4C71hRV.png"
+                      class="item"
+                    />
+                  </div>
+                </div>
+                <button id="prev">
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="24"
+                    height="24"
+                    viewBox="0 0 24 24"
+                  >
+                    <path fill="none" d="M0 0h24v24H0V0z" />
+                    <path d="M15.61 7.41L14.2 6l-6 6 6 6 1.41-1.41L11.03 12l4.58-4.59z" />
+                  </svg>
+                </button>
+                <button id="next">
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="24"
+                    height="24"
+                    viewBox="0 0 24 24"
+                  >
+                    <path fill="none" d="M0 0h24v24H0V0z" />
+                    <path d="M10.02 6L8.61 7.41 13.19 12l-4.58 4.59L10.02 18l6-6-6-6z" />
+                  </svg>
+                </button>
+              </div> 
+      </div>
     </header>
     <main>
         <section id="novidades">
             <h2><strong>Se liga nas novidades.</strong> Veja o que acabou de chegar.</h2>
-                <div class="box" id="cx1">
-                    <img src="images/Garrafa-Brindes.webp" alt="...">
-                </div>
-                <div class="box" id="cx2">
-                    <img src="/images/Adesivos.webp" alt="...">
-                </div>
-                <div class="box" id="cx3">
-                    <img src="/images/Cartão-de-Visita.webp" alt="...">
-                </div>
-                <div class="box" id="cx4">
-                    <img src="/images/Papelaria.webp" alt="...">
-                </div>
-                <div class="box" id="cx5">
-                    <img src="/images/Panfletos.jpg" alt="...">
-                </div>
-                <div class="box" id="cx6">
-                    <img src="/images/Cartazes.jpg" alt="...">
-                </div>
+            <div class="contentImagesNovidades">
+                
+                    <div class="box" id="cx1">
+                        <img src="images/Garrafa-Brindes.webp" alt="...">
+                    </div>
+                    <div class="box" id="cx2">
+                        <img src="/images/Adesivos.webp" alt="...">
+                    </div>
+                    <div class="box" id="cx3">
+                        <img src="/images/Cartão-de-Visita.webp" alt="...">
+                    </div>
+                    <div class="box" id="cx4">
+                        <img src="/images/Papelaria.webp" alt="...">
+                    </div>
+                    <div class="box" id="cx5">
+                        <img src="/images/Panfletos.jpg" alt="...">
+                    </div>
+                    <div class="box" id="cx6">
+                        <img src="/images/Cartazes.jpg" alt="...">
+                    </div>
+            </div>
         </section>
         <section id="motivosCompra">
             <h2><strong>Na imprimeaí, é diferente.</strong> Ainda mais motivos para comprar com a gente.</h2>
-            <div id="mot1">
-                <img src="images/icone-caixa.png" alt="...">
-                <h3>Rapidez em <strong>todos</strong> <br> os pedidos.</h3>
-            </div>
-            <div id="mot2">
-                <img src="images/icone-cartao.png" alt="...">
-                <h3>Opções variadas <br> de <strong>pagamento.</strong></h3>
-            </div>
-            <div id="mot3">
-                <img src="images/icone-sacola.png" alt="...">
-                <h3>A <strong>melhor</strong> experiência <br> de compra.</h3>
+            <div class="contentMotivos">
+                <div id="mot1" class="motivos">
+                    <img src="images/icone-caixa.png" alt="...">
+                    <h3>Rapidez em <strong>todos</strong> <br> os pedidos.</h3>
+                </div>
+                <div id="mot2" class="motivos">
+                    <img src="images/icone-cartao.png" alt="...">
+                    <h3>Opções variadas <br> de <strong>pagamento.</strong></h3>
+                </div>
+                <div id="mot3" class="motivos">
+                    <img src="images/icone-sacola.png" alt="...">
+                    <h3>A <strong>melhor</strong> experiência <br> de compra.</h3>
+                </div>
             </div>
         </section>
         <section id="linksRapidos">
             <h2>Links Rápidos</h2>
-            <a href="/pedidosUsuario">
-                <div id="meus-pedidos">
-                    <h3>Meus Pedidos</h3>
-                </div>
-            </a>
-            <a href="/carteira">
-                <div id="minha-carteira">
-                    <h3>Minha Carteira</h3>
-                </div>
-            </a>
-            <a href="/perfil">
-                <div id="meu-perfil">
-                    <h3>Meu Perfil</h3>
-                </div>
-            </a>
+            <div class="contentLinks">
+                <a href="/pedidosUsuario">
+                    <div id="meus-pedidos" class="links">
+                        <h3>Meus Pedidos</h3>
+                    </div>
+                </a>
+                <a href="/carteira">
+                    <div id="minha-carteira" class="links">
+                        <h3>Minha Carteira</h3>
+                    </div>
+                </a>
+                <a href="/perfil">
+                    <div id="meu-perfil" class="links">
+                        <h3>Meu Perfil</h3>
+                    </div>
+                </a>
+            </div>
         </section>
+        <div class="contentFooter">
+            <footer>
+                <div id="institucional">
+                    <h2>Institucional</h2>
+                    <a href="/sobre">Sobre a Imprimeaí</a>
+                    <a href="/blog">Blog</a>
+                    <a href="/politica-de-privacidade">Política de Privacidade</a>
+                    <a href="/central-de-ajuda">Central de Ajuda</a>
+                    <a href="/tutoriais">Nossos Tutoriais</a>
+                </div>
+                <div id="formasDePagamento">
+                    <h2>Formas de Pagamento</h2>
+                    <img src="https://wbl.blob.core.windows.net/public/icon-pagamento-pix.svg" alt="...">
+                    <img src="https://wbl.blob.core.windows.net/public/icon-pagamento-visa.svg" alt="...">
+                    <img src="https://wbl.blob.core.windows.net/public/icon-pagamento-mastercard.svg" alt="...">
+                    <img src="https://wbl.blob.core.windows.net/public/icon-pagamento-amex.svg" alt="...">
+                    <img src="https://wbl.blob.core.windows.net/public/icon-pagamento-itau.svg" alt="...">
+                    <img src="https://wbl.blob.core.windows.net/public/icon-pagamento-bb.svg" alt="...">
+                    <img src="https://wbl.blob.core.windows.net/public/icon-pagamento-caixa.svg" alt="...">
+                    <img src="https://wbl.blob.core.windows.net/public/icon-pagamento-bradesco.svg" alt="...">
+                    <img src="https://wbl.blob.core.windows.net/public/icon-pagamento-boleto.svg" alt="...">
+                </div>
+                <div id="redesSociais">
+                    <h2>Siga-nos nas redes sociais</h2>
+                    <ul class="wrapper2">
+                    <li class="icon facebook">
+                        <span class="tooltip">Facebook</span>
+                        <svg
+                        viewBox="0 0 320 512"
+                        height="1.2em"
+                        fill="currentColor"
+                        xmlns="http://www.w3.org/2000/svg"
+                        >
+                        <path
+                            d="M279.14 288l14.22-92.66h-88.91v-60.13c0-25.35 12.42-50.06 52.24-50.06h40.42V6.26S260.43 0 225.36 0c-73.22 0-121.08 44.38-121.08 124.72v70.62H22.89V288h81.39v224h100.17V288z"
+                        ></path>
+                        </svg>
+                    </li>
+                    <li class="icon twitter">
+                        <span class="tooltip">Twitter</span>
+                        <svg
+                        height="1.8em"
+                        fill="currentColor"
+                        viewBox="0 0 48 48"
+                        xmlns="http://www.w3.org/2000/svg"
+                        class="twitter"
+                        >
+                        <path
+                            d="M42,12.429c-1.323,0.586-2.746,0.977-4.247,1.162c1.526-0.906,2.7-2.351,3.251-4.058c-1.428,0.837-3.01,1.452-4.693,1.776C34.967,9.884,33.05,9,30.926,9c-4.08,0-7.387,3.278-7.387,7.32c0,0.572,0.067,1.129,0.193,1.67c-6.138-0.308-11.582-3.226-15.224-7.654c-0.64,1.082-1,2.349-1,3.686c0,2.541,1.301,4.778,3.285,6.096c-1.211-0.037-2.351-0.374-3.349-0.914c0,0.022,0,0.055,0,0.086c0,3.551,2.547,6.508,5.923,7.181c-0.617,0.169-1.269,0.263-1.941,0.263c-0.477,0-0.942-0.054-1.392-0.135c0.94,2.902,3.667,5.023,6.898,5.086c-2.528,1.96-5.712,3.134-9.174,3.134c-0.598,0-1.183-0.034-1.761-0.104C9.268,36.786,13.152,38,17.321,38c13.585,0,21.017-11.156,21.017-20.834c0-0.317-0.01-0.633-0.025-0.945C39.763,15.197,41.013,13.905,42,12.429"
+                        ></path>
+                        </svg>
+                    </li>
+                    <li class="icon instagram">
+                        <span class="tooltip">Instagram</span>
+                        <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        height="1.2em"
+                        fill="currentColor"
+                        class="bi bi-instagram"
+                        viewBox="0 0 16 16"
+                        >
+                        <path
+                            d="M8 0C5.829 0 5.556.01 4.703.048 3.85.088 3.269.222 2.76.42a3.917 3.917 0 0 0-1.417.923A3.927 3.927 0 0 0 .42 2.76C.222 3.268.087 3.85.048 4.7.01 5.555 0 5.827 0 8.001c0 2.172.01 2.444.048 3.297.04.852.174 1.433.372 1.942.205.526.478.972.923 1.417.444.445.89.719 1.416.923.51.198 1.09.333 1.942.372C5.555 15.99 5.827 16 8 16s2.444-.01 3.298-.048c.851-.04 1.434-.174 1.943-.372a3.916 3.916 0 0 0 1.416-.923c.445-.445.718-.891.923-1.417.197-.509.332-1.09.372-1.942C15.99 10.445 16 10.173 16 8s-.01-2.445-.048-3.299c-.04-.851-.175-1.433-.372-1.941a3.926 3.926 0 0 0-.923-1.417A3.911 3.911 0 0 0 13.24.42c-.51-.198-1.092-.333-1.943-.372C10.443.01 10.172 0 7.998 0h.003zm-.717 1.442h.718c2.136 0 2.389.007 3.232.046.78.035 1.204.166 1.486.275.373.145.64.319.92.599.28.28.453.546.598.92.11.281.24.705.275 1.485.039.843.047 1.096.047 3.231s-.008 2.389-.047 3.232c-.035.78-.166 1.203-.275 1.485a2.47 2.47 0 0 1-.599.919c-.28.28-.546.453-.92.598-.28.11-.704.24-1.485.276-.843.038-1.096.047-3.232.047s-2.39-.009-3.233-.047c-.78-.036-1.203-.166-1.485-.276a2.478 2.478 0 0 1-.92-.598 2.48 2.48 0 0 1-.6-.92c-.109-.281-.24-.705-.275-1.485-.038-.843-.046-1.096-.046-3.233 0-2.136.008-2.388.046-3.231.036-.78.166-1.204.276-1.486.145-.373.319-.64.599-.92.28-.28.546-.453.92-.598.282-.11.705-.24 1.485-.276.738-.034 1.024-.044 2.515-.045v.002zm4.988 1.328a.96.96 0 1 0 0 1.92.96.96 0 0 0 0-1.92zm-4.27 1.122a4.109 4.109 0 1 0 0 8.217 4.109 4.109 0 0 0 0-8.217zm0 1.441a2.667 2.667 0 1 1 0 5.334 2.667 2.667 0 0 1 0-5.334z"
+                        ></path>
+                        </svg>
+                    </li>
+                    </ul>
+                </div>
+                <div id="siteSeguro">
+                    <h2>Site Seguro</h2>
+                    <svg width="102" height="32" viewBox="0 0 102 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path fill-rule="evenodd" clip-rule="evenodd" d="M101.115 16.7621C101.482 16.6101 101.511 16.5821 101.375 16.1961C100.6 13.9831 97.682 12.7881 95.197 13.8251C93.236 14.6421 91.816 16.7161 91.816 19.0331C91.816 22.1581 94.07 24.9351 97.134 24.9351C98.538 24.9351 99.536 24.7421 100.425 24.1771C100.616 23.9991 101.691 23.1401 101.7 22.9561C101.702 22.9151 101.55 23.0481 101.315 23.1771C100.622 23.5401 99.585 23.6811 98.772 23.6951C97.126 23.7261 95.809 22.6031 94.952 21.2731C94.401 20.4141 94.044 19.4351 93.956 18.3821C93.819 16.7641 94.214 14.9041 96.042 14.4471C97.257 14.1431 98.409 14.8241 98.856 15.9951C99.059 16.5261 98.936 16.8031 98.444 17.0051L94.049 18.8411L95.547 18.9371C97.333 18.1971 99.33 17.5021 101.115 16.7621Z" fill="#A9A9A9"/>
+                        <path fill-rule="evenodd" clip-rule="evenodd" d="M87.583 7.75208C88.698 7.75208 89.747 7.75208 90.864 7.75208C90.407 8.04808 90.253 8.17008 90.057 8.48108C89.916 8.70408 89.879 9.12708 89.854 9.50708C89.663 13.8881 89.78 18.3031 89.752 22.6861C89.77 23.8791 90.238 23.7391 91.793 23.6941C91.559 23.8931 91.178 24.2841 90.885 24.4541C89.483 24.4541 88.145 24.4231 86.744 24.4231C87.271 23.8801 87.543 23.5281 87.506 22.1651C87.535 17.5851 87.354 13.1911 87.633 8.78108C86.976 8.80008 86.38 8.79108 85.722 8.80908C86.343 8.49008 86.931 8.04008 87.583 7.75208Z" fill="#A9A9A9"/>
+                        <path fill-rule="evenodd" clip-rule="evenodd" d="M81.65 25.205C81.886 25.377 82.132 25.545 82.386 25.705C83.765 26.578 84.204 27.646 84.091 28.631C83.956 29.819 82.818 30.756 80.866 30.873C78.782 31 75.977 30.176 76.497 27.435C76.772 25.974 78.71 25.22 80.311 25.167C80.755 25.152 81.207 25.189 81.65 25.205ZM86.361 13.797L84.959 14.705H83.361C84.035 15.177 84.552 15.855 84.838 16.612C85.141 17.418 85.184 18.31 84.875 19.132C84.584 19.907 83.994 20.575 83.129 21.083C82.637 21.372 82.387 21.737 82.359 22.089C82.279 23.112 83.529 23.857 84.254 24.398C85.836 25.582 86.453 27.525 85.406 29.402C84.406 31.195 82.023 31.996 79.494 32.004C76.351 31.99 74.369 30.551 74.264 28.59C74.129 26.059 76.729 24.852 79.077 24.578C79.735 24.5 80.323 24.512 80.876 24.553C80.044 24.004 79.733 22.891 80.157 22.145C80.268 21.952 80.198 22.018 79.989 22.049C78.067 22.34 76.089 21.086 75.626 19.192C75.392 18.231 75.538 17.226 75.903 16.439C76.698 14.731 78.467 13.782 80.43 13.782C82.47 13.781 84.361 13.782 86.361 13.797ZM82.83 17.963C83.08 19.481 82.695 20.918 81.324 21.297C79.92 21.686 78.367 20.594 77.869 18.639C77.322 16.495 77.887 15.135 79.209 14.723C80.775 14.236 82.449 15.648 82.83 17.963Z" fill="#A9A9A9"/>
+                        <path fill-rule="evenodd" clip-rule="evenodd" d="M68.513 13.4811C72.279 13.4811 74.243 15.9841 74.419 18.9161C74.593 21.8381 72.185 24.4531 69.235 24.7661C65.69 25.1431 62.594 22.7001 62.594 19.1371C62.595 16.0221 65.253 13.4811 68.513 13.4811ZM72.072 19.2931C72.289 21.4411 71.566 23.4381 69.638 23.8851C67.665 24.3421 65.572 22.7031 65.05 19.9221C64.476 16.8721 65.425 14.8631 67.286 14.3691C69.494 13.7841 71.742 16.0111 72.072 19.2931Z" fill="#A9A9A9"/>
+                        <path fill-rule="evenodd" clip-rule="evenodd" d="M55.605 13.4811C59.416 13.4811 61.404 15.9841 61.582 18.9161C61.758 21.8381 59.32 24.4531 56.338 24.7661C52.75 25.1431 49.617 22.7001 49.617 19.1371C49.617 16.0221 52.306 13.4811 55.605 13.4811ZM59.207 19.2931C59.426 21.4411 58.695 23.4381 56.744 23.8851C54.748 24.3421 52.631 22.7031 52.101 19.9221C51.521 16.8721 52.48 14.8631 54.365 14.3691C56.597 13.7841 58.873 16.0111 59.207 19.2931Z" fill="#A9A9A9"/>
+                        <path fill-rule="evenodd" clip-rule="evenodd" d="M46.137 11.9141L47.85 10.1671C44.943 7.76112 39.956 7.44412 36.652 9.11512C33.779 10.5681 31.689 13.4541 31.587 16.6781C31.479 20.0691 33.451 22.7531 35.451 24.1021C38.754 26.3291 44.48 25.8341 47.93 24.0921L47.928 23.7701L47.929 20.2131L48.733 19.2741H43.708L41.847 20.3211L45.461 20.2141C45.461 21.2281 45.461 22.3351 45.461 23.3491C45.461 23.7921 45.467 23.8651 44.734 24.1011C43.703 24.3721 42.538 24.4251 41.475 24.3351C37.866 24.0341 35.115 21.1851 34.463 17.6271C33.845 14.2531 35.436 11.0601 38.127 9.74312C39.441 9.09912 41.018 8.79812 42.727 9.34512C43.797 9.68812 44.77 10.3061 45.618 11.1571L45.028 12.2311L46.137 11.9141Z" fill="#A9A9A9"/>
+                        <path opacity="0.3" d="M28.91 6.99705V6.92705C28.915 6.88405 28.918 6.84005 28.918 6.79605C28.918 6.73905 28.913 6.68505 28.906 6.63605C28.836 5.91905 28.318 5.33405 27.619 5.18105L27.42 5.15205C25.619 4.93305 19.545 4.01505 16.624 1.36305C16.498 1.20505 16.348 1.06305 16.178 0.941052C15.779 0.654052 15.305 0.503052 14.808 0.503052C14.308 0.503052 13.834 0.656052 13.434 0.943052C13.267 1.06405 13.12 1.20405 12.995 1.35905C10.046 4.04105 3.91701 4.94905 2.10101 5.16405L2.02101 5.17605C1.30501 5.32405 0.768013 5.93405 0.709013 6.66505C0.704013 6.70805 0.700012 6.75105 0.700012 6.79705C0.700012 6.83105 0.702012 6.86505 0.706012 6.90105V6.98705C0.706012 7.04605 0.706012 7.10405 0.706012 7.16305C0.704012 7.19105 0.703012 7.22005 0.703012 7.25005C0.703012 7.30805 0.705012 7.36505 0.710012 7.42205C0.875012 19.1861 4.60701 25.2141 7.71001 28.1981C11.152 31.5091 14.568 31.9341 14.712 31.9521L14.806 31.9621L14.901 31.9521C15.045 31.9341 18.459 31.5111 21.901 28.2021C25.003 25.2201 28.735 19.1981 28.903 7.44505C28.91 7.38205 28.913 7.31605 28.913 7.25105C28.913 7.21705 28.911 7.18405 28.909 7.14305C28.91 7.09405 28.91 7.04405 28.91 6.99705Z" fill="#303030"/>
+                        <path d="M2.13501 5.07705C2.13801 5.07705 2.14201 5.07605 2.14601 5.07605C2.14301 5.07705 2.13901 5.07605 2.13501 5.07705Z" fill="black"/>
+                        <path d="M28.062 6.84603C28.065 6.81903 28.07 6.79203 28.07 6.76503C28.07 6.73803 28.065 6.71103 28.062 6.68503C28.027 6.32703 27.767 6.03603 27.422 5.95903C27.384 5.95503 27.344 5.95003 27.302 5.94503C25.162 5.68403 19.037 4.71603 15.992 1.89403C15.905 1.77603 15.798 1.67103 15.676 1.58303C15.431 1.40603 15.124 1.30103 14.79 1.30103C14.455 1.30103 14.147 1.40703 13.902 1.58503C13.782 1.67103 13.676 1.77303 13.59 1.89103C10.5 4.75803 4.23102 5.71403 2.18202 5.95803C2.17802 5.95803 2.17502 5.95903 2.17102 5.95903C1.81202 6.03203 1.54202 6.33903 1.51802 6.71203C1.51702 6.73103 1.51202 6.74903 1.51202 6.76703C1.51202 6.78503 1.51602 6.80303 1.51802 6.82203C1.51802 6.93303 1.51702 7.04702 1.51802 7.15702C1.51702 7.17702 1.51502 7.19803 1.51502 7.21903C1.51502 7.26303 1.51702 7.30603 1.52202 7.34802C1.82202 29.609 14.79 31.098 14.79 31.098C14.79 31.098 27.752 29.612 28.059 7.36603C28.064 7.31703 28.067 7.26903 28.067 7.22003C28.067 7.19303 28.065 7.16502 28.063 7.13802C28.063 7.04202 28.062 6.94203 28.062 6.84603Z" fill="#828282"/>
+                        <mask id="mask0_117_50" style="mask-type:luminance" maskUnits="userSpaceOnUse" x="1" y="1" width="28" height="31">
+                        <path d="M28.062 6.84603C28.065 6.81903 28.07 6.79203 28.07 6.76503C28.07 6.73803 28.065 6.71103 28.062 6.68503C28.027 6.32703 27.767 6.03603 27.422 5.95903C27.384 5.95503 27.344 5.95003 27.302 5.94503C25.162 5.68403 19.037 4.71603 15.992 1.89403C15.905 1.77603 15.798 1.67103 15.676 1.58303C15.431 1.40603 15.124 1.30103 14.79 1.30103C14.455 1.30103 14.147 1.40703 13.902 1.58503C13.782 1.67103 13.676 1.77303 13.59 1.89103C10.5 4.75803 4.23102 5.71403 2.18202 5.95803C2.17802 5.95803 2.17502 5.95903 2.17102 5.95903C1.81202 6.03203 1.54202 6.33903 1.51802 6.71203C1.51702 6.73103 1.51202 6.74903 1.51202 6.76703C1.51202 6.78503 1.51602 6.80303 1.51802 6.82203C1.51802 6.93303 1.51702 7.04702 1.51802 7.15702C1.51702 7.17702 1.51502 7.19803 1.51502 7.21903C1.51502 7.26303 1.51702 7.30603 1.52202 7.34802C1.82202 29.609 14.79 31.098 14.79 31.098C14.79 31.098 27.752 29.612 28.059 7.36603C28.064 7.31703 28.067 7.26903 28.067 7.22003C28.067 7.19303 28.065 7.16502 28.063 7.13802C28.063 7.04202 28.062 6.94203 28.062 6.84603Z" fill="white"/>
+                        </mask>
+                        <g mask="url(#mask0_117_50)">
+                        <path d="M32.789 -7.63293H14.657V35.6081H32.789V-7.63293Z" fill="#C4C4C4"/>
+                        </g>
+                        <path d="M21.757 8.95911C21.457 8.95911 21.182 9.06611 20.968 9.24411L20.806 9.40611L11.118 19.0931L8.10303 16.0781C8.04403 16.0041 7.97703 15.9361 7.90203 15.8781C7.69103 15.7091 7.42303 15.6081 7.13103 15.6081C6.87703 15.6081 6.64103 15.6841 6.44503 15.8161C6.30803 15.9071 6.19103 16.0241 6.10003 16.1611C5.96903 16.3571 5.89203 16.5941 5.89203 16.8481C5.89203 17.1421 5.99503 17.4121 6.16603 17.6241L6.35503 17.8141L9.37603 20.8351L9.37303 20.8371L10.182 21.6461L10.366 21.8301C10.573 21.9961 10.833 22.0961 11.118 22.0961C11.4 22.0961 11.659 21.9981 11.864 21.8361C11.937 21.7791 12.003 21.7131 12.061 21.6391L12.862 20.8381L12.859 20.8361L22.541 11.1541L22.714 10.9801C22.889 10.7671 22.994 10.4941 22.994 10.1971C22.994 9.51311 22.441 8.95911 21.757 8.95911Z" fill="#E6E7E8"/>
+                        <path d="M49.978 9.53406C50.208 9.67606 50.546 9.79406 50.902 9.79406C51.429 9.79406 51.736 9.51606 51.736 9.11306C51.736 8.74006 51.523 8.52706 50.984 8.32006C50.334 8.09006 49.931 7.75206 49.931 7.18906C49.931 6.56806 50.445 6.10706 51.222 6.10706C51.63 6.10706 51.925 6.20106 52.103 6.30206L51.96 6.72206C51.831 6.65106 51.564 6.53306 51.202 6.53306C50.659 6.53306 50.452 6.85806 50.452 7.13106C50.452 7.50406 50.694 7.68806 51.245 7.90106C51.919 8.16106 52.263 8.48706 52.263 9.07306C52.263 9.68806 51.808 10.2211 50.867 10.2211C50.482 10.2211 50.062 10.1081 49.847 9.96606L49.978 9.53406Z" fill="#7B7B7B"/>
+                        <path d="M54.552 10.1611L54.511 9.80008H54.493C54.333 10.0251 54.026 10.2271 53.618 10.2271C53.038 10.2271 52.741 9.81908 52.741 9.40408C52.741 8.71208 53.356 8.33308 54.464 8.33908V8.27908C54.464 8.04208 54.4 7.61608 53.814 7.61608C53.546 7.61608 53.269 7.69908 53.068 7.82908L52.949 7.48608C53.185 7.33208 53.529 7.23108 53.89 7.23108C54.765 7.23108 54.98 7.82908 54.98 8.40308V9.47408C54.98 9.72208 54.992 9.96508 55.027 10.1611H54.552ZM54.476 8.69908C53.908 8.68708 53.263 8.78808 53.263 9.34508C53.263 9.68208 53.488 9.84208 53.753 9.84208C54.126 9.84208 54.362 9.60608 54.446 9.36208C54.464 9.30908 54.475 9.25008 54.475 9.19708V8.69908H54.476Z" fill="#7B7B7B"/>
+                        <path d="M55.873 10.1611V7.69307H55.47V7.29607H55.872V7.16007C55.872 6.75807 55.96 6.39007 56.204 6.16007C56.4 5.97007 56.66 5.89307 56.902 5.89307C57.086 5.89307 57.246 5.93507 57.345 5.97607L57.275 6.37807C57.199 6.34307 57.091 6.31307 56.943 6.31307C56.5 6.31307 56.388 6.70507 56.388 7.14207V7.29607H57.079V7.69207H56.388V10.1601H55.873V10.1611Z" fill="#7B7B7B"/>
+                        <path d="M57.761 8.82306C57.773 9.52806 58.222 9.81806 58.743 9.81806C59.116 9.81806 59.341 9.75306 59.536 9.67006L59.624 10.0431C59.44 10.1261 59.128 10.2211 58.671 10.2211C57.79 10.2211 57.263 9.64106 57.263 8.77706C57.263 7.91306 57.773 7.23206 58.607 7.23206C59.543 7.23206 59.791 8.05406 59.791 8.58206C59.791 8.68806 59.779 8.77106 59.773 8.82406H57.761V8.82306ZM59.289 8.45106C59.293 8.11906 59.152 7.60406 58.566 7.60406C58.039 7.60406 57.808 8.08906 57.767 8.45106H59.289Z" fill="#7B7B7B"/>
+                        <path d="M61.708 6.22509C61.933 6.17709 62.288 6.14209 62.647 6.14209C63.163 6.14209 63.495 6.23109 63.743 6.43209C63.95 6.58509 64.075 6.82309 64.075 7.13609C64.075 7.52109 63.819 7.85809 63.399 8.01209V8.02409C63.778 8.11909 64.223 8.43209 64.223 9.02409C64.223 9.36809 64.086 9.62809 63.885 9.82309C63.606 10.0781 63.156 10.1971 62.506 10.1971C62.151 10.1971 61.879 10.1731 61.707 10.1491L61.708 6.22509ZM62.222 7.85809H62.691C63.236 7.85809 63.554 7.57509 63.554 7.18909C63.554 6.72209 63.199 6.53909 62.679 6.53909C62.441 6.53909 62.306 6.55709 62.222 6.57409V7.85809ZM62.222 9.77009C62.324 9.78809 62.472 9.79309 62.656 9.79309C63.187 9.79309 63.679 9.59809 63.679 9.01809C63.679 8.47409 63.21 8.24909 62.648 8.24909H62.222V9.77009Z" fill="#7B7B7B"/>
+                        <path d="M64.898 8.19008C64.898 7.85208 64.892 7.56208 64.875 7.29608H65.33L65.348 7.85808H65.371C65.502 7.47408 65.814 7.23108 66.164 7.23108C66.225 7.23108 66.266 7.23708 66.312 7.24908V7.74008C66.259 7.72808 66.207 7.72208 66.134 7.72208C65.767 7.72208 65.507 8.00008 65.437 8.39108C65.425 8.46208 65.412 8.54508 65.412 8.63308V10.1601H64.898V8.19008Z" fill="#7B7B7B"/>
+                        <path d="M69.367 8.70508C69.367 9.76508 68.633 10.2261 67.939 10.2261C67.164 10.2261 66.566 9.65808 66.566 8.75208C66.566 7.79208 67.195 7.23108 67.988 7.23108C68.81 7.23108 69.367 7.82908 69.367 8.70508ZM67.093 8.73408C67.093 9.36108 67.454 9.83608 67.962 9.83608C68.46 9.83608 68.833 9.36808 68.833 8.72308C68.833 8.23808 68.591 7.62208 67.976 7.62208C67.359 7.62208 67.093 8.19008 67.093 8.73408Z" fill="#7B7B7B"/>
+                        <path d="M70.189 7.29602L70.568 8.75202C70.65 9.07102 70.728 9.36702 70.781 9.66302H70.799C70.863 9.37302 70.959 9.06502 71.053 8.75802L71.522 7.29602H71.96L72.403 8.72802C72.51 9.07202 72.592 9.37402 72.657 9.66402H72.677C72.724 9.37402 72.8 9.07202 72.896 8.73402L73.304 7.29602H73.818L72.896 10.16H72.421L71.983 8.79302C71.881 8.47402 71.799 8.18902 71.729 7.85202H71.717C71.645 8.19602 71.557 8.49202 71.455 8.79902L70.994 10.16H70.521L69.656 7.29602H70.189Z" fill="#7B7B7B"/>
+                        <path d="M74.23 9.6271C74.384 9.7281 74.658 9.8351 74.918 9.8351C75.297 9.8351 75.475 9.6461 75.475 9.4081C75.475 9.1601 75.327 9.0231 74.942 8.8821C74.426 8.6981 74.184 8.4141 74.184 8.0711C74.184 7.6091 74.557 7.2301 75.172 7.2301C75.463 7.2301 75.717 7.3131 75.877 7.4081L75.746 7.7871C75.633 7.7161 75.426 7.6211 75.16 7.6211C74.853 7.6211 74.68 7.7991 74.68 8.0121C74.68 8.2491 74.854 8.3561 75.225 8.4971C75.723 8.6861 75.977 8.9351 75.977 9.3601C75.977 9.8641 75.586 10.2191 74.907 10.2191C74.593 10.2191 74.303 10.1421 74.102 10.0231L74.23 9.6271Z" fill="#7B7B7B"/>
+                        <path d="M77.224 6.49102C77.232 6.66902 77.101 6.81102 76.894 6.81102C76.71 6.81102 76.58 6.66802 76.58 6.49102C76.58 6.30702 76.717 6.16602 76.906 6.16602C77.101 6.16602 77.224 6.30702 77.224 6.49102ZM76.646 10.161V7.29602H77.166V10.16H76.646V10.161Z" fill="#7B7B7B"/>
+                        <path d="M78.031 8.07205C78.031 7.77505 78.023 7.53306 78.006 7.29706H78.469L78.498 7.77106H78.51C78.653 7.49906 78.983 7.23206 79.457 7.23206C79.853 7.23206 80.469 7.46805 80.469 8.45205V10.1621H79.948V8.50906C79.948 8.04706 79.776 7.66206 79.286 7.66206C78.942 7.66206 78.677 7.90506 78.587 8.19506C78.564 8.26006 78.552 8.34806 78.552 8.43706V10.1601H78.032L78.031 8.07205Z" fill="#7B7B7B"/>
+                        <path d="M83.783 7.29603C83.771 7.50303 83.76 7.73403 83.76 8.08303V9.74603C83.76 10.402 83.629 10.806 83.352 11.054C83.073 11.315 82.67 11.398 82.309 11.398C81.965 11.398 81.588 11.315 81.356 11.161L81.487 10.765C81.676 10.884 81.973 10.99 82.327 10.99C82.86 10.99 83.251 10.713 83.251 9.99003V9.67103H83.239C83.079 9.93803 82.772 10.15 82.327 10.15C81.618 10.15 81.108 9.54603 81.108 8.75403C81.108 7.78203 81.741 7.23303 82.399 7.23303C82.895 7.23303 83.169 7.49303 83.292 7.73003H83.304L83.329 7.29803H83.783V7.29603ZM83.244 8.42603C83.244 8.33703 83.238 8.26103 83.215 8.19003C83.119 7.88803 82.865 7.63903 82.486 7.63903C81.99 7.63903 81.634 8.06003 81.634 8.72203C81.634 9.28503 81.917 9.75203 82.48 9.75203C82.8 9.75203 83.089 9.55003 83.203 9.21903C83.232 9.13003 83.244 9.03003 83.244 8.94203V8.42603Z" fill="#7B7B7B"/>
+                        </svg>
+                        <svg width="101" height="31" viewBox="0 0 101 31" fill="none" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+                            <rect width="101" height="30.8756" fill="url(#pattern0_117_82)"/>
+                            <defs>
+                            <pattern id="pattern0_117_82" patternContentUnits="objectBoundingBox" width="1" height="1">
+                            <use xlink:href="#image0_117_82" transform="matrix(0.00255102 0 0 0.00834486 0 -0.0382437)"/>
+                            </pattern>
+                            <image id="image0_117_82" width="392" height="129" xlink:href="data:image/png;base64,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"/>
+                            </defs>
+                            </svg>
+                </div>
+                <div id="canaisAtendimento">
+                    <h2>Canais de Atendimento</h2>
+                    <p>Horário de Atendimento: Segunda a sexta-feira das 08h às 17h30</p>
+                </div>
+                <a href="/politica-de-privacidade">Copyright © 2024 - Imprimeaí. Todos os direitos reservados.</a>
+            </footer>
+        </div>
     </main>
-    <footer>
-        <div id="institucional">
-            <h2>Institucional</h2>
-            <a href="/sobre">Sobre a Imprimeaí</a>
-            <a href="/blog">Blog</a>
-            <a href="/politica-de-privacidade">Política de Privacidade</a>
-            <a href="/central-de-ajuda">Central de Ajuda</a>
-            <a href="/tutoriais">Nossos Tutoriais</a>
-        </div>
-        <div id="formasDePagamento">
-            <h2>Formas de Pagamento</h2>
-            <img src="https://wbl.blob.core.windows.net/public/icon-pagamento-pix.svg" alt="...">
-            <img src="https://wbl.blob.core.windows.net/public/icon-pagamento-visa.svg" alt="...">
-            <img src="https://wbl.blob.core.windows.net/public/icon-pagamento-mastercard.svg" alt="...">
-            <img src="https://wbl.blob.core.windows.net/public/icon-pagamento-amex.svg" alt="...">
-            <img src="https://wbl.blob.core.windows.net/public/icon-pagamento-itau.svg" alt="...">
-            <img src="https://wbl.blob.core.windows.net/public/icon-pagamento-bb.svg" alt="...">
-            <img src="https://wbl.blob.core.windows.net/public/icon-pagamento-caixa.svg" alt="...">
-            <img src="https://wbl.blob.core.windows.net/public/icon-pagamento-bradesco.svg" alt="...">
-            <img src="https://wbl.blob.core.windows.net/public/icon-pagamento-boleto.svg" alt="...">
-        </div>
-        <div id="redesSociais">
-            <h2>Siga-nos nas redes sociais</h2>
-            <ul class="wrapper2">
-            <li class="icon facebook">
-                <span class="tooltip">Facebook</span>
-                <svg
-                viewBox="0 0 320 512"
-                height="1.2em"
-                fill="currentColor"
-                xmlns="http://www.w3.org/2000/svg"
-                >
-                <path
-                    d="M279.14 288l14.22-92.66h-88.91v-60.13c0-25.35 12.42-50.06 52.24-50.06h40.42V6.26S260.43 0 225.36 0c-73.22 0-121.08 44.38-121.08 124.72v70.62H22.89V288h81.39v224h100.17V288z"
-                ></path>
-                </svg>
-            </li>
-            <li class="icon twitter">
-                <span class="tooltip">Twitter</span>
-                <svg
-                height="1.8em"
-                fill="currentColor"
-                viewBox="0 0 48 48"
-                xmlns="http://www.w3.org/2000/svg"
-                class="twitter"
-                >
-                <path
-                    d="M42,12.429c-1.323,0.586-2.746,0.977-4.247,1.162c1.526-0.906,2.7-2.351,3.251-4.058c-1.428,0.837-3.01,1.452-4.693,1.776C34.967,9.884,33.05,9,30.926,9c-4.08,0-7.387,3.278-7.387,7.32c0,0.572,0.067,1.129,0.193,1.67c-6.138-0.308-11.582-3.226-15.224-7.654c-0.64,1.082-1,2.349-1,3.686c0,2.541,1.301,4.778,3.285,6.096c-1.211-0.037-2.351-0.374-3.349-0.914c0,0.022,0,0.055,0,0.086c0,3.551,2.547,6.508,5.923,7.181c-0.617,0.169-1.269,0.263-1.941,0.263c-0.477,0-0.942-0.054-1.392-0.135c0.94,2.902,3.667,5.023,6.898,5.086c-2.528,1.96-5.712,3.134-9.174,3.134c-0.598,0-1.183-0.034-1.761-0.104C9.268,36.786,13.152,38,17.321,38c13.585,0,21.017-11.156,21.017-20.834c0-0.317-0.01-0.633-0.025-0.945C39.763,15.197,41.013,13.905,42,12.429"
-                ></path>
-                </svg>
-            </li>
-            <li class="icon instagram">
-                <span class="tooltip">Instagram</span>
-                <svg
-                xmlns="http://www.w3.org/2000/svg"
-                height="1.2em"
-                fill="currentColor"
-                class="bi bi-instagram"
-                viewBox="0 0 16 16"
-                >
-                <path
-                    d="M8 0C5.829 0 5.556.01 4.703.048 3.85.088 3.269.222 2.76.42a3.917 3.917 0 0 0-1.417.923A3.927 3.927 0 0 0 .42 2.76C.222 3.268.087 3.85.048 4.7.01 5.555 0 5.827 0 8.001c0 2.172.01 2.444.048 3.297.04.852.174 1.433.372 1.942.205.526.478.972.923 1.417.444.445.89.719 1.416.923.51.198 1.09.333 1.942.372C5.555 15.99 5.827 16 8 16s2.444-.01 3.298-.048c.851-.04 1.434-.174 1.943-.372a3.916 3.916 0 0 0 1.416-.923c.445-.445.718-.891.923-1.417.197-.509.332-1.09.372-1.942C15.99 10.445 16 10.173 16 8s-.01-2.445-.048-3.299c-.04-.851-.175-1.433-.372-1.941a3.926 3.926 0 0 0-.923-1.417A3.911 3.911 0 0 0 13.24.42c-.51-.198-1.092-.333-1.943-.372C10.443.01 10.172 0 7.998 0h.003zm-.717 1.442h.718c2.136 0 2.389.007 3.232.046.78.035 1.204.166 1.486.275.373.145.64.319.92.599.28.28.453.546.598.92.11.281.24.705.275 1.485.039.843.047 1.096.047 3.231s-.008 2.389-.047 3.232c-.035.78-.166 1.203-.275 1.485a2.47 2.47 0 0 1-.599.919c-.28.28-.546.453-.92.598-.28.11-.704.24-1.485.276-.843.038-1.096.047-3.232.047s-2.39-.009-3.233-.047c-.78-.036-1.203-.166-1.485-.276a2.478 2.478 0 0 1-.92-.598 2.48 2.48 0 0 1-.6-.92c-.109-.281-.24-.705-.275-1.485-.038-.843-.046-1.096-.046-3.233 0-2.136.008-2.388.046-3.231.036-.78.166-1.204.276-1.486.145-.373.319-.64.599-.92.28-.28.546-.453.92-.598.282-.11.705-.24 1.485-.276.738-.034 1.024-.044 2.515-.045v.002zm4.988 1.328a.96.96 0 1 0 0 1.92.96.96 0 0 0 0-1.92zm-4.27 1.122a4.109 4.109 0 1 0 0 8.217 4.109 4.109 0 0 0 0-8.217zm0 1.441a2.667 2.667 0 1 1 0 5.334 2.667 2.667 0 0 1 0-5.334z"
-                ></path>
-                </svg>
-            </li>
-            </ul>      
-        </div>
-        <div id="siteSeguro">
-            <h2>Site Seguro</h2>
-            <svg width="102" height="32" viewBox="0 0 102 32" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <path fill-rule="evenodd" clip-rule="evenodd" d="M101.115 16.7621C101.482 16.6101 101.511 16.5821 101.375 16.1961C100.6 13.9831 97.682 12.7881 95.197 13.8251C93.236 14.6421 91.816 16.7161 91.816 19.0331C91.816 22.1581 94.07 24.9351 97.134 24.9351C98.538 24.9351 99.536 24.7421 100.425 24.1771C100.616 23.9991 101.691 23.1401 101.7 22.9561C101.702 22.9151 101.55 23.0481 101.315 23.1771C100.622 23.5401 99.585 23.6811 98.772 23.6951C97.126 23.7261 95.809 22.6031 94.952 21.2731C94.401 20.4141 94.044 19.4351 93.956 18.3821C93.819 16.7641 94.214 14.9041 96.042 14.4471C97.257 14.1431 98.409 14.8241 98.856 15.9951C99.059 16.5261 98.936 16.8031 98.444 17.0051L94.049 18.8411L95.547 18.9371C97.333 18.1971 99.33 17.5021 101.115 16.7621Z" fill="#A9A9A9"/>
-                <path fill-rule="evenodd" clip-rule="evenodd" d="M87.583 7.75208C88.698 7.75208 89.747 7.75208 90.864 7.75208C90.407 8.04808 90.253 8.17008 90.057 8.48108C89.916 8.70408 89.879 9.12708 89.854 9.50708C89.663 13.8881 89.78 18.3031 89.752 22.6861C89.77 23.8791 90.238 23.7391 91.793 23.6941C91.559 23.8931 91.178 24.2841 90.885 24.4541C89.483 24.4541 88.145 24.4231 86.744 24.4231C87.271 23.8801 87.543 23.5281 87.506 22.1651C87.535 17.5851 87.354 13.1911 87.633 8.78108C86.976 8.80008 86.38 8.79108 85.722 8.80908C86.343 8.49008 86.931 8.04008 87.583 7.75208Z" fill="#A9A9A9"/>
-                <path fill-rule="evenodd" clip-rule="evenodd" d="M81.65 25.205C81.886 25.377 82.132 25.545 82.386 25.705C83.765 26.578 84.204 27.646 84.091 28.631C83.956 29.819 82.818 30.756 80.866 30.873C78.782 31 75.977 30.176 76.497 27.435C76.772 25.974 78.71 25.22 80.311 25.167C80.755 25.152 81.207 25.189 81.65 25.205ZM86.361 13.797L84.959 14.705H83.361C84.035 15.177 84.552 15.855 84.838 16.612C85.141 17.418 85.184 18.31 84.875 19.132C84.584 19.907 83.994 20.575 83.129 21.083C82.637 21.372 82.387 21.737 82.359 22.089C82.279 23.112 83.529 23.857 84.254 24.398C85.836 25.582 86.453 27.525 85.406 29.402C84.406 31.195 82.023 31.996 79.494 32.004C76.351 31.99 74.369 30.551 74.264 28.59C74.129 26.059 76.729 24.852 79.077 24.578C79.735 24.5 80.323 24.512 80.876 24.553C80.044 24.004 79.733 22.891 80.157 22.145C80.268 21.952 80.198 22.018 79.989 22.049C78.067 22.34 76.089 21.086 75.626 19.192C75.392 18.231 75.538 17.226 75.903 16.439C76.698 14.731 78.467 13.782 80.43 13.782C82.47 13.781 84.361 13.782 86.361 13.797ZM82.83 17.963C83.08 19.481 82.695 20.918 81.324 21.297C79.92 21.686 78.367 20.594 77.869 18.639C77.322 16.495 77.887 15.135 79.209 14.723C80.775 14.236 82.449 15.648 82.83 17.963Z" fill="#A9A9A9"/>
-                <path fill-rule="evenodd" clip-rule="evenodd" d="M68.513 13.4811C72.279 13.4811 74.243 15.9841 74.419 18.9161C74.593 21.8381 72.185 24.4531 69.235 24.7661C65.69 25.1431 62.594 22.7001 62.594 19.1371C62.595 16.0221 65.253 13.4811 68.513 13.4811ZM72.072 19.2931C72.289 21.4411 71.566 23.4381 69.638 23.8851C67.665 24.3421 65.572 22.7031 65.05 19.9221C64.476 16.8721 65.425 14.8631 67.286 14.3691C69.494 13.7841 71.742 16.0111 72.072 19.2931Z" fill="#A9A9A9"/>
-                <path fill-rule="evenodd" clip-rule="evenodd" d="M55.605 13.4811C59.416 13.4811 61.404 15.9841 61.582 18.9161C61.758 21.8381 59.32 24.4531 56.338 24.7661C52.75 25.1431 49.617 22.7001 49.617 19.1371C49.617 16.0221 52.306 13.4811 55.605 13.4811ZM59.207 19.2931C59.426 21.4411 58.695 23.4381 56.744 23.8851C54.748 24.3421 52.631 22.7031 52.101 19.9221C51.521 16.8721 52.48 14.8631 54.365 14.3691C56.597 13.7841 58.873 16.0111 59.207 19.2931Z" fill="#A9A9A9"/>
-                <path fill-rule="evenodd" clip-rule="evenodd" d="M46.137 11.9141L47.85 10.1671C44.943 7.76112 39.956 7.44412 36.652 9.11512C33.779 10.5681 31.689 13.4541 31.587 16.6781C31.479 20.0691 33.451 22.7531 35.451 24.1021C38.754 26.3291 44.48 25.8341 47.93 24.0921L47.928 23.7701L47.929 20.2131L48.733 19.2741H43.708L41.847 20.3211L45.461 20.2141C45.461 21.2281 45.461 22.3351 45.461 23.3491C45.461 23.7921 45.467 23.8651 44.734 24.1011C43.703 24.3721 42.538 24.4251 41.475 24.3351C37.866 24.0341 35.115 21.1851 34.463 17.6271C33.845 14.2531 35.436 11.0601 38.127 9.74312C39.441 9.09912 41.018 8.79812 42.727 9.34512C43.797 9.68812 44.77 10.3061 45.618 11.1571L45.028 12.2311L46.137 11.9141Z" fill="#A9A9A9"/>
-                <path opacity="0.3" d="M28.91 6.99705V6.92705C28.915 6.88405 28.918 6.84005 28.918 6.79605C28.918 6.73905 28.913 6.68505 28.906 6.63605C28.836 5.91905 28.318 5.33405 27.619 5.18105L27.42 5.15205C25.619 4.93305 19.545 4.01505 16.624 1.36305C16.498 1.20505 16.348 1.06305 16.178 0.941052C15.779 0.654052 15.305 0.503052 14.808 0.503052C14.308 0.503052 13.834 0.656052 13.434 0.943052C13.267 1.06405 13.12 1.20405 12.995 1.35905C10.046 4.04105 3.91701 4.94905 2.10101 5.16405L2.02101 5.17605C1.30501 5.32405 0.768013 5.93405 0.709013 6.66505C0.704013 6.70805 0.700012 6.75105 0.700012 6.79705C0.700012 6.83105 0.702012 6.86505 0.706012 6.90105V6.98705C0.706012 7.04605 0.706012 7.10405 0.706012 7.16305C0.704012 7.19105 0.703012 7.22005 0.703012 7.25005C0.703012 7.30805 0.705012 7.36505 0.710012 7.42205C0.875012 19.1861 4.60701 25.2141 7.71001 28.1981C11.152 31.5091 14.568 31.9341 14.712 31.9521L14.806 31.9621L14.901 31.9521C15.045 31.9341 18.459 31.5111 21.901 28.2021C25.003 25.2201 28.735 19.1981 28.903 7.44505C28.91 7.38205 28.913 7.31605 28.913 7.25105C28.913 7.21705 28.911 7.18405 28.909 7.14305C28.91 7.09405 28.91 7.04405 28.91 6.99705Z" fill="#303030"/>
-                <path d="M2.13501 5.07705C2.13801 5.07705 2.14201 5.07605 2.14601 5.07605C2.14301 5.07705 2.13901 5.07605 2.13501 5.07705Z" fill="black"/>
-                <path d="M28.062 6.84603C28.065 6.81903 28.07 6.79203 28.07 6.76503C28.07 6.73803 28.065 6.71103 28.062 6.68503C28.027 6.32703 27.767 6.03603 27.422 5.95903C27.384 5.95503 27.344 5.95003 27.302 5.94503C25.162 5.68403 19.037 4.71603 15.992 1.89403C15.905 1.77603 15.798 1.67103 15.676 1.58303C15.431 1.40603 15.124 1.30103 14.79 1.30103C14.455 1.30103 14.147 1.40703 13.902 1.58503C13.782 1.67103 13.676 1.77303 13.59 1.89103C10.5 4.75803 4.23102 5.71403 2.18202 5.95803C2.17802 5.95803 2.17502 5.95903 2.17102 5.95903C1.81202 6.03203 1.54202 6.33903 1.51802 6.71203C1.51702 6.73103 1.51202 6.74903 1.51202 6.76703C1.51202 6.78503 1.51602 6.80303 1.51802 6.82203C1.51802 6.93303 1.51702 7.04702 1.51802 7.15702C1.51702 7.17702 1.51502 7.19803 1.51502 7.21903C1.51502 7.26303 1.51702 7.30603 1.52202 7.34802C1.82202 29.609 14.79 31.098 14.79 31.098C14.79 31.098 27.752 29.612 28.059 7.36603C28.064 7.31703 28.067 7.26903 28.067 7.22003C28.067 7.19303 28.065 7.16502 28.063 7.13802C28.063 7.04202 28.062 6.94203 28.062 6.84603Z" fill="#828282"/>
-                <mask id="mask0_117_50" style="mask-type:luminance" maskUnits="userSpaceOnUse" x="1" y="1" width="28" height="31">
-                <path d="M28.062 6.84603C28.065 6.81903 28.07 6.79203 28.07 6.76503C28.07 6.73803 28.065 6.71103 28.062 6.68503C28.027 6.32703 27.767 6.03603 27.422 5.95903C27.384 5.95503 27.344 5.95003 27.302 5.94503C25.162 5.68403 19.037 4.71603 15.992 1.89403C15.905 1.77603 15.798 1.67103 15.676 1.58303C15.431 1.40603 15.124 1.30103 14.79 1.30103C14.455 1.30103 14.147 1.40703 13.902 1.58503C13.782 1.67103 13.676 1.77303 13.59 1.89103C10.5 4.75803 4.23102 5.71403 2.18202 5.95803C2.17802 5.95803 2.17502 5.95903 2.17102 5.95903C1.81202 6.03203 1.54202 6.33903 1.51802 6.71203C1.51702 6.73103 1.51202 6.74903 1.51202 6.76703C1.51202 6.78503 1.51602 6.80303 1.51802 6.82203C1.51802 6.93303 1.51702 7.04702 1.51802 7.15702C1.51702 7.17702 1.51502 7.19803 1.51502 7.21903C1.51502 7.26303 1.51702 7.30603 1.52202 7.34802C1.82202 29.609 14.79 31.098 14.79 31.098C14.79 31.098 27.752 29.612 28.059 7.36603C28.064 7.31703 28.067 7.26903 28.067 7.22003C28.067 7.19303 28.065 7.16502 28.063 7.13802C28.063 7.04202 28.062 6.94203 28.062 6.84603Z" fill="white"/>
-                </mask>
-                <g mask="url(#mask0_117_50)">
-                <path d="M32.789 -7.63293H14.657V35.6081H32.789V-7.63293Z" fill="#C4C4C4"/>
-                </g>
-                <path d="M21.757 8.95911C21.457 8.95911 21.182 9.06611 20.968 9.24411L20.806 9.40611L11.118 19.0931L8.10303 16.0781C8.04403 16.0041 7.97703 15.9361 7.90203 15.8781C7.69103 15.7091 7.42303 15.6081 7.13103 15.6081C6.87703 15.6081 6.64103 15.6841 6.44503 15.8161C6.30803 15.9071 6.19103 16.0241 6.10003 16.1611C5.96903 16.3571 5.89203 16.5941 5.89203 16.8481C5.89203 17.1421 5.99503 17.4121 6.16603 17.6241L6.35503 17.8141L9.37603 20.8351L9.37303 20.8371L10.182 21.6461L10.366 21.8301C10.573 21.9961 10.833 22.0961 11.118 22.0961C11.4 22.0961 11.659 21.9981 11.864 21.8361C11.937 21.7791 12.003 21.7131 12.061 21.6391L12.862 20.8381L12.859 20.8361L22.541 11.1541L22.714 10.9801C22.889 10.7671 22.994 10.4941 22.994 10.1971C22.994 9.51311 22.441 8.95911 21.757 8.95911Z" fill="#E6E7E8"/>
-                <path d="M49.978 9.53406C50.208 9.67606 50.546 9.79406 50.902 9.79406C51.429 9.79406 51.736 9.51606 51.736 9.11306C51.736 8.74006 51.523 8.52706 50.984 8.32006C50.334 8.09006 49.931 7.75206 49.931 7.18906C49.931 6.56806 50.445 6.10706 51.222 6.10706C51.63 6.10706 51.925 6.20106 52.103 6.30206L51.96 6.72206C51.831 6.65106 51.564 6.53306 51.202 6.53306C50.659 6.53306 50.452 6.85806 50.452 7.13106C50.452 7.50406 50.694 7.68806 51.245 7.90106C51.919 8.16106 52.263 8.48706 52.263 9.07306C52.263 9.68806 51.808 10.2211 50.867 10.2211C50.482 10.2211 50.062 10.1081 49.847 9.96606L49.978 9.53406Z" fill="#7B7B7B"/>
-                <path d="M54.552 10.1611L54.511 9.80008H54.493C54.333 10.0251 54.026 10.2271 53.618 10.2271C53.038 10.2271 52.741 9.81908 52.741 9.40408C52.741 8.71208 53.356 8.33308 54.464 8.33908V8.27908C54.464 8.04208 54.4 7.61608 53.814 7.61608C53.546 7.61608 53.269 7.69908 53.068 7.82908L52.949 7.48608C53.185 7.33208 53.529 7.23108 53.89 7.23108C54.765 7.23108 54.98 7.82908 54.98 8.40308V9.47408C54.98 9.72208 54.992 9.96508 55.027 10.1611H54.552ZM54.476 8.69908C53.908 8.68708 53.263 8.78808 53.263 9.34508C53.263 9.68208 53.488 9.84208 53.753 9.84208C54.126 9.84208 54.362 9.60608 54.446 9.36208C54.464 9.30908 54.475 9.25008 54.475 9.19708V8.69908H54.476Z" fill="#7B7B7B"/>
-                <path d="M55.873 10.1611V7.69307H55.47V7.29607H55.872V7.16007C55.872 6.75807 55.96 6.39007 56.204 6.16007C56.4 5.97007 56.66 5.89307 56.902 5.89307C57.086 5.89307 57.246 5.93507 57.345 5.97607L57.275 6.37807C57.199 6.34307 57.091 6.31307 56.943 6.31307C56.5 6.31307 56.388 6.70507 56.388 7.14207V7.29607H57.079V7.69207H56.388V10.1601H55.873V10.1611Z" fill="#7B7B7B"/>
-                <path d="M57.761 8.82306C57.773 9.52806 58.222 9.81806 58.743 9.81806C59.116 9.81806 59.341 9.75306 59.536 9.67006L59.624 10.0431C59.44 10.1261 59.128 10.2211 58.671 10.2211C57.79 10.2211 57.263 9.64106 57.263 8.77706C57.263 7.91306 57.773 7.23206 58.607 7.23206C59.543 7.23206 59.791 8.05406 59.791 8.58206C59.791 8.68806 59.779 8.77106 59.773 8.82406H57.761V8.82306ZM59.289 8.45106C59.293 8.11906 59.152 7.60406 58.566 7.60406C58.039 7.60406 57.808 8.08906 57.767 8.45106H59.289Z" fill="#7B7B7B"/>
-                <path d="M61.708 6.22509C61.933 6.17709 62.288 6.14209 62.647 6.14209C63.163 6.14209 63.495 6.23109 63.743 6.43209C63.95 6.58509 64.075 6.82309 64.075 7.13609C64.075 7.52109 63.819 7.85809 63.399 8.01209V8.02409C63.778 8.11909 64.223 8.43209 64.223 9.02409C64.223 9.36809 64.086 9.62809 63.885 9.82309C63.606 10.0781 63.156 10.1971 62.506 10.1971C62.151 10.1971 61.879 10.1731 61.707 10.1491L61.708 6.22509ZM62.222 7.85809H62.691C63.236 7.85809 63.554 7.57509 63.554 7.18909C63.554 6.72209 63.199 6.53909 62.679 6.53909C62.441 6.53909 62.306 6.55709 62.222 6.57409V7.85809ZM62.222 9.77009C62.324 9.78809 62.472 9.79309 62.656 9.79309C63.187 9.79309 63.679 9.59809 63.679 9.01809C63.679 8.47409 63.21 8.24909 62.648 8.24909H62.222V9.77009Z" fill="#7B7B7B"/>
-                <path d="M64.898 8.19008C64.898 7.85208 64.892 7.56208 64.875 7.29608H65.33L65.348 7.85808H65.371C65.502 7.47408 65.814 7.23108 66.164 7.23108C66.225 7.23108 66.266 7.23708 66.312 7.24908V7.74008C66.259 7.72808 66.207 7.72208 66.134 7.72208C65.767 7.72208 65.507 8.00008 65.437 8.39108C65.425 8.46208 65.412 8.54508 65.412 8.63308V10.1601H64.898V8.19008Z" fill="#7B7B7B"/>
-                <path d="M69.367 8.70508C69.367 9.76508 68.633 10.2261 67.939 10.2261C67.164 10.2261 66.566 9.65808 66.566 8.75208C66.566 7.79208 67.195 7.23108 67.988 7.23108C68.81 7.23108 69.367 7.82908 69.367 8.70508ZM67.093 8.73408C67.093 9.36108 67.454 9.83608 67.962 9.83608C68.46 9.83608 68.833 9.36808 68.833 8.72308C68.833 8.23808 68.591 7.62208 67.976 7.62208C67.359 7.62208 67.093 8.19008 67.093 8.73408Z" fill="#7B7B7B"/>
-                <path d="M70.189 7.29602L70.568 8.75202C70.65 9.07102 70.728 9.36702 70.781 9.66302H70.799C70.863 9.37302 70.959 9.06502 71.053 8.75802L71.522 7.29602H71.96L72.403 8.72802C72.51 9.07202 72.592 9.37402 72.657 9.66402H72.677C72.724 9.37402 72.8 9.07202 72.896 8.73402L73.304 7.29602H73.818L72.896 10.16H72.421L71.983 8.79302C71.881 8.47402 71.799 8.18902 71.729 7.85202H71.717C71.645 8.19602 71.557 8.49202 71.455 8.79902L70.994 10.16H70.521L69.656 7.29602H70.189Z" fill="#7B7B7B"/>
-                <path d="M74.23 9.6271C74.384 9.7281 74.658 9.8351 74.918 9.8351C75.297 9.8351 75.475 9.6461 75.475 9.4081C75.475 9.1601 75.327 9.0231 74.942 8.8821C74.426 8.6981 74.184 8.4141 74.184 8.0711C74.184 7.6091 74.557 7.2301 75.172 7.2301C75.463 7.2301 75.717 7.3131 75.877 7.4081L75.746 7.7871C75.633 7.7161 75.426 7.6211 75.16 7.6211C74.853 7.6211 74.68 7.7991 74.68 8.0121C74.68 8.2491 74.854 8.3561 75.225 8.4971C75.723 8.6861 75.977 8.9351 75.977 9.3601C75.977 9.8641 75.586 10.2191 74.907 10.2191C74.593 10.2191 74.303 10.1421 74.102 10.0231L74.23 9.6271Z" fill="#7B7B7B"/>
-                <path d="M77.224 6.49102C77.232 6.66902 77.101 6.81102 76.894 6.81102C76.71 6.81102 76.58 6.66802 76.58 6.49102C76.58 6.30702 76.717 6.16602 76.906 6.16602C77.101 6.16602 77.224 6.30702 77.224 6.49102ZM76.646 10.161V7.29602H77.166V10.16H76.646V10.161Z" fill="#7B7B7B"/>
-                <path d="M78.031 8.07205C78.031 7.77505 78.023 7.53306 78.006 7.29706H78.469L78.498 7.77106H78.51C78.653 7.49906 78.983 7.23206 79.457 7.23206C79.853 7.23206 80.469 7.46805 80.469 8.45205V10.1621H79.948V8.50906C79.948 8.04706 79.776 7.66206 79.286 7.66206C78.942 7.66206 78.677 7.90506 78.587 8.19506C78.564 8.26006 78.552 8.34806 78.552 8.43706V10.1601H78.032L78.031 8.07205Z" fill="#7B7B7B"/>
-                <path d="M83.783 7.29603C83.771 7.50303 83.76 7.73403 83.76 8.08303V9.74603C83.76 10.402 83.629 10.806 83.352 11.054C83.073 11.315 82.67 11.398 82.309 11.398C81.965 11.398 81.588 11.315 81.356 11.161L81.487 10.765C81.676 10.884 81.973 10.99 82.327 10.99C82.86 10.99 83.251 10.713 83.251 9.99003V9.67103H83.239C83.079 9.93803 82.772 10.15 82.327 10.15C81.618 10.15 81.108 9.54603 81.108 8.75403C81.108 7.78203 81.741 7.23303 82.399 7.23303C82.895 7.23303 83.169 7.49303 83.292 7.73003H83.304L83.329 7.29803H83.783V7.29603ZM83.244 8.42603C83.244 8.33703 83.238 8.26103 83.215 8.19003C83.119 7.88803 82.865 7.63903 82.486 7.63903C81.99 7.63903 81.634 8.06003 81.634 8.72203C81.634 9.28503 81.917 9.75203 82.48 9.75203C82.8 9.75203 83.089 9.55003 83.203 9.21903C83.232 9.13003 83.244 9.03003 83.244 8.94203V8.42603Z" fill="#7B7B7B"/>
-                </svg>
-                <svg width="101" height="31" viewBox="0 0 101 31" fill="none" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
-                    <rect width="101" height="30.8756" fill="url(#pattern0_117_82)"/>
-                    <defs>
-                    <pattern id="pattern0_117_82" patternContentUnits="objectBoundingBox" width="1" height="1">
-                    <use xlink:href="#image0_117_82" transform="matrix(0.00255102 0 0 0.00834486 0 -0.0382437)"/>
-                    </pattern>
-                    <image id="image0_117_82" width="392" height="129" xlink:href="data:image/png;base64,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"/>
-                    </defs>
-                    </svg>                                                   
-        </div>
-        <div id="canaisAtendimento">
-            <h2>Canais de Atendimento</h2>
-            <p>Horário de Atendimento: Segunda a sexta-feira das 08h às 17h30</p>
-        </div>
-        <a href="/politica-de-privacidade">Copyright © 2024 - Imprimeaí. Todos os direitos reservados.</a>
-    </footer>
+
     <div class="popup" id="newsletter">
         <div class="form">
           <div class="icone">
