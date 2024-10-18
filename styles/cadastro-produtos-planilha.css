@@ -13,7 +13,7 @@
     box-sizing: border-box;
 }
 body {
-    font-family: 'Inter Tight';
+    font-family: var(--font-padrao);
     background-color: #F5F5F7;
 }
 form > h1 {
