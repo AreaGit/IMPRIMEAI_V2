@@ -515,6 +515,18 @@
         left: 0%;
         top: 170px;
     }
+    .popup {
+        display: none;
+        position: fixed;
+        left: 50%;
+        transform: translate(-50%);
+        top: 70%;
+        width: 50%;
+        height: fit-content;
+        background: #FFFFFF;
+        box-shadow: 0px 187px 75px rgba(0, 0, 0, 0.01), 0px 105px 63px rgba(0, 0, 0, 0.05), 0px 47px 47px rgba(0, 0, 0, 0.09), 0px 12px 26px rgba(0, 0, 0, 0.1), 0px 0px 0px rgba(0, 0, 0, 0.1);
+        border-radius: 13px;
+    }
 }
 @media screen and (min-width:1024px) and (max-width:1300px) {  
     .popup {
@@ -522,8 +534,8 @@
         position: fixed;
         left: 50%;
         transform: translate(-50%);
-        top: 70%;
-        width: 90vw;
+        top: 50%;
+        width: 50%;
         height: fit-content;
         background: #FFFFFF;
         box-shadow: 0px 187px 75px rgba(0, 0, 0, 0.01), 0px 105px 63px rgba(0, 0, 0, 0.05), 0px 47px 47px rgba(0, 0, 0, 0.09), 0px 12px 26px rgba(0, 0, 0, 0.1), 0px 0px 0px rgba(0, 0, 0, 0.1);
@@ -674,8 +686,8 @@
         position: fixed;
         left: 50%;
         transform: translate(-50%);
-        top: 70%;
-        width: 90vw;
+        top: 50%;
+        width: 50%;
         height: fit-content;
         background: #FFFFFF;
         box-shadow: 0px 187px 75px rgba(0, 0, 0, 0.01), 0px 105px 63px rgba(0, 0, 0, 0.05), 0px 47px 47px rgba(0, 0, 0, 0.09), 0px 12px 26px rgba(0, 0, 0, 0.1), 0px 0px 0px rgba(0, 0, 0, 0.1);
