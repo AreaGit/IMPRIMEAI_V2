@@ -18,7 +18,7 @@ body {
 }
 header {
     height: 42px;
-    position: fixed;
+    position: absolute;
     left: 50%;
     transform: translate(-50%);
     top: 1%;
@@ -26,29 +26,11 @@ header {
     transition: 2s;
     width: 100%;
 }
-header.scrolled {
-    position: fixed;
-    top: 0%;
-    transition: 2s;
-    color: black;
-    width: 100%;
-    z-index: 1000;
-    background-color: white;
-    height: 40px;
-}
-header.scrolled > #nav-bar > li > a {
-    color: #6E6E73;
-}
-header.scrolled > #nav-bar > li > a:hover {
-    color: #020202;
-}
-#logo2 {
-    display: none;
-}
 #logo {
     position: absolute;
-    left: -3%;
-    width: 12%;
+    left: 50%;
+    transform: translate(-50%);
+    width: 15%;
     top: -11px;
 }
 li {
@@ -57,143 +39,6 @@ li {
 a {
     text-decoration: none;
     color: black;
-}
-#nav-bar {
-    position: absolute;
-    left: 50%;
-    top: 15%;
-    width: 54%;
-    transform: translate(-50%);
-}
-#nav-bar > li {
-    display: inline;
-    position: relative;
-    left: 10%;
-    padding-right: 24px;
-}
-#nav-bar > li > a {
-    font-weight: 500;
-    font-size: 14px;
-    color: #6E6E73;
-}
-#nav-bar > li > a:hover {
-    transition: 1s;
-    color: #000000;
-}
-#icone-pesquisa {
-    width: 22px;
-    height: 24px;
-    position: fixed;
-    left: 112%;
-    transform: translate(-112%);
-    top: 1px;
-}
-#carrinho-compras {
-    width: 32px;
-    height: 34px;
-    position: fixed;
-    left: 110%;
-    transform: translate(-120%);
-    top: -6px;
-}
-#menu-icon {
-    display: none;
-}
-#fechar-menu {
-    display: none;
-    cursor: pointer;
-}
-.input-wrapper {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 15px;
-    position: absolute;
-    left: 25%;
-    top: -10px;
-}
-  
-  .input {
-    border-style: none;
-    height: 40px;
-    width: 50px;
-    padding: 10px;
-    outline: none;
-    border-radius: 50%;
-    transition: .5s ease-in-out;
-    background-color: transparent;
-    box-shadow: 0px 0px 3px transparent;
-    padding-right: 40px;
-    color: #020202;
-  }
-  
-  .input::placeholder,
-  .input {
-    font-size: 17px;
-  }
-  
-  .input::placeholder {
-    color: #8f8f8f;
-  }
-  
-  .icon {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    position: absolute;
-    right: 0px;
-    cursor: pointer;
-    width: 50px;
-    height: 50px;
-    outline: none;
-    border-style: none;
-    border-radius: 50%;
-    pointer-events: painted;
-    background-color: transparent;
-    transition: .2s linear;
-  }
-  
-  .icon:focus ~ .input,
-  .input:focus {
-    box-shadow: none;
-    width: 250px;
-    border-radius: 0px;
-    background-color: transparent;
-    border-bottom: 2px solid #020202;
-    transition: all 500ms cubic-bezier(0, 0.110, 0.35, 2);
-  }
-  #sugestoes {
-    display: none;
-    cursor: pointer;
-    border: 1px solid #ccc;
-    padding: 10px;
-    height: auto;
-    overflow-y: auto;
-    width: 250px;
-    border-radius: 3px;
-    position: absolute;
-    top: 35px;
-    left: 20%;
-    transition: 0.8s;
-}
-#sugestoes:hover {
-    transition: 0.8s;  
-    box-shadow: 1px 1px 4px black;  
-} 
-#sugestoes ul {
-    list-style-type: none; /* Remova os marcadores de lista */
-    padding: 0;
-}
-
-#sugestoes li {
-    margin-bottom: 5px;
-    cursor: pointer;
-    border-bottom: 1px solid;
-    height: 27px;
-}
-
-#sugestoes li:hover {
-    background-color: #f0f0f0; /* Mude a cor de fundo ao passar o mouse sobre os itens */
 }
 main > h1 {
     font-weight: 500;
@@ -228,8 +73,9 @@ h1 {
 div#detalhes-pedido {
     position: absolute;
     top: 260px;
-    left: 10%;
-    transform: translate(-10%);
+    left: 50%;
+    transform: translate(-50%);
+    width: 74%;
 }
 div#endereco-list {
     background-color: white;
@@ -245,5 +91,6 @@ div#itens-pedido-list {
     box-shadow: -1px 3px 5px black;
 }
 div#divItem > img {
-    width: 380px;
+    width: 100%;
+    max-width: 380px;
 }

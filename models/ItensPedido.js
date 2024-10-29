@@ -30,6 +30,14 @@ const ItensPedidos = db.define('itenspedidos', {
         type: Sequelize.DECIMAL(10, 2),
         allowNull: false,
     },
+    marca: {
+        type: Sequelize.STRING(255),
+        allowNull: true,
+    },
+    modelo: {
+        type: Sequelize.STRING(255),
+        allowNull: true,
+    },
     acabamento: {
         type: Sequelize.STRING(255),
         allowNull: false,

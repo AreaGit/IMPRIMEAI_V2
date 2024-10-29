@@ -271,6 +271,7 @@ app.post('/cadastrar-produtos-planilha', upload.single('file'), async (req, res)
         categoriaProd2,
         categoriaProd3,
         raioProd,
+        marca,
         modelo,
         material,
         formato,
@@ -300,17 +301,55 @@ app.post('/cadastrar-produtos-planilha', upload.single('file'), async (req, res)
       });
 
       let modeloJSON
+      let marcaJSON
+      let materialJSON
+      let formatoJSON
+      let enobrecimentoJSON
+      let corJSON
+      let acabamentoJSON
       // Converte arrays para strings JSON
       if(modelo == null) {
          modeloJSON = "Não há"
       } else {
-         modeloJSON = JSON.stringify(modelo.split(','));
+        modeloJSON = JSON.stringify(modelo.split(','));
+      } 
+      
+      if(marca == null) {
+         marcaJSON = "Não há"
+      } else {
+        marcaJSON = JSON.stringify(marca.split(','));
+      } 
+      
+      if(material == null) {
+         materialJSON = "Não há"
+      } else {
+        materialJSON = JSON.stringify(material.split(','));
+      } 
+      
+      if(formato == null) {
+         formatoJSON = "Não há"
+      } else {
+        formatoJSON = JSON.stringify(formato.split(','));
+      } 
+      
+      if(enobrecimento == null) { 
+         enobrecimentoJSON = "Não há"
+      } else {
+        enobrecimentoJSON = JSON.stringify(enobrecimento.split(','));
+      } 
+      
+      if(cor == null) {
+          corJSON = "Não há"
+      } else {
+        corJSON = JSON.stringify(cor.split(','));
+      } 
+      
+      if(acabamento == null) {
+         acabamentoJSON = "Não há"
+      } else {
+        acabamentoJSON = JSON.stringify(acabamento.split(','));
       }
-      const materialJSON = JSON.stringify(material.split(','));
-      const formatoJSON = JSON.stringify(formato.split(','));
-      const enobrecimentoJSON = JSON.stringify(enobrecimento.split(','));
-      const corJSON = JSON.stringify(cor.split(','));
-      const acabamentoJSON = JSON.stringify(acabamento.split(','));
+      
       // Converte quantidades para string se não for string
       const quantidadesString = Array.isArray(quantidades)
         ? `[${quantidades.join(',')}]` // Se for array, transforma em string com colchetes
@@ -318,6 +357,7 @@ app.post('/cadastrar-produtos-planilha', upload.single('file'), async (req, res)
       // Insira as variações do produto na tabela VariacoesProduto
       await VariacoesProduto.create({
         idProduto: novoProduto.id,
+        marca: marcaJSON,
         modelo: modeloJSON,
         material: materialJSON,
         formato: formatoJSON,

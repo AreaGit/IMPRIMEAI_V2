@@ -11,6 +11,9 @@ const VariacoesProduto = db.define('variacoesproduto', {
     idProduto: {
         type: Sequelize.INTEGER,
     },
+    marca: {
+        type: Sequelize.JSON // Agora é JSON
+    },
     modelo: {
         type: Sequelize.JSON // Agora é JSON
     },

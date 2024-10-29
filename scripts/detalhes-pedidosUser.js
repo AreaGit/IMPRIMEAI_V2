@@ -56,6 +56,10 @@ fetch(`/detalhes-pedidoUser/${idPedido}`)
             const div = document.createElement('div');
             if(item.nomeArquivo == null) {
                 item.nomeArquivo = ""
+            } else if(item.marca == null) {
+                item.marca = ""
+            } else if(item.modelo == null) {
+                item.modelo = ""
             }
             div.id = `divItem`
                 div.innerHTML += `
@@ -64,6 +68,8 @@ fetch(`/detalhes-pedidoUser/${idPedido}`)
                 <p><strong>Nome do Produto:</strong> ${item.nomeProd}</p>
                 <p><strong>Quantidade:</strong> ${item.quantidade}</p>
                 <p><strong>Valor:</strong> ${item.valorProd}</p>
+                <p><strong>Marca:</strong> ${item.marca}</p>
+                <p><strong>Modelo:</strong> ${item.modelo}</p>
                 <p><strong>Acabamento:</strong> ${item.acabamento}</p>
             <p><strong>Cor:</strong> ${item.cor}</p>
             <p><strong>Enobrecimento:</strong> ${item.enobrecimento}</p>

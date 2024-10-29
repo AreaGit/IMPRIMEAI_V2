@@ -94,9 +94,19 @@ Object.keys(interfaces).forEach((iface) => {
 
 app.get('/api/carrinho', (req, res) => {
   try {
-    // Obtenha os dados do carrinho da sessão
-    const carrinho = req.session.carrinho || [];
-    // Envie os dados do carrinho como resposta em JSON
+    // Primeiro, tente obter o ID do usuário principal nos cookies
+    let userId = req.cookies.userId || req.cookies.userIdTemp;
+
+    // Se não houver `userId` nem `userIdTemp`, gere um temporário e salve como `userIdTemp`
+    if (!userId) {
+      userId = Math.floor(Math.random() * 999) + 1;
+      res.cookie('userIdTemp', userId, { httpOnly: true, maxAge: 24 * 60 * 60 * 1000 }); // Expira em 1 dia
+    }
+
+    // Filtra o carrinho da sessão pelo ID do usuário
+    const carrinho = req.session.carrinho?.filter(item => item.userId === userId) || [];
+
+    // Envia os dados do carrinho do usuário como resposta em JSON
     res.json(carrinho);
   } catch (error) {
     console.error('Erro ao obter os dados do carrinho:', error);
@@ -120,7 +130,12 @@ app.post('/adicionar-ao-carrinho/:produtoId', async (req, res) => {
     try {
       const produtoId = req.params.produtoId;
       const { quantidade, ...variacoesSelecionadas } = req.body; // A quantidade do produto a ser adicionada
-  
+      let userId = req.cookies.userId;
+      console.log(req.body)
+      if(!userId) {
+        userId = req.cookies.userIdTemp;
+      }
+
       // Verifique se a quantidade é um número válido
       if (typeof quantidade !== 'number' || quantidade <= 0) {
         return res.status(400).json({ message: 'Quantidade inválida' });
@@ -149,12 +164,15 @@ app.post('/adicionar-ao-carrinho/:produtoId', async (req, res) => {
       } else {
         // Caso contrário, adicione o produto ao carrinho
         req.session.carrinho.push({
+          userId: userId,
           produtoId: produto.id,
           nomeProd: produto.nomeProd,
           quantidade: quantidade,
           valorUnitario: produto.valorProd,
           subtotal: quantidade * produto.valorProd,
           raioProd: produto.raioProd,
+          marca: variacoesSelecionadas.marca,
+          modelo: variacoesSelecionadas.modelo,
           acabamento: variacoesSelecionadas.acabamento,
           cor: variacoesSelecionadas.cor,
           enobrecimento: variacoesSelecionadas.enobrecimento,
@@ -546,9 +564,20 @@ async function encontrarGraficaMaisProxima(endereco) {
       console.log('Gráfica mais próxima:', graficaMaisProxima);
       console.log('Distância mínima:', distanciaMinima);
       
-      // Calcular o custo do frete com base na distância e arredondar para duas casas decimais
-      const custoDoFrete = parseFloat((distanciaMinima * 2).toFixed(2)); // 2 reais por quilômetro
+      // Lógica de escalonagem de frete por km
+      let custoPorKm;
+      if (distanciaMinima <= 2) {
+        custoPorKm = 10.00;
+      } else if (distanciaMinima <= 5) {
+        custoPorKm = 4.00;
+      } else if (distanciaMinima <= 10) {
+        custoPorKm = 3.33;
+      } else {
+        custoPorKm = 2.76;
+      }
       
+      const custoDoFrete = parseFloat((distanciaMinima * custoPorKm).toFixed(2));
+
       return {
         graficaMaisProxima,
         distanciaMinima,
@@ -604,10 +633,20 @@ async function encontrarGraficaMaisProxima2(enderecosSalvos) {
         console.log('Gráfica mais próxima:', graficaMaisProxima);
         console.log('Distância mínima:', distanciaMinima);
         
-        // Calcular o custo do frete com base na distância e arredondar para duas casas decimais
-        const custoDoFrete = parseFloat((distanciaMinima * 2).toFixed(2)); // 2 reais por quilômetro
-        
-        somaDosFretes += custoDoFrete; // Adicionar o custo do frete ao total de fretes
+        // Lógica de escalonagem de frete por km
+        let custoPorKm;
+        if (distanciaMinima <= 2) {
+          custoPorKm = 10.00;
+        } else if (distanciaMinima <= 5) {
+          custoPorKm = 4.00;
+        } else if (distanciaMinima <= 10) {
+          custoPorKm = 3.33;
+        } else {
+          custoPorKm = 2.76;
+        }
+
+        const custoDoFrete = parseFloat((distanciaMinima * custoPorKm).toFixed(2));
+        somaDosFretes += custoDoFrete;
 
         resultadosFrete.push({
           endereco,
@@ -618,12 +657,12 @@ async function encontrarGraficaMaisProxima2(enderecosSalvos) {
       }
     }
 
-    // Retornar a soma total dos fretes junto com os resultados de frete
     return {
       resultadosFrete,
-      somaDosFretes
+      somaDosFretes: parseFloat(somaDosFretes.toFixed(2))
     };
-  } catch (err) {
+
+    } catch (err) {
     console.error('Erro ao encontrar as gráficas mais próximas:', err);
   }
 }
@@ -690,6 +729,8 @@ app.post('/upload', upload.single('filePlanilha'), async (req, res) => {
               valorUnitario: produto.valorUnitario,
               subtotal: produto.valorUnitario * quantidadeEndereco,
               raioProd: produto.raioProd,
+              marca: produto.marca,
+              modelo: produto.modelo,
               acabamento: produto.acabamento,
               cor: produto.cor,
               enobrecimento: produto.enobrecimento,
@@ -976,6 +1017,8 @@ app.post('/criar-pedidos', async (req, res) => {
         quantidade: produto.quantidade,
         valorProd: produtoInfo.valorProd,
         raio: produto.raioProd,
+        marca: produto.marca,
+        modelo: produto.modelo,
         acabamento: produto.acabamento,
         cor: produto.cor,
         enobrecimento: produto.enobrecimento,
@@ -1616,6 +1659,8 @@ async function verificarGraficaMaisProximaEAtualizar2(itensPedido, enderecos) {
         nomeProd: item.nomeProd,
         quantidade: item.quantidade,
         valorProd: item.valorProd,
+        marca: item.marca,
+        modelo: item.modelo,
         acabamento: item.acabamento,
         cor: item.cor,
         enobrecimento: item.enobrecimento,
@@ -1636,47 +1681,48 @@ async function verificarGraficaMaisProximaEAtualizar2(itensPedido, enderecos) {
     }
   });
 
-app.post('/processarPagamento-pix', (req, res) => {
-  const perfilData = req.body.perfilData;
-  const carrinho = req.session.carrinho;
-  // Calcular o valor total corretamente, respeitando as condições para frete
-  const totalAmount = carrinho.reduce((total, item) => {
-    let subtotalComFrete;
-
-    if (item.endereco.tipoEntrega === "Único Endereço") {
-      subtotalComFrete = (item.valorUnitario + item.endereco.frete) * item.quantidade;
-    } else if (item.endereco.tipoEntrega === "Entrega a Retirar na Loja") {
-      subtotalComFrete = item.valorUnitario * item.quantidade; // Sem adicionar frete
-    } else {
-      subtotalComFrete = (item.valorUnitario + item.endereco.frete) * item.quantidade;
-    }
-
-    return total + subtotalComFrete * 100; // Convertendo para centavos
-  }, 0);
-
-  console.log('Total Amount (cents):', totalAmount);
-
-  // Define o payload da requisição
-  const body = {
-    "items": carrinho.map(item => {
-      let amount;
-
+  app.post('/processarPagamento-pix', (req, res) => {
+    const perfilData = req.body.perfilData;
+    const carrinho = req.session.carrinho;
+  
+    // Calcula o valor total, incluindo o frete corretamente para cada item
+    const totalAmount = carrinho.reduce((total, item) => {
+      let itemSubtotal;
+      
       if (item.endereco.tipoEntrega === "Único Endereço") {
-        amount = Math.round((item.valorUnitario + item.endereco.frete) * 100);
+        itemSubtotal = (item.valorUnitario * item.quantidade) + item.endereco.frete;
       } else if (item.endereco.tipoEntrega === "Entrega a Retirar na Loja") {
-        amount = Math.round(item.valorUnitario * 100); // Sem adicionar frete
+        itemSubtotal = item.valorUnitario * item.quantidade; // Sem adicionar frete
       } else {
-        amount = Math.round((item.valorUnitario + item.endereco.frete) * 100);
+        itemSubtotal = (item.valorUnitario * item.quantidade) + item.endereco.frete;
       }
-
-      return {
-        "id": item.produtoId,
-        "amount": amount,
-        "description": item.nomeProd,
-        "quantity": item.quantidade,
-        "code": item.produtoId
-      };
-    }),
+  
+      return total + itemSubtotal * 100; // Convertendo para centavos
+    }, 0);
+  
+    console.log('Total Amount (cents):', totalAmount);
+  
+    // Define o payload da requisição
+    const body = {
+      "items": carrinho.map(item => {
+        let amount;
+  
+        if (item.endereco.tipoEntrega === "Único Endereço") {
+          amount = Math.round(item.valorUnitario * 100);
+        } else if (item.endereco.tipoEntrega === "Entrega a Retirar na Loja") {
+          amount = Math.round(item.valorUnitario * 100);
+        } else {
+          amount = Math.round(item.valorUnitario * 100);
+        }
+  
+        return {
+          "id": item.produtoId,
+          "amount": totalAmount,
+          "description": item.nomeProd,
+          "quantity": item.quantidade,
+          "code": item.produtoId
+        };
+      }),
     "customer": {
         "name": perfilData.nomeCliente,
         "email": perfilData.emailCliente,
@@ -1709,7 +1755,7 @@ app.post('/processarPagamento-pix', (req, res) => {
     method: 'POST',
     uri: 'https://api.pagar.me/core/v5/orders',
     headers: {
-      'Authorization': 'Basic ' + Buffer.from(`${pagarmeKeyProd}:`).toString('base64'),
+      'Authorization': 'Basic ' + Buffer.from(`${pagarmeKeyTest}:`).toString('base64'),
       'Content-Type': 'application/json'
     },
     body: body,
@@ -1766,19 +1812,20 @@ app.get('/charges/:chargeId', (req, res) => {
 app.post('/processarPagamento-boleto', (req, res) => {
   const perfilData = req.body.perfilData;
   const carrinho = req.session.carrinho;
-  // Calcular o valor total corretamente, respeitando as condições para frete
-  const totalAmount = carrinho.reduce((total, item) => {
-    let subtotalComFrete;
 
+  // Calcula o valor total, incluindo o frete corretamente para cada item
+  const totalAmount = carrinho.reduce((total, item) => {
+    let itemSubtotal;
+    
     if (item.endereco.tipoEntrega === "Único Endereço") {
-      subtotalComFrete = (item.valorUnitario + item.endereco.frete) * item.quantidade;
+      itemSubtotal = (item.valorUnitario * item.quantidade) + item.endereco.frete;
     } else if (item.endereco.tipoEntrega === "Entrega a Retirar na Loja") {
-      subtotalComFrete = item.valorUnitario * item.quantidade; // Sem adicionar frete
+      itemSubtotal = item.valorUnitario * item.quantidade; // Sem adicionar frete
     } else {
-      subtotalComFrete = (item.valorUnitario + item.endereco.frete) * item.quantidade;
+      itemSubtotal = (item.valorUnitario * item.quantidade) + item.endereco.frete;
     }
 
-    return total + subtotalComFrete * 100; // Convertendo para centavos
+    return total + itemSubtotal * 100; // Convertendo para centavos
   }, 0);
 
   console.log('Total Amount (cents):', totalAmount);
@@ -1789,16 +1836,16 @@ app.post('/processarPagamento-boleto', (req, res) => {
       let amount;
 
       if (item.endereco.tipoEntrega === "Único Endereço") {
-        amount = Math.round((item.valorUnitario + item.endereco.frete) * 100);
+        amount = Math.round(item.valorUnitario * 100);
       } else if (item.endereco.tipoEntrega === "Entrega a Retirar na Loja") {
-        amount = Math.round(item.valorUnitario * 100); // Sem adicionar frete
+        amount = Math.round(item.valorUnitario * 100);
       } else {
-        amount = Math.round((item.valorUnitario + item.endereco.frete) * 100);
+        amount = Math.round(item.valorUnitario * 100);
       }
 
       return {
         "id": item.produtoId,
-        "amount": amount,
+        "amount": totalAmount,
         "description": item.nomeProd,
         "quantity": item.quantidade,
         "code": item.produtoId
@@ -1858,23 +1905,22 @@ app.post('/processarPagamento-boleto', (req, res) => {
 });
 
 app.post('/processarPagamento-cartao', (req ,res) => {
-  const formData = req.body.formData;
   const perfilData = req.body.perfilData;
   const carrinho = req.session.carrinho;
-  console.log(formData)
-  // Calcular o valor total corretamente, respeitando as condições para frete
+
+  // Calcula o valor total, incluindo o frete corretamente para cada item
   const totalAmount = carrinho.reduce((total, item) => {
-    let subtotalComFrete;
-
+    let itemSubtotal;
+    
     if (item.endereco.tipoEntrega === "Único Endereço") {
-      subtotalComFrete = (item.valorUnitario + item.endereco.frete) * item.quantidade;
+      itemSubtotal = (item.valorUnitario * item.quantidade) + item.endereco.frete;
     } else if (item.endereco.tipoEntrega === "Entrega a Retirar na Loja") {
-      subtotalComFrete = item.valorUnitario * item.quantidade; // Sem adicionar frete
+      itemSubtotal = item.valorUnitario * item.quantidade; // Sem adicionar frete
     } else {
-      subtotalComFrete = (item.valorUnitario + item.endereco.frete) * item.quantidade;
-    }     
+      itemSubtotal = (item.valorUnitario * item.quantidade) + item.endereco.frete;
+    }
 
-    return total + subtotalComFrete * 100; // Convertendo para centavos
+    return total + itemSubtotal * 100; // Convertendo para centavos
   }, 0);
 
   console.log('Total Amount (cents):', totalAmount);
@@ -1885,16 +1931,16 @@ app.post('/processarPagamento-cartao', (req ,res) => {
       let amount;
 
       if (item.endereco.tipoEntrega === "Único Endereço") {
-        amount = Math.round((item.valorUnitario + item.endereco.frete) * 100);
+        amount = Math.round(item.valorUnitario * 100);
       } else if (item.endereco.tipoEntrega === "Entrega a Retirar na Loja") {
-        amount = Math.round(item.valorUnitario * 100); // Sem adicionar frete
+        amount = Math.round(item.valorUnitario * 100);
       } else {
-        amount = Math.round((item.valorUnitario + item.endereco.frete) * 100);
+        amount = Math.round(item.valorUnitario * 100);
       }
 
       return {
         "id": item.produtoId,
-        "amount": amount,
+        "amount": totalAmount,
         "description": item.nomeProd,
         "quantity": item.quantidade,
         "code": item.produtoId

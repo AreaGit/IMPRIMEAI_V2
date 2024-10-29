@@ -105,31 +105,31 @@ document.addEventListener("DOMContentLoaded", function() {
 
 const cx1 = document.getElementById('cx1');
 cx1.addEventListener('click', () => {
-    window.location.href = '/detalhes-produtos?id=2'
+    window.location.href = '/categorias?categoria=brindes'
 });
 const cx2 = document.getElementById('cx2');
 cx2.addEventListener('click', () => {
-    window.location.href = '/detalhes-produtos?id=3'
+    window.location.href = '/categorias?categoria=adesivos'
 });
 
 const cx3 = document.getElementById('cx3');
 cx3.addEventListener('click', () => {
-    window.location.href = '/detalhes-produtos?id=10'
+    window.location.href = '/categorias?categoria=cartoes'
 });
 
 const cx4 = document.getElementById('cx4');
 cx4.addEventListener('click', () => {
-    window.location.href = '/detalhes-produtos?id=9'
+    window.location.href = '/categorias?categoria=papelaria'
 });
 
 const cx5 = document.getElementById('cx5');
 cx5.addEventListener('click', () => {
-    window.location.href = '/detalhes-produtos?id=5'
+    window.location.href = '/categorias?categoria=folders'
 });
 
 const cx6 = document.getElementById('cx6');
 cx6.addEventListener('click', () => {
-    window.location.href = '/cartazes'
+    window.location.href = '/categorias?categoria=banners'
 });
 
 document.addEventListener("DOMContentLoaded", function() {
@@ -466,4 +466,55 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         });
     });
+});
+document.getElementById('banner1').addEventListener('click', () => {
+    window.location.href = "/"
+});
+document.getElementById('banner2').addEventListener('click', () => {
+    window.location.href = "/detalhes-produtos?id=22"
+});
+document.getElementById('banner4').addEventListener('click', () => {
+    window.location.href = "/detalhes-produtos?id=11"
+});
+document.getElementById('banner5').addEventListener('click', () => {
+    window.location.href = "/detalhes-produtos?id=2"
+});
+document.getElementById('banner6').addEventListener('click', () => {
+    window.location.href = "/detalhes-produtos?id=50"
+});
+document.getElementById('banner7').addEventListener('click', () => {
+    window.location.href = "https://www.instagram.com/imprimeai.com.br/"
+});
+document.getElementById('banner8').addEventListener('click', () => {
+    window.location.href = "/"
+});
+document.getElementById('bannerCartaoDeVisita').addEventListener('click', () => {
+    window.location.href = "/categorias?categoria=cartoes"
+});
+document.getElementById('bannerPapelaria').addEventListener('click', () => {
+    window.location.href = "/categorias?categoria=papelaria"
+});
+document.getElementById('bannerTags').addEventListener('click', () => {
+    window.location.href = "/categorias?categoria=tags" 
+});
+document.getElementById('bannerBrindes').addEventListener('click', () => {
+    window.location.href = "/categorias?categoria=brindes"
+});
+document.getElementById('bannerCalendarios').addEventListener('click', () => {
+    window.location.href = "/categorias?categoria=calendarios"
+});
+document.getElementById('bannerCanetas').addEventListener('click', () => {
+    window.location.href = "/detalhes-produtos?id=96"
+});
+document.getElementById('bannerAdesivos').addEventListener('click', () => {
+    window.location.href = "/categorias?categoria=adesivos"
+});
+document.getElementById('bannerQuadroCanvas').addEventListener('click', () => {
+    window.location.href = "/detalhes-produtos?id=45"
+});
+document.getElementById('bannerSacolas').addEventListener('click', () => {
+    window.location.href = "/categorias?categoria=sacolas"
+});
+document.getElementById('bannerFolhetos').addEventListener('click', () => {
+    window.location.href = "/categorias?categoria=folders"
 });
