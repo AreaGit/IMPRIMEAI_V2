@@ -37,116 +37,51 @@
             <br>
             <input type="text" name="ruaUser" id="ruaUser" placeholder="Digite a sua Rua..." size="35" required minlength="4" class="custom-input">
             <br>
-            <label for="estadoUser">Estado</label>
+            <label for="numResidenciaUser">Número</label>
             <br>
-            <input type="text" name="estadoUser" id="estadoUser" placeholder="Digite o seu Estado..." size="35" required class="custom-input">
-            <br>
-            <label for="cidadeUser">Cidade</label>
-            <br>
-            <input type="text" name="cidadeUser" id="cidadeUser" placeholder="Digite a sua Cidade..." size="35" required class="custom-input">
-            <br>
-            <label for="bairroUser">Bairro</label>
-            <br>
-            <input type="text" name="bairroUser" id="bairroUser" placeholder="Digite o seu Bairro..." size="35" required class="custom-input">
-            <br>
-            <label for="numResidenciaUser">Número da Residência</label>
-            <br>
-            <input type="text" name="numResidenciaUser" id="numResidenciaUser" placeholder="Digite o número de sua Residência..." size="35" required class="custom-input">
+            <input type="text" name="numResidenciaUser" id="numResidenciaUser" placeholder="Digite o número do local..." size="35" required class="custom-input">
             <br>
             <label for="complementoUser">Complemento</label>
             <br>
             <input type="text" name="complementoUser" id="complementoUser" placeholder="Digite seu Complemento..." size="35" class="custom-input">
             <br>
+            <label for="bairroUser">Bairro</label>
+            <br>
+            <input type="text" name="bairroUser" id="bairroUser" placeholder="Digite o seu Bairro..." size="35" required class="custom-input">
+            <br>
+            <label for="cidadeUser">Cidade</label>
+            <br>
+            <input type="text" name="cidadeUser" id="cidadeUser" placeholder="Digite a sua Cidade..." size="35" required class="custom-input">
+            <br>
+            <label for="estadoUser">Estado</label>
+            <br>
+            <input type="text" name="estadoUser" id="estadoUser" placeholder="Digite o seu Estado..." size="35" required class="custom-input">
+            <br>
             <div id="checkboxProdutos">
-                <h3>Marque os Produtos que a Gráfica Produz</h3>
-                <input type="checkbox" name="checkWind" id="checkWind Banner">
-                <label for="checkWind">Wind Banner</label>
-                <br>
-                <input type="checkbox" name="checkBanner Lona" id="checkBanner Lona">
-                <label for="checkBanner Lona">Banner Lona</label>
-                <br>
-                <input type="checkbox" name="checkCaderno" id="checkCaderno Personalizado">
-                <label for="checkCaderno Personalizado">Caderno Personalizado</label>
-                <br>
-                <input type="checkbox" name="checkTag" id="checkTag Personalizada">
-                <label for="checkTag Personalizada">Tag Personalizada</label>
-                <br>
-                <input type="checkbox" name="checkBottons" id="checkBottons Personalizados">
-                <label for="checkBottons">Bottons Personalizados</label>
-                <br>
-                <input type="checkbox" name="checkCamiseta" id="checkCamiseta Personalizada">
-                <label for="checkCamiseta Personalizada">Camiseta Personalizada</label>
-                <br>
-                <input type="checkbox" name="checkCaneca" id="checkCaneca Personalizada">
-                <label for="checkCaneca">Caneca Personalizada</label>
-                <br>
-                <input type="checkbox" name="checkGarrafa" id="checkGarrafa Térmica em Inox">
-                <label for="checkGarrafa">Garrafa Térmica em Inox</label>
-                <br>
-                <input type="checkbox" name="checkaAdesivo" id="checkAdesivo Redondo">
-                <label for="checkAdesivo">Adesivo Redondo</label>
-                <br>
-                <input type="checkbox" name="checkCartao" id="checkCartão de Visita">
-                <label for="checkCartao">Cartão de Visita</label>
-                <br>
-                <input type="checkbox" name="checkFolheto" id="checkFolheto em Sulfite">
-                <label for="checkFolheto">Folheto em Sulfite</label>
-                <br>
-                <input type="checkbox" name="checkPasta" id="checkPasta com Bolsa">
-                <label for="checkPasta">Pasta com Bolsa</label>
-                <br>
-                <input type="checkbox" name="checkIma" id="checkImã de Geladeira">
-                <label for="checkIma">Imã de Geladeira</label>
-                <br>
-                <input type="checkbox" name="checkSacola" id="checkSacola Kraft">
-                <label for="checkSacola">Sacola Kraft</label>
-                <br>
-                <input type="checkbox" name="checkBotons" id="checkBotons Personalizados">
-                <label for="checkBotons">Botons Personalizados</label>
-                <br>
-                <input type="checkbox" name="checkPasta" id="checkPasta com Bolsa">
-                <label for="checkPasta">Pasta com Bolsa</label>
-                <br>
-                <input type="checkbox" name="checkMiniCartao" id="checkMini Cartão de Visita">
-                <label for="checkMiniCartao">Mini Cartão de Visita</label>
-                <br>
-                <input type="checkbox" name="checkPulseira" id="checkPulseira Personalizada">
-                <label for="checkPulseira">Pulseira Personalizada</label>
-                <br>
-                <input type="checkbox" name="checkAzulejo" id="checkAzulejo Personalizado">
-                <label for="checkAzulejo">Azulejo Personalizado</label>
-                <br>
-                <input type="checkbox" name="checkChaveirp" id="checkChaveiro Abridor de Garrafa">
-                <label for="checkChaveiro">Chaveiro Abridor de Garrafa</label>
-                <br>
-                <input type="checkbox" name="checkChinelos" id="checkChinelos Personalizados">
-                <label for="checkChinelos Personalizados">Chinelos Personalizados</label>
-                <br>
-                <input type="checkbox" name="checkBone" id="checkBoné Trucker">
-                <label for="checkBoné Trucker">Boné Trucker</label>
-                <br>
+                <h3>Marque os Produtos que a sua Gráfica Produz</h3> 
+                <button id="btnCad" type="button" class="btnCad2">Continuar para o login</button>      
             </div>
         </div>
         <div id="rightForm">
-            <label for="bancoUser">Banco</label>
+            <label for="telefoneUser">Telefone</label>
             <br>
-            <input type="text" name="bancoUser" id="bancoUser" placeholder="Digite seu Banco..." size="35" required class="custom-input">
-            <br>
-            <label for="contaUser">Conta</label>
-            <br>
-            <input type="text" name="contaUser" id="contaUser" placeholder="Digite seu Conta..." size="35" required class="custom-input">
-            <br>
-            <label for="agenciaUser">Agência</label>
-            <br>
-            <input type="text" name="agenciaUser" id="agenciaUser" placeholder="Digite seu Agência..." size="35" required class="custom-input" maxlength="4">
+            <input type="text" name="telefoneUser" id="telefoneUser" placeholder="Digite seu Telefone..." size="35" required minlength="11" class="custom-input">
             <br>
             <label for="cnpjUser">CNPJ</label>
             <br>
             <input type="text" name="cnpjUser" id="cnpjUser" placeholder="Digite seu CNPJ..." size="35" required minlength="11" class="custom-input">
             <br>
-            <label for="telefoneUser">Telefone</label>
+          <label for="bancoUser">Banco</label>
             <br>
-            <input type="text" name="telefoneUser" id="telefoneUser" placeholder="Digite seu Telefone..." size="35" required minlength="11" class="custom-input">
+            <input type="text" name="bancoUser" id="bancoUser" placeholder="Digite seu Banco..." size="35" required class="custom-input">
+            <br>
+            <label for="agenciaUser">Agência</label>
+            <br>
+            <input type="text" name="agenciaUser" id="agenciaUser" placeholder="Digite seu Agência..." size="35" required class="custom-input" maxlength="4">
+            <br>
+            <label for="contaUser">Conta</label>
+            <br>
+            <input type="text" name="contaUser" id="contaUser" placeholder="Digite seu Conta..." size="35" required class="custom-input">
             <br>
             <label for="emailUser">E-mail</label>
             <br>
@@ -166,7 +101,7 @@
                 Li e aceito os <a href="#" id="abrirTermos">termos e condições</a> da Imprimeai
             </label>
         </div>
-        <button id="btnCad" type="button">Continuar para o login</button>
+        <button id="btnCad" type="button" class="btnCad1">Continuar para o login</button>
     </form>
     <div id="popup" style="overflow-y: scroll; height: 550px;">
         <span class="material-symbols-outlined" id="fechar-menu">close</span>

@@ -1041,7 +1041,13 @@
       #novidades > h2 {
         font-size: 40px; /* Aumenta o tamanho da fonte do título */
       }
-    
+      .contentImagesNovidades {
+        width: 99%;
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+        align-items: center;
+    }
       .box {
         width: 440px; /* Aumenta a largura das caixas */
         height: 500px; /* Aumenta a altura das caixas */

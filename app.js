@@ -691,6 +691,18 @@ app.get('/api/quantidades/:produtoId', async (req, res) => {
     res.status(500).json({ error: 'Erro ao obter as quantidades' });
   }
 });
+// Rota para buscar todos os produtos no cadastro das Gráficas
+app.get('/api-graf/produtos', async (req, res) => {
+  try {
+    const produtos = await Produtos.findAll({
+      attributes: ['nomeProd'] // Retorna apenas o campo nome
+    });
+    res.json(produtos);
+  } catch (error) {
+    console.error("Erro ao buscar produtos:", error);
+    res.status(500).json({ error: "Erro ao buscar produtos" });
+  }
+});
 //Rotas get para mostrar o produto e as suas variações
 app.get('/produto/:id', async (req, res) => {
   try {

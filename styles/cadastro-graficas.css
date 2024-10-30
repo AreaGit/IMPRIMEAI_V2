@@ -17,8 +17,7 @@ body {
     background-color: #F5F5F7;
 }
 #logo {
-    width: 135px;
-    height: 46px;
+    width: 15%;
     position: absolute;
     left: 50%;
     transform: translate(-50%);
@@ -84,6 +83,9 @@ label {
     left: 10%;
     top: 5%;
     transform: translate(-10%);
+}
+.btnCad2 {
+  display: none;
 }
 form > button {
     width: 295px;
@@ -402,4 +404,9 @@ label > a {
   #checkboxProdutos > label {
     position: relative;
     top: -18px;
+    padding-left: 10px;
+  }
+  div#checkboxProdutos > h3 {
+    font-size: 17px;
+    width: fit-content;
   }

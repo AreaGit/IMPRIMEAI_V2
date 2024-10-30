@@ -1,4 +1,7 @@
 @media screen and (min-width:320px) and (max-width:768px) {
+    #logo {
+        width: 40%;
+    }
     header > h2 {
         font-weight: 700;
         font-size: 40px;
@@ -44,12 +47,22 @@
         transform: translate(0%);
     }
     #rightForm {
-        position: absolute;
-        left: -66%;
-        top: 255%;
+        position: relative;
+        left: -67%;
         transform: translate(0%);
+        top: 765px;
+        width: 240%;
     }
-    form > button {
+    div#checkboxProdutos {
+        position: relative;
+        top: 700px;
+        margin-bottom: 500px;
+    }
+    .btnCad1 {
+        display: none;
+    }
+    .btnCad2 {
+        display: block;
         width: 92vw;
         height: 51px;
         font-size: 17px;
@@ -59,12 +72,10 @@
         background-color: white;
         box-shadow: -1px -1px 8px black;
         cursor: pointer;
-        position: absolute;
-        left: -65%;
-        transform: translate(0%);
-        top: 380%;
         border-radius: 5px;
         transition: 0.8s;
+        position: absolute;
+        top: 101%;
     }
     .container {
         --color: #a5a5b0;
@@ -77,9 +88,9 @@
         user-select: none;
         fill: var(--color);
         position: absolute;
-        left: 93%;
+        left: 88%;
         transform: translate(-93%);
-        top: 560px;
+        top: 573px;
     }
     #popup {
         display: none;
@@ -110,6 +121,14 @@
     }
 }
 @media screen and (min-width:768px) and (max-width:1024px) {
+    form {
+        position: absolute;
+        top: 40%;
+        width: 40vw;
+        height: 600px;
+        left: 50%;
+        transform: translate(-50%);
+    }
     #leftForm {
         position: absolute;
         left: -65%;
@@ -141,6 +160,14 @@
     }
 }
 @media screen and (min-width:1025px) and (max-width:1440px) {
+    form {
+        position: absolute;
+        top: 40%;
+        width: 40vw;
+        height: 600px;
+        left: 50%;
+        transform: translate(-50%);
+    }
     #leftForm {
         position: absolute;
         left: -45%;
@@ -204,8 +231,7 @@
 }
 @media screen and (min-width:2560px) {
     #logo {
-        width: 145px;
-        height: 56px;
+        width: 12%;
         position: absolute;
         left: 50%;
         transform: translate(-50%);
