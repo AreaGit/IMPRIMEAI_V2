@@ -277,7 +277,7 @@ function getMarkedQuantity() {
   const checkboxes = document.querySelectorAll('.quantidade-checkbox');
   for (const checkbox of checkboxes) {
     if (checkbox.checked) {
-      return parseInt(checkbox.value);
+      return parseInt(checkbox.value * inputQuantidade.value);
     }
   }
   return 0;
@@ -290,15 +290,10 @@ const inputQuantidade = document.getElementById('quantidade');
 adicionarAoCarrinhoBtn.addEventListener('click', async () => {
   try {
     // Obtenha a quantidade escolhida pelo usuário
-    let quantidade = parseInt(inputQuantidade.value);
+    let quantidade = getMarkedQuantity();
 
     // Obtenha a quantidade marcada no checkbox
     const markedQuantity = getMarkedQuantity();
-
-    // Verifique se a quantidade marcada no checkbox é maior
-    if (markedQuantity > quantidade) {
-      quantidade = markedQuantity;
-    }
 
     // Verifique se a quantidade é válida (maior que 0)
     if (quantidade <= 0) {
@@ -371,15 +366,11 @@ adicionarAoCarrinhoBtn.addEventListener('click', async () => {
     avancarBtn.addEventListener('click', async () => {
       try {
         // Obtenha a quantidade escolhida pelo usuário
-        let quantidade = parseInt(inputQuantidade.value);
+        let quantidade = getMarkedQuantity();
     
         // Obtenha a quantidade marcada no checkbox
         const markedQuantity = getMarkedQuantity();
     
-        // Verifique se a quantidade marcada no checkbox é maior
-        if (markedQuantity > quantidade) {
-          quantidade = markedQuantity;
-        }
     
         // Verifique se a quantidade é válida (maior que 0)
         if (quantidade <= 0) {

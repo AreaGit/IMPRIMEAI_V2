@@ -1,32 +1,167 @@
-@media screen and (min-width:320px) and (max-width:863px) {
+@media screen and (min-width:320px) and (max-width:767px){
+    .popup {
+        display: none;
+        position: fixed;
+        left: 50%;
+        transform: translate(-50%);
+        top: 70%;
+        width: 90vw;
+        height: fit-content;
+        background: #FFFFFF;
+        box-shadow: 0px 187px 75px rgba(0, 0, 0, 0.01), 0px 105px 63px rgba(0, 0, 0, 0.05), 0px 47px 47px rgba(0, 0, 0, 0.09), 0px 12px 26px rgba(0, 0, 0, 0.1), 0px 0px 0px rgba(0, 0, 0, 0.1);
+        border-radius: 13px;
+    }
     header {
         z-index: 999;
         position: absolute;
         width: 99%;
-        left: 50%;
+        left: 0%;
     }
-    header.scrolled {
-        position: inherit;
-        top: 0%;
-        border-bottom: 0px solid transparent;
-        color: white;
-        width: 0%;
+    .mainContentHeader {
+        position: absolute;
+        height: 500px;
+        width: 100%;
         z-index: -1;
     }
-    div#lg {
-        width: 50px;
-        height: 50px;
+    .messageHeader {
+        position: relative;
+        left: 1%;
+        top: 20px;
+        width: fit-content;
+    }
+    li > a {
+        text-decoration: none;
+        color: #555555;
+        padding: 5px;
+        transition: 0.8s;
+    }
+    .linksHeader {
+        width: fit-content;
+        position: relative;
+        left: 70%;
+    }
+    .linksHeader > ul > li {
+        padding-right: 0px;
+    }
+    .notCad > p {
+        font-weight: 300;
+        font-size: 12px;
+    }
+    .notCad > p > a {
+        font-weight: 300;
+        font-size: 12px;
+        text-decoration: underline;
+    }
+    .icons-mediaHeader {
+        display: none;
+    }
+    .logo-header {
+        position: relative;
+        left: 10%;
+        top: 30px;
+        width: fit-content;
+    }
+    .logo-header > a > img {
+        cursor: pointer;
+        width: 65%;
+        position: relative;
+        left: 15px;
+    }
+    .notCad {
+        width: fit-content;
+        position: relative;
+        left: 85%;
+        top: -17px;
+    }
+    .notCad > a {
+        font-weight: 300;
+        font-size: 12px;
+    }
+    .carrinho {
+        width: fit-content;
+        position: relative;
+        left: 80%;
+        top: -7px;
+    }
+    .linhaAbInp {display: none;}
+    .linhaAbNav {display: none;}
+    .menu {
+        display: none;
+    }
+    .menu-wrapper {
+        display: block;
+    }
+    #iconMenuMob {
+        display: none;
         position: absolute;
-        left: 0%;
-        top: 0px;
-        z-index: 999;
+        top: 11%;
+        left: 95%;
+        transform: translate(-95%);
+        font-size: 28px;
+    }
+    .search-input {
+        position: absolute;
+        left: 45%;
+        transform: translate(-45%);
+        top: 45%;
+        width: fit-content;
+        height: auto;
+        z-index: 1;
+    }
+    div#suggestions-container {
+        display: none;
+        background-color: white;
+        width: 70vw;
+        box-shadow: -1px -1px 3px black;
+        height: auto;
+        z-index: 1;
+        position: relative;
+        top: -40px;
+        left: 50%;
+        transform: translate(-50%);
+        border-radius: 5px;
+        padding: 20px;
+        max-height: 455px;
+        overflow-y: auto;
+    }
+    .search-input > input {
+        border: 1px solid #A8A8A8;
+        background-color: transparent;
+        width: 80vw;
+        padding: 15px;
+        border-radius: 30px;
+    }
+    .search-input > button {
+        background-color: transparent;
+        display: block;
+        position: relative;
+        left: 85%;
+        top: -35px;
+    }
+    #wrapper {
+        width: 220px;
+        position: relative;
+        left: 50%;
+        transform: translate(-50%);
+        top: 110px;
+    }
+    #prev {
+        top: 85%;
+        left: -50px;
+        transform: translate(50%, -50%);
+    }
+    #next {
+        top: 85%;
+        right: 19px;
+        transform: translate(50%, -50%);
     }
     #nav-bar {
         display: none;
         width: 80%;
         padding: 15px;
         position: absolute;
-        left: 60%;
+        left: 50%;
+        transform: translate(-50%);
         top: 5px;
         box-shadow: -1px -3px 20px black;
         border-radius: 5px;
@@ -86,18 +221,8 @@
         transform: translate(-120%);
         top: 6%;
     }
-    span#quantidadeCarrinho {
-        position: absolute;
-        left: 35%;
-        top: 8%;
-        transform: translate(-111%);
-        background: black;
-        color: white;
-        padding: 3px;
-        font-size: 12px;
-        border-radius: 51%;
-        cursor: pointer;
-    }
+    #banners{display: none;}
+    #progress{display: none;}
     #totalCarrinho {
         display: none;
         width: 95%;
@@ -105,37 +230,37 @@
         position: absolute;
         left: 50%;
         transform: translate(-50%);
-        top: 10px;
+        top: 95px;
     }
     #totalCarrinho > h1 {
         font-weight: 600;
-        font-size: 40px;
+        font-size: 30px;
         position: relative;
         left: 50%;
-        width: 81%;
+        width: fit-content;
         transform: translate(-50%);
+        text-align: center;
     }
     #voltar {
         border: 1px solid #EF4126;
         color: #EF4126;
         background-color: white;
         box-shadow: -1px 2px 8px #000000a3;
-        padding: 18px 28px 18px 28px;
         border-radius: 5px;
-        position: relative;
-        top: 50px;
-        left: 23%;
-        transform: translate(-23%);
+        position: absolute;
+        top: 105px;
+        left: 50%;
+        transform: translate(-50%);
         transition: 0.8s;
         font-weight: 500;
-        font-size: 17px;
+        font-size: 13px;
     }
     .produto-carrinho {
         position: relative;
         width: 95%;
         left: 50%;
         transform: translate(-50%);
-        top: 255px;
+        top: 370px;
         border: none;
     }
     h2.nomeProduto {
@@ -144,6 +269,7 @@
         width: fit-content;
         transform: translate(-50%);
         top: 35px;
+        text-align: center;
     }
     p.qnt {
         width: fit-content;
@@ -163,7 +289,7 @@
         position: relative;
         left: 90%;
         transform: translate(-90%);
-        top: -10px;
+        top: 25px;
     }
     p.sub {
         width: fit-content;
@@ -176,7 +302,7 @@
     }
     #resumo-compra {
         display: none;
-        width: 92%;
+        width: 94%;
         height: 271px;
         position: relative;
         top: 410px;
@@ -201,11 +327,28 @@
     }
     #carrinho-vazio {
         height: 165px;
-        width: 99%;
+        width: 86%;
         position: absolute;
         left: 50%;
         transform: translate(-50%);
-        top: 35px;
+        top: 130px;
+        display: inline;
+        justify-content: center;
+    }
+    #tlt-vazio {
+        font-size: 25px;
+        font-weight: 600;
+    }
+    #carrinho-vazio > a {
+        border: 1px solid #F37160;
+        color: #F37160;
+        background-color: white;
+        border-radius: 5px;
+        position: absolute;
+        top: 110px;
+        left: 50%;
+        transform: translate(-50%);
+        transition: 0.8s;
     }
     #cupomDesconto {
         width: 304px;
@@ -257,7 +400,111 @@
         background-color: white;
       }
 }
-@media screen and (min-width:1024px) and (max-width:1440px){
+@media screen and (min-width: 768px) and (max-width: 1300px) {
+    .mainContentHeader {
+        position: absolute;
+        height: 460px;
+        width: 100%;
+        z-index: -1;
+    }
+    div#banners {
+        height: 165px;
+        position: relative;
+        top: 300px;
+        width: 65%;
+        left: 18%;
+        cursor: pointer;
+    }
+    .banner.active > img {
+        width: 100%;
+    }
+    .menu {
+        display: none;
+    }
+    .menu-wrapper {
+        z-index: 1;
+        display: block;
+        top: 42%;
+    }
+    .linhaAbInp {
+        border: 1px solid #e0e0e0;
+        width: 70vw;
+        position: absolute;
+        left: 50%;
+        transform: translate(-50%);
+        top: 44%;
+    }
+    .linhaAbNav {
+        border: 1px solid #e0e0e0;
+        width: 70vw;
+        position: absolute;
+        left: 50%;
+        top: 55%;
+        transform: translate(-50%);
+    }
+    .messageHeader {
+        position: absolute;
+        left: 20%;
+        top: 15%;
+        width: fit-content;
+    }
+    .linksHeader {
+        width: fit-content;
+        position: absolute;
+        left: 60%;
+        transform: translate(-60%);
+        top: 15%;
+    }
+    .icons-mediaHeader {
+        width: fit-content;
+        position: absolute;
+        left: 85%;
+        transform: translate(-85%);
+        top: 15%;
+    }
+    .logo-header {
+        position: absolute;
+        left: 0%;
+        transform: translate(0%);
+        top: 25%;
+        width: fit-content;
+    }
+    .logo-header > a > img {
+        cursor: pointer;
+        width: 65%;
+    }
+    .search-input {
+        position: absolute;
+        left: 50%;
+        transform: translate(-50%);
+        top: 30%;
+        width: fit-content;
+        height: auto;
+        z-index: 10;
+    }
+    .search-input > button {
+        background-color: transparent;
+        display: block;
+        position: relative;
+        left: 85%;
+        top: -35px;
+    }
+    .notCad {
+        width: fit-content;
+        position: absolute;
+        left: 85%;
+        transform: translate(-85%);
+        top: 30%;
+    }
+    .carrinho {
+        width: 6%;
+        position: absolute;
+        left: 95%;
+        transform: translate(-85%);
+        top: 30%;
+    }
+}
+@media screen and (min-width:1301px) and (max-width:1440px){
     span#quantidadeCarrinho {
         position: absolute;
         left: 111%;
@@ -440,25 +687,31 @@
     }
 }
 @media screen and (min-width:2560px) {
-    #nav-bar {
+    div#banners {
+        height: 370px;
         position: relative;
+        top: 300px;
+        width: 1200px;
         left: 50%;
-        top: 8px;
-        width: 1050px;
         transform: translate(-50%);
+        cursor: pointer;
     }
-    #logo {
+    .logo-header > a > img {
+        cursor: pointer;
+        width: 10vw;
+    }
+    .mainContentHeader {
         position: absolute;
-        left: -2%;
-        top: -7px;
-        width: 107px;
+        height: 37vw;
+        width: 100%;
+        z-index: -1;
     }
     #totalCarrinho > h1 {
         font-weight: 600;
         font-size: 40px;
         position: absolute;
         left: 50%;
-        width: 52%;
+        width: max-content;
         transform: translate(-50%);
     }
     #voltar {

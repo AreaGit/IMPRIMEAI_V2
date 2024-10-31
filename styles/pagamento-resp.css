@@ -1,102 +1,15 @@
-@media screen and (min-width:320px) and (max-width:863px) {
-    header {
-        z-index: 999;
-        position: absolute;
-        width: 99%;
-        left: 50%;
+@media screen and (min-width:320px) and (max-width:767px) {
+    .logo-header > a > img {
+        cursor: pointer;
+        width: 35vw;
     }
-    header.scrolled {
-        position: inherit;
-        top: 0%;
-        border-bottom: 0px solid transparent;
-        color: white;
-        width: 0%;
-        z-index: -1;
-    }
-    div#lg {
-        width: 50px;
-        height: 50px;
-        position: absolute;
-        left: 0%;
-        top: 0px;
-        z-index: 999;
-    }
-    #nav-bar {
-        display: none;
-        width: 80%;
-        padding: 15px;
-        position: absolute;
-        left: 60%;
-        top: 5px;
-        box-shadow: -1px -3px 20px black;
-        border-radius: 5px;
-        height: 715px;
-        opacity: 0;
-        z-index: 1000;
-        background-color: white;
-    }
-    #nav-bar > li {
-        display: block;
-        padding-top: 14px;
+    img#imgProd {
         position: relative;
-        top: 65px;
+        top: 340px;
+        left: 15%;
+        transform: translate(-15%);
+        width: 295px;
     }
-    #nav-bar > li > a  {
-        font-size: 28px;
-    }
-    #fechar-menu {
-        display: none;
-        cursor: pointer;
-        width: fit-content;
-        font-size: 40px;
-        position: absolute;
-        left: 72%;
-    }
-    #menu-icon {
-        display: block;
-        position: absolute;
-        left: 100%;
-        transform: translate(-100%);
-        top: -10%;
-    }
-    #logo {
-        display: none;
-    }    
-    #logo2 {
-        display: block;
-        position: absolute;
-        left: 0%;
-        transform: translate(-5%);
-        top: -3px;
-        width: 23%;
-    }
-    #icone-pesquisa {
-        width: 34px;
-        height: 36px;
-        position: absolute;
-        left: 30%;
-        transform: translate(-30%);
-        top: 33px;
-    }
-    #carrinho-compras {
-        width: 44px;
-        height: 46px;
-        position: absolute;
-        left: 33%;
-        transform: translate(-120%);
-        top: 6%;
-    }
-    span#quantidadeCarrinho {
-        position: absolute;
-        left: 35%;
-        transform: translate(-111%);
-        background: black;
-        color: white;
-        padding: 3px;
-        font-size: 12px;
-        border-radius: 51%;
-        cursor: pointer;
-      }
     .caixas {
         width: 94vw;
         position: relative;
@@ -110,22 +23,23 @@
         width: 94vw;
         position: relative;
         left: -2%;
-        height: 127px;
+        height: 150px;
+        display: inline-grid;
     }
     h2.tltPagto {
         font-weight: 700;
         font-size: 17px;
         position: relative;
-        left: 40%;
+        left: 45%;
         top: -15px;
-        width: fit-content;
-        transform: translate(-40%);
+        width: 28%;
+        transform: translate(-45%);
     }
     #linhaHrFin {
         border: 1px solid black;
         width: 90vw;
         position: absolute;
-        top: 1050px;
+        top: 1180px;
         left: 50%;
         transform: translate(-50%);
     }
@@ -142,7 +56,7 @@
         position: absolute;
         left: 25%;
         transform: translate(-25%);
-        top: 1320px;
+        top: 1444px;
         transition: 0.8s;
     }
     #opcoesPagto {
@@ -162,10 +76,10 @@
     }
     #resumoCompra {
         display: block;
-        width: 99%;
+        width: 100%;
         height: 200px;
         position: relative;
-        top: 980px;
+        top: 1280px;
         left: 90%;
         transform: translate(-90%);
         padding: 15px;
@@ -205,15 +119,28 @@
         cursor: pointer;
     }
     #pedidoCriado {
+        display: none;
         width: 97vw;
         height: 500px;
         box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
         background-color: #fff;
         border-radius: 0.5rem;
         position: absolute;
-        left: 0%;
-        /* transform: translate(-50%); */
-        top: -645px;
+        left: 50%;
+        transform: translate(-50%);
+        top: -515px;
+    }
+    #criacaoBoleto {
+        display: none;
+        width: 97vw;
+        height: 500px;
+        box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+        background-color: #fff;
+        border-radius: 0.5rem;
+        position: absolute;
+        left: 50%;
+        transform: translate(-50%);
+        top: -515px;
     }
     #boletoContainer {
         display: none;
@@ -256,7 +183,198 @@
         top: -520px;
     }
 }
-@media screen and (min-width:1024px) and (max-width:1440px) {
+@media screen and (min-width:768px) and (max-width:1300px) {
+    .logo-header > a > img {
+        cursor: pointer;
+        width: 35vw;
+    }
+    img#imgProd {
+        position: relative;
+        top: 340px;
+        left: 15%;
+        transform: translate(-15%);
+        width: 295px;
+    }
+    .caixas {
+        width: 94vw;
+        position: relative;
+        left: -2%;
+        height: 150px;
+    }
+    p.prgPagto {
+        width: 68%;
+    }
+    .caixas {
+        width: 75%;
+        position: relative;
+        left: -2%;
+        height: 150px;
+        display: inline-grid;
+    }
+    h2.tltPagto {
+        font-weight: 700;
+        font-size: 17px;
+        position: relative;
+        left: 45%;
+        top: -15px;
+        width: 28%;
+        transform: translate(-45%);
+    }
+    #linhaHrFin {
+        border: 1px solid black;
+        width: 90vw;
+        position: absolute;
+        top: 1180px;
+        left: 50%;
+        transform: translate(-50%);
+    }
+    #btnContPag {
+        width: 99vw;
+        height: 51px;
+        font-size: 17px;
+        font-weight: 600;
+        color: #EF4126;
+        border: 1px solid #EF4126;
+        background-color: white;
+        cursor: pointer;
+        border-radius: 5px;
+        position: absolute;
+        left: 25%;
+        transform: translate(-25%);
+        top: 1444px;
+        transition: 0.8s;
+    }
+    #opcoesPagto {
+        position: absolute;
+        top: 350px;
+        left: 50%;
+        width: 100%;
+        transform: translate(-40%);
+    }
+    main > p {
+        line-height: 25px;
+        font-size: 17px;
+        font-weight: 400;
+        position: absolute;
+        left: 20%;
+        transform: translate(-20%);
+        top: 285px;
+    }
+    #resumoCompra {
+        display: block;
+        width: 100%;
+        height: 200px;
+        position: relative;
+        top: 1280px;
+        left: 90%;
+        transform: translate(-90%);
+        padding: 15px;
+    }
+    #totalComp {
+        position: relative;
+        top: 43px;
+        font-size: 20px;
+        font-weight: bold;
+        left: -8px;
+    }
+    #qrCodeContainer {
+        display: none;
+        width: 98vw;
+        height: 500px;
+        box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+        background-color: #fff;
+        border-radius: 0.5rem;
+        position: absolute;
+        left: 50%;
+        transform: translate(-50%);
+        top: -586px;
+    }
+    #qrCodeContainer > button {
+        position: absolute;
+        left: 50%;
+        transform: translate(-50%);
+        top: 360px;
+        padding: 12px 25px 12px 25px;
+        font-size: 17px;
+        color: white;
+        background-color: #EF4126;
+        border: none;
+        border-radius: 5px;
+        font-weight: 600;
+        transition: 0.8s;
+        cursor: pointer;
+    }
+    #pedidoCriado {
+        display: none;
+        width: 97vw;
+        height: 500px;
+        box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+        background-color: #fff;
+        border-radius: 0.5rem;
+        position: absolute;
+        left: 52%;
+        /* transform: translate(-50%); */
+        top: -645px;
+    }
+    #criacaoBoleto {
+        display: none;
+        width: 97vw;
+        height: 500px;
+        box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+        background-color: #fff;
+        border-radius: 0.5rem;
+        position: absolute;
+        left: 52%;
+        /* transform: translate(-50%); */
+        top: -70px;
+    }
+    .image-content {
+        width: 40%;
+        position: relative;
+        top: 50px;
+    }
+    #boletoContainer {
+        display: none;
+        width: 98vw;
+        height: 500px;
+        box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+        background-color: #fff;
+        border-radius: 0.5rem;
+        position: absolute;
+        left: 50%;
+        transform: translate(-50%);
+        top: -586px;
+    }
+    #boletoContainer > a {
+        position: absolute;
+        left: 50%;
+        transform: translate(-50%);
+        top: 360px;
+        padding: 12px 25px 12px 25px;
+        font-size: 17px;
+        color: white;
+        background-color: #EF4126;
+        border: none;
+        border-radius: 5px;
+        font-weight: 600;
+        transition: 0.8s;
+        cursor: pointer;
+    }
+    .modal {
+        display: none;
+        width: 94vw;
+        height: fit-content;
+        background: #FFFFFF;
+        box-shadow: 0px 187px 75px rgba(0, 0, 0, 0.01), 0px 105px 63px rgba(0, 0, 0, 0.05), 0px 47px 47px rgba(0, 0, 0, 0.09), 0px 12px 26px rgba(0, 0, 0, 0.1), 0px 0px 0px rgba(0, 0, 0, 0.1);
+        border-radius: 26px;
+        max-width: 450px;
+        position: absolute;
+        left: 50%;
+        transform: translate(-50%);
+        top: -520px;
+    }
+}
+@media screen and (min-width:1301px) and (max-width:1440px) {
     span#quantidadeCarrinho {
         position: absolute;
         left: 111%;
@@ -299,12 +417,11 @@
     }
     #resumoCompra {
         display: block;
-        width: 90vw;
         height: 200px;
         position: relative;
-        top: 892px;
-        left: 90%;
-        transform: translate(-90%);
+        top: 1015px;
+        left: 50%;
+        transform: translate(-50%);
         padding: 15px;
     }
     #btnContPag {
@@ -336,6 +453,18 @@
         top: -567px;
     }
     #pedidoCriado {
+        display: none;
+        width: 590px;
+        height: 500px;
+        box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+        background-color: #fff;
+        border-radius: 0.5rem;
+        position: absolute;
+        left: 50%;
+        transform: translate(-50%);
+        top: -585px;
+    }
+    #criacaoBoleto {
         display: none;
         width: 590px;
         height: 500px;
@@ -452,5 +581,29 @@
         left: -100%;
         /* transform: translate(-110%); */
         top: -90px;
+    }
+    #pedidoCriado {
+        display: none;
+        width: 590px;
+        height: 500px;
+        box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+        background-color: #fff;
+        border-radius: 0.5rem;
+        position: absolute;
+        left: -125%;
+        /* transform: translate(-50%); */
+        top: -70px;
+    }   
+    #criacaoBoleto {
+        display: none;
+        width: 590px;
+        height: 500px;
+        box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+        background-color: #fff;
+        border-radius: 0.5rem;
+        position: absolute;
+        left: -125%;
+        /* transform: translate(-50%); */
+        top: -70px;
     }
 }

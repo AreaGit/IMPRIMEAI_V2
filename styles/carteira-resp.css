@@ -60,15 +60,7 @@
         top: -10%;
     }
     #logo {
-        display: none;
-    }    
-    #logo2 {
-        display: block;
-        position: absolute;
-        left: 0%;
-        transform: translate(-5%);
-        top: -3px;
-        width: 23%;
+        width: 50%;
     }
     #icone-pesquisa {
         width: 34px;
@@ -140,10 +132,7 @@
         transform: translate(-50%);
     }
     #logo {
-        position: absolute;
-        left: -14%;
-        top: -2px;
-        width: 107px;
+        width: 25%;
     }
     #icone-pesquisa {
         width: 22px;
@@ -186,12 +175,6 @@
         width: 1050px;
         transform: translate(-50%);
     }
-    #logo {
-        position: absolute;
-        left: -2%;
-        top: -7px;
-        width: 107px;
-    }
     #icone-pesquisa {
         width: 22px;
         height: 24px;
@@ -202,25 +185,7 @@
     }
 }
 @media screen and (min-width:2560px) {
-    #nav-bar {
-        position: relative;
-        left: 50%;
-        top: 8px;
-        width: 1050px;
-        transform: translate(-50%);
-    }
     #logo {
-        position: absolute;
-        left: -2%;
-        top: -7px;
-        width: 107px;
-    }
-    #icone-pesquisa {
-        width: 22px;
-        height: 24px;
-        position: absolute;
-        left: 112%;
-        transform: translate(-112%);
-        top: 1px;
+        width: 12%;
     }
 }

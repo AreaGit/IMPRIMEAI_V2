@@ -1,102 +1,14 @@
-@media screen and (min-width:320px) and (max-width:863px) {
-    header {
-        z-index: 999;
-        position: absolute;
-        width: 99%;
-        left: 50%;
+@media screen and (min-width:320px) and (max-width:767px) {
+    .logo-header > a > img {
+        cursor: pointer;
+        width: 35vw;
     }
-    header.scrolled {
-        position: inherit;
-        top: 0%;
-        border-bottom: 0px solid transparent;
-        color: white;
-        width: 0%;
-        z-index: -1;
-    }
-    div#lg {
-        width: 50px;
-        height: 50px;
-        position: absolute;
-        left: 0%;
-        top: 0px;
-        z-index: 999;
-    }
-    #nav-bar {
-        display: none;
-        width: 80%;
-        padding: 15px;
-        position: absolute;
-        left: 60%;
-        top: 5px;
-        box-shadow: -1px -3px 20px black;
-        border-radius: 5px;
-        height: 715px;
-        opacity: 0;
-        z-index: 1000;
-        background-color: white;
-    }
-    #nav-bar > li {
-        display: block;
-        padding-top: 14px;
+    img#imgProd {
         position: relative;
-        top: 65px;
-    }
-    #nav-bar > li > a  {
-        font-size: 28px;
-    }
-    #fechar-menu {
-        display: none;
-        cursor: pointer;
-        width: fit-content;
-        font-size: 40px;
-        position: absolute;
-        left: 72%;
-    }
-    #menu-icon {
-        display: block;
-        position: absolute;
-        left: 100%;
-        transform: translate(-100%);
-        top: -10%;
-    }
-    #logo {
-        display: none;
-    }    
-    #logo2 {
-        display: block;
-        position: absolute;
-        left: 0%;
-        transform: translate(-5%);
-        top: -3px;
-        width: 23%;
-    }
-    #icone-pesquisa {
-        width: 34px;
-        height: 36px;
-        position: absolute;
-        left: 30%;
-        transform: translate(-30%);
-        top: 33px;
-    }
-    #carrinho-compras {
-        width: 44px;
-        height: 46px;
-        position: absolute;
-        left: 33%;
-        transform: translate(-120%);
-        top: 6%;
-    }
-    span#quantidadeCarrinho {
-        position: absolute;
-        left: 35%;
-        top: 8%;
-        transform: translate(-111%);
-        background: black;
-        color: white;
-        padding: 3px;
-        font-size: 12px;
-        border-radius: 51%;
-        cursor: pointer;
+        top: 340px;
+        left: 15%;
+        transform: translate(-15%);
+        width: 295px;
     }
     #container {
         width: 99%;

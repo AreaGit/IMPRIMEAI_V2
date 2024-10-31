@@ -18,7 +18,7 @@ body {
 }
 header {
   height: 42px;
-  position: fixed;
+  position: absolute;
   left: 50%;
   transform: translate(-50%);
   top: 1%;
@@ -26,29 +26,11 @@ header {
   transition: 2s;
   width: 100%;
 }
-header.scrolled {
-  position: fixed;
-  top: 0%;
-  transition: 2s;
-  color: black;
-  width: 100%;
-  z-index: 1000;
-  background-color: white;
-  height: 40px;
-}
-header.scrolled > #nav-bar > li > a {
-  color: #6E6E73;
-}
-header.scrolled > #nav-bar > li > a:hover {
-  color: #020202;
-}
-#logo2 {
-  display: none;
-}
 #logo {
   position: absolute;
-  left: -3%;
-  width: 12%;
+  left: 50%;
+  transform: translate(-50%);
+  width: 15%;
   top: -11px;
 }
 li {

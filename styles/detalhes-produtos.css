@@ -615,7 +615,14 @@ ul {
     box-shadow: -1px -1px 3px black;
     padding: 15px;
 }
-#detalhes-produto > input[type="number"] {
+.btnsCompra {
+  position: absolute;
+  left: 80%;
+  top: 105%;
+  transform: translate(-80%);
+  width: 100%;
+}
+.btnsCompra > input[type="number"] {
     width: 50px;
     height: 50px;
     border-radius: 5px;
@@ -625,7 +632,7 @@ ul {
     font-size: 17px;
     margin: 8px;
 }
-#detalhes-produto > button {
+#adicionarAoCarrinhoBtn {
     cursor: pointer;
     margin-top: 15px;
     background-color: #F37160;
@@ -639,14 +646,17 @@ ul {
     box-shadow: -1px 2px 8px #000000a3;
 }
 #lnk-comp {
-    padding: 15px 25px 15px 25px;
-    border: 1px solid #EF4126;
-    color: #EF4126;
-    font-weight: 500;
-    font-size: 17px;
-    box-shadow: -1px 2px 8px #000000a3;
-    transition: 0.8s;
-    border-radius: 4px;
+  cursor: pointer;
+  width: 38%;
+  height: 51px;
+  border: 1px solid #EF4126;
+  color: #EF4126;
+  font-weight: 600;
+  font-size: 17px;
+  box-shadow: -1px 2px 8px #000000a3;
+  transition: 0.8s;
+  border-radius: 4px;
+  background-color: white;
 }
 #lnk-comp:hover {
     transition: 0.8s;
@@ -727,7 +737,7 @@ ul {
 }
 #descricao-produto {
     position: absolute;
-    top: 135%;
+    top: 140%;
     left: 50%;
     width: 40%;
     height: 255px;

@@ -603,7 +603,7 @@ span#totalItens {
     position: absolute;
     left: -40%;
     transform: translate(-50%);
-    top: -250px;
+    top: -70px;
   }
   #pedidoCriado {
     display: none;
@@ -615,7 +615,7 @@ span#totalItens {
     position: absolute;
     left: -40%;
     transform: translate(-50%);
-    top: -250px;
+    top: -70px;
   }
   #faixa {
     background: #47c9a2;

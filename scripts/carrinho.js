@@ -274,3 +274,7 @@ document.addEventListener("DOMContentLoaded", async () => {
           nameUserLog.textContent = username;
       }
 });
+
+document.getElementById('continuarComprando').addEventListener('click', () => {
+  window.location.href = '/'
+});
