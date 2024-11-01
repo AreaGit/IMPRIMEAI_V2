@@ -321,7 +321,7 @@
         position: absolute;
         left: 90%;
         transform: translate(-90%);
-        top: 95%;
+        top: 100%;
         border-radius: 5px;
         transition: 0.8s;
     }
@@ -338,7 +338,6 @@
         position: absolute;
         left: 93%;
         transform: translate(-93%);
-        top: 338px;
     }
     .material-checkbox {
         display: flex;
@@ -369,55 +368,10 @@
       div#popup > ol > li {
         text-align: justify;
       }
-    .error-prompt-heading {
-        color: #991B1B;
-        font-size: 21px;
-        line-height: 1.25rem;
-        font-weight: bold;
-    }
-    .error-prompt-wrap {
-        margin-top: 0.5rem;
-        color: #B91C1C;
-        font-size: 21px;
-        line-height: 1.25rem;
-    }
-    .error-svg {
-        color: #F87171;
-        width: 2rem;
-        height: 2rem;
-    }
-    .notifications-container {
-        width: 362px;
-        height: auto;
-        font-size: 0.875rem;
-        line-height: 1.25rem;
-        display: flex;
-        flex-direction: column;
-        gap: 1rem;
-        position: absolute;
-        left: 90%;
-        transform: translate(-90%);
-        top: 60px;
-    }
-    .success-prompt-heading {
-        font-weight: bold;
-        font-size: 22px;
-        color: rgb(22 101 52);
-    }
-    .success-prompt-prompt {
-        margin-top: 0.5rem;
-        color: rgb(21 128 61);
-        font-size: 20px;
-    }
-    .succes-svg {
-        color: rgb(74 222 128);
-        width: 2rem;
-        height: 2rem;
-    }
     form > a {
         position: relative;
         left: 71%;
-        top: 640px;
+        top: 670px;
         text-decoration: underline;
         color: #F37160;
         font-size: 20px;

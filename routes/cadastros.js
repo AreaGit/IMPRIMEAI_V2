@@ -150,7 +150,7 @@ app.post("/login", async (req, res) => {
 
     res.cookie('userCad', user.userCad);
     res.cookie("userId", user.id);
-
+    res.clearCookie("userIdTemp")
     // Gere um token de autenticação (exemplo simples)
     const token = Math.random().toString(16).substring(2);
 
@@ -379,74 +379,52 @@ app.post("/cadastro-graficas", async (req, res) => {
   try {
     const { userCad, cnpjCad, endereçoCad, cepCad, cidadeCad, estadoCad, bairroCad, compCad, numCad, telefoneCad, bancoCad, agenciaCad, contaCorrenteCad, codBanco, digitoConta, produtos, emailCad, passCad } = req.body;
     const hashedPassword = await bcrypt.hash(passCad, 10);
+    
+    // Formata CNPJ e número da conta
     const cnpjFormatado = cnpjCad.replace(/[^\d]+/g, '');
     const contaCorrenteSemHifen = contaCorrenteCad.replace(/-/g, '');
-    const digitoVerificador = calcularDigitoAgencia(agenciaCad);
 
+    // Validação do CNPJ com 14 dígitos
+    if (cnpjFormatado.length !== 14) {
+      return res.status(400).json({ message: "CNPJ inválido. Deve conter 14 dígitos." });
+    }
+
+    // Formatação e Validação do Telefone
+    const telefoneMatch = telefoneCad.match(/\((\d{2})\)\s*(\d{4,5})-?(\d{4})/);
+    if (!telefoneMatch) {
+      return res.status(400).json({ message: "Número de telefone inválido. O formato deve ser (DD) NNNNN-NNNN" });
+    }
+    const ddd = telefoneMatch[1];
+    const telefone = `${telefoneMatch[2]}${telefoneMatch[3]}`; // Remove traço do número
+
+    // Função para calcular o dígito verificador da agência (se necessário)
     function calcularDigitoAgencia(agencia) {
-      const pesos = [5, 4, 3, 2];  // Pesos fixos para cada dígito
+      const pesos = [5, 4, 3, 2];
       let soma = 0;
-  
-      // Calcula a soma dos dígitos da agência multiplicados pelos seus pesos
       for (let i = 0; i < agencia.length; i++) {
           soma += parseInt(agencia[i]) * pesos[i];
       }
-  
-      // Calcula o módulo da soma
       const mod11 = soma % 11;
-  
-      // Define o dígito verificador
       let digito = 11 - mod11;
-      if (digito === 10 || digito === 11) {
-          digito = 0;  // Se o resultado for 10 ou 11, o dígito é 0
-      }
-  
+      if (digito === 10 || digito === 11) digito = 0;
       return digito.toString();
-  }
-    // Validação do CNPJ
-    if (cnpjFormatado.length !== 14) {
-      return res.status(400).json({
-        message: "CNPJ inválido. Deve conter 14 dígitos."
-      });
     }
+    const digitoVerificador = calcularDigitoAgencia(agenciaCad);
 
-    const existingGrafica = await Graficas.findOne({
-      where: {
-        [Op.or]: [
-          { emailCad: emailCad },
-        ],
-      },
-    });
-
+    // Verifica se a gráfica já está cadastrada pelo e-mail
+    const existingGrafica = await Graficas.findOne({ where: { emailCad } });
     if (existingGrafica) {
-      return res.status(400).json({
-        message: "Já existe uma Gráfica com este e-mail cadastrado",
-      });
+      return res.status(400).json({ message: "Já existe uma Gráfica com este e-mail cadastrado" });
     }
 
-    const today = new Date().toISOString().split('T')[0];
-
-    const generateRandomCode = () => {
-      return Math.floor(1000 + Math.random() * 9000).toString();
-    };
-
-    // Extração correta do DDD e número de telefone
-    const telefoneMatch = telefoneCad.match(/\((\d{2})\)\s*(\d{4,5}-\d{4})/);
-    if (!telefoneMatch) {
-      return res.status(400).json({
-        message: "Número de telefone inválido. O formato deve ser (DD) NNNNN-NNNN"
-      });
-    }
-    const ddd = telefoneMatch[1];
-    const telefone = telefoneMatch[2].replace('-', '');
-
+    // Configuração do request para criar o recebedor no Pagar.me
     const options = {
       method: 'POST',
       url: 'https://api.pagar.me/core/v5/recipients',
       headers: {
         accept: 'application/json',
         'content-type': 'application/json',
-        'Authorization': 'Basic ' + Buffer.from(`${pagarmeKeyProd}:`).toString('base64')
+        Authorization: 'Basic ' + Buffer.from(`${pagarmeKeyProd}:`).toString('base64')
       },
       body: {
         register_information: {
@@ -468,44 +446,30 @@ app.post("/cadastro-graficas", async (req, res) => {
           site_url: 'https://imprimeai.com.br',
           annual_revenue: 1000000,
           corporation_type: 'LTDA',
-          founding_date: today,
-          phone_numbers: [
-            {
-              ddd: ddd,
-              number: telefone,
-              type: 'mobile'
-            }
-          ],
-          managing_partners: [
-            {
-              name: userCad,
-              email: emailCad,
-              document: cnpjFormatado,
-              type: 'corporation',
-              monthly_income: 120000,
-              mother_name: 'Nulo',
-              birthdate: today,
-              professional_occupation: 'Gráfica',
-              self_declared_legal_representative: true,
-              address: {
-                street: endereçoCad.split(',')[0],
-                complementary: compCad,
-                street_number: numCad,
-                neighborhood: bairroCad,
-                city: cidadeCad,
-                state: estadoCad,
-                zip_code: cepCad,
-                reference_point: 'Nenhum'
-              },
-              phone_numbers: [
-                {
-                  ddd: ddd,
-                  number: telefone,
-                  type: 'mobile'
-                }
-              ]
-            }
-          ]
+          founding_date: new Date().toISOString().split('T')[0],
+          phone_numbers: [{ ddd, number: telefone, type: 'mobile' }],
+          managing_partners: [{
+            name: userCad,
+            email: emailCad,
+            document: cnpjFormatado,
+            type: 'corporation',
+            monthly_income: 120000,
+            mother_name: 'Nulo',
+            birthdate: new Date().toISOString().split('T')[0],
+            professional_occupation: 'Gráfica',
+            self_declared_legal_representative: true,
+            address: {
+              street: endereçoCad.split(',')[0],
+              complementary: compCad,
+              street_number: numCad,
+              neighborhood: bairroCad,
+              city: cidadeCad,
+              state: estadoCad,
+              zip_code: cepCad,
+              reference_point: 'Nenhum'
+            },
+            phone_numbers: [{ ddd, number: telefone, type: 'mobile' }]
+          }]
         },
         default_bank_account: {
           holder_name: userCad,
@@ -529,45 +493,40 @@ app.post("/cadastro-graficas", async (req, res) => {
           volume_percentage: 50,
           delay: null
         },
-        code: generateRandomCode()
+        code: Math.floor(1000 + Math.random() * 9000).toString()
       },
       json: true
     };
 
-    try {
-      const pagarmeResponse = await request(options);
-      console.log(pagarmeResponse);
-      const newGrafica = await Graficas.create({
-        userCad,
-        cnpjCad,
-        enderecoCad: endereçoCad,
-        cepCad,
-        cidadeCad,
-        estadoCad,
-        bairroCad,
-        compCad,
-        numCad,
-        telefoneCad,
-        bancoCad,
-        agenciaCad,
-        contaCorrenteCad,
-        produtos,
-        recipientId: pagarmeResponse.id,
-        emailCad,
-        passCad: hashedPassword
-      });
+    // Faz a requisição para o Pagar.me e cadastra no banco
+    const pagarmeResponse = await request(options);
+    const newGrafica = await Graficas.create({
+      userCad,
+      cnpjCad,
+      enderecoCad: endereçoCad,
+      cepCad,
+      cidadeCad,
+      estadoCad,
+      bairroCad,
+      compCad,
+      numCad,
+      telefoneCad,
+      bancoCad,
+      agenciaCad,
+      contaCorrenteCad,
+      produtos,
+      recipientId: pagarmeResponse.id,
+      emailCad,
+      passCad: hashedPassword
+    });
 
-      console.log(newGrafica);
-      res.json({ message: 'Gráfica cadastrada com sucesso!', Graficas: newGrafica, PagarMe: pagarmeResponse });
-    } catch (pagarmeError) {
-      console.error('Erro ao criar recebedor no Pagar.me:', pagarmeError);
-      res.status(500).json({ message: 'Erro ao criar recebedor no Pagar.me', error: pagarmeError });
-    }
+    res.json({ message: 'Gráfica cadastrada com sucesso!', Graficas: newGrafica, PagarMe: pagarmeResponse });
   } catch (error) {
     console.error('Erro ao cadastrar gráfica:', error);
-    res.status(500).json({ message: 'Erro ao cadastrar gráfica' });
+    res.status(500).json({ message: 'Erro ao cadastrar gráfica', error });
   }
 });
+
 
 app.post("/login-graficas", async (req, res) => {
   try {

@@ -736,7 +736,7 @@ async function monitorarTransacaoCartao(dadosTransacao) {
         window.location.reload();
       }, 5000);
     }else if(status === "failed") {
-      avisoFalhaTransacao.style.display = 'none';
+      avisoFalhaTransacao.style.display = 'block';
       setTimeout(() => {
         window.location.reload();
       }, 5000);

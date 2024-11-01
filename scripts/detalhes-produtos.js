@@ -334,7 +334,8 @@ adicionarAoCarrinhoBtn.addEventListener('click', async () => {
       avisoAdicionadoaoCarrinho.style.display = 'block';
       setTimeout(() => {
         avisoAdicionadoaoCarrinho.style.display = 'none';
-      }, 5000);
+        window.location.reload();
+      }, 3000);
       // Limpe o campo de entrada de quantidade
       inputQuantidade.value = '1';
     } else {
@@ -412,7 +413,7 @@ adicionarAoCarrinhoBtn.addEventListener('click', async () => {
           setTimeout(() => {
             window.location.href = '/carrinho'
             avisoAdicionadoaoCarrinho.style.display = 'none';
-          }, 5000);
+          }, 2000);
           // Limpe o campo de entrada de quantidade
           inputQuantidade.value = '1';
         } else {

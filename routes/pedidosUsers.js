@@ -1907,7 +1907,7 @@ app.post('/processarPagamento-boleto', (req, res) => {
 app.post('/processarPagamento-cartao', (req ,res) => {
   const perfilData = req.body.perfilData;
   const carrinho = req.session.carrinho;
-
+  const formData = req.body.formData
   // Calcula o valor total, incluindo o frete corretamente para cada item
   const totalAmount = carrinho.reduce((total, item) => {
     let itemSubtotal;

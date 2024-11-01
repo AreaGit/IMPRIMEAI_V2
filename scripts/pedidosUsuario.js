@@ -40,7 +40,7 @@ fetch(`/pedidos-usuario/${userId}`)
                 <h2>${pedido.itenspedidos[0].nomeProd}</h2>
                 <p>ID ${pedido.id}</p>
                 <p>R$ ${pedido.valorPed.toFixed(2)}</p>
-                <p>${pedido.quantPed} unidade${pedido.quantPed > 1 ? 's' : ''}</p>
+                <p>${pedido.quantPed} unidade${pedido.quantPed > 1 ? 's' : ''}</p>z
                 <a href="detalhesPedidosUser?idPedido=${pedido.id}">Detalhes do pedido</a>
             `;
             listaDePedidos.appendChild(divPedido);
@@ -62,3 +62,23 @@ async function pegarImagemDoProduto(idDoProduto) {
         return null;
     }
 }
+
+document.addEventListener('DOMContentLoaded', () => {
+    function getCookie(name) {
+      const cookies = document.cookie.split(';');
+      for (let i = 0; i < cookies.length; i++) {
+      const cookie = cookies[i].trim();
+      if (cookie.startsWith(name + '=')) {
+          return cookie.substring(name.length + 1);
+      }
+  }
+      return null;
+  }
+       
+  // Ler o valor do cookie 'userCad'
+  const userId = getCookie('userId');
+  console.log(userId);
+    if(userId == null) {
+      window.location.href = '/cadastro';
+    }    
+});

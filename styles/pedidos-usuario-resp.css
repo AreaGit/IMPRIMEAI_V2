@@ -60,16 +60,8 @@
         top: -10%;
     }
     #logo {
-        display: none;
+        width: 50%;
     }    
-    #logo2 {
-        display: block;
-        position: absolute;
-        left: 0%;
-        transform: translate(-5%);
-        top: -3px;
-        width: 23%;
-    }
     #icone-pesquisa {
         width: 34px;
         height: 36px;
@@ -153,10 +145,7 @@
         transform: translate(-50%);
     }
     #logo {
-        position: absolute;
-        left: -14%;
-        top: -2px;
-        width: 107px;
+        width: 25%;
     }
     #icone-pesquisa {
         width: 22px;
@@ -174,12 +163,6 @@
         top: 8px;
         width: 1050px;
         transform: translate(-50%);
-    }
-    #logo {
-        position: absolute;
-        left: -2%;
-        top: -7px;
-        width: 107px;
     }
     #icone-pesquisa {
         width: 22px;
@@ -199,10 +182,7 @@
         transform: translate(-50%);
     }
     #logo {
-        position: absolute;
-        left: -2%;
-        top: -7px;
-        width: 107px;
+        width: 12%;
     }
     #icone-pesquisa {
         width: 22px;

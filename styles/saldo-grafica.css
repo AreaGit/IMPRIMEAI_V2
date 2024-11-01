@@ -368,7 +368,7 @@ span#valorDisp {
 #rigth > p {
     font-size: 18px;
     margin: 20px;
-    width: 70px;
+    width: max-content;
 }
 #linhaHr2 {
     border: 1px solid black;
