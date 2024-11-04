@@ -378,7 +378,7 @@ span#totalItens {
     position: fixed;
     left: 90%;
     transform: translate(-90%);
-    top: -400px;
+    top: 10%;
   }
   
   .flex {

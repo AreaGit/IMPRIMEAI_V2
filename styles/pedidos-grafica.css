@@ -339,7 +339,7 @@ div#pedidos-list::-webkit-scrollbar {
     left: 50%;
     transform: translate(-50%);
     height: 165px;
-    width: 839px;
+    width: 900px;
 }
 .cxPedido:hover {
     transition: 0.8s;

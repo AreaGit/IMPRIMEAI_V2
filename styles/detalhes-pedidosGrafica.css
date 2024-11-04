@@ -49,7 +49,7 @@ div#produto-info {
     padding: 15px;
     background-color: white;
     box-shadow: -1px 1px 12px black;
-    height: 800px;
+    height: 920px;
 }
 .infoProd > button {
     width: 185px;
@@ -63,13 +63,13 @@ div#produto-info {
     cursor: pointer;
     transition: 0.8s;
     position: relative;
-    left: 70%;
+    left: 65%;
     top: 700px;
 }
 .infoProd > a {
     color: #EF4126;
     position: relative;
-    left: 68%;
+    left: 60%;
     top: 700px;
 }
 .infoProd > button:hover {
@@ -95,7 +95,7 @@ div#produto-info {
 }
 .detalhesEntrega {
     position: relative;
-    left: 70%;
+    left: 65%;
     width: 30%;
     top: -500px;
     padding: 15px;

@@ -209,62 +209,76 @@ main > h2 {
     width: 50%;
 }
 .pedido {
-    width: 100%;
-    height: 10vw;
-    background-color: white;
-    border-radius: 5px;
-    box-shadow: -1px 3px 8px black;
-    padding: 25px;
-    margin-bottom: 20px;
-    cursor: pointer;
-    transition: 0.8s;
+  width: 100%;
+  height: 10vw; /* Ajuste automático conforme o conteúdo */
+  background-color: white;
+  border-radius: 5px;
+  box-shadow: -1px 3px 8px black;
+  padding: 25px;
+  margin-bottom: 20px;
+  cursor: pointer;
+  transition: 0.8s;
+  display: flex;
+  flex-direction: column; /* Alinha conteúdo em coluna */
+  justify-content: space-between;
+  position: relative;
 }
+
 .pedido:hover {
-    transition: 0.8s;
-    box-shadow: -1px 3px 8px #F69896;
+  transition: 0.8s;
+  box-shadow: -1px 3px 8px #F69896;
 }
+
 .pedido > h2 {
-    font-size: 20px;
-    font-weight: 400;
-    position: relative;
-    left: 22%;
-    top: 25px;
+  font-size: 20px;
+  font-weight: 400;
+  margin-bottom: 10px;
+  width: fit-content;
+  position: relative;
+  left: 25%;
+  top: 33px;
 }
-.pedido > p {
-    display: inline;
-    padding: 10px;
-    font-size: 17px;
-    font-weight: 500;
-    color: #6E6E73;
-    position: relative;
-    left: 22%;
-    top: 32px;
-    transform: translate(-22%);
+
+.pedido-info {
+  display: flex;
+  gap: 15px;
+  flex-wrap: wrap;
+  margin-bottom: 10px;
+  position: relative;
+  left: 25%;
+  width: fit-content;
 }
+
+.pedido-info > p {
+  font-size: 17px;
+  font-weight: 500;
+  color: #6E6E73;
+  width: fit-content;
+}
+
+.pedido > a {
+  align-self: flex-end;
+  padding: 12px 24px;
+  font-size: 16px;
+  font-weight: 600;
+  color: white;
+  background-color: #F37160;
+  border: 1px solid white;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: 0.8s;
+  margin-top: -120px;
+}
+
+.pedido > a:hover {
+  background-color: white;
+  color: #EF4126;
+  border: 1px solid #EF4126;
+}
+
 .pedido > img {
     width: 15%;
     position: absolute;
     left: 5%;
     transform: translate(-5%);
-}
-.pedido > a {
-    padding: 18px 28px 18px 28px;
-    font-size: 17px;
-    font-weight: 600;
-    color: white;
-    background-color: #F37160;
-    border: 1px solid white;
-    border-radius: 5px;
-    cursor: pointer;
-    transition: 0.8s;
-    position: relative;
-    left: 40%;
-    transform: translate(-40%);
-    top: 10px;
-}
-.pedido > a:hover {
-    transition: 0.8s;
-    background-color: white;
-    color: #EF4126;
-    border: 1px solid #EF4126;
 }

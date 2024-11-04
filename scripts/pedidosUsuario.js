@@ -20,13 +20,17 @@ function getCookie(name) {
 fetch(`/pedidos-usuario/${userId}`)
     .then(response => response.json())
     .then(data => {
-        console.log(data);
+        // Ordena os pedidos pelo id, do maior para o menor
+        data.pedidos.sort((a, b) => b.id - a.id);
+
+        // Renderiza os pedidos na ordem correta
         data.pedidos.forEach(async pedido => {
             const divPedido = document.createElement('div');
             divPedido.className = 'pedido';
+
             const idDoProduto = pedido.itenspedidos[0].idProduto;
             
-            // Criar uma imagem para o produto
+            // Cria a imagem do produto
             const imgProduto = document.createElement('img');
             const srcDaImagem = await pegarImagemDoProduto(idDoProduto);
             if (srcDaImagem) {
@@ -36,11 +40,14 @@ fetch(`/pedidos-usuario/${userId}`)
             }
             divPedido.appendChild(imgProduto);
             
+            // Adiciona as informações do pedido
             divPedido.innerHTML += `
                 <h2>${pedido.itenspedidos[0].nomeProd}</h2>
-                <p>ID ${pedido.id}</p>
-                <p>R$ ${pedido.valorPed.toFixed(2)}</p>
-                <p>${pedido.quantPed} unidade${pedido.quantPed > 1 ? 's' : ''}</p>z
+                <div class="pedido-info">
+                    <p>ID ${pedido.id}</p>
+                    <p>R$ ${pedido.valorPed.toFixed(2)}</p>
+                    <p>${pedido.quantPed} unidade${pedido.quantPed > 1 ? 's' : ''}</p>
+                </div>
                 <a href="detalhesPedidosUser?idPedido=${pedido.id}">Detalhes do pedido</a>
             `;
             listaDePedidos.appendChild(divPedido);

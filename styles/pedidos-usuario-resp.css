@@ -86,7 +86,7 @@
     }
     .pedido {
         width: 95vw;
-        height: 165px;
+        height: 310px;
         background-color: white;
         border-radius: 5px;
         box-shadow: -1px 3px 8px black;
@@ -95,20 +95,15 @@
         cursor: pointer;
         transition: 0.8s;
     }
-    .pedido > a {
-        padding: 11px;
-        font-size: 15px;
-        font-weight: 600;
-        color: white;
-        background-color: #F37160;
-        border: 1px solid white;
-        border-radius: 5px;
-        cursor: pointer;
-        transition: 0.8s;
+    .pedido-info {
+        display: flex;
+        gap: 15px;
+        flex-wrap: wrap;
+        margin-bottom: 10px;
         position: relative;
-        left: 35%;
-        transform: translate(-35%);
-        top: 52px;
+        left: 25%;
+        width: fit-content;
+        top: -40px;
     }
     .pedido > img {
         width: 30%;
@@ -133,7 +128,7 @@
         position: relative;
         left: 30%;
         top: 25px;
-        width: fit-content;
+        width: 65%;
     }
 }
 @media screen and (min-width:1024px) and (max-width:1440px) {
@@ -155,6 +150,31 @@
         transform: translate(-112%);
         top: 1px;
     }
+    .pedido {
+        width: 100%;
+        height: 22vw;
+        background-color: white;
+        border-radius: 5px;
+        box-shadow: -1px 3px 8px black;
+        padding: 25px;
+        margin-bottom: 20px;
+        cursor: pointer;
+        transition: 0.8s;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        position: relative;
+    }
+    .pedido-info {
+        display: flex;
+        gap: 15px;
+        flex-wrap: wrap;
+        margin-bottom: 10px;
+        position: relative;
+        left: 25%;
+        width: fit-content;
+        top: -55px;
+    }
 }
 @media screen and (min-width:1441px) and (max-width:1789px) {
     #nav-bar {
@@ -171,6 +191,21 @@
         left: 112%;
         transform: translate(-112%);
         top: 1px;
+    }
+    .pedido {
+        width: 100%;
+        height: 13vw;
+        background-color: white;
+        border-radius: 5px;
+        box-shadow: -1px 3px 8px black;
+        padding: 25px;
+        margin-bottom: 20px;
+        cursor: pointer;
+        transition: 0.8s;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        position: relative;
     }
 }
 @media screen and (min-width:2560px) {
@@ -191,5 +226,20 @@
         left: 112%;
         transform: translate(-112%);
         top: 1px;
+    }
+    .pedido {
+        width: 100%;
+        height: 9vw;
+        background-color: white;
+        border-radius: 5px;
+        box-shadow: -1px 3px 8px black;
+        padding: 25px;
+        margin-bottom: 20px;
+        cursor: pointer;
+        transition: 0.8s;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        position: relative;
     }
 }
