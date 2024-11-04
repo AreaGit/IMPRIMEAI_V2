@@ -556,26 +556,25 @@ document.getElementById('btnCad2').addEventListener('click', async() => {
 });
 document.addEventListener('DOMContentLoaded', async () => {
     try {
-      const response = await fetch('/api-graf/produtos');
-      const produtos = await response.json();
-  
-      const checkboxContainer = document.getElementById('checkboxProdutos');
-      
-      produtos.forEach(produto => {
-        const checkbox = document.createElement('input');
-        checkbox.type = 'checkbox';
-        checkbox.name = `check${produto.nomeProd.replace(/\s+/g, '')}`;
-        checkbox.id = `check${produto.nomeProd.replace(/\s+/g, '')}`;
-        
-        const label = document.createElement('label');
-        label.htmlFor = checkbox.id;
-        label.textContent = produto.nomeProd;
-  
-        checkboxContainer.appendChild(checkbox);
-        checkboxContainer.appendChild(label);
-        checkboxContainer.appendChild(document.createElement('br'));
-      });
+        const response = await fetch('/api-graf/produtos');
+        const produtos = await response.json();
+        const checkboxContainer = document.getElementById('checkboxProdutos');
+
+        produtos.forEach(produto => {
+            const checkbox = document.createElement('input');
+            checkbox.type = 'checkbox';
+            checkbox.name = `check ${produto.nomeProd.replace(/\s+/g, ' ')}`;
+            checkbox.id = `check ${produto.nomeProd.replace(/\s+/g, ' ')}`;
+
+            const label = document.createElement('label');
+            label.htmlFor = checkbox.id;
+            label.textContent = produto.nomeProd;
+
+            checkboxContainer.appendChild(checkbox);
+            checkboxContainer.appendChild(label);
+            checkboxContainer.appendChild(document.createElement('br'));
+        });
     } catch (error) {
-      console.error("Erro ao carregar produtos:", error);
+        console.error("Erro ao carregar produtos:", error);
     }
-  });
+});
