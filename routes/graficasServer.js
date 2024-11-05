@@ -441,6 +441,7 @@ async function getCoordinatesFromAddressEnd(enderecoEntregaInfo, apiKey) {
       console.log(graficaId)
       const pedido = await ItensPedido.findByPk(pedidoId);
       const tablePedidos = await Pedidos.findByPk(pedidoId);
+      const tableEnderecos = await Enderecos.findByPk(pedidoId);
       if (!pedido) {
         return res.json({ success: false, message: 'Pedido não encontrado.' });
       }
@@ -448,6 +449,28 @@ async function getCoordinatesFromAddressEnd(enderecoEntregaInfo, apiKey) {
       const ped = await ItensPedidos.findByPk(pedidoId);
       const userId = ped.idUserPed; // Ou qualquer forma que você tenha o id do usuário
       const user = await User.findByPk(userId);
+
+      // Verifica se o tipo de entrega é "Entrega a Retirar na Loja"
+    if (tableEnderecos.tipoEntrega === "Entrega a Retirar na Loja") {
+      const grafica = await Graficas.findByPk(graficaId);
+      if (!grafica) {
+        return res.status(404).json({ message: 'Gráfica não encontrada' });
+      }
+
+      // Atualiza o endereço do pedido com os dados da gráfica
+      const enderecoPedido = await Enderecos.findByPk(pedidoId);
+      if (enderecoPedido) {
+        enderecoPedido.rua = grafica.enderecoCad;
+        enderecoPedido.cidade = grafica.cidadeCad;
+        enderecoPedido.estado = grafica.estadoCad;
+        enderecoPedido.cep = grafica.cepCad;
+        enderecoPedido.tipoEntrega = 'Entrega a Retirar na Loja';
+        await enderecoPedido.save();
+        console.log('Endereço atualizado para os dados da gráfica.');
+      } else {
+        console.log('Endereço do pedido não encontrado.');
+      }
+    }
 
       if(tipoPed == "Mult") {
         if (!pedido) {

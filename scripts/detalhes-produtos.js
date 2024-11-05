@@ -288,6 +288,23 @@ const inputQuantidade = document.getElementById('quantidade');
 
 // Lida com o clique no botão "Adicionar ao Carrinho"
 adicionarAoCarrinhoBtn.addEventListener('click', async () => {
+  function getCookie(name) {
+    const cookies = document.cookie.split(';');
+    for (let i = 0; i < cookies.length; i++) {
+    const cookie = cookies[i].trim();
+    if (cookie.startsWith(name + '=')) {
+        return cookie.substring(name.length + 1);
+    }
+}
+    return null;
+}
+     
+// Ler o valor do cookie 'userCad'
+const userId = getCookie('userId');
+console.log(userId);
+  if(userId == null) {
+    window.location.href = '/cadastro';
+  }else {
   try {
     // Obtenha a quantidade escolhida pelo usuário
     let quantidade = getMarkedQuantity();
@@ -348,6 +365,7 @@ adicionarAoCarrinhoBtn.addEventListener('click', async () => {
   } catch (error) {
     console.error('Erro ao adicionar o produto ao carrinho:', error);
   }
+}    
 });
 
   document.addEventListener('DOMContentLoaded', function () {
@@ -365,66 +383,84 @@ adicionarAoCarrinhoBtn.addEventListener('click', async () => {
     
     // Lida com o clique no botão "Avançar"
     avancarBtn.addEventListener('click', async () => {
-      try {
-        // Obtenha a quantidade escolhida pelo usuário
-        let quantidade = getMarkedQuantity();
-    
-        // Obtenha a quantidade marcada no checkbox
-        const markedQuantity = getMarkedQuantity();
-    
-    
-        // Verifique se a quantidade é válida (maior que 0)
-        if (quantidade <= 0) {
-          alert('Por favor, escolha uma quantidade válida maior que 0.');
-          return;
+      function getCookie(name) {
+        const cookies = document.cookie.split(';');
+        for (let i = 0; i < cookies.length; i++) {
+        const cookie = cookies[i].trim();
+        if (cookie.startsWith(name + '=')) {
+            return cookie.substring(name.length + 1);
         }
-    
-        const params = new URLSearchParams(window.location.search);
-        const produtoId = params.get('id');
-        const materialSelecionado = document.getElementById('material');
-        const formatoSelecionado = document.getElementById('formato');
-        const corSelecionada = document.getElementById('cor');
-        const enobrecimentoSelecionado = document.getElementById('enobrecimento');
-        const acabamentoSelecionado = document.getElementById('acabamento');
-        
-        const variacoesSelecionadas = {
-          idProduto: produtoId,
-          marca: marcaSelecionada ? marcaSelecionada.value : null,
-          material: materialSelecionado ? materialSelecionado.value : null,
-          formato: formatoSelecionado ? formatoSelecionado.value : null,
-          cor: corSelecionada ? corSelecionada.value : null,
-          enobrecimento: enobrecimentoSelecionado ? enobrecimentoSelecionado.value : null,
-          acabamento: acabamentoSelecionado ? acabamentoSelecionado.value : null,
-          modelo: modeloSelecionado ? modeloSelecionado.value : null,
-        };
-    
-        // Faça uma solicitação POST para adicionar o produto ao carrinho
-        const response = await fetch(`/adicionar-ao-carrinho/${produtoId}`, {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json'
-          },
-          body: JSON.stringify({ quantidade, ...variacoesSelecionadas })
-        });
-    
-        if (response.ok) {
-          // Produto adicionado com sucesso ao carrinho
-          avisoAdicionadoaoCarrinho.style.display = 'block';
-          setTimeout(() => {
-            window.location.href = '/carrinho'
-            avisoAdicionadoaoCarrinho.style.display = 'none';
-          }, 2000);
-          // Limpe o campo de entrada de quantidade
-          inputQuantidade.value = '1';
-        } else {
-          // Trate qualquer erro de adição ao carrinho
-          erroCarrinho.style.display = 'block';
-          setTimeout(() => {
-            erroCarrinho.style.display = 'none';
-          }, 5000);
+    }
+        return null;
+    }
+         
+    // Ler o valor do cookie 'userCad'
+    const userId = getCookie('userId');
+    console.log(userId);
+      if(userId == null) {
+        window.location.href = '/cadastro';
+      }else {
+        try {
+          // Obtenha a quantidade escolhida pelo usuário
+          let quantidade = getMarkedQuantity();
+      
+          // Obtenha a quantidade marcada no checkbox
+          const markedQuantity = getMarkedQuantity();
+      
+      
+          // Verifique se a quantidade é válida (maior que 0)
+          if (quantidade <= 0) {
+            alert('Por favor, escolha uma quantidade válida maior que 0.');
+            return;
+          }
+      
+          const params = new URLSearchParams(window.location.search);
+          const produtoId = params.get('id');
+          const materialSelecionado = document.getElementById('material');
+          const formatoSelecionado = document.getElementById('formato');
+          const corSelecionada = document.getElementById('cor');
+          const enobrecimentoSelecionado = document.getElementById('enobrecimento');
+          const acabamentoSelecionado = document.getElementById('acabamento');
+          
+          const variacoesSelecionadas = {
+            idProduto: produtoId,
+            marca: marcaSelecionada ? marcaSelecionada.value : null,
+            material: materialSelecionado ? materialSelecionado.value : null,
+            formato: formatoSelecionado ? formatoSelecionado.value : null,
+            cor: corSelecionada ? corSelecionada.value : null,
+            enobrecimento: enobrecimentoSelecionado ? enobrecimentoSelecionado.value : null,
+            acabamento: acabamentoSelecionado ? acabamentoSelecionado.value : null,
+            modelo: modeloSelecionado ? modeloSelecionado.value : null,
+          };
+      
+          // Faça uma solicitação POST para adicionar o produto ao carrinho
+          const response = await fetch(`/adicionar-ao-carrinho/${produtoId}`, {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ quantidade, ...variacoesSelecionadas })
+          });
+      
+          if (response.ok) {
+            // Produto adicionado com sucesso ao carrinho
+            avisoAdicionadoaoCarrinho.style.display = 'block';
+            setTimeout(() => {
+              window.location.href = '/carrinho'
+              avisoAdicionadoaoCarrinho.style.display = 'none';
+            }, 2000);
+            // Limpe o campo de entrada de quantidade
+            inputQuantidade.value = '1';
+          } else {
+            // Trate qualquer erro de adição ao carrinho
+            erroCarrinho.style.display = 'block';
+            setTimeout(() => {
+              erroCarrinho.style.display = 'none';
+            }, 5000);
+          }
+        } catch (error) {
+          console.error('Erro ao adicionar o produto ao carrinho:', error);
         }
-      } catch (error) {
-        console.error('Erro ao adicionar o produto ao carrinho:', error);
       }
     });
 });

@@ -18,6 +18,8 @@ console.log(userId);
 const urlParams = new URLSearchParams(window.location.search);
 const idPedido = urlParams.get('idPedido');
 
+const carregamento = document.getElementById('carregamento');
+
 fetch(`/detalhes-pedidoUser/${idPedido}`)
 .then((response) => response.json())
 .then((data) => {
@@ -28,6 +30,21 @@ fetch(`/detalhes-pedidoUser/${idPedido}`)
     // Verificar se há endereços disponíveis
     if (data.enderecos && data.enderecos.length > 0) {
         data.enderecos.forEach((endereco) => {
+            if(endereco.tipoEntrega == "Entrega a Retirar na Loja") {
+                const div = document.createElement('div');
+                div.id = 'divEnd';
+                div.innerHTML = `
+                <p><strong>Retirar em Rua:</strong> ${endereco.rua}</p>
+                <p><strong>Retirar em CEP:</strong> ${endereco.cep}</p>
+                <p><strong>Retirar em Cidade:</strong> ${endereco.cidade}</p>
+                <p><strong>Retirar em Estado:</strong> ${endereco.estado}</p>
+                <p><strong>Retirar em Número:</strong> ${endereco.numero}</p>
+                <p><strong>Retirar em Complemento:</strong> ${endereco.complemento}</p>
+                <p><strong>Retirar em Bairro:</strong> ${endereco.bairro}</p>
+                <p><strong>Celular:</strong> ${endereco.celular}</p>
+                `;
+                enderecoContainer.appendChild(div);
+            } else {
             const div = document.createElement('div');
             div.id = 'divEnd';
             div.innerHTML = `
@@ -41,6 +58,7 @@ fetch(`/detalhes-pedidoUser/${idPedido}`)
             <p><strong>Celular:</strong> ${endereco.celular}</p>
             `;
             enderecoContainer.appendChild(div);
+            }
         });
     } else {
         // Se não houver endereços disponíveis, exibir uma mensagem
@@ -90,6 +108,7 @@ fetch(`/detalhes-pedidoUser/${idPedido}`)
             const enviarButton = document.createElement('button');
             enviarButton.textContent = 'Enviar';
             enviarButton.addEventListener('click', () => {
+                carregamento.style.display = 'block'
                 const fileInput = document.querySelector(`[name="file_${item.idProduto}"]`);
                 const file = fileInput.files[0];
                 
@@ -110,12 +129,15 @@ fetch(`/detalhes-pedidoUser/${idPedido}`)
                     console.log('Resposta do servidor:', data);
                     setTimeout(() => {
                         window.location.reload();
-                    }, 5000)
+                    }, 3000)
                     // Você pode adicionar lógica aqui para atualizar a interface do usuário conforme necessário
                 })
                     .catch(error => console.error('Erro no envio do arquivo:', error));
                     } else {
                         alert('Por favor, escolha um arquivo antes de clicar em Enviar.');
+                        setTimeout(() => {
+                            window.location.reload();
+                        }, 3000)
                     }
                 });
                     div.appendChild(label);
