@@ -1244,17 +1244,17 @@ async function verificarGraficaMaisProximaEAtualizar2(itensPedido, enderecos) {
 }
     async function enviarEmailNotificacao(destinatario, assunto, corpo) {
       const transporter = nodemailer.createTransport({
-        host: 'smtp.gmail.com',
-        port: 465,
-        secure: true,
+        host: 'email-ssl.com.br',  // Servidor SMTP da LocalWeb
+        port: 465,                 // Porta para SSL (465)
+        secure: true,              // Usar conexão segura (SSL)
         auth: {
-          user: "gabrieldiastrin63@gmail.com",
-          pass: "bwep pyqq zocy ljsi"
-        }
+          user: 'no-reply@imprimeai.com.br',  // E-mail que você vai usar para enviar
+          pass: 'H0ndur@s',                    // Senha do e-mail
+        },
       })
 
       const info = await transporter.sendMail({
-        from: 'gabrieldiastrin63@gmail.com',
+        from: 'no-reply@imprimeai.com.br',
         to: destinatario,
         subject: assunto,
         text: corpo,

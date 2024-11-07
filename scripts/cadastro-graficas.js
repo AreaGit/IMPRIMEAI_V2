@@ -563,7 +563,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         produtos.forEach(produto => {
             const checkbox = document.createElement('input');
             checkbox.type = 'checkbox';
-            checkbox.name = `check ${produto.nomeProd.replace(/\s+/g, ' ')}`;
+            checkbox.name = `check${produto.nomeProd.replace(/\s+/g, ' ')}`;
             checkbox.id = `check ${produto.nomeProd.replace(/\s+/g, ' ')}`;
 
             const label = document.createElement('label');
