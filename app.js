@@ -1581,6 +1581,16 @@ app.get('/cadastro-planilha', (req, res) => {
     res.status(500).send("Erro interno do servidor", err)
   }
 });
+//Rota get para formulário para solicitações de novos parceiros
+app.get('/seja-um-parceiro', (req, res) => {
+  try {
+    const formParceiroContentHtml = fs.readFileSync(path.join(__dirname, "html", "parceiro.html"), "utf-8");
+    res.send(formParceiroContentHtml)
+  } catch (err) {
+    console.log("Erro ao ler o arquivo parceiro.html", err);
+    res.status(500).send("Erro interno do servidor", err);
+  }
+});
 app.listen(PORT, () => {
   console.log(`Servidor rodando na porta ${PORT} https://localhost:${PORT}`);
 });

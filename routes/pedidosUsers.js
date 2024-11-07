@@ -1755,7 +1755,7 @@ async function verificarGraficaMaisProximaEAtualizar2(itensPedido, enderecos) {
     method: 'POST',
     uri: 'https://api.pagar.me/core/v5/orders',
     headers: {
-      'Authorization': 'Basic ' + Buffer.from(`${pagarmeKeyTest}:`).toString('base64'),
+      'Authorization': 'Basic ' + Buffer.from(`${pagarmeKeyProd}:`).toString('base64'),
       'Content-Type': 'application/json'
     },
     body: body,

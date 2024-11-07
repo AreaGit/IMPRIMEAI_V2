@@ -1,0 +1,58 @@
+:root {
+    --branco:#ffff;
+    --coral:#F37160;
+    --flamingo:#F69896;
+    --concreto:#A7A9AC;
+    --preto:#000000;
+    --vermelho:#EF4126;
+    --font-padrao:'Open Sans';
+}
+* {
+    margin: 0px;
+    padding: 0px;
+    box-sizing: border-box;
+}
+body {
+    font-family: var(--font-padrao);
+    background-color: #F5F5F7;
+}
+#logo {
+    width: 135px;
+    height: 46px;
+    position: absolute;
+    left: 50%;
+    transform: translate(-50%);
+}
+header > h1 {
+    font-weight: 500;
+    font-size: 24px;
+    position: absolute;
+    left: 15%;
+    top: 80px;
+}
+#linhaHr {
+    border: 1px solid black;
+    width: 90vw;
+    position: absolute;
+    top: 125px;
+    left: 50%;
+    transform: translate(-50%);
+}
+header > h2 {
+    font-weight: 700;
+    font-size: 40px;
+    line-height: 61px;
+    position: absolute;
+    top: 150px;
+    left: 20%;
+    transform: translate(-20%);
+}
+.containerForm {
+    border: 1px solid;
+    width: 50%;
+    position: absolute;
+    left: 50%;
+    transform: translate(-50%);
+    top: 40%;
+    height: auto;
+}
