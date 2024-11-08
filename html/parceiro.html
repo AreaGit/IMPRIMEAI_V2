@@ -20,7 +20,7 @@
         <a href="/"><img src="../images/logo-imprimeai.png" alt="..." id="logo"></a>
         <h1>Seja um Parceiro</h1>
         <div id="linhaHr"></div>
-        <h2>Preencha os campos abaixo para <br> solicitar a ser um novo parceiro Imprimeai</h2>
+        <h2>Quer ser nosso parceiro? <br> Preencha os campos abaixo</h2>
     </header>
     <main>
         <div class="containerForm">
@@ -32,9 +32,162 @@
                 </p>
                 <p>
                     <label for="localidadeParceiro">Localidade</label>
+                    <br>
+                    <input type="text" name="localidadeParceiro" id="localidadeParceiro" placeholder="Digite sua localidade...">
                 </p>
+                <p>
+                    <label for="telefoneParceiro">Telefone</label>
+                    <br>
+                    <input type="text" name="telefoneParceiro" id="telefoneParceiro" placeholder="Digite seu Telefone...">
+                </p>
+                <p>
+                    <label for="emailParceiro">Email</label>
+                    <br>
+                    <input type="email" name="emailParceiro" id="emailParceiro" placeholder="Digite seu E-mail...">
+                </p>
+                <p>
+                    <label for="mensagemParceiro">Mensagem</label>
+                    <br>
+                    <textarea name="mensagemParceiro" id="mensagemParceiro" cols="30" rows="10" placeholder="Digite uma Mensagem..."></textarea>
+                </p>
+                <div id="checkboxProdutos">
+                    <h3>Marque os Produtos que a sua Gráfica Produz</h3> 
+   
+                </div>
+                <button type="button" id="enviarDados">Enviar</button>
             </form>
         </div>
     </main>
+    <div id="avisoUser">
+        <div class="notifications-container">
+            <div class="error-alert">
+              <div class="flex">
+                <div class="flex-shrink-0">
+                  
+                  <svg aria-hidden="true" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg" class="error-svg">
+                    <path clip-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" fill-rule="evenodd"></path>
+                  </svg>
+                </div>
+                <div class="error-prompt-container">
+                  <p class="error-prompt-heading">Seu nome está incompleto!
+                  </p><div class="error-prompt-wrap">
+                    <ul class="error-prompt-list" role="list">
+                      <li>O campo de usuário tem que possuir mais de 4 caracteres</li>
+                    </ul>
+                </div>
+                </div>
+              </div>
+            </div>
+          </div> 
+        </div>
+        <div id="avisoLocalidade">
+            <div class="notifications-container">
+                <div class="error-alert">
+                  <div class="flex">
+                    <div class="flex-shrink-0">
+                      
+                      <svg aria-hidden="true" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg" class="error-svg">
+                        <path clip-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" fill-rule="evenodd"></path>
+                      </svg>
+                    </div>
+                    <div class="error-prompt-container">
+                      <p class="error-prompt-heading">A localidade está incompleta!
+                      </p><div class="error-prompt-wrap">
+                        <ul class="error-prompt-list" role="list">
+
+                        </ul>
+                    </div>
+                    </div>
+                  </div>
+                </div>
+              </div> 
+            </div>
+            <div id="avisoTelefone">
+                <div class="notifications-container">
+                    <div class="error-alert">
+                      <div class="flex">
+                        <div class="flex-shrink-0">
+                          
+                          <svg aria-hidden="true" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg" class="error-svg">
+                            <path clip-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" fill-rule="evenodd"></path>
+                          </svg>
+                        </div>
+                        <div class="error-prompt-container">
+                          <p class="error-prompt-heading">Seu telefone está incompleto!
+                          </p><div class="error-prompt-wrap">
+                            <ul class="error-prompt-list" role="list">
+
+                            </ul>
+                        </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div> 
+                </div>
+                <div id="avisoEmail">
+                    <div class="notifications-container">
+                        <div class="error-alert">
+                          <div class="flex">
+                            <div class="flex-shrink-0">
+                              
+                              <svg aria-hidden="true" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg" class="error-svg">
+                                <path clip-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" fill-rule="evenodd"></path>
+                              </svg>
+                            </div>
+                            <div class="error-prompt-container">
+                              <p class="error-prompt-heading">E-mail digitado de forma incorreta
+                              </p><div class="error-prompt-wrap">
+                                <ul class="error-prompt-list" role="list">
+
+                                </ul>
+                            </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div> 
+                    </div>
+                    <div id="avisoUser">
+                        <div class="notifications-container">
+                            <div class="error-alert">
+                              <div class="flex">
+                                <div class="flex-shrink-0">
+                                  
+                                  <svg aria-hidden="true" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg" class="error-svg">
+                                    <path clip-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" fill-rule="evenodd"></path>
+                                  </svg>
+                                </div>
+                                <div class="error-prompt-container">
+                                  <p class="error-prompt-heading">O campo mensagem está incompleto!
+                                  </p><div class="error-prompt-wrap">
+                                    <ul class="error-prompt-list" role="list">
+
+                                    </ul>
+                                </div>
+                                </div>
+                              </div>
+                            </div>
+                          </div> 
+                        </div>
+                        <div id="avisoGeral">
+                            <div class="notifications-container">
+                                <div class="success">
+                                  <div class="flex">
+                                    <div class="flex-shrink-0">
+                                      <svg aria-hidden="true" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg" class="succes-svg">
+                                        <path clip-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" fill-rule="evenodd"></path>
+                                      </svg>
+                                    </div>
+                                    <div class="success-prompt-wrap">
+                                      <p class="success-prompt-heading">
+                                        Solicitação Enviada!
+                                      </p>
+                                      <div class="success-prompt-prompt">
+                                      </div>
+                                    </div>
+                                  </div>
+                                </div>
+                              </div>          
+                        </div>
+    <script src="../scripts/parceiro.js"></script>
 </body>
 </html>

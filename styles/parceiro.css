@@ -48,11 +48,194 @@ header > h2 {
     transform: translate(-20%);
 }
 .containerForm {
-    border: 1px solid;
     width: 50%;
     position: absolute;
     left: 50%;
     transform: translate(-50%);
     top: 40%;
     height: auto;
+    padding: 35px;
 }
+form {
+    position: absolute;
+    left: 65%;
+    transform: translate(-65%);
+    width: 45%;
+}
+p {
+    width: fit-content;
+}
+input {
+    padding: 10px;
+    border-radius: 2px;
+    border-color: none;
+    border: 1px solid #86868B;
+    font-size: 17px;
+    margin-top: 5px;
+    margin-bottom: 10px;
+    background-color: white;
+    width: 347px;
+    height: 51px;
+}
+label {
+    margin-top: 5px;
+}
+textarea {
+    padding: 10px;
+    border-radius: 2px;
+    border-color: none;
+    border: 1px solid #86868B;
+    font-size: 17px;
+    margin-top: 5px;
+    margin-bottom: 10px;
+    background-color: white;
+    width: 347px;
+}
+form > button {
+    width: 295px;
+    height: 51px;
+    font-size: 17px;
+    font-weight: bold;
+    color: #EF4126;
+    border: 1px solid #EF4126;
+    background-color: white;
+    box-shadow: -1px -1px 8px black;
+    cursor: pointer;
+    border-radius: 5px;
+    transition: 0.8s;
+    position: relative;
+    top: 20px;
+    left: 50%;
+    transform: translate(-50%);
+}
+form > button:hover {
+    transition: 0.8s;
+    background-color: #F37160;
+    color: white;
+}
+#checkboxProdutos > input {
+    width: 100px;
+ }
+ #checkboxProdutos > input[type="checkbox"] {
+   width: 30px;
+   width: 30px;
+ }
+ #checkboxProdutos > label {
+   position: relative;
+   top: -18px;
+   padding-left: 10px;
+ }
+ div#checkboxProdutos > h3 {
+   font-size: 17px;
+   width: fit-content;
+ }
+#avisoUser{display: none;}
+#avisoLocalidade{display: none;}
+#avisoEmail{display: none;}
+#avisoTelefone{display: none;}
+#avisoEmail{display: none;}
+#avisoMensagem{display: none;}
+#avisoGeral{display: none;}
+  .notifications-container {
+    width: 320px;
+    height: auto;
+    font-size: 0.875rem;
+    line-height: 1.25rem;
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    position: fixed;
+    left: 90%;
+    transform: translate(-90%);
+    top: 60px;
+  }
+  
+  .flex {
+    display: flex;
+  }
+  
+  .flex-shrink-0 {
+    flex-shrink: 0;
+  }
+  
+  .error-alert {
+    border-radius: 0.375rem;
+    padding: 1rem;
+    background-color: rgb(254 242 242);
+    border: 1px solid #f37160;
+  }
+  
+  .error-svg {
+    color: #F87171;
+    width: 1.25rem;
+    height: 1.25rem;
+  }
+  
+  .error-prompt-heading {
+    color: #991B1B;
+    font-size: 0.875rem;
+    line-height: 1.25rem;
+    font-weight: bold;
+  }
+  
+  .error-prompt-container {
+    display: flex;
+    flex-direction: column;
+    margin-left: 1.25rem;
+  }
+  
+  .error-prompt-wrap {
+    margin-top: 0.5rem;
+    color: #B91C1C;
+    font-size: 0.875rem;
+    line-height: 1.25rem;
+  }
+  
+  .error-prompt-list {
+    padding-left: 1.25rem;
+    margin-top: 0.25rem;
+    list-style-type: disc;
+  }
+
+  .flex {
+    display: flex;
+  }
+  
+  .flex-shrink-0 {
+    flex-shrink: 0;
+  }
+  
+  .success {
+    padding: 1rem;
+    border-radius: 0.375rem;
+    background-color: rgb(240 253 244);
+    border: 1px solid rgb(22 101 52);
+  }
+  
+  .succes-svg {
+    color: rgb(74 222 128);
+    width: 1.25rem;
+    height: 1.25rem;
+  }
+  
+  .success-prompt-wrap {
+    margin-left: 0.75rem;
+  }
+  
+  .success-prompt-heading {
+    font-weight: bold;
+    color: rgb(22 101 52);
+  }
+  
+  .success-prompt-prompt {
+    margin-top: 0.5rem;
+    color: rgb(21 128 61);
+  }
+  
+  .success-button-container {
+    display: flex;
+    margin-top: 0.875rem;
+    margin-bottom: -0.375rem;
+    margin-left: -0.5rem;
+    margin-right: -0.5rem;
+  }

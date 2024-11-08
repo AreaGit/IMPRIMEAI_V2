@@ -230,6 +230,42 @@ app.post('/redefinir-senha', async (req, res) => {
   }
 });
 
+app.post('/solicitar-parceiro', async (req, res) => {
+  try {
+    const { nome, localidade, telefone, email, mensagem, produtos } = req.body;
+
+    // Validação dos campos obrigatórios
+    if (!nome || !localidade || !telefone || !email || !mensagem) {
+      return res.status(400).json({ message: "Todos os campos obrigatórios devem ser preenchidos." });
+    }
+
+    // Transformar o objeto produtos em uma string
+    const produtosSelecionados = Object.keys(produtos)
+      .filter(produto => produtos[produto])
+      .join(', ');
+
+    // Configurar o corpo do e-mail
+    const corpoEmail = `
+      Nova Solicitação de Parceria\n
+      Nome: ${nome}\n
+      Localidade: ${localidade}\n
+      Telefone: ${telefone}\n
+      Email: ${email}\n
+      Mensagem: ${mensagem}\n
+      Produtos Selecionados: ${produtosSelecionados}
+    `;
+
+    // Enviar o e-mail usando a função enviarEmailNotificacao
+    await enviarEmailNotificacao('atendimento@imprimeai.com.br', 'Nova Solicitação de Parceria', corpoEmail);
+
+    // Responder com sucesso
+    res.status(200).json({ message: "Solicitação de parceria enviada com sucesso!" });
+  } catch (err) {
+    console.error("Erro ao processar solicitação de parceria:", err);
+    res.status(500).json({ message: "Erro interno do servidor. Tente novamente mais tarde." });
+  }
+});
+
 app.post('/cadastrar-produto', upload.fields([
   { name: 'gabaritoProd', maxCount: 1 }
 ]), async (req, res) => {
