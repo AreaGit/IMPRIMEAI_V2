@@ -1,0 +1,12 @@
+@media screen and (min-width: 320px) and (max-width: 767px) {
+    form {
+        position: relative;
+        top: 450px;
+        width: 40vw;
+        height: 600px;
+        left: 50%;
+        transform: translate(-50%);
+        display: flex;
+        justify-content: center;
+    }
+}

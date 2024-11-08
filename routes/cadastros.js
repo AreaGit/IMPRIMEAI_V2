@@ -172,6 +172,64 @@ app.get("/logout", (req, res) => {
   res.redirect("/login");
 });
 
+app.post('/enviar-email-redefinir', async(req, res) => {
+  try {
+    const email = req.body.email;
+    console.log("Email recebido para redefinir", email);
+
+    const transporter = nodemailer.createTransport({
+      host: 'email-ssl.com.br',  // Servidor SMTP da LocalWeb
+      port: 465,                 // Porta para SSL (465)
+      secure: true,              // Usar conexão segura (SSL)
+      auth: {
+        user: 'no-reply@imprimeai.com.br',  // E-mail que você vai usar para enviar
+        pass: 'H0ndur@s',                    // Senha do e-mail
+      },
+    })
+  
+    const info = await transporter.sendMail({
+      from: 'no-reply@imprimeai.com.br',
+      to: email,
+      subject: "Redefinição de senha",
+      text: "Olá vimos que você esqueceu sua senha! acesse esse link para redefini-lá: https://imprimeai.com.br/redefinir-senha",
+    });
+  
+    console.log('E-mail enviado:', info);
+
+    res.json({message: "Email enviado!"});
+  } catch(err) {
+
+  }
+});
+
+app.post('/redefinir-senha', async (req, res) => {
+  const { email, senha } = req.body;
+
+  try {
+      // 1. Busca o usuário pelo e-mail
+      const user = await User.findOne({ where: { emailCad: email } });
+      
+      if (!user) {
+          return res.status(404).json({ error: 'Usuário não encontrado' });
+      }
+
+      // 2. Cria um hash da nova senha usando bcrypt
+      const hashedPassword = await bcrypt.hash(senha, 10);
+
+      // 3. Atualiza a senha do usuário
+      await User.update({ passCad: hashedPassword }, { where: { emailCad: email } });
+
+      // 4. Remove o cookie emailUser
+      res.clearCookie('emailUser');
+
+      // 5. Responde com sucesso
+      res.status(200).json({ message: 'Senha redefinida com sucesso!' });
+  } catch (error) {
+      console.error('Erro ao redefinir senha:', error);
+      res.status(500).json({ error: 'Erro ao redefinir senha. Tente novamente mais tarde.' });
+  }
+});
+
 app.post('/cadastrar-produto', upload.fields([
   { name: 'gabaritoProd', maxCount: 1 }
 ]), async (req, res) => {

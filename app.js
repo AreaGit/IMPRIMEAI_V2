@@ -1591,6 +1591,36 @@ app.get('/seja-um-parceiro', (req, res) => {
     res.status(500).send("Erro interno do servidor", err);
   }
 });
+//Rota get para a página para envio de e-mail para redefinir a senha
+app.get('/esqueci-senha', (req, res) => {
+  try {
+    const esqueciContentHtml = fs.readFileSync(path.join(__dirname, "html", "esqueci-senha.html"), "utf-8");
+    res.send(esqueciContentHtml);
+  } catch (err) {
+    console.log("Erro ao ler o arquivo esqueci-senha.html", err);
+    res.status(500).send("Erro interno do servidor", err);
+  }
+});
+//Rota get para página de link enviado
+app.get('/link-enviado', (req, res) => {
+  try {
+    const linkEnviadoContentHtml = fs.readFileSync(path.join(__dirname, "html", "link-enviado.html"), "utf-8");
+    res.send(linkEnviadoContentHtml);
+  } catch (err) {
+    console.log("Erro ao ler o arquivo link-enviado.html", err);
+    res.status(500).send("Erro interno do servidor", err);
+  }
+});
+//Rota get para página para redefinir senha
+app.get('/redefinir-senha', (req, res) => {
+  try {
+    const redefinirSenhaHtmlContent = fs.readFileSync(path.join(__dirname, "html", "redefinir-senha.html"), "utf-8");
+    res.send(redefinirSenhaHtmlContent);
+  } catch(err) {
+    console.log("Erro ao ler o arquivo redefinir-senha.html", err);
+    res.status(500).send("Erro interno do servidor", err);
+  }
+})
 app.listen(PORT, () => {
   console.log(`Servidor rodando na porta ${PORT} https://localhost:${PORT}`);
 });

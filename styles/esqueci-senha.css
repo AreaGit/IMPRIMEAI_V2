@@ -54,6 +54,8 @@ form {
     height: 600px;
     left: 50%;
     transform: translate(-50%);
+    display: flex;
+    justify-content: center;
 }
 input {
     padding: 10px;
@@ -92,72 +94,11 @@ form > button:hover {
     background-color: #F37160;
     color: white;
 }
-div#conteudo {
-    width: min-content;
-    position: absolute;
-    left: 50%;
-    transform: translate(-50%);
-    top: 25%;
+#conteudo {
+    height: fit-content;
+    position: relative;
+    top: 40%;
 }
-.container {
-    --color: #a5a5b0;
-    --size: 25px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    cursor: pointer;
-    font-size: var(--size);
-    user-select: none;
-    fill: var(--color);
-    position: absolute;
-    left: 93%;
-    transform: translate(-93%);
-    top: 77%;
-  }
-  
-  .container .eye {
-    position: absolute;
-    animation: keyframes-fill .5s;
-  }
-  
-  .container .eye-slash {
-    position: absolute;
-    animation: keyframes-fill .5s;
-    display: none;
-  }
-  
-  /* ------ On check event ------ */
-  .container input:checked ~ .eye {
-    display: none;
-  }
-  
-  .container input:checked ~ .eye-slash {
-    display: block;
-  }
-  
-  /* ------ Hide the default checkbox ------ */
-  .container input {
-    position: absolute;
-    opacity: 0;
-    cursor: pointer;
-    height: 0;
-    width: 0;
-  }
-  
-  /* ------ Animation ------ */
-  @keyframes keyframes-fill {
-    0% {
-      transform: scale(0);
-      opacity: 0;
-    }
-  
-    50% {
-      transform: scale(1.2);
-    }
-  }
-  #avisoSucesso {
-    display: none;
-  }
   #avisoErro {
     display: none;
   }
@@ -287,10 +228,3 @@ div#conteudo {
     margin-top: 0.25rem;
     list-style-type: disc;
   }
-.lnkEsqSenha {
-  position: absolute;
-  left: 50%;
-  transform: translate(-50%);
-  top: 75%;
-  color: #F37160;
-} 

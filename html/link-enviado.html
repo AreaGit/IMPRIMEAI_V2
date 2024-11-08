@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Link Enviado!</title>
+    <link rel="shortcut icon" href="../images/favicon-imprimeai.png" type="image/x-icon">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,300;1,400;1,500;1,600;1,700;1,800&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter+Tight:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" />
+    <style>
+        :root {
+            --branco:#ffff;
+            --coral:#F37160;
+            --flamingo:#F69896;
+            --concreto:#A7A9AC;
+            --preto:#000000;
+            --vermelho:#EF4126;
+            --font-padrao:'Open Sans';
+        }
+        * {
+            margin: 0px;
+            padding: 0px;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: var(--font-padrao);
+            background-color: #F5F5F7;
+        }
+        .content {
+            width: 100%;
+            text-align: center;
+            position: relative;
+            top: 250px;
+        }
+        .content > img {
+            cursor: pointer;
+        }
+        .content > h1 {
+            color: #F37160;
+            margin-bottom: 40px;
+        }
+        .content > p > span {
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <div class="content">
+        <img id="logo" src="../images/logo-imprimeai.png" alt="...">
+        <h1>Link Enviado!</h1>
+        <p>Enviamos um link para <span id="email"></span> para redefinição de senha.</p>
+    </div>
+    <script>
+        const email = document.getElementById('email');
+        document.getElementById('logo').addEventListener('click', () => {
+            window.location.href = '/'
+        })
+        function getCookie(name) {
+            const nameEQ = name + "=";
+            const ca = document.cookie.split(';');
+            for(let i=0;i < ca.length;i++) {
+                let c = ca[i];
+                while (c.charAt(0) === ' ') c = c.substring(1,c.length);
+                if (c.indexOf(nameEQ) === 0) return c.substring(nameEQ.length,c.length);
+            }
+            return null;
+        }
+
+        email.textContent = getCookie("emailUser");
+    </script>
+</body>
+</html>
