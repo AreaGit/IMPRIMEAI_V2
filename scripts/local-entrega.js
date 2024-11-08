@@ -76,10 +76,14 @@ async function preencherEndereco(cep) {
         const data = await response.json();
         
         if (!data.erro) {
+            console.log(data)
             cidade.value = data.localidade;
             estado.value = data.uf;
             bairro.value = data.bairro;
+            rua.value = data.logradouro;
 
+            rua.style.borderColor = 'green';
+            valdRua = true;
             cidade.style.borderColor = 'green';
             validCidade = true;
             estado.style.borderColor = 'green';

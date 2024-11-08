@@ -71,6 +71,15 @@ const Pedidos = db.define('pedidos', {
     ]
 });
 
+// Rodar o comando SQL para garantir que o AUTO_INCREMENT comece a partir de 3001
+db.query('ALTER TABLE pedidos AUTO_INCREMENT = 3001', { raw: true })
+  .then(() => {
+    console.log("AUTO_INCREMENT alterado para 3001");
+  })
+  .catch((err) => {
+    console.error("Erro ao alterar AUTO_INCREMENT", err);
+  });
+
 Pedidos.hasMany(ItensPedidos, { foreignKey: 'idPed'});
 Pedidos.hasMany(Enderecos, { foreignKey: 'idPed'});
 

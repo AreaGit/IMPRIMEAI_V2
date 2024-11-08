@@ -959,7 +959,8 @@ app.post('/criar-pedidos', async (req, res) => {
   const { metodPag, idTransacao, valorPed } = req.body;
   const carrinhoQuebrado = req.session.carrinho || [];
   const enderecoDaSessao = req.session.endereco;
-  
+  const userId = req.cookies.userId
+
   try {
     if (carrinhoQuebrado.length === 0) {
       throw new Error('Carrinho vazio.');
@@ -1040,6 +1041,23 @@ app.post('/criar-pedidos', async (req, res) => {
       await verificarGraficaMaisProximaEAtualizar2(itensPedido, enderecos);
     } else {
       await verificarGraficaMaisProximaEAtualizar(itensPedido[0], enderecos[0]);
+    }
+
+    // Buscar informações do usuário para o WhatsApp
+    const usuario = await User.findByPk(userId, { attributes: ['telefoneCad', 'userCad'] });
+    if (usuario) {
+      const nome = usuario.userCad;
+      const telefone = usuario.telefoneCad;
+      const linkDetalhamento = `https://www.imprimeai.com.br/detalhesPedidosUser?idPedido=${pedido.id}`
+      const mensagemWhatsapp = "Oi " + nome + ", tudo bem? 😊 Quero te agradecer por confiar sua impressão com a Imprimeaí! Nosso time está super feliz por poder te atender. Se precisar de algo mais ou tiver alguma dúvida, por favor nos chame.\n\n" +
+      "Em breve, te trarei mais novidades sobre o pedido " + pedido.id + "\n" +
+      "Se preferir acompanhe também pelo site:" + linkDetalhamento + "\n\n" +
+      "Obrigada!\n\n" +
+      "Siga-nos no Insta\n" +
+      "https://www.instagram.com/imprimeai.com.br e fique por dentro das novidades, cupons de desconto e assuntos importantes sobre gráfica e comunicação visual!\n\n" +
+      "*Tá com pressa? Imprimeaí!*";
+
+      await enviarNotificacaoWhatsapp(telefone, mensagemWhatsapp);
     }
 
     // Limpar a sessão
@@ -1126,9 +1144,21 @@ async function verificarGraficaMaisProximaEAtualizar(itensPedido, enderecoPedido
           // Construir mensagem de notificação
           let mensagemStatus = `Novo pedido ID ${itensPedido[0].idPed}.`;
           if (itensPedido[0].statusPed === 'Pedido em Aberto') {
-            mensagemStatus += ` O pedido está em aberto e aguardando o envio da arte do cliente.`;
+            mensagemStatus = `Olá ${graficaMaisProxima.userCad}, tudo bem?\n\n` +
+            `Estou passando para avisar que o pedido ${itensPedido[0].idPed} está em aberto e aguardando o envio da arte do cliente. Fique atento ao painel de pedidos! \n` +
+            `O número do pedido é ${itensPedido[0].idPed} e ele precisa ser processado o quanto antes. \n` +
+            `Fique à vontade para nos avisar se houver qualquer dúvida ou necessidade de mais informações para dar sequência.\n\n` +
+            `Agradecemos a parceria e ficamos no aguardo do retorno. Caso precisem de algo, estamos à disposição!\n\n` +
+            `Atenciosamente,\n` +
+            `Suporte imprimeai.com.br`;
           } else {
-            mensagemStatus += ` O pedido está aguardando atendimento.`;
+            mensagemStatus = `Olá ${graficaMaisProxima.userCad}, tudo bem?\n\n` +
+            `Estou passando para avisar que temos um pedido aguardando atendimento de vocês. \n` +
+            `O número do pedido é ${itensPedido[0].idPed} e ele precisa ser processado o quanto antes. \n` +
+            `Fique à vontade para nos avisar se houver qualquer dúvida ou necessidade de mais informações para dar sequência.\n\n` +
+            `Agradecemos a parceria e ficamos no aguardo do retorno. Caso precisem de algo, estamos à disposição!\n\n` +
+            `Atenciosamente,\n` +
+            `Suporte imprimeai.com.br`;
           }
 
           // Enviar notificação por e-mail para a gráfica
@@ -1216,9 +1246,21 @@ async function verificarGraficaMaisProximaEAtualizar2(itensPedido, enderecos) {
                     let mensagemStatus = '';
       
                     if (pedidoCadastrado.statusPed === 'Aguardando') {
-                      mensagemStatus = `Olá gráfica ${graficaMaisProxima.userCad}, você tem um novo pedido em Aguardo para ser atendido. Abra o seu Painel de Pedidos!`;
+                       mensagemStatus = `Olá ${graficaMaisProxima.userCad}, tudo bem?\n\n` +
+                      `Estou passando para avisar que temos um pedido aguardando atendimento de vocês. \n` +
+                      `O número do pedido é ${itensPedido[0].idPed} e ele precisa ser processado o quanto antes. \n` +
+                      `Fique à vontade para nos avisar se houver qualquer dúvida ou necessidade de mais informações para dar sequência.\n\n` +
+                      `Agradecemos a parceria e ficamos no aguardo do retorno. Caso precisem de algo, estamos à disposição!\n\n` +
+                      `Atenciosamente,\n` +
+                      `Suporte imprimeai.com.br`;
                     } else {
-                      mensagemStatus = `Olá gráfica ${graficaMaisProxima.userCad}, você tem um novo pedido em Aberto para ser atendido. Fique atento ao seu Painel de Pedidos!`;
+                       mensagemStatus = `Olá ${graficaMaisProxima.userCad}, tudo bem?\n\n` +
+                      `Estou passando para avisar que temos um pedido em Aberto para ser atendido. Fique atento ao seu Painel de Pedidos! \n` +
+                      `O número do pedido é ${itensPedido[0].idPed} e ele precisa ser processado o quanto antes. \n` +
+                      `Fique à vontade para nos avisar se houver qualquer dúvida ou necessidade de mais informações para dar sequência.\n\n` +
+                      `Agradecemos a parceria e ficamos no aguardo do retorno. Caso precisem de algo, estamos à disposição!\n\n` +
+                      `Atenciosamente,\n` +
+                      `Suporte imprimeai.com.br`;
                     }
       
                     await enviarEmailNotificacao(graficaMaisProxima.emailCad, `Novo Pedido - ID ${pedidoCadastrado.id}`, mensagemStatus);
