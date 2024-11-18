@@ -3,6 +3,7 @@ const app = express();
 const bcrypt = require('bcrypt');
 const {Op} = require('sequelize');
 const User = require('../models/User');
+const UsersEmpresas = require('../models/Users-Empresas');
 const Produtos = require('../models/Produtos');
 const VariacoesProduto = require('../models/VariacoesProduto');
 const Graficas = require('../models/Graficas');
@@ -105,6 +106,56 @@ app.post("/cadastrar", async (req, res) => {
     }
 });
 
+app.post("/cadastrarUser-empresas", async (req, res) => { 
+  try {
+      const { userCad, cpfCad, endereçoCad, numCad, compCad, bairroCad, cepCad, cidadeCad, estadoCad, inscricaoEstadualCad, telefoneCad, empresa, emailCad, passCad } = req.body;
+      const hashedPassword = await bcrypt.hash(passCad, 10);
+
+  // Verifique se já existe um usuário com o mesmo CPF, email ou senha
+  const existingUser = await UsersEmpresas.findOne({
+    where: {
+      [Op.or]: [
+        { emailCad: emailCad },
+      ],
+    },
+  });
+
+  if (existingUser) {
+    return res.status(400).json({
+      message: "Já existe um usuário com este e-mail cadastrado",
+    });
+  }
+  // Geração do código de verificação
+  const verificationCode = Math.floor(1000 + Math.random() * 9000).toString();
+
+      const newUser = await UsersEmpresas.create({
+          userCad: userCad,
+          cpfCad: cpfCad,
+          endereçoCad: endereçoCad,
+          numCad: numCad,
+          compCad: compCad,
+          bairroCad: bairroCad,
+          cepCad: cepCad,
+          cidadeCad: cidadeCad,
+          estadoCad: estadoCad,
+          inscricaoEstadualCad: inscricaoEstadualCad,
+          telefoneCad: telefoneCad,
+          empresa: empresa,
+          emailCad: emailCad,
+          passCad: hashedPassword,
+          verificationCode: verificationCode // Salve o código de verificação
+      });
+      const mensagemStatus = `Seu código de verificação é: ${verificationCode}`
+      await enviarEmailNotificacao(emailCad, `Código de Verificação do usuário ${userCad}`, mensagemStatus);
+      await enviarNotificacaoWhatsapp(telefoneCad, `Seu código de verificação é: ${verificationCode}`);
+      res.json({ message: 'Usuário cadastrado com sucesso!', user: newUser });
+      
+  } catch (error) {
+      console.error('Erro ao cadastrar usuário:', error);
+      res.status(500).json({ message: 'Erro ao cadastrar usuário' });
+  }
+});
+
 app.post('/verificar-codigo', async (req, res) => {
   try {
       const { emailCad, verificationCode } = req.body;
@@ -148,6 +199,46 @@ app.post("/login", async (req, res) => {
       return res.status(401).json({ message: "Senha incorreta" });
     }
 
+    res.cookie('userCad', user.userCad);
+    res.cookie("userId", user.id);
+    res.clearCookie("userIdTemp")
+    // Gere um token de autenticação (exemplo simples)
+    const token = Math.random().toString(16).substring(2);
+
+    res.json({ message: "Login bem-sucedido", token: token, userCad: user.userCad });
+    console.log(token)
+  } catch (error) {
+    console.error("Erro ao fazer login:", error);
+    res.status(500).json({ message: "Erro ao Fazer o Login <br> Preencha os Campos Corretamente" });
+  }
+});
+
+app.post("/loginUser-empresas", async (req, res) => {
+  try {
+    const { empresa, emailCad, passCad } = req.body;
+
+    // Verifique se o usuário existe no banco de dados
+    const user = await UsersEmpresas.findOne({ where: { emailCad: emailCad} });
+
+    if (!user) {
+      return res.status(401).json({ message: "Usuário não encontrado" });
+    }
+
+    //verificando se empresa está correta
+    const empresaMatch = await UsersEmpresas.findOne({ where: { empresa: empresa} });
+
+    if (!empresaMatch) {
+      return res.status(401).json({ message: "Empresa Incorreta" });
+    }
+
+    const passwordMatch = await bcrypt.compare(passCad, user.passCad);
+
+    // Verifique se a senha está correta
+    if (!passwordMatch) {
+      return res.status(401).json({ message: "Senha incorreta" });
+    }
+
+    res.cookie("empresa", user.empresa);
     res.cookie('userCad', user.userCad);
     res.cookie("userId", user.id);
     res.clearCookie("userIdTemp")
