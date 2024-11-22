@@ -8,6 +8,7 @@ const pedidosUsers = require('./routes/pedidosUsers');
 const graficasServer = require('./routes/graficasServer')
 const Produtos = require('./models/Produtos');
 const VariacoesProduto = require('./models/VariacoesProduto');
+const Empresas = require('./models/Empresas');
 const Graficas = require('./models/Graficas');
 const Pedidos = require('./models/Pedidos');
 const ItensPedido = require('./models/ItensPedido');
@@ -1634,6 +1635,16 @@ app.get('/empresas/cadastro', (req, res) => {
     res.status(500).send("Erro interno do servidor", err);
   }
 });
+//Rota get para a página de cadastro de marcas
+app.get('/empresas/cadastro-marcas', (req, res) => {
+  try {
+    const cadastroMarcasEmpresasHtmlContent = fs.readFileSync(path.join(__dirname, "html", "cadastro-marcas.html"), "utf-8");
+    res.send(cadastroMarcasEmpresasHtmlContent);
+  } catch(err) {
+    console.log("Erro ao ler o arquivo cadastro-marcas.html", err);
+    res.status(500).send("Erro interno do servidor", err);
+  }
+});
 //Rota get para a página de login
 app.get('/empresas/login', (req, res) => {
   try {
@@ -1642,6 +1653,57 @@ app.get('/empresas/login', (req, res) => {
   } catch(err) {
     console.log("Erro ao ler o arquivo login.html", err);
     res.status(500).send("Erro interno do servidor", err);
+  }
+});
+//Rota get para página de cadastro de produtos exclusivos via planilha
+app.get('/empresas/cadastro-planilha-exclusivos', (req, res) => {
+  try {
+    const cadastroPlanilhaContentHtml = fs.readFileSync(path.join(__dirname, "html", "cadastro-produtosexclusivos-planilha.html"), "utf-8");
+    res.send(cadastroPlanilhaContentHtml);
+  } catch(err) {
+    console.log("Erro ao ler o arquivo cadatro-produtosexclusivos-planilha.html", err);
+    res.status(500).send("Erro interno do servidor", err)
+  }
+});
+//Rota get para o painel dinâmico da loja
+app.get('/:empresa/inicio', (req, res) => {
+  try {
+    const portalEmpresaHtmlContent = fs.readFileSync(path.join(__dirname, "html", "portal.html"), "utf-8");
+    res.send(portalEmpresaHtmlContent);
+  } catch(err) {
+    console.log("Erro ao ler o arquivo portal.html", err);
+    res.status(500).send("Erro interno do servidor", err);
+  }
+});
+//Rota get para pegar informações da empresa
+app.get('/api/empresa/logo', async (req, res) => {
+  try {
+    // Recupera o nome da empresa dos cookies
+    const empresaCookie = req.cookies.empresa;
+
+    if (!empresaCookie) {
+      return res.status(400).json({ message: 'Nome da empresa não encontrado nos cookies.' });
+    }
+
+    // Decodifica o nome da empresa
+    const nomeEmpresa = decodeURIComponent(empresaCookie);
+
+    // Busca a empresa no banco de dados
+    const empresa = await Empresas.findOne({
+      where: { nome: nomeEmpresa },
+      attributes: ['logo'], // Retorna apenas o campo logo
+    });
+
+    if (!empresa) {
+      return res.status(404).json({ message: 'Empresa não encontrada.' });
+    }
+
+    // Converte o BLOB para base64 e retorna
+    const logoBase64 = empresa.logo.toString('base64');
+    res.json({ logo: `data:image/png;base64,${logoBase64}` });
+  } catch (error) {
+    console.error('Erro ao buscar a logo da empresa:', error);
+    res.status(500).json({ message: 'Erro interno do servidor.' });
   }
 });
 

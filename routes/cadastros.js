@@ -6,6 +6,9 @@ const User = require('../models/User');
 const UsersEmpresas = require('../models/Users-Empresas');
 const Produtos = require('../models/Produtos');
 const VariacoesProduto = require('../models/VariacoesProduto');
+const ProdutosExc = require('../models/ProdutosExc');
+const VariacoesProdutoExc = require('../models/VariacoesProdutoExc');
+const Empresas = require('../models/Empresas');
 const Graficas = require('../models/Graficas');
 const multer = require('multer');
 const nodemailer = require('nodemailer');
@@ -104,6 +107,31 @@ app.post("/cadastrar", async (req, res) => {
         console.error('Erro ao cadastrar usuário:', error);
         res.status(500).json({ message: 'Erro ao cadastrar usuário' });
     }
+});
+
+// Rota para cadastrar a marca
+app.post('/cadastrar-marca', async (req, res) => {
+  const { nomeMarca, logo } = req.body;
+
+  if (!nomeMarca || !logo) {
+    return res.status(400).json({ message: 'Nome da marca e logo são obrigatórios.' });
+  }
+
+  try {
+    // Remover o prefixo base64 e converter para buffer
+    const logoBuffer = Buffer.from(logo.split(',')[1], 'base64');
+
+    // Salvar no banco de dados
+    const novaEmpresa = await Empresas.create({
+      nome: nomeMarca,
+      logo: logoBuffer,
+    });
+
+    res.status(201).json({ message: 'Marca cadastrada com sucesso.', empresa: novaEmpresa });
+  } catch (error) {
+    console.error('Erro ao cadastrar a marca:', error);
+    res.status(500).json({ message: 'Erro interno do servidor.' });
+  }
 });
 
 app.post("/cadastrarUser-empresas", async (req, res) => { 
@@ -217,39 +245,36 @@ app.post("/loginUser-empresas", async (req, res) => {
   try {
     const { empresa, emailCad, passCad } = req.body;
 
-    // Verifique se o usuário existe no banco de dados
-    const user = await UsersEmpresas.findOne({ where: { emailCad: emailCad} });
+    // Verifique se o usuário e a empresa existem no banco de dados
+    const user = await UsersEmpresas.findOne({
+      where: { emailCad: emailCad, empresa: empresa },
+      attributes: ['id', 'empresa', 'passCad', 'userCad'], // Inclui userCad na busca
+    });
 
     if (!user) {
-      return res.status(401).json({ message: "Usuário não encontrado" });
+      return res.status(401).json({ message: "Credenciais inválidas." });
     }
-
-    //verificando se empresa está correta
-    const empresaMatch = await UsersEmpresas.findOne({ where: { empresa: empresa} });
-
-    if (!empresaMatch) {
-      return res.status(401).json({ message: "Empresa Incorreta" });
-    }
-
-    const passwordMatch = await bcrypt.compare(passCad, user.passCad);
 
     // Verifique se a senha está correta
+    const passwordMatch = await bcrypt.compare(passCad, user.passCad);
     if (!passwordMatch) {
-      return res.status(401).json({ message: "Senha incorreta" });
+      return res.status(401).json({ message: "Credenciais inválidas." });
     }
 
-    res.cookie("empresa", user.empresa);
+    // Configure os cookies: empresa, userId e username
+    res.cookie("empresa", user.empresa, { httpOnly: true, secure: true });
+    res.cookie("userId", user.id, { httpOnly: true, secure: true });
     res.cookie('userCad', user.userCad);
-    res.cookie("userId", user.id);
-    res.clearCookie("userIdTemp")
-    // Gere um token de autenticação (exemplo simples)
-    const token = Math.random().toString(16).substring(2);
 
-    res.json({ message: "Login bem-sucedido", token: token, userCad: user.userCad });
-    console.log(token)
+    // Retorne sucesso e a URL de redirecionamento
+    res.json({
+      success: true,
+      message: "Login bem-sucedido",
+      redirectUrl: `/${encodeURIComponent(user.empresa)}/inicio`,
+    });
   } catch (error) {
     console.error("Erro ao fazer login:", error);
-    res.status(500).json({ message: "Erro ao Fazer o Login <br> Preencha os Campos Corretamente" });
+    res.status(500).json({ message: "Erro ao realizar login." });
   }
 });
 
@@ -541,6 +566,136 @@ app.post('/cadastrar-produtos-planilha', upload.single('file'), async (req, res)
         : `[${quantidades.toString().replace(/\./g, '')}]`; // Remove pontos da string
       // Insira as variações do produto na tabela VariacoesProduto
       await VariacoesProduto.create({
+        idProduto: novoProduto.id,
+        marca: marcaJSON,
+        modelo: modeloJSON,
+        material: materialJSON,
+        formato: formatoJSON,
+        enobrecimento: enobrecimentoJSON,
+        cor: corJSON,
+        acabamento: acabamentoJSON,
+        quantidades: quantidadesString, // Armazenando as quantidades
+      });
+    }
+
+    res.json({ message: 'Produtos cadastrados com sucesso!' });
+  } catch (error) {
+    console.error('Erro ao cadastrar produtos:', error);
+    res.status(500).json({ message: 'Erro ao cadastrar produtos', error: error.message });
+  }
+}); 
+
+app.post('/cadastrar-produtosexclusivos-planilha', upload.single('file'), async (req, res) => {
+  try {
+    if (!req.file) {
+      return res.status(400).json({ message: 'Arquivo de planilha não enviado.' });
+    }
+
+    // Ler a planilha carregada
+    const workbook = xlsx.read(req.file.buffer, { type: 'buffer' });
+    const sheetName = workbook.SheetNames[0]; // Lê a primeira aba da planilha
+    const sheet = workbook.Sheets[sheetName];
+
+    // Converte a planilha para um array de objetos
+    const produtos = xlsx.utils.sheet_to_json(sheet);
+
+    // Itera sobre os produtos e cadastra cada um no banco de dados
+    for (const produto of produtos) {
+      const {
+        nomeProd,
+        descProd,
+        valorProd,
+        categoriaProd,
+        categoriaProd2,
+        categoriaProd3,
+        empresa,
+        raioProd,
+        marca,
+        modelo,
+        material,
+        formato,
+        enobrecimento,
+        cor,
+        acabamento,
+        quantidades,
+        imgProd,
+        imgProd2,
+        imgProd3,
+        imgProd4,
+      } = produto;
+
+      // Insere o produto na tabela Produtos
+      const novoProduto = await ProdutosExc.create({
+        nomeProd: nomeProd,
+        descProd: descProd,
+        valorProd: valorProd,
+        categProd: categoriaProd,
+        categProd2: categoriaProd2,
+        categProd3: categoriaProd3, 
+        empresa: empresa,
+        raioProd: raioProd,
+        imgProd: imgProd,
+        imgProd2: imgProd2,
+        imgProd3: imgProd3,
+        imgProd4: imgProd4,
+      });
+
+      let modeloJSON
+      let marcaJSON
+      let materialJSON
+      let formatoJSON
+      let enobrecimentoJSON
+      let corJSON
+      let acabamentoJSON
+      // Converte arrays para strings JSON
+      if(modelo == null) {
+         modeloJSON = "Não há"
+      } else {
+        modeloJSON = JSON.stringify(modelo.split(','));
+      } 
+      
+      if(marca == null) {
+         marcaJSON = "Não há"
+      } else {
+        marcaJSON = JSON.stringify(marca.split(','));
+      } 
+      
+      if(material == null) {
+         materialJSON = "Não há"
+      } else {
+        materialJSON = JSON.stringify(material.split(','));
+      } 
+      
+      if(formato == null) {
+         formatoJSON = "Não há"
+      } else {
+        formatoJSON = JSON.stringify(formato.split(','));
+      } 
+      
+      if(enobrecimento == null) { 
+         enobrecimentoJSON = "Não há"
+      } else {
+        enobrecimentoJSON = JSON.stringify(enobrecimento.split(','));
+      } 
+      
+      if(cor == null) {
+          corJSON = "Não há"
+      } else {
+        corJSON = JSON.stringify(cor.split(','));
+      } 
+      
+      if(acabamento == null) {
+         acabamentoJSON = "Não há"
+      } else {
+        acabamentoJSON = JSON.stringify(acabamento.split(','));
+      }
+      
+      // Converte quantidades para string se não for string
+      const quantidadesString = Array.isArray(quantidades)
+        ? `[${quantidades.join(',')}]` // Se for array, transforma em string com colchetes
+        : `[${quantidades.toString().replace(/\./g, '')}]`; // Remove pontos da string
+      // Insira as variações do produto na tabela VariacoesProduto
+      await VariacoesProdutoExc.create({
         idProduto: novoProduto.id,
         marca: marcaJSON,
         modelo: modeloJSON,

@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cadastro Marcas</title>
+    <link rel="shortcut icon" href="../images/favicon-imprimeai.png" type="image/x-icon">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,300;1,400;1,500;1,600;1,700;1,800&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter+Tight:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" />
+    <link rel="stylesheet" href="../styles/cadastro-marcas.css">
+    <link rel="stylesheet" href="../styles/cadastro-marcas-resp.css">
+</head>
+<body>
+    <header>
+        <a href="/"><img src="../images/logo-imprimeai.png" alt="..." id="logo"></a>
+        <h1>Cadastro de Marcas</h1>
+        <div id="linhaHr"></div>
+        <h2>Prencha os campos abaixo para <br> cadastrar a sua marca</h2>
+    </header>
+    <form>
+        <div id="leftForm">
+            <label for="nomeMarca">Nome da Marca</label>
+            <br>
+            <input type="text" name="nomeMarca" id="nomeMarca" placeholder="Digite o nome da Marca..." size="35" required minlength="4" class="custom-input">
+            <br>
+            <label for="logoMarca">Logo da Marca</label>
+            <br>
+            <input type="file" name="logoMarca" id="logoMarca">
+            <br>
+            <button id="btnCadastrarMarca">Cadastrar Marca</button>
+        </div>
+    </form>
+    <script src="../scripts/cadastro-marcas.js"></script>
+</body>
+</html>

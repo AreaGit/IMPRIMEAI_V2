@@ -43,7 +43,7 @@ btnCad.addEventListener('click', () => {
           document.cookie = `username=${data.userCad}; path=/;`;
           setTimeout(() => {
             avisoSucesso.style.display = 'none';
-            window.location.href = '/';
+            window.location.href = data.redirectUrl;
           }, 3000);
         } else {
           // Exibir mensagem de erro
