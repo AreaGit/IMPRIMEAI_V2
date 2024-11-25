@@ -747,6 +747,63 @@
     cursor: pointer;
     width: 300px;
   }
+  #produtos {
+    position: absolute;
+    top: 40%;
+    flex-wrap: nowrap;
+    justify-content: space-between;
+    left: 50%;
+    transform: translate(-50%);
+    width: 100%;
+}
+.cxProd {
+  cursor: pointer;
+  padding: 15px;
+  display: inline-flex;
+  box-shadow: -1px -1px 8px #434344;
+  border-radius: 5px;
+  width: calc(24% - 20px);
+  overflow: hidden; /* Oculta o conteúdo que ultrapassa a altura definida */
+  height: 456px;
+  position: relative;
+  top: 12%;
+  left: 15%;
+  transition: transform 0.8s;
+  margin: 20px;
+  transition: 0.8s;
+  background-color: white;
+}
+.cxProd:hover {
+  box-shadow: -1px 1px 8px #ef41266c;
+  transform: scale(1.1);
+}
+.cxProd > img {
+  width: 235px;
+  height: 292px;
+  position: absolute;
+  left: 50%;
+  transform: translate(-50%);
+  top: 15%;
+}
+.cxProd > h2 {
+  height: 31px;
+}
+.cxProd > p {
+  position: absolute;
+  top: 87%;
+  left: 6%;
+}
+.cxProd > a {
+  position: absolute;
+  top: 89%;
+  left: 75%;
+  background-color: #F37160;
+  color: white;
+  padding: 8px 18px 8px 18px;
+  font-size: 14px;
+  font-weight: 400;
+  border-radius: 2px;
+}
   #novidades {
     display: flex;
     flex-direction: column; /* Alinha o título e os links em coluna */

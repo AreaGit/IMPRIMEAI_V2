@@ -8,6 +8,8 @@ const VariacoesProduto = require('../models/VariacoesProduto');
 const Pedidos = require('../models/Pedidos');
 const ItensPedido = require('../models/ItensPedido');
 const Enderecos = require('../models/Enderecos');
+const ProdutosExc = require('../models/ProdutosExc');
+const VariacoesProdutoExc = require('../models/VariacoesProdutoExc');
 const {Op} = require('sequelize');
 const multer = require('multer');
 const cookieParser = require('cookie-parser');
@@ -143,6 +145,70 @@ app.post('/adicionar-ao-carrinho/:produtoId', async (req, res) => {
   
       // Consulte o banco de dados para obter as informações do produto
       const produto = await Produtos.findByPk(produtoId);
+  
+      // Verifique se o produto existe
+      if (!produto) {
+        return res.status(404).json({ message: 'Produto não encontrado' });
+      }
+  
+      // Inicialize o carrinho se ainda não existir na sessão
+      if (!req.session.carrinho) {
+        req.session.carrinho = [];
+      }
+  
+      // Verifique se o produto já está no carrinho
+      const produtoNoCarrinho = req.session.carrinho.find((item) => item.produtoId === produto.id);
+  
+      if (produtoNoCarrinho) {
+        // Se o produto já estiver no carrinho, atualize a quantidade
+        produtoNoCarrinho.quantidade += quantidade;
+        produtoNoCarrinho.subtotal = produtoNoCarrinho.quantidade * produto.valorProd;
+      } else {
+        // Caso contrário, adicione o produto ao carrinho
+        req.session.carrinho.push({
+          userId: userId,
+          produtoId: produto.id,
+          nomeProd: produto.nomeProd,
+          quantidade: quantidade,
+          valorUnitario: produto.valorProd,
+          subtotal: quantidade * produto.valorProd,
+          raioProd: produto.raioProd,
+          marca: variacoesSelecionadas.marca,
+          modelo: variacoesSelecionadas.modelo,
+          acabamento: variacoesSelecionadas.acabamento,
+          cor: variacoesSelecionadas.cor,
+          enobrecimento: variacoesSelecionadas.enobrecimento,
+          formato: variacoesSelecionadas.formato,
+          material: variacoesSelecionadas.material,
+        });
+      }
+  
+      // Responda com uma mensagem de sucesso e o carrinho atualizado
+      res.json({ message: 'Produto adicionado ao carrinho com sucesso', carrinho: req.session.carrinho });
+      console.log(req.session.carrinho)
+    } catch (error) {
+      console.error('Erro ao adicionar o produto ao carrinho:', error);
+      res.status(500).json({ message: 'Erro ao adicionar o produto ao carrinho' });
+    }
+  });
+
+  app.post('/adicionar-ao-carrinho-empresa/:produtoId', async (req, res) => {
+    try {
+      const produtoId = req.params.produtoId;
+      const { quantidade, ...variacoesSelecionadas } = req.body; // A quantidade do produto a ser adicionada
+      let userId = req.cookies.userId;
+      console.log(req.body)
+      if(!userId) {
+        userId = req.cookies.userIdTemp;
+      }
+
+      // Verifique se a quantidade é um número válido
+      if (typeof quantidade !== 'number' || quantidade <= 0) {
+        return res.status(400).json({ message: 'Quantidade inválida' });
+      }
+  
+      // Consulte o banco de dados para obter as informações do produto
+      const produto = await ProdutosExc.findByPk(produtoId);
   
       // Verifique se o produto existe
       if (!produto) {

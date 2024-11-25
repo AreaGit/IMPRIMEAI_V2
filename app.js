@@ -15,6 +15,8 @@ const ItensPedido = require('./models/ItensPedido');
 const Enderecos = require('./models/Enderecos');
 const Newsletter = require('./models/Newsletter');
 const Saques = require('./models/Saques');
+const ProdutosExc = require('./models/ProdutosExc');
+const VariacoesProdutoExc = require('./models/VariacoesProdutoExc');
 const nodemailer = require('nodemailer');
 const { Op } = require('sequelize');
 const redis = require('redis');
@@ -1706,7 +1708,141 @@ app.get('/api/empresa/logo', async (req, res) => {
     res.status(500).json({ message: 'Erro interno do servidor.' });
   }
 });
+//Rota get para pegar os produtos da empresa
+app.get('/api-produtos/empresa', async (req, res) => {
+  try {
+    // Recupera o nome da empresa dos parâmetros da URL
+    const empresa = req.cookies.empresa;
+    console.log(empresa)
+    // Validação básica do parâmetro
+    if (!empresa) {
+      return res.status(400).json({ error: "Nome da empresa não fornecido ou inválido." });
+    }
 
+    // Busca os produtos no banco filtrando pelo nome da empresa
+    const produtos = await ProdutosExc.findAll({
+      where: { empresa }, // Substitua "empresa" pelo nome exato da coluna no banco
+    });
+
+    // Verifica se encontrou produtos
+    if (produtos.length === 0) {
+      return res.status(404).json({ message: "Nenhum produto encontrado para esta empresa." });
+    }
+
+    // Retorna os produtos encontrados
+    res.json(produtos);
+  } catch (error) {
+    console.error("Erro ao buscar produtos:", error);
+    res.status(500).json({ error: "Erro ao buscar produtos. Tente novamente mais tarde." });
+  }
+});
+// Rota dinâmica para carregar a página de detalhes do produto com o nome da empresa
+app.get('/:empresa/detalhes-produtos', (req, res) => {
+  try {
+    const { empresa } = req.params;
+
+    // Validação básica para o nome da empresa
+    if (!empresa) {
+      return res.status(400).send("Nome da empresa não fornecido.");
+    }
+
+    // Carrega o arquivo HTML de detalhes do produto
+    const detalhesHtmlContent = fs.readFileSync(
+      path.join(__dirname, 'html', 'detalhes-produtos-empresa.html'),
+      'utf-8'
+    );
+
+    // Serve o arquivo HTML
+    res.send(detalhesHtmlContent);
+  } catch (err) {
+    console.error("Erro ao carregar a página detalhes-produtos-empresa.html", err);
+    res.status(500).send("Erro interno do servidor.");
+  }
+});
+//Rotas get para mostrar o produto e as suas variações
+app.get('/produto-empresa/:id', async (req, res) => {
+  try {
+    const productId = parseInt(req.params.id);
+    const produto = await ProdutosExc.findByPk(productId); // Use o método correto para buscar o produto
+
+    if (!produto) {
+      res.status(404).json({ mensagem: 'Produto não encontrado' });
+    } else {
+      res.json({
+        id: produto.id,
+        nomeProd: produto.nomeProd,
+        descProd: produto.descProd,
+        valorProd: produto.valorProd,
+        raioProd: produto.raioProd,
+        imgProd: produto.imgProd, // Include the main product image
+        imgProd2: produto.imgProd2, // Include additional image 1
+        imgProd3: produto.imgProd3, // Include additional image 2
+        imgProd4: produto.imgProd4, // Include additional image 3
+        gabaritoProd: produto.gabaritoProd,
+        // Adicione outras propriedades do produto conforme necessário
+      });
+    }
+  } catch (error) {
+    console.error('Erro ao buscar detalhes do produto:', error);
+    res.status(500).json({ mensagem: 'Erro interno do servidor' });
+  }
+}); 
+app.get('/produto-empresa/:id/gabarito', async (req, res) => {
+  try {
+    const productId = parseInt(req.params.id);
+    const produto = await ProdutosExc.findByPk(productId);
+
+    if (!produto || !produto.gabaritoProd) {
+      return res.status(404).json({ mensagem: 'Gabarito não encontrado' });
+    }
+
+    // Tratamento do conteúdo do PDF
+    const pdfContent = Buffer.from(produto.gabaritoProd, 'binary'); // Assumindo que o conteúdo está armazenado como string
+    res.setHeader('Content-Type', 'application/pdf');
+    res.setHeader('Content-Disposition', `attachment; filename=${produto.nomeProd}_gabarito.pdf`);
+    res.send(pdfContent);
+  } catch (error) {
+    console.error('Erro ao baixar gabarito:', error);
+    res.status(500).json({ mensagem: 'Erro interno do servidor' });
+  }
+});
+app.get('/variacoes-produto-empresa/:id', async (req, res) => {
+  try {
+    const produtoId = parseInt(req.params.id);
+
+    // Buscar as variações do produto com base no ID do produto
+    const variacoes = await VariacoesProdutoExc.findAll({
+      where: { idProduto: produtoId }
+    });
+
+    res.json(variacoes);
+  } catch (error) {
+    console.error('Erro ao buscar variações do produto:', error);
+    res.status(500).json({ mensagem: 'Erro interno do servidor' });
+  }
+});
+app.get('/api/quantidades-empresa/:produtoId', async (req, res) => {
+  try {
+    const { produtoId } = req.params;
+
+    // Encontre as variações do produto pelo ID do produto
+    const variacoesProduto = await VariacoesProdutoExc.findOne({
+      where: { idProduto: produtoId },
+    });
+
+    if (!variacoesProduto) {
+      return res.status(404).json({ error: 'Produto não encontrado' });
+    }
+
+    // Converta as quantidades de volta para um array de números
+    const quantidades = JSON.parse(variacoesProduto.quantidades);
+
+    res.json({ quantidades });
+  } catch (error) {
+    console.error('Erro ao obter as quantidades:', error);
+    res.status(500).json({ error: 'Erro ao obter as quantidades' });
+  }
+});
 app.listen(PORT, () => {
   console.log(`Servidor rodando na porta ${PORT} https://localhost:${PORT}`);
 });

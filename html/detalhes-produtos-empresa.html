@@ -1,0 +1,1975 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Detalhes do Produto</title>
+    <link rel="shortcut icon" href="../images/favicon-imprimeai.png" type="image/x-icon">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,300;1,400;1,500;1,600;1,700;1,800&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter+Tight:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0"/>
+    <link rel="stylesheet" href="../styles/detalhes-produtos.css">
+    <link rel="stylesheet" href="../styles/detalhes-produtos-resp.css">
+</head>
+<body>
+    <header>
+        <div class="mainContentHeader">
+            <div class="sliderBanner-header">
+              <!--Slider Banner Ficará aqui-->
+            </div>
+            <div class="messageHeader">
+              <p>Tá com pressa?</p>
+            </div>
+            <div class="linksHeader">
+              <ul>
+                <li><a href="/pedidosUsuario">Meus Pedidos</a></li>
+                <li><a href="/carteira">Minha Carteira</a></li>
+              </ul>
+            </div>
+            <div class="icons-mediaHeader">
+              <ul>
+                <li><img src="https://wbl.blob.core.windows.net/public/icon-whatsapp.png" alt="..."></li>
+                <li><img src="https://wbl.blob.core.windows.net/public/icon-instagram-black.png" alt="..."></li>
+                <li><img src="https://wbl.blob.core.windows.net/public/icon-youtube-black.png" alt="..."></li>
+                <li><img src="https://wbl.blob.core.windows.net/public/icon-facebook-black.png" alt="..."></li>
+              </ul>
+            </div>
+            <div class="logo-header">
+              <a href="/"><img src="../images/logo-imprimeai.png" alt="..."></a>
+            </div>
+            <div class="search-input">
+              <input type="text" name="search-input" id="search-input" placeholder="O que você está procurando?">
+              <button><span class="material-symbols-outlined">
+                search
+                </span></button>
+                <div id="suggestions-container"></div>
+            </div>
+            <div class="notCad">
+                <p id="conviteCad">Olá!, bem-vindo! <br> <a href="/login">Entre</a> ou <a href="/cadastro">cadastre-se</a></p>
+            </div>
+            <div class="notCad" id="userLog">
+              <p>Olá!, bem-vindo! <br> <a href="/perfil" id="nameUserLog"></a></p>
+            </div>
+            <div class="carrinho">
+              <a href="/carrinho"><img src="https://wbl.blob.core.windows.net/public/icon-carrinho.png" alt="..."></a>
+              <span id="quantidadeCarrinho">0</span>
+            </div>
+            <div class="linhaAbInp"></div>
+            <span id="iconMenuMob" class="material-symbols-outlined">
+              menu
+              </span>
+              <div class="menu">
+                <nav>
+                   <ul id="mainMenu">
+                        <li id="allCateg">
+                            <a href="#" id="toggleMenu">☰ Todos os Produtos</a>
+                        <ul id="categs" class="categorias">
+                            <li id="maisVendidos">
+                                <a href="#" class="parentCateg">Mais Vendidos</a>
+                                <ul id="categsMaisVendidos" class="subCategAll">
+                                    <li>
+                                        <a href="/categorias?categoria=adesivos">Adesivo</a>
+                                    </li>
+                                    <li>
+                                        <a href="/categorias?categoria=banners">Banner</a>
+                                    </li>
+                                    <li>
+                                        <a href="/categorias?categoria=cartoes">Cartão de Visita</a>
+                                    </li>
+                                    <li>
+                                        <a href="/categorias?categoria=envelopes">Envelope</a>
+                                    </li>
+                                    <li>
+                                        <a href="/detalhes-produtos?id=37">Wind Banner</a>
+                                    </li>
+                                    <li>
+                                        <a href="/categorias?categoria=folhetos">Folheto</a>
+                                    </li>
+                                    <li>
+                                        <a href="/categorias?categoria=pastas">Pasta Personalizada</a>
+                                    </li>
+                                    <li>
+                                        <a href="/categorias?categoria=tags">Tags</a>
+                                    </li>
+                                </ul>
+                            </li>
+                            <li>
+                                <a href="#" class="parentCateg">Cartões de Visita</a>
+                                <ul class="subCategAll">
+                                    <li>
+                                        <a href="/categorias?categoria=cartoes">Cartão de Visita</a>
+                                    </li>
+                                    <li>
+                                        <a href="/detalhes-produtos?id=1">Cartão de Visita Verniz Localizado</a>
+                                    </li>
+                                    <li>
+                                        <a href="detalhes-produtos?id=2">Cartão de Visita com Brilho</a>
+                                    </li>
+                                    <li>
+                                        <a href="detalhes-produtos?id=3">Cartão de Visita Corte Especial</a>
+                                    </li>
+                                    <li>
+                                        <a href="/detalhes-produtos?id=4">Cartão de Visita em Hot Stamping</a>
+                                    </li>
+                                    <li>
+                                        <a href="/detalhes-produtos?id=5">Cartão de Visita em Plástico</a>
+                                    </li>
+                                    <li>
+                                        <a href="detalhes-produtos?id=3">Cartão de Visita Fosco</a>
+                                    </li>
+                                    <li>
+                                        <a href="/detalhes-produtos?id=6">Cartão de Visita Premium</a>
+                                    </li>
+                                    <li>
+                                        <a href="/detalhes-produtos?id=7">Cartão Fidelidade</a>
+                                    </li>
+                                    <li>
+                                        <a href="/detalhes-produtos?id=8">Mini Cartão de Visita</a>
+                                    </li>
+                                    <li>
+                                        <a href="/detalhes-produtos?id=9">Porta Cartão de Visita</a>
+                                    </li>
+                                </ul>
+                            </li>
+                            <li>
+                                <a href="#" class="parentCateg">Folhetos e Folders</a>
+                                <ul class="subCategAll">
+                                    <li>
+                                        <a href="/categorias?categoria=flyer">Flyer</a>
+                                    </li>
+                                    <li>
+                                        <a href="/detalhes-produtos?id=12">Folheto</a>
+                                    </li>
+                                    <li>
+                                        <a href="/categorias?categoria=panfletos">Panfleto</a>
+                                    </li>
+                                    <li>
+                                        <a href="/detalhes-produtos?id=17">Folder</a>
+                                    </li>
+                                    <li>
+                                        <a href="/categorias?categoria=folders">Folders e Panfletos</a>
+                                    </li>
+                                    <li>
+                                        <a href="/detalhes-produtos?id=16">Tabloide</a>
+                                    </li>
+                                </ul>
+                            </li>
+                            <li>
+                                <a href="/categorias?categoria=envelopes">Envelopes</a>
+                            </li>
+                            <li>
+                                <a href="/categorias?categoria=pastas">Pastas</a>
+                            </li>
+                            <li>
+                                <a href="#" class="parentCateg">Imãs</a>
+                                <ul class="subCategAll">
+                                    <li>
+                                      <a href="/categorias?categoria=imas">Imã Personalizado</a>
+                                  </li>
+                                  <li>
+                                      <a href="/detalhes-produtos?id=67">Imã com Calendário</a>
+                                  </li>
+                                  <li>
+                                      <a href="/detalhes-produtos?id=66">Imã para Carros</a>
+                                  </li>
+                                  <li>
+                                      <a href="/detalhes-produtos?id=62">Lembrancinha</a>
+                                  </li>
+                                  <li>
+                                      <a href="/detalhes-produtos?id=69">Quebra Cabeça Personalizado</a>
+                                  </li>
+                              </ul>
+                          </li>
+                          <li>
+                              <a href="#" class="parentCateg">Adesivos e Rótulos</a>
+                              <ul class="subCategAll">
+                                  <li>
+                                      <a href="/categorias?categoria=adesivos">Adesivo</a>
+                                  </li>
+                                  <li>
+                                      <a href="/detalhes-produtos?id=21">Adesivo Vinil</a>
+                                  </li>
+                                  <li>
+                                      <a href="/detalhes-produtos?id=22">Adesivo Redondo</a>
+                                  </li>
+                                  <li>
+                                      <a href="/detalhes-produtos?id=21">Adesivo em Papel</a>
+                                  </li>
+                                  <li>
+                                      <a href="/detalhes-produtos?id=26">Adesivo Cartão de Crédito</a>
+                                  </li>
+                                  <li>
+                                      <a href="/detalhes-produtos?id=30">Adesivo Decorativo</a>
+                                  </li>
+                                  <li>
+                                      <a href="/detalhes-produtos?id=23">Adesivo Eletrostático</a>
+                                  </li>
+                                  <li>
+                                      <a href="/detalhes-produtos?id=27">Adesivo em BOPP</a>
+                                  </li>
+                                  <li>
+                                      <a href="/detalhes-produtos?id=25">Adesivo para Fechar Sacola</a>
+                                  </li>
+                                  <li>
+                                      <a href="/detalhes-produtos?id=24">Adesivo para Troca de Óleo</a>
+                                  </li>
+                                  <li>
+                                      <a href="/detalhes-produtos?id=30">Adesivo para Vitrine</a>
+                                  </li>
+                                  <li>
+                                      <a href="/detalhes-produtos?id=70">Adesivo Perfurado</a>
+                                  </li>
+                                  <li>
+                                      <a href="/detalhes-produtos?id=71">Adesivo Resinado</a>
+                                  </li>
+                                  <li>
+                                      <a href="/detalhes-produtos?id=31">Adesivo Termocolante</a>
+                                  </li>
+                                  <li>
+                                      <a href="/detalhes-produtos?id=22">Cartela de Adesivos</a>
+                                  </li>
+                                  <li>
+                                      <a href="/detalhes-produtos?id=32">Etiquetas</a>
+                                  </li>
+                                  <li>
+                                      <a href="/detalhes-produtos?id=32">Etiquetas Escolares</a>
+                                  </li>
+                                  <li>
+                                      <a href="/detalhes-produtos?id=24">Lacre de Segurança</a>
+                                  </li>
+                                  <li>
+                                      <a href="/detalhes-produtos?id=23">Rótulos</a>
+                                  </li>
+                                  <li>
+                                      <a href="/detalhes-produtos?id=34">Stickers</a>
+                                  </li>
+                              </ul>
+                          </li>
+                          <li>
+                              <a href="#" class="parentCateg">Banner</a>
+                              <ul class="subCategAll">
+                                  <li>
+                                      <a href="/detalhes-produtos?id=35">Banner</a>
+                                  </li>
+                                  <li>
+                                      <a href="/detalhes-produtos?id=37">Wind Banner</a>
+                                  </li>
+                                  <li>
+                                      <a href="/detalhes-produtos?id=38">Backdrop</a>
+                                  </li>
+                                  <li>
+                                      <a href="/detalhes-produtos?id=36">Bandeira</a>
+                                  </li>
+                                  <li>
+                                      <a href="/detalhes-produtos?id=40">Banner com Suporte</a>
+                                  </li>
+                                  <li>
+                                      <a href="/detalhes-produtos?id=39">Banner em Tecido</a>
+                                  </li>
+                                  <li>
+                                      <a href="/detalhes-produtos?id=39">Capa de Antena</a>
+                                  </li>
+                                  <li>
+                                      <a href="/detalhes-produtos?id=36">Faixas</a>
+                                  </li>
+                                  <li>
+                                      <a href="/detalhes-produtos?id=40">Suporte para Banner</a>
+                                  </li>
+                              </ul>
+                          </li>
+                          <li>
+                              <a href="#" class="parentCateg">Blocos, Fichas e Talões</a>
+                              <ul class="subCategAll">
+                                  <li>
+                                      <a href="/detalhes-produtos?id=72">Bloco Autocopiativo</a>
+                                  </li>
+                                  <li>
+                                      <a href="/detalhes-produtos?id=76">Bloco de Notas Personalizado</a>
+                                  </li>
+                                  <li>
+                                      <a href="/detalhes-produtos?id=73">Comandas</a>
+                                  </li>
+                                  <li>
+                                      <a href="/detalhes-produtos?id=79">Ficha de Anamnese</a>
+                                  </li>
+                                  <li>
+                                      <a href="/detalhes-produtos?id=80">Fichas</a>
+                                  </li>
+                                  <li>
+                                      <a href="/detalhes-produtos?id=81">Receituários</a>
+                                  </li>
+                                  <li>
+                                      <a href="/categorias?categoria=blocos">Talão de Pedidos</a>
+                                  </li>
+                                  <li>
+                                      <a href="/detalhes-produtos?id=78">Talões</a>
+                                  </li>
+                              </ul>
+                          </li>
+                          <li>
+                              <a href="#" class="parentCateg">Brindes e Presentes</a>
+                              <ul class="subCategAll">
+                                  <li>
+                                      <a href="#">Brindes para Clientes</a>
+                                      <ul>
+                                          <li>
+                                              <a href="/detalhes-produtos?id=82">Baralho Personalizado</a>
+                                          </li>
+                                          <li>
+                                              <a href="/detalhes-produtos?id=83">Cartão Fio Dental</a>
+                                          </li>
+                                          <li>
+                                              <a href="/detalhes-produtos?id=41">Cortador de Pizza</a>
+                                          </li>
+                                          <li>
+                                              <a href="/detalhes-produtos?id=84">Estojo Personalizado</a>
+                                          </li>
+                                          <li>
+                                              <a href="/detalhes-produtos?id=85">Lixeira para Carro</a>
+                                          </li>
+                                          <li>
+                                              <a href="/detalhes-produtos?id=42">Suporte para Celular</a>
+                                          </li>
+                                          <li>
+                                              <a href="/detalhes-produtos?id=86">Tatuagem Temporária</a>
+                                          </li>
+                                          <li>
+                                              <a href="/detalhes-produtos?id=87">Ventarola</a>
+                                          </li>
+                                      </ul>
+                                      <li>
+                                          <a href="/detalhes-produtos?id=43">Copos e Taças</a>
+                                          <ul>
+                                              <li>
+                                                  <a href="/detalhes-produtos?id=88">Caneca Personalizada</a>
+                                              </li>
+                                              <li>
+                                                  <a href="/detalhes-produtos?id=90">Copo Personalizado</a>
+                                              </li>
+                                              <li>
+                                                  <a href="/detalhes-produtos?id=43">Copo Térmico</a>
+                                              </li>
+                                              <li>
+                                                  <a href="/detalhes-produtos?id=91">Garrafa Personalizada</a>
+                                              </li>
+                                              <li>
+                                                  <a href="/detalhes-produtos?id=92">Squeeze</a>
+                                              </li>
+                                          </ul>
+                                      </li>
+                                      <li>
+                                          <a href="#">Decoração</a>
+                                          <ul>
+                                              <li>
+                                                  <a href="/detalhes-produtos?id=93">Azulejo Personalizado</a>
+                                              </li>
+                                              <li>
+                                                  <a href="/detalhes-produtos?id=44">Painel de Parede</a>
+                                              </li>
+                                              <li>
+                                                  <a href="/detalhes-produtos?id=45">Quadros Decorativos</a>
+                                              </li>
+                                          </ul>
+                                      </li>
+                                      <li>
+                                          <a href="/categorias?categoria=Itens%20de%20Escritorio">Itens de Escritório</a>
+                                          <ul>
+                                              <li>
+                                                  <a href="/detalhes-produtos?id=94">Agenda Personalizada</a>
+                                              </li>
+                                              <li>
+                                                  <a href="/detalhes-produtos?id=46">Caderneta</a>
+                                              </li>
+                                              <li>
+                                                  <a href="/detalhes-produtos?id=95">Caderno</a>
+                                              </li>
+                                              <li>
+                                                  <a href="/detalhes-produtos?id=96">Canetas</a>
+                                              </li>
+                                              <li>
+                                                  <a href="/detalhes-produtos?id=47">Lápis</a>
+                                              </li>
+                                              <li>
+                                                  <a href="/detalhes-produtos?id=96">Marca Texto</a>
+                                              </li>
+                                              <li>
+                                                  <a href="/detalhes-produtos?id=97">Mouse Pad</a>
+                                              </li>
+                                              <li>
+                                                  <a href="/detalhes-produtos?id=48">Porta Bolsa</a>
+                                              </li>
+                                              <li>
+                                                  <a href="/detalhes-produtos?id=9">Porta Cartão de Visita</a>
+                                              </li>
+                                              <li>
+                                                  <a href="/detalhes-produtos?id=98">Régua</a>
+                                              </li>
+                                          </ul>
+                                      </li>
+                                      <li>
+                                          <a href="#">Presentes Corporativos</a>
+                                          <ul>
+                                              <li>
+                                                  <a href="/detalhes-produtos?id=49">Abridor de Garrafa</a>
+                                              </li>
+                                              <li>
+                                                  <a href="/detalhes-produtos?id=99">Bottons</a>
+                                              </li>
+                                              <li>
+                                                  <a href="/detalhes-produtos?id=49">Chaveiros</a>
+                                              </li>
+                                              <li>
+                                                  <a href="/detalhes-produtos?id=100">Fone de Ouvido Personalizado</a>
+                                              </li>
+                                              <li>
+                                                  <a href="/detalhes-produtos?id=101">Pen Card</a>
+                                              </li>
+                                          </ul>
+                                      </li>
+                                      <li>
+                                          <a href="/detalhes-produtos?id=102">Albúm de Figurinhs Personalizado</a>
+                                      </li>
+                                      <li>
+                                          <a href="/detalhes-produtos?id=103">Boné Personalizado</a>
+                                      </li>
+                                      <li>
+                                          <a href="/categorias?categoria=brindes">Brindes</a>
+                                      </li>
+                                      <li>
+                                          <a href="/detalhes-produtos?id=50">Camiseta Personalizada</a>
+                                      </li>
+                                      <li>
+                                          <a href="/categorias?categoria=capinhas">Capinha de Celular</a>
+                                      </li>
+                                      <li>
+                                          <a href="/detalhes-produtos?id=106">Porta Copos</a>
+                                      </li>
+                                      <li>
+                                          <a href="/detalhes-produtos?id=107">Revelação de Fotos</a>
+                                  </li>
+                                    </li>
+                                </ul>
+                            </li>
+                            <li>
+                                <a href="#" class="parentCateg">Calendários e Agendas</a>
+                                <ul class="subCategAll">
+                                    <li>
+                                        <a href="#">Calendário</a>
+                                        <ul class="subCategAll">
+                                            <li>
+                                                <a href="#">Bloco de Calendário 2025</a>
+                                            </li>
+                                            <li>
+                                                <a href="#">Calendário de Bolso</a>
+                                            </li>
+                                            <li>
+                                                <a href="#">Calendário de Mesa</a>
+                                            </li>
+                                        </ul>
+                                    </li>
+                                    <li>
+                                        <a href="#">Agenda Personalizada</a>
+                                    </li>
+                                </ul>
+                            </li>
+                            <li>
+                                <a href="#" class="parentCateg">Comunicação Visual</a>
+                                <ul class="subCategAll">
+                                    <li>
+                                        <a href="#">Banner</a>
+                                    </li>
+                                    <li>
+                                        <a href="#">Wind Banner</a>
+                                    </li>
+                                    <li>
+                                        <a href="#">Adesivo Vitrine</a>
+                                    </li>
+                                    <li>
+                                        <a href="#">Bandeira</a>
+                                    </li>
+                                    <li>
+                                        <a href="#">Bandeira e Bandeirola</a>
+                                    </li>
+                                    <li>
+                                        <a href="#">Cartaz</a>
+                                    </li>
+                                    <li>
+                                        <a href="#">Cavaletes</a>
+                                    </li>
+                                    <li>
+                                        <a href="#">Cordão para Crachá</a>
+                                    </li>
+                                    <li>
+                                        <a href="#">Crachá</a>
+                                    </li>
+                                    <li>
+                                        <a href="#">Credencial</a>
+                                    </li>
+                                    <li>
+                                        <a href="#">Ecobag</a>
+                                    </li>
+                                    <li>
+                                        <a href="#">Faixas</a>
+                                    </li>
+                                    <li>
+                                        <a href="#">Mapa para Evento</a>
+                                    </li>
+                                    <li>
+                                        <a href="#">Móbile</a>
+                                    </li>
+                                    <li>
+                                        <a href="#">Placa Personalizada</a>
+                                    </li>
+                                    <li>
+                                        <a href="#">Suporte para Banner</a>
+                                    </li>
+                                    <li>
+                                        <a href="#">Urna</a>
+                                    </li>
+                                    <li>
+                                        <a href="#">Ventarola</a>
+                                    </li>
+                                </ul>
+                            </li>
+                            <li>
+                                <a href="#" class="parentCateg">Embalagens e Sacolas</a>
+                                <ul class="subCategAll">
+                                    <li>
+                                        <a href="#">Embalagem para Delivery</a>
+                                        <ul>
+                                            <li>
+                                                <a href="#">Cinta para Embalagem</a>
+                                            </li>
+                                            <li>
+                                                <a href="#">Embalagem para Confeitaria</a>
+                                            </li>
+                                            <li>
+                                                <a href="#">Embalagem para Doces</a>
+                                            </li>
+                                            <li>
+                                                <a href="#">Embalagem para Hambúrguer</a>
+                                            </li>
+                                            <li>
+                                                <a href="#">Embalagens para Datas Comemorativas</a>
+                                            </li>
+                                            <li>
+                                                <a href="#">Lacre para Sacola</a>
+                                            </li>
+                                            <li>
+                                                <a href="#">Saco Delivery</a>
+                                            </li>
+                                        </ul>
+                                    </li>
+                                    <li>
+                                        <a href="#" class="parentCateg">Sacolas Personalizadas</a>
+                                        <ul class="subCategAll">
+                                            <li>
+                                                <a href="#">Sacola de Papel</a>
+                                            </li>
+                                            <li>
+                                                <a href="#">Sacola para Evento</a>
+                                            </li>
+                                            <li>
+                                                <a href="#">Sacola para Garrafa</a>
+                                            </li>
+                                            <li>
+                                                <a href="#">Sacola Personalizada para Loja</a>
+                                            </li>
+                                            <li>
+                                                <a href="#">Sacola Plástica Personalizada</a>
+                                            </li>
+                                        </ul>
+                                    </li>
+                                    <li>
+                                        <a href="#">Embalagem para Correios</a>
+                                    </li>
+                                    <li>
+                                        <a href="#">Embalagens para Bijuterias</a>
+                                    </li>
+                                    <li>
+                                        <a href="#">Embalagens para Presente</a>
+                                    </li>
+                                </ul>
+                            </li>
+                            <li>
+                                <a href="#" class="parentCateg">Festas e Eventos</a>
+                                <ul class="subCategAll">
+                                    <li>
+                                        <a href="#">Convite Personalizado</a>
+                                    </li>
+                                    <li>
+                                        <a href="#">Convites de Casamento</a>
+                                    </li>
+                                    <li>
+                                        <a href="#">Copo Personalizado</a>
+                                    </li>
+                                    <li>
+                                        <a href="#">Credencial</a>
+                                    </li>
+                                    <li>
+                                        <a href="#">Feiras e Eventos</a>
+                                    </li>
+                                    <li>
+                                        <a href="#">Lembrancinha</a>
+                                    </li>
+                                    <li>
+                                        <a href="#">Personalizados para Casamento</a>
+                                    </li>
+                                    <li>
+                                        <a href="#">Personalizado para Festa</a>
+                                    </li>
+                                </ul>
+                            </li>
+                            <li>
+                                <a href="#" class="parentCateg">Impressão Têxtil</a>
+                                <ul class="subCategAll">
+                                    <li>
+                                        <a href="#">Adesivo Termocolante</a>
+                                    </li>
+                                    <li>
+                                        <a href="#">Bandeira</a>
+                                    </li>
+                                    <li>
+                                        <a href="#">Banner em Tecido</a>
+                                    </li>
+                                    <li>
+                                        <a href="#">Boné Personalizado</a>
+                                    </li>
+                                    <li>
+                                        <a href="#">Camiseta Personalizada</a>
+                                    </li>
+                                    <li>
+                                        <a href="#">Capa de Antena</a>
+                                    </li>
+                                    <li>
+                                        <a href="#">Ecobag</a>
+                                    </li>
+                                    <li>
+                                        <a href="#">Faixas</a>
+                                    </li>
+                                    <li>
+                                        <a href="#">Quadros Decorativos</a>
+                                    </li>
+                                </ul>
+                            </li>
+                            <li>
+                                <a href="#" class="parentCateg">Papelaria</a>
+                                <ul class="subCategAll">
+                                    <li>
+                                        <a href="#">Cartão de Visita</a>
+                                    </li>
+                                    <li>
+                                        <a href="#">Envelope</a>
+                                    </li>
+                                    <li>
+                                        <a href="#">Agenda Personalizada</a>
+                                    </li>
+                                    <li>
+                                        <a href="#">Bloco de Notas Personalizado</a>
+                                    </li>
+                                    <li>
+                                        <a href="#">Caderno</a>
+                                    </li>
+                                    <li>
+                                        <a href="#">Canetas</a>
+                                    </li>
+                                    <li>
+                                        <a href="#">Carimbos</a>
+                                    </li>
+                                    <li>
+                                        <a href="#">Carnê</a>
+                                    </li>
+                                    <li>
+                                        <a href="#">Cartaz</a>
+                                    </li>
+                                    <li>
+                                        <a href="#">Carteirinhas Personalizadas</a>
+                                    </li>
+                                    <li>
+                                        <a href="#">CDs e DVDs</a>
+                                    </li>
+                                    <li>
+                                        <a href="#">Certificados</a>
+                                    </li>
+                                    <li>
+                                        <a href="#">Comandas</a>
+                                    </li>
+                                    <li>
+                                        <a href="#">Cordão para Crachá</a>
+                                    </li>
+                                    <li>
+                                        <a href="#">Crachá</a>
+                                    </li>
+                                    <li>
+                                        <a href="#">Credencial</a>
+                                    </li>
+                                    <li>
+                                        <a href="#">Ingressos Personalizados</a>
+                                    </li>
+                                    <li>
+                                        <a href="#">Lacre de Segurança</a>
+                                    </li>
+                                    <li>
+                                        <a href="#">Lápis</a>
+                                    </li>
+                                    <li>
+                                        <a href="#">Marcador de Página</a>
+                                    </li>
+                                    <li>
+                                        <a href="#">Papel Timbrado</a>
+                                    </li>
+                                    <li>
+                                        <a href="#">Papelaria Personalizada</a>
+                                    </li>
+                                    <li>
+                                        <a href="#">Pasta Personalizada</a>
+                                    </li>
+                                    <li>
+                                        <a href="#">Placa Não Perturbe</a>
+                                    </li>
+                                    <li>
+                                        <a href="#">Placa Personalizada</a>
+                                    </li>
+                                    <li>
+                                        <a href="#">Porta Copos</a>
+                                    </li>
+                                    <li>
+                                        <a href="#">Postais</a>
+                                    </li>
+                                    <li>
+                                        <a href="#">Régua</a>
+                                    </li>
+                                    <li>
+                                        <a href="#">Solapa</a>
+                                    </li>
+                                    <li>
+                                        <a href="#">Tags</a>
+                                    </li>
+                                    <li>
+                                        <a href="#">Talões</a>
+                                    </li>
+                                </ul>
+                            </li>
+                            <li>
+                                <a href="#" class="parentCateg">Revistas, Catálogos e Livros</a>
+                                <ul class="subCategAll">
+                                    <li>
+                                        <a href="#">Apostilas</a>
+                                    </li>
+                                    <li>
+                                        <a href="#">Catálogos</a>
+                                    </li>
+                                    <li>
+                                        <a href="#">Livros</a>
+                                    </li>
+                                    <li>
+                                        <a href="#">Revista Personalizada</a>
+                                    </li>
+                                </ul>
+                            </li>
+                            <li>
+                                <a href="#" class="parentCateg">Tags e Cartelas</a>
+                                <ul class="subCategAll">
+                                    <li>
+                                        <a href="#">Cartela para Bijuteria</a>
+                                    </li>
+                                    <li>
+                                        <a href="#">Embalagens para Bijuterias</a>
+                                    </li>
+                                    <li>
+                                        <a href="#">Tag para Roupas</a>
+                                    </li>
+                                    <li>
+                                        <a href="#">Tag para Garrafa</a>
+                                    </li>
+                                    <li>
+                                        <a href="#">Tags</a>
+                                    </li>
+                                </ul>
+                            </li>
+                        </ul>
+                    </li>
+                    <li>
+                        <a href="/categorias?categoria=cartoes">Cartão de Visita</a>
+                        <ul class="categStatic" id="categCart">
+                            <li>
+                                <a href="#">Cartão de Visita</a>
+                            </li>
+                            <li>
+                                <a href="#">Cartão de Visita Verniz Localizado</a>
+                            </li>
+                            <li>
+                                <a href="#">Cartão de Visita com Brilho</a>
+                            </li>
+                            <li>
+                                <a href="#">Cartão de Visita Corte Especial</a>
+                            </li>
+                            <li>
+                                <a href="#">Cartão de Visita em Hot Stamping</a>
+                            </li>
+                            <li>
+                                <a href="#">Cartão de Visita em Plástico</a>
+                            </li>
+                            <li>
+                                <a href="#">Cartão de Visita Fosco</a>
+                            </li>
+                            <li>
+                                <a href="#">Cartão de Visita Premium</a>
+                            </li>
+                            <li>
+                                <a href="#">Cartão Fidelidade</a>
+                            </li>
+                            <li>
+                                <a href="#">Mini Cartão de Visita</a>
+                            </li>
+                            <li>
+                                <a href="#">Porta Cartão de Visita</a>
+                            </li>
+                        </ul>
+                    </li>
+                    <li>
+                        <a href="/categorias?categoria=folders">Folders e Panfletos</a>
+                        <ul class="categStatic" id="categFold">
+                            <li>
+                                <a href="#">Flyer</a>
+                            </li>
+                            <li>
+                                <a href="#">Folheto</a>
+                            </li>
+                            <li>
+                                <a href="#">Panfleto</a>
+                            </li>
+                            <li>
+                                <a href="#">Folder</a>
+                            </li>
+                            <li>
+                                <a href="#">Folders e Panfletos</a>
+                            </li>
+                            <li>
+                                <a href="#">Tabloide</a>
+                            </li>
+                        </ul>
+                    </li>
+                    <li>
+                        <a href="/categorias?categoria=adesivos">Adesivos</a>
+                        <ul class="categStatic" id="categAdes">
+                            <li>
+                                <a href="#">Adesivo</a>
+                            </li>
+                            <li>
+                                <a href="#">Adesivo Vinil</a>
+                            </li>
+                            <li>
+                                <a href="#">Adesivo Redondo</a>
+                            </li>
+                            <li>
+                                <a href="#">Adesivo em Papel</a>
+                            </li>
+                            <li>
+                                <a href="#">Adesivo Cartão de Crédito</a>
+                            </li>
+                            <li>
+                                <a href="#">Adesivo Decorativo</a>
+                            </li>
+                            <li>
+                                <a href="#">Adesivo Eletrostático</a>
+                            </li>
+                            <li>
+                                <a href="#">Adesivo em BOPP</a>
+                            </li>
+                            <li>
+                                <a href="#">Adesivo para Fechar Sacola</a>
+                            </li>
+                            <li>
+                                <a href="#">Adesivo para Troca de Óleo</a>
+                            </li>
+                            <li>
+                                <a href="#">Adesivo para Vitrine</a>
+                            </li>
+                            <li>
+                                <a href="#">Adesivo Perfurado</a>
+                            </li>
+                            <li>
+                                <a href="#">Adesivo Resinado</a>
+                            </li>
+                            <li>
+                                <a href="#">Adesivo Termocolante</a>
+                            </li>
+                            <li>
+                                <a href="#">Cartela de Adesivos</a>
+                            </li>
+                            <li>
+                                <a href="#">Etiquetas</a>
+                            </li>
+                            <li>
+                                <a href="#">Etiquetas Escolares</a>
+                            </li>
+                            <li>
+                                <a href="#">Lacre de Segurança</a>
+                            </li>
+                            <li>
+                                <a href="#">Rótulos</a>
+                            </li>
+                            <li>
+                                <a href="#">Stickers</a>
+                            </li>
+                        </ul>
+                    </li>
+                    <li>
+                        <a href="/categorias?categoria=banners">Banner</a>
+                        <ul class="categStatic" id="categBann">
+                            <li>
+                                <a href="#">Banner</a>
+                            </li>
+                            <li>
+                                <a href="#">Wind Banner</a>
+                            </li>
+                            <li>
+                                <a href="#">Backdrop</a>
+                            </li>
+                            <li>
+                                <a href="#">Bandeira</a>
+                            </li>
+                            <li>
+                                <a href="#">Banner com Suporte</a>
+                            </li>
+                            <li>
+                                <a href="#">Banner em Tecido</a>
+                            </li>
+                            <li>
+                                <a href="#">Capa de Antena</a>
+                            </li>
+                            <li>
+                                <a href="#">Faixas</a>
+                            </li>
+                            <li>
+                                <a href="#">Suporte para Banner</a>
+                            </li>
+                        </ul>
+                    </li>
+                    <li>
+                        <a href="/categorias?categoria=brindes">Brindes</a>
+                        <ul class="categStatic" id="categBrind">
+                            <li>
+                                <a href="#">Brindes para Clientes</a>
+                                <ul>
+                                    <li>
+                                        <a href="#">Baralho Personalizado</a>
+                                    </li>
+                                    <li>
+                                        <a href="#">Cartão Fio Dental</a>
+                                    </li>
+                                    <li>
+                                        <a href="#">Cortador de Pizza</a>
+                                    </li>
+                                    <li>
+                                        <a href="#">Estojo Personalizado</a>
+                                    </li>
+                                    <li>
+                                        <a href="#">Lixeira para Carro</a>
+                                    </li>
+                                    <li>
+                                        <a href="#">Suporte para Celular</a>
+                                    </li>
+                                    <li>
+                                        <a href="#">Tatuagem Temporária</a>
+                                    </li>
+                                    <li>
+                                        <a href="#">Ventarola</a>
+                                    </li>
+                                </ul>
+                                <li>
+                                    <a href="#">Copos e Taças</a>
+                                    <ul>
+                                        <li>
+                                            <a href="#">Caneca Personalizada</a>
+                                        </li>
+                                        <li>
+                                            <a href="#">Copo Personalizado</a>
+                                        </li>
+                                        <li>
+                                            <a href="#">Copo Térmico</a>
+                                        </li>
+                                        <li>
+                                            <a href="#">Garrafa Personalizada</a>
+                                        </li>
+                                        <li>
+                                            <a href="#">Squeeze</a>
+                                        </li>
+                                    </ul>
+                                </li>
+                                <li>
+                                    <a href="#">Decoração</a>
+                                    <ul>
+                                        <li>
+                                            <a href="#">Azulejo Personalizado</a>
+                                        </li>
+                                        <li>
+                                            <a href="#">Painel de Parede</a>
+                                        </li>
+                                        <li>
+                                            <a href="#">Quadros Decorativos</a>
+                                        </li>
+                                    </ul>
+                                </li>
+                                <li>
+                                    <a href="#">Itens de Escritório</a>
+                                    <ul>
+                                        <li>
+                                            <a href="#">Agenda Personalizada</a>
+                                        </li>
+                                        <li>
+                                            <a href="#">Caderneta</a>
+                                        </li>
+                                        <li>
+                                            <a href="#">Caderno</a>
+                                        </li>
+                                        <li>
+                                            <a href="#">Canetas</a>
+                                        </li>
+                                        <li>
+                                            <a href="#">Lápis</a>
+                                        </li>
+                                        <li>
+                                            <a href="#">Marca Texto</a>
+                                        </li>
+                                        <li>
+                                            <a href="#">Mouse Pad</a>
+                                        </li>
+                                        <li>
+                                            <a href="#">Porta Bolsa</a>
+                                        </li>
+                                        <li>
+                                            <a href="#">Porta Cartão de Visita</a>
+                                        </li>
+                                        <li>
+                                            <a href="#">Régua</a>
+                                        </li>
+                                    </ul>
+                                </li>
+                                <li>
+                                    <a href="#">Presentes Corporativos</a>
+                                    <ul>
+                                        <li>
+                                            <a href="#">Abridor de Garrafa</a>
+                                        </li>
+                                        <li>
+                                            <a href="#">Bottons</a>
+                                        </li>
+                                        <li>
+                                            <a href="#">Chaveiros</a>
+                                        </li>
+                                        <li>
+                                            <a href="#">Fone de Ouvido Personalizado</a>
+                                        </li>
+                                        <li>
+                                            <a href="#">Pen Card</a>
+                                        </li>
+                                    </ul>
+                                </li>
+                                <li>
+                                    <a href="#">Albúm de Figurinhs Personalizado</a>
+                                </li>
+                                <li>
+                                    <a href="#">Boné Personalizado</a>
+                                </li>
+                                <li>
+                                    <a href="#">Brindes</a>
+                                </li>
+                                <li>
+                                    <a href="#">Camiseta Personalizada</a>
+                                </li>
+                                <li>
+                                    <a href="#">Capinha de Celular</a>
+                                </li>
+                                <li>
+                                    <a href="#">Porta Copos</a>
+                                </li>
+                                <li>
+                                    <a href="#">Revelação de Fotos</a>
+                                </li>
+                            </li>
+                        </ul>
+                    </li>
+                    <li>
+                        <a href="/categorias?categoria=pastas">Pastas</a>
+                    </li>
+                    <li>
+                        <a href="/categorias?categoria=imas">Imãs</a>
+                        <ul class="categStatic" id="categIm">
+                            <li>
+                                <a href="#">Imã Personalizado</a>
+                            </li>
+                            <li>
+                                <a href="#">Imã com Calendário</a>
+                            </li>
+                            <li>
+                                <a href="#">Imã para Carros</a>
+                            </li>
+                            <li>
+                                <a href="#">Lembrancinha</a>
+                            </li>
+                            <li>
+                                <a href="#">Quebra Cabeça Personalizado</a>
+                            </li>
+                        </ul>
+                    </li>
+                    <li>
+                        <a href="/categorias?categoria=banners">Wind Banner</a>
+                    </li>
+                    <li>
+                        <a href="/categorias?categoria=tags">Tags</a>
+                    </li>
+                    <li>
+                        <a href="/categorias?categoria=sacolas">Sacolas</a>
+                    </li>
+                   </ul>
+                </nav>
+            </div>
+            <span class="material-symbols-outlined hamburger-icon" id="menuToggle">menu</span>
+            <div class="menu-wrapper" id="menuContainer">
+                <nav>
+                    <ul id="mainCategory">
+                        <li id="allCategories">
+                            <a href="#" id="toggleMainMenu">☰ Todos os Produtos</a>
+                            <ul id="category-list" class="category-content">
+                                <li id="maisVendidos">
+                                    <a href="#" class="parentCateg">Mais Vendidos</a>
+                                    <ul id="categsMaisVendidos" class="subCategAll">
+                                        <li>
+                                            <a href="/categorias?categoria=adesivos">Adesivo</a>
+                                        </li>
+                                        <li>
+                                            <a href="/categorias?categoria=banners">Banner</a>
+                                        </li>
+                                        <li>
+                                            <a href="/categorias?categoria=cartoes">Cartão de Visita</a>
+                                        </li>
+                                        <li>
+                                            <a href="/categorias?categoria=envelopes">Envelope</a>
+                                        </li>
+                                        <li>
+                                            <a href="/detalhes-produtos?id=37">Wind Banner</a>
+                                        </li>
+                                        <li>
+                                            <a href="/categorias?categoria=folhetos">Folheto</a>
+                                        </li>
+                                        <li>
+                                            <a href="/categorias?categoria=pastas">Pasta Personalizada</a>
+                                        </li>
+                                        <li>
+                                            <a href="/categorias?categoria=tags">Tags</a>
+                                        </li>
+                                    </ul>
+                                </li>
+                                <li>
+                                    <a href="#" class="parentCateg">Cartões de Visita</a>
+                                    <ul class="subCategAll">
+                                        <li>
+                                            <a href="/categorias?categoria=cartoes">Cartão de Visita</a>
+                                        </li>
+                                        <li>
+                                            <a href="/detalhes-produtos?id=1">Cartão de Visita Verniz Localizado</a>
+                                        </li>
+                                        <li>
+                                            <a href="detalhes-produtos?id=2">Cartão de Visita com Brilho</a>
+                                        </li>
+                                        <li>
+                                            <a href="detalhes-produtos?id=3">Cartão de Visita Corte Especial</a>
+                                        </li>
+                                        <li>
+                                            <a href="/detalhes-produtos?id=4">Cartão de Visita em Hot Stamping</a>
+                                        </li>
+                                        <li>
+                                            <a href="/detalhes-produtos?id=5">Cartão de Visita em Plástico</a>
+                                        </li>
+                                        <li>
+                                            <a href="detalhes-produtos?id=3">Cartão de Visita Fosco</a>
+                                        </li>
+                                        <li>
+                                            <a href="/detalhes-produtos?id=6">Cartão de Visita Premium</a>
+                                        </li>
+                                        <li>
+                                            <a href="/detalhes-produtos?id=7">Cartão Fidelidade</a>
+                                        </li>
+                                        <li>
+                                            <a href="/detalhes-produtos?id=8">Mini Cartão de Visita</a>
+                                        </li>
+                                        <li>
+                                            <a href="/detalhes-produtos?id=9">Porta Cartão de Visita</a>
+                                        </li>
+                                    </ul>
+                                </li>
+                                <li>
+                                    <a href="#" class="parentCateg">Folhetos e Folders</a>
+                                    <ul class="subCategAll">
+                                        <li>
+                                            <a href="/categorias?categoria=flyer">Flyer</a>
+                                        </li>
+                                        <li>
+                                            <a href="/detalhes-produtos?id=12">Folheto</a>
+                                        </li>
+                                        <li>
+                                            <a href="/categorias?categoria=panfletos">Panfleto</a>
+                                        </li>
+                                        <li>
+                                            <a href="/detalhes-produtos?id=17">Folder</a>
+                                        </li>
+                                        <li>
+                                            <a href="/categorias?categoria=folders">Folders e Panfletos</a>
+                                        </li>
+                                        <li>
+                                            <a href="/detalhes-produtos?id=16">Tabloide</a>
+                                        </li>
+                                    </ul>
+                                </li>
+                                <li>
+                                    <a href="/categorias?categoria=envelopes">Envelopes</a>
+                                </li>
+                                <li>
+                                    <a href="/categorias?categoria=pastas">Pastas</a>
+                                </li>
+                                <li>
+                                    <a href="#" class="parentCateg">Imãs</a>
+                                    <ul class="subCategAll">
+                                        <li>
+                                            <a href="/categorias?categoria=imas">Imã Personalizado</a>
+                                        </li>
+                                        <li>
+                                            <a href="/detalhes-produtos?id=67">Imã com Calendário</a>
+                                        </li>
+                                        <li>
+                                            <a href="/detalhes-produtos?id=66">Imã para Carros</a>
+                                        </li>
+                                        <li>
+                                            <a href="/detalhes-produtos?id=62">Lembrancinha</a>
+                                        </li>
+                                        <li>
+                                            <a href="/detalhes-produtos?id=69">Quebra Cabeça Personalizado</a>
+                                        </li>
+                                    </ul>
+                                </li>
+                                <li>
+                                    <a href="#" class="parentCateg">Adesivos e Rótulos</a>
+                                    <ul class="subCategAll">
+                                        <li>
+                                            <a href="/categorias?categoria=adesivos">Adesivo</a>
+                                        </li>
+                                        <li>
+                                            <a href="/detalhes-produtos?id=21">Adesivo Vinil</a>
+                                        </li>
+                                        <li>
+                                            <a href="/detalhes-produtos?id=22">Adesivo Redondo</a>
+                                        </li>
+                                        <li>
+                                            <a href="/detalhes-produtos?id=21">Adesivo em Papel</a>
+                                        </li>
+                                        <li>
+                                            <a href="/detalhes-produtos?id=26">Adesivo Cartão de Crédito</a>
+                                        </li>
+                                        <li>
+                                            <a href="/detalhes-produtos?id=30">Adesivo Decorativo</a>
+                                        </li>
+                                        <li>
+                                            <a href="/detalhes-produtos?id=23">Adesivo Eletrostático</a>
+                                        </li>
+                                        <li>
+                                            <a href="/detalhes-produtos?id=27">Adesivo em BOPP</a>
+                                        </li>
+                                        <li>
+                                            <a href="/detalhes-produtos?id=25">Adesivo para Fechar Sacola</a>
+                                        </li>
+                                        <li>
+                                            <a href="/detalhes-produtos?id=24">Adesivo para Troca de Óleo</a>
+                                        </li>
+                                        <li>
+                                            <a href="/detalhes-produtos?id=30">Adesivo para Vitrine</a>
+                                        </li>
+                                        <li>
+                                            <a href="/detalhes-produtos?id=70">Adesivo Perfurado</a>
+                                        </li>
+                                        <li>
+                                            <a href="/detalhes-produtos?id=71">Adesivo Resinado</a>
+                                        </li>
+                                        <li>
+                                            <a href="/detalhes-produtos?id=31">Adesivo Termocolante</a>
+                                        </li>
+                                        <li>
+                                            <a href="/detalhes-produtos?id=22">Cartela de Adesivos</a>
+                                        </li>
+                                        <li>
+                                            <a href="/detalhes-produtos?id=32">Etiquetas</a>
+                                        </li>
+                                        <li>
+                                            <a href="/detalhes-produtos?id=32">Etiquetas Escolares</a>
+                                        </li>
+                                        <li>
+                                            <a href="/detalhes-produtos?id=24">Lacre de Segurança</a>
+                                        </li>
+                                        <li>
+                                            <a href="/detalhes-produtos?id=23">Rótulos</a>
+                                        </li>
+                                        <li>
+                                            <a href="/detalhes-produtos?id=34">Stickers</a>
+                                        </li>
+                                    </ul>
+                                </li>
+                                <li>
+                                    <a href="#" class="parentCateg">Banner</a>
+                                    <ul class="subCategAll">
+                                        <li>
+                                            <a href="/detalhes-produtos?id=35">Banner</a>
+                                        </li>
+                                        <li>
+                                            <a href="/detalhes-produtos?id=37">Wind Banner</a>
+                                        </li>
+                                        <li>
+                                            <a href="/detalhes-produtos?id=38">Backdrop</a>
+                                        </li>
+                                        <li>
+                                            <a href="/detalhes-produtos?id=36">Bandeira</a>
+                                        </li>
+                                        <li>
+                                            <a href="/detalhes-produtos?id=40">Banner com Suporte</a>
+                                        </li>
+                                        <li>
+                                            <a href="/detalhes-produtos?id=39">Banner em Tecido</a>
+                                        </li>
+                                        <li>
+                                            <a href="/detalhes-produtos?id=39">Capa de Antena</a>
+                                        </li>
+                                        <li>
+                                            <a href="/detalhes-produtos?id=36">Faixas</a>
+                                        </li>
+                                        <li>
+                                            <a href="/detalhes-produtos?id=40">Suporte para Banner</a>
+                                        </li>
+                                    </ul>
+                                </li>
+                                <li>
+                                    <a href="#" class="parentCateg">Blocos, Fichas e Talões</a>
+                                    <ul class="subCategAll">
+                                        <li>
+                                            <a href="/detalhes-produtos?id=72">Bloco Autocopiativo</a>
+                                        </li>
+                                        <li>
+                                            <a href="/detalhes-produtos?id=76">Bloco de Notas Personalizado</a>
+                                        </li>
+                                        <li>
+                                            <a href="/detalhes-produtos?id=73">Comandas</a>
+                                        </li>
+                                        <li>
+                                            <a href="/detalhes-produtos?id=79">Ficha de Anamnese</a>
+                                        </li>
+                                        <li>
+                                            <a href="/detalhes-produtos?id=80">Fichas</a>
+                                        </li>
+                                        <li>
+                                            <a href="/detalhes-produtos?id=81">Receituários</a>
+                                        </li>
+                                        <li>
+                                            <a href="/categorias?categoria=blocos">Talão de Pedidos</a>
+                                        </li>
+                                        <li>
+                                            <a href="/detalhes-produtos?id=78">Talões</a>
+                                        </li>
+                                    </ul>
+                                </li>
+                                <li>
+                                    <a href="#" class="parentCateg">Brindes e Presentes</a>
+                                    <ul class="subCategAll">
+                                        <li>
+                                            <a href="#">Brindes para Clientes</a>
+                                            <ul>
+                                                <li>
+                                                    <a href="/detalhes-produtos?id=82">Baralho Personalizado</a>
+                                                </li>
+                                                <li>
+                                                    <a href="/detalhes-produtos?id=83">Cartão Fio Dental</a>
+                                                </li>
+                                                <li>
+                                                    <a href="/detalhes-produtos?id=41">Cortador de Pizza</a>
+                                                </li>
+                                                <li>
+                                                    <a href="/detalhes-produtos?id=84">Estojo Personalizado</a>
+                                                </li>
+                                                <li>
+                                                    <a href="/detalhes-produtos?id=85">Lixeira para Carro</a>
+                                                </li>
+                                                <li>
+                                                    <a href="/detalhes-produtos?id=42">Suporte para Celular</a>
+                                                </li>
+                                                <li>
+                                                    <a href="/detalhes-produtos?id=86">Tatuagem Temporária</a>
+                                                </li>
+                                                <li>
+                                                    <a href="/detalhes-produtos?id=87">Ventarola</a>
+                                                </li>
+                                            </ul>
+                                            <li>
+                                                <a href="/detalhes-produtos?id=43">Copos e Taças</a>
+                                                <ul>
+                                                    <li>
+                                                        <a href="/detalhes-produtos?id=88">Caneca Personalizada</a>
+                                                    </li>
+                                                    <li>
+                                                        <a href="/detalhes-produtos?id=90">Copo Personalizado</a>
+                                                    </li>
+                                                    <li>
+                                                        <a href="/detalhes-produtos?id=43">Copo Térmico</a>
+                                                    </li>
+                                                    <li>
+                                                        <a href="/detalhes-produtos?id=91">Garrafa Personalizada</a>
+                                                    </li>
+                                                    <li>
+                                                        <a href="/detalhes-produtos?id=92">Squeeze</a>
+                                                    </li>
+                                                </ul>
+                                            </li>
+                                            <li>
+                                                <a href="#">Decoração</a>
+                                                <ul>
+                                                    <li>
+                                                        <a href="/detalhes-produtos?id=93">Azulejo Personalizado</a>
+                                                    </li>
+                                                    <li>
+                                                        <a href="/detalhes-produtos?id=44">Painel de Parede</a>
+                                                    </li>
+                                                    <li>
+                                                        <a href="/detalhes-produtos?id=45">Quadros Decorativos</a>
+                                                    </li>
+                                                </ul>
+                                            </li>
+                                            <li>
+                                                <a href="/categorias?categoria=Itens%20de%20Escritorio">Itens de Escritório</a>
+                                                <ul>
+                                                    <li>
+                                                        <a href="/detalhes-produtos?id=94">Agenda Personalizada</a>
+                                                    </li>
+                                                    <li>
+                                                        <a href="/detalhes-produtos?id=46">Caderneta</a>
+                                                    </li>
+                                                    <li>
+                                                        <a href="/detalhes-produtos?id=95">Caderno</a>
+                                                    </li>
+                                                    <li>
+                                                        <a href="/detalhes-produtos?id=96">Canetas</a>
+                                                    </li>
+                                                    <li>
+                                                        <a href="/detalhes-produtos?id=47">Lápis</a>
+                                                    </li>
+                                                    <li>
+                                                        <a href="/detalhes-produtos?id=96">Marca Texto</a>
+                                                    </li>
+                                                    <li>
+                                                        <a href="/detalhes-produtos?id=97">Mouse Pad</a>
+                                                    </li>
+                                                    <li>
+                                                        <a href="/detalhes-produtos?id=48">Porta Bolsa</a>
+                                                    </li>
+                                                    <li>
+                                                        <a href="/detalhes-produtos?id=9">Porta Cartão de Visita</a>
+                                                    </li>
+                                                    <li>
+                                                        <a href="/detalhes-produtos?id=98">Régua</a>
+                                                    </li>
+                                                </ul>
+                                            </li>
+                                            <li>
+                                                <a href="#">Presentes Corporativos</a>
+                                                <ul>
+                                                    <li>
+                                                        <a href="/detalhes-produtos?id=49">Abridor de Garrafa</a>
+                                                    </li>
+                                                    <li>
+                                                        <a href="/detalhes-produtos?id=99">Bottons</a>
+                                                    </li>
+                                                    <li>
+                                                        <a href="/detalhes-produtos?id=49">Chaveiros</a>
+                                                    </li>
+                                                    <li>
+                                                        <a href="/detalhes-produtos?id=100">Fone de Ouvido Personalizado</a>
+                                                    </li>
+                                                    <li>
+                                                        <a href="/detalhes-produtos?id=101">Pen Card</a>
+                                                    </li>
+                                                </ul>
+                                            </li>
+                                            <li>
+                                                <a href="/detalhes-produtos?id=102">Albúm de Figurinhs Personalizado</a>
+                                            </li>
+                                            <li>
+                                                <a href="/detalhes-produtos?id=103">Boné Personalizado</a>
+                                            </li>
+                                            <li>
+                                                <a href="/categorias?categoria=brindes">Brindes</a>
+                                            </li>
+                                            <li>
+                                                <a href="/detalhes-produtos?id=50">Camiseta Personalizada</a>
+                                            </li>
+                                            <li>
+                                                <a href="/categorias?categoria=capinhas">Capinha de Celular</a>
+                                            </li>
+                                            <li>
+                                                <a href="/detalhes-produtos?id=106">Porta Copos</a>
+                                            </li>
+                                            <li>
+                                                <a href="/detalhes-produtos?id=107">Revelação de Fotos</a>
+                                            </li>
+                                        </li>
+                                    </ul>
+                                </li>
+                                <li>
+                                    <a href="#" class="parentCateg">Calendários e Agendas</a>
+                                    <ul class="subCategAll">
+                                        <li>
+                                            <a href="#">Calendário</a>
+                                            <ul class="subCategAll">
+                                                <li>
+                                                    <a href="#">Bloco de Calendário 2025</a>
+                                                </li>
+                                                <li>
+                                                    <a href="#">Calendário de Bolso</a>
+                                                </li>
+                                                <li>
+                                                    <a href="#">Calendário de Mesa</a>
+                                                </li>
+                                            </ul>
+                                        </li>
+                                        <li>
+                                            <a href="#">Agenda Personalizada</a>
+                                        </li>
+                                    </ul>
+                                </li>
+                                <li>
+                                    <a href="#" class="parentCateg">Comunicação Visual</a>
+                                    <ul class="subCategAll">
+                                        <li>
+                                            <a href="#">Banner</a>
+                                        </li>
+                                        <li>
+                                            <a href="#">Wind Banner</a>
+                                        </li>
+                                        <li>
+                                            <a href="#">Adesivo Vitrine</a>
+                                        </li>
+                                        <li>
+                                            <a href="#">Bandeira</a>
+                                        </li>
+                                        <li>
+                                            <a href="#">Bandeira e Bandeirola</a>
+                                        </li>
+                                        <li>
+                                            <a href="#">Cartaz</a>
+                                        </li>
+                                        <li>
+                                            <a href="#">Cavaletes</a>
+                                        </li>
+                                        <li>
+                                            <a href="#">Cordão para Crachá</a>
+                                        </li>
+                                        <li>
+                                            <a href="#">Crachá</a>
+                                        </li>
+                                        <li>
+                                            <a href="#">Credencial</a>
+                                        </li>
+                                        <li>
+                                            <a href="#">Ecobag</a>
+                                        </li>
+                                        <li>
+                                            <a href="#">Faixas</a>
+                                        </li>
+                                        <li>
+                                            <a href="#">Mapa para Evento</a>
+                                        </li>
+                                        <li>
+                                            <a href="#">Móbile</a>
+                                        </li>
+                                        <li>
+                                            <a href="#">Placa Personalizada</a>
+                                        </li>
+                                        <li>
+                                            <a href="#">Suporte para Banner</a>
+                                        </li>
+                                        <li>
+                                            <a href="#">Urna</a>
+                                        </li>
+                                        <li>
+                                            <a href="#">Ventarola</a>
+                                        </li>
+                                    </ul>
+                                </li>
+                                <li>
+                                    <a href="#" class="parentCateg">Embalagens e Sacolas</a>
+                                    <ul class="subCategAll">
+                                        <li>
+                                            <a href="#">Embalagem para Delivery</a>
+                                            <ul>
+                                                <li>
+                                                    <a href="#">Cinta para Embalagem</a>
+                                                </li>
+                                                <li>
+                                                    <a href="#">Embalagem para Confeitaria</a>
+                                                </li>
+                                                <li>
+                                                    <a href="#">Embalagem para Doces</a>
+                                                </li>
+                                                <li>
+                                                    <a href="#">Embalagem para Hambúrguer</a>
+                                                </li>
+                                                <li>
+                                                    <a href="#">Embalagens para Datas Comemorativas</a>
+                                                </li>
+                                                <li>
+                                                    <a href="#">Lacre para Sacola</a>
+                                                </li>
+                                                <li>
+                                                    <a href="#">Saco Delivery</a>
+                                                </li>
+                                            </ul>
+                                        </li>
+                                        <li>
+                                            <a href="#" class="parentCateg">Sacolas Personalizadas</a>
+                                            <ul class="subCategAll">
+                                                <li>
+                                                    <a href="#">Sacola de Papel</a>
+                                                </li>
+                                                <li>
+                                                    <a href="#">Sacola para Evento</a>
+                                                </li>
+                                                <li>
+                                                    <a href="#">Sacola para Garrafa</a>
+                                                </li>
+                                                <li>
+                                                    <a href="#">Sacola Personalizada para Loja</a>
+                                                </li>
+                                                <li>
+                                                    <a href="#">Sacola Plástica Personalizada</a>
+                                                </li>
+                                            </ul>
+                                        </li>
+                                        <li>
+                                            <a href="#">Embalagem para Correios</a>
+                                        </li>
+                                        <li>
+                                            <a href="#">Embalagens para Bijuterias</a>
+                                        </li>
+                                        <li>
+                                            <a href="#">Embalagens para Presente</a>
+                                        </li>
+                                    </ul>
+                                </li>
+                                <li>
+                                    <a href="#" class="parentCateg">Festas e Eventos</a>
+                                    <ul class="subCategAll">
+                                        <li>
+                                            <a href="#">Convite Personalizado</a>
+                                        </li>
+                                        <li>
+                                            <a href="#">Convites de Casamento</a>
+                                        </li>
+                                        <li>
+                                            <a href="#">Copo Personalizado</a>
+                                        </li>
+                                        <li>
+                                            <a href="#">Credencial</a>
+                                        </li>
+                                        <li>
+                                            <a href="#">Feiras e Eventos</a>
+                                        </li>
+                                        <li>
+                                            <a href="#">Lembrancinha</a>
+                                        </li>
+                                        <li>
+                                            <a href="#">Personalizados para Casamento</a>
+                                        </li>
+                                        <li>
+                                            <a href="#">Personalizado para Festa</a>
+                                        </li>
+                                    </ul>
+                                </li>
+                                <li>
+                                    <a href="#" class="parentCateg">Impressão Têxtil</a>
+                                    <ul class="subCategAll">
+                                        <li>
+                                            <a href="#">Adesivo Termocolante</a>
+                                        </li>
+                                        <li>
+                                            <a href="#">Bandeira</a>
+                                        </li>
+                                        <li>
+                                            <a href="#">Banner em Tecido</a>
+                                        </li>
+                                        <li>
+                                            <a href="#">Boné Personalizado</a>
+                                        </li>
+                                        <li>
+                                            <a href="#">Camiseta Personalizada</a>
+                                        </li>
+                                        <li>
+                                            <a href="#">Capa de Antena</a>
+                                        </li>
+                                        <li>
+                                            <a href="#">Ecobag</a>
+                                        </li>
+                                        <li>
+                                            <a href="#">Faixas</a>
+                                        </li>
+                                        <li>
+                                            <a href="#">Quadros Decorativos</a>
+                                        </li>
+                                    </ul>
+                                </li>
+                                <li>
+                                    <a href="#" class="parentCateg">Papelaria</a>
+                                    <ul class="subCategAll">
+                                        <li>
+                                            <a href="#">Cartão de Visita</a>
+                                        </li>
+                                        <li>
+                                            <a href="#">Envelope</a>
+                                        </li>
+                                        <li>
+                                            <a href="#">Agenda Personalizada</a>
+                                        </li>
+                                        <li>
+                                            <a href="#">Bloco de Notas Personalizado</a>
+                                        </li>
+                                        <li>
+                                            <a href="#">Caderno</a>
+                                        </li>
+                                        <li>
+                                            <a href="#">Canetas</a>
+                                        </li>
+                                        <li>
+                                            <a href="#">Carimbos</a>
+                                        </li>
+                                        <li>
+                                            <a href="#">Carnê</a>
+                                        </li>
+                                        <li>
+                                            <a href="#">Cartaz</a>
+                                        </li>
+                                        <li>
+                                            <a href="#">Carteirinhas Personalizadas</a>
+                                        </li>
+                                        <li>
+                                            <a href="#">CDs e DVDs</a>
+                                        </li>
+                                        <li>
+                                            <a href="#">Certificados</a>
+                                        </li>
+                                        <li>
+                                            <a href="#">Comandas</a>
+                                        </li>
+                                        <li>
+                                            <a href="#">Cordão para Crachá</a>
+                                        </li>
+                                        <li>
+                                            <a href="#">Crachá</a>
+                                        </li>
+                                        <li>
+                                            <a href="#">Credencial</a>
+                                        </li>
+                                        <li>
+                                            <a href="#">Ingressos Personalizados</a>
+                                        </li>
+                                        <li>
+                                            <a href="#">Lacre de Segurança</a>
+                                        </li>
+                                        <li>
+                                            <a href="#">Lápis</a>
+                                        </li>
+                                        <li>
+                                            <a href="#">Marcador de Página</a>
+                                        </li>
+                                        <li>
+                                            <a href="#">Papel Timbrado</a>
+                                        </li>
+                                        <li>
+                                            <a href="#">Papelaria Personalizada</a>
+                                        </li>
+                                        <li>
+                                            <a href="#">Pasta Personalizada</a>
+                                        </li>
+                                        <li>
+                                            <a href="#">Placa Não Perturbe</a>
+                                        </li>
+                                        <li>
+                                            <a href="#">Placa Personalizada</a>
+                                        </li>
+                                        <li>
+                                            <a href="#">Porta Copos</a>
+                                        </li>
+                                        <li>
+                                            <a href="#">Postais</a>
+                                        </li>
+                                        <li>
+                                            <a href="#">Régua</a>
+                                        </li>
+                                        <li>
+                                            <a href="#">Solapa</a>
+                                        </li>
+                                        <li>
+                                            <a href="#">Tags</a>
+                                        </li>
+                                        <li>
+                                            <a href="#">Talões</a>
+                                        </li>
+                                    </ul>
+                                </li>
+                                <li>
+                                    <a href="#" class="parentCateg">Revistas, Catálogos e Livros</a>
+                                    <ul class="subCategAll">
+                                        <li>
+                                            <a href="#">Apostilas</a>
+                                        </li>
+                                        <li>
+                                            <a href="#">Catálogos</a>
+                                        </li>
+                                        <li>
+                                            <a href="#">Livros</a>
+                                        </li>
+                                        <li>
+                                            <a href="#">Revista Personalizada</a>
+                                        </li>
+                                    </ul>
+                                </li>
+                                <li>
+                                    <a href="#" class="parentCateg">Tags e Cartelas</a>
+                                    <ul class="subCategAll">
+                                        <li>
+                                            <a href="#">Cartela para Bijuteria</a>
+                                        </li>
+                                        <li>
+                                            <a href="#">Embalagens para Bijuterias</a>
+                                        </li>
+                                        <li>
+                                            <a href="#">Tag para Roupas</a>
+                                        </li>
+                                        <li>
+                                            <a href="#">Tag para Garrafa</a>
+                                        </li>
+                                        <li>
+                                            <a href="#">Tags</a>
+                                        </li>
+                                    </ul>
+                                </li>
+                            </ul>
+                        </li>
+                    </ul>
+                </nav>
+            </div>
+                <div class="linhaAbNav"></div>
+        </div>
+  </header>
+    <main>
+        <section id="detalhes-produto">
+            <h1></h1>
+            <p></p>
+            <div id="variacoes">
+
+            </div>
+            <br>
+        </section>
+        <section id="quantidades">
+            <div class="btnsCompra">
+                <label for="quantidade">Quantidade:</label>
+                <br>
+                <input type="number" name="quantidade" id="quantidade" value="1">
+                <br>
+                <button id="adicionarAoCarrinhoBtn">Adicionar ao Carrinho</button>
+                <button href="#" id="lnk-comp">Comprar</button>
+                <br>
+                <a href="/" id="cont-comp">Continuar comprando</a>
+            </div>
+        </section>
+        <section id="img-produto">
+          <div id="image-container">
+            <div class="slides">
+              <img src="">
+          </div>
+          <div class="slides">
+              <img src="">
+          </div>
+          <div class="slides">
+              <img src="">
+          </div>
+          <div class="slides">
+              <img src="">
+          </div>
+      
+          <!-- Next and previous buttons -->
+          <button class="button" id="retrocederSlides">              
+            <?xml version="1.0" ?><svg fill="none" height="16px" stroke="white" viewBox="0 0 32 32" width="32" xmlns="http://www.w3.org/2000/svg"><path d="M22,2 L10,16 22,30" stroke-width="4"/></svg>
+            <div class="text">
+            </div>
+          </button>
+          <button class="button" id="avancarSlides">              
+            <?xml version="1.0" ?><!DOCTYPE svg  PUBLIC '-//W3C//DTD SVG 1.1//EN'  'http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd'><svg enable-background="new 0 0 15 26" height="16px" id="Layer_1" version="1.1" viewBox="0 0 15 26" width="32px" xml:space="preserve" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"><polygon fill="white" points="2.019,0.58 -0.035,2.634 10.646,13.316 -0.035,23.997 2.019,26.052 14.755,13.316 "/></svg>
+            <div class="text">
+            </div>
+          </button>
+          </div>
+            <div id="gabarito">
+                <h2>Gabarito do Produto</h2>
+                <a href="#" id="downloadGab"><img src="../images/icone-adobe.png" alt=".." id="icone-adobe"></a>
+            </div>
+        </section>
+        <section id="descricao-produto">
+            <h2>Descrição do Produto</h2>
+            <p></p>
+        </section>
+        <div id="avisoGeral">
+            <div class="notifications-container">
+                <div class="success">
+                  <div class="flex">
+                    <div class="flex-shrink-0">
+                      <svg aria-hidden="true" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg" class="succes-svg">
+                        <path clip-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" fill-rule="evenodd"></path>
+                      </svg>
+                    </div>
+                    <div class="success-prompt-wrap">
+                      <p class="success-prompt-heading">
+                        Produto adicionado ao carrinho!
+                      </p>
+                      <div class="success-prompt-prompt">
+                        <p>Seu produto foi adicionado <br> ao carrinho com sucesso!</p>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>          
+        </div>
+        <div id="erroCarrinho">
+            <div class="notifications-container">
+                <div class="error-alert">
+                  <div class="flex">
+                    <div class="flex-shrink-0">
+                      
+                      <svg aria-hidden="true" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg" class="error-svg">
+                        <path clip-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" fill-rule="evenodd"></path>
+                      </svg>
+                    </div>
+                    <div class="error-prompt-container">
+                      <p class="error-prompt-heading">Erro ao adicionar ao Carrinho
+                      </p><div class="error-prompt-wrap">
+                        <ul class="error-prompt-list" role="list">
+                          <li>Erro ao adicionar ao carrinho, tente novamente mais tarde!</li>
+                        </ul>
+                    </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+        </div>
+    </main>
+    <script src="../scripts/detalhes-produtos-empresa.js"></script>
+</body>
+</html>

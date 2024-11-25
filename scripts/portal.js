@@ -55,3 +55,32 @@ if (!username) {
   userLog.style.display = 'block';
   nameUserLog.textContent = limitedUsername;
 }
+document.addEventListener('DOMContentLoaded', () => {
+  fetch(`/api-produtos/empresa`)
+    .then((response) => {
+      if (!response.ok) {
+        throw new Error('Erro ao carregar os produtos.');
+      }
+      return response.json();
+    })
+    .then((produtos) => {
+      const produtosContainer = document.getElementById('produtos');
+      produtosContainer.innerHTML = '';
+
+      produtos.forEach((produto) => {
+        const produtoElement = document.createElement('div');
+        produtoElement.classList.add('cxProd');
+        produtoElement.innerHTML = `
+          <img src="${produto.imgProd}" alt="${produto.nomeProd}">
+          <h3>${produto.nomeProd}</h3>
+          <p>R$ ${produto.valorProd.toFixed(2)}</p>
+          <a href="detalhes-produtos?id=${produto.id}">Comprar</a>
+        `;
+        produtosContainer.appendChild(produtoElement);
+      });
+    })
+    .catch((error) => {
+      console.error('Erro ao carregar produtos:', error);
+      alert('Erro ao carregar produtos.');
+    });
+});
