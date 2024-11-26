@@ -9,6 +9,9 @@ fetch('/api/empresa/nome')
       document.getElementById('cart').addEventListener("click", () => {
         window.location.href = `/${empresa}/carrinho`;
       });
+      document.getElementById('meusPed').addEventListener("click", () => {
+        window.location.href = `/${empresa}/pedidos-usuario`;
+      });
     } else {
       console.error("Nome da empresa não encontrado na resposta.");
     }

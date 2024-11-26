@@ -262,8 +262,8 @@ app.post("/loginUser-empresas", async (req, res) => {
     }
 
     // Configure os cookies: empresa, userId e username
-    res.cookie("empresa", user.empresa, { httpOnly: true, secure: true });
-    res.cookie("userId", user.id, { httpOnly: true, secure: true });
+    res.cookie("empresa", user.empresa);
+    res.cookie("userId", user.id);
     res.cookie('userCad', user.userCad);
 
     // Retorne sucesso e a URL de redirecionamento

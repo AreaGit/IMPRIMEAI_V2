@@ -1834,6 +1834,31 @@ async function verificarGraficaMaisProximaEAtualizar2(itensPedido, enderecos) {
       res.status(500).json({ error: 'Erro ao buscar pedidos do usuário', message: error.message });
     }
   });
+  app.get('/pedidos-usuario-empresa/:userId', async (req, res) => {
+    const userId = req.cookies.userId;
+  
+    try {
+      // Consulte o banco de dados para buscar os pedidos do usuário com base no userId
+      const pedidosDoUsuario = await Pedidos.findAll({
+        where: {
+          idUserPed: userId,
+        },
+        include: [
+          {
+            model: ItensPedido,
+            where: { tipo: 'Empresas' },
+            attributes: ['statusPed', 'nomeProd', 'idProduto'], // Inclua apenas a coluna 'statusPed'
+          }
+        ],
+      });
+  
+      // Renderize a página HTML de pedidos-usuario e passe os pedidos como JSON
+      res.json({ pedidos: pedidosDoUsuario });
+    } catch (error) {
+      console.error('Erro ao buscar pedidos do usuário:', error);
+      res.status(500).json({ error: 'Erro ao buscar pedidos do usuário', message: error.message });
+    }
+  });
   
   app.get('/imagens/:id', async (req, res) => {
     try {

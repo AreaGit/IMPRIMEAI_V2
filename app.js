@@ -1873,6 +1873,52 @@ app.get('/:empresa/carrinho', (req, res) => {
     res.status(500).send("Erro interno do servidor.");
   }
 });
+// Rota dinâmica para carregar a página de pedidos do usuário com o nome da empresa
+app.get('/:empresa/pedidos-usuario', (req, res) => {
+  try {
+    const { empresa } = req.params;
+
+    // Validação básica para o nome da empresa
+    if (!empresa) {
+      return res.status(400).send("Nome da empresa não fornecido.");
+    }
+
+    // Carrega o arquivo HTML de carrinho
+    const pedidosHtmlContent = fs.readFileSync(
+      path.join(__dirname, 'html', 'pedidosUsuario-empresa.html'),
+      'utf-8'
+    );
+
+    // Serve o arquivo HTML
+    res.send(pedidosHtmlContent);
+  } catch (err) {
+    console.error("Erro ao carregar a página pedidosUsuario-empresa.html", err);
+    res.status(500).send("Erro interno do servidor.");
+  }
+});
+// Rota dinâmica para carregar a página de pedidos do usuário com o nome da empresa
+app.get('/:empresa/detalhesPedidosUser', (req, res) => {
+  try {
+    const { empresa } = req.params;
+
+    // Validação básica para o nome da empresa
+    if (!empresa) {
+      return res.status(400).send("Nome da empresa não fornecido.");
+    }
+
+    // Carrega o arquivo HTML de carrinho
+    const pedidosHtmlContent = fs.readFileSync(
+      path.join(__dirname, 'html', 'detalhesPedidosUser-empresa.html'),
+      'utf-8'
+    );
+
+    // Serve o arquivo HTML
+    res.send(pedidosHtmlContent);
+  } catch (err) {
+    console.error("Erro ao carregar a página detalhesPedidosUser-empresa.html", err);
+    res.status(500).send("Erro interno do servidor.");
+  }
+});
 app.get('/pagamento-empresas', (req, res) => {
   try {
     const pagamentoEmpresasHtmlContent = fs.readFileSync(path.join(__dirname, "html", "pagamento-empresa.html"), "utf-8");
