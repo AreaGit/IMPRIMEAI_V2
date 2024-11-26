@@ -230,6 +230,7 @@ app.post('/adicionar-ao-carrinho/:produtoId', async (req, res) => {
       } else {
         // Caso contrário, adicione o produto ao carrinho
         req.session.carrinho.push({
+          tipo: "Empresas",
           userId: userId,
           produtoId: produto.id,
           nomeProd: produto.nomeProd,
@@ -237,6 +238,7 @@ app.post('/adicionar-ao-carrinho/:produtoId', async (req, res) => {
           valorUnitario: produto.valorProd,
           subtotal: quantidade * produto.valorProd,
           raioProd: produto.raioProd,
+          arte: produto.gabaritoProd,
           marca: variacoesSelecionadas.marca,
           modelo: variacoesSelecionadas.modelo,
           acabamento: variacoesSelecionadas.acabamento,
@@ -1096,6 +1098,126 @@ app.post('/criar-pedidos', async (req, res) => {
         statusPag: metodPag === 'Boleto' ? 'Esperando Pagamento' : metodPag === 'Carteira Usuário' ? 'Pago' : 'Aguardando',
         linkDownload: produto.downloadLink,
         nomeArquivo: produto.nomeArquivo,
+        arteEmpresas: produto.arte == null || produto.arte === "" ? "Não há" : produto.arte,
+        enderecoId: enderecos[index].id
+      });
+    });
+
+    const itensPedido = await Promise.all(itensPedidoPromises);
+
+    // Chamada da função de verificação da gráfica
+    if (isMultipleAddresses) {
+      await verificarGraficaMaisProximaEAtualizar2(itensPedido, enderecos);
+    } else {
+      await verificarGraficaMaisProximaEAtualizar(itensPedido[0], enderecos[0]);
+    }
+
+    // Buscar informações do usuário para o WhatsApp
+    const usuario = await User.findByPk(userId, { attributes: ['telefoneCad', 'userCad'] });
+    if (usuario) {
+      const nome = usuario.userCad;
+      const telefone = usuario.telefoneCad;
+      const linkDetalhamento = `https://www.imprimeai.com.br/detalhesPedidosUser?idPedido=${pedido.id}`
+      const mensagemWhatsapp = "Oi " + nome + ", tudo bem? 😊 Quero te agradecer por confiar sua impressão com a Imprimeaí! Nosso time está super feliz por poder te atender. Se precisar de algo mais ou tiver alguma dúvida, por favor nos chame.\n\n" +
+      "Em breve, te trarei mais novidades sobre o pedido " + pedido.id + "\n" +
+      "Se preferir acompanhe também pelo site:" + linkDetalhamento + "\n\n" +
+      "Obrigada!\n\n" +
+      "Siga-nos no Insta\n" +
+      "https://www.instagram.com/imprimeai.com.br e fique por dentro das novidades, cupons de desconto e assuntos importantes sobre gráfica e comunicação visual!\n\n" +
+      "*Tá com pressa? Imprimeaí!*";
+
+      await enviarNotificacaoWhatsapp(telefone, mensagemWhatsapp);
+    }
+
+    // Limpar a sessão
+    req.session.carrinho = [];
+    req.session.endereco = {};
+
+    // Enviar resposta ao cliente
+    res.status(200).json({ message: 'Pedido criado com sucesso!' });
+
+  } catch (error) {
+    console.error('Erro ao criar pedidos:', error);
+    res.status(500).json({ error: 'Erro ao criar pedidos' });
+  }
+});
+
+app.post('/criar-pedidos-empresas', async (req, res) => {
+  const { metodPag, idTransacao, valorPed } = req.body;
+  const carrinhoQuebrado = req.session.carrinho || [];
+  const enderecoDaSessao = req.session.endereco;
+  const userId = req.cookies.userId
+
+  try {
+    if (carrinhoQuebrado.length === 0) {
+      throw new Error('Carrinho vazio.');
+    }
+
+    const isMultipleAddresses = carrinhoQuebrado[0].tipoEntrega === 'Múltiplos Enderecos';
+
+    const totalUnidades = carrinhoQuebrado.reduce((total, produto) => total + produto.quantidade, 0);
+    const totalAPagar = await Promise.all(carrinhoQuebrado.map(async (produto) => {
+      const produtoInfo = await ProdutosExc.findByPk(produto.produtoId);
+      return produtoInfo.valorProd * produto.quantidade;
+    })).then(valores => valores.reduce((total, valor) => total + valor, 0));
+
+    const pedido = await Pedidos.create({
+      idUserPed: req.cookies.userId,
+      nomePed: 'Pedido Geral',
+      quantPed: totalUnidades,
+      valorPed: totalAPagar,
+      statusPed: metodPag === 'Boleto' ? 'Esperando Pagamento' : 'Pago',
+      metodPag: metodPag,
+      idTransacao: idTransacao
+    });
+
+    const enderecosPromises = carrinhoQuebrado.map(async (produto) => {
+      const endereco = produto.endereco || {};
+      return Enderecos.create({
+        idPed: pedido.id,
+        rua: endereco.rua,
+        cep: endereco.cep,
+        cidade: endereco.cidade,
+        numero: endereco.numeroRua,
+        complemento: endereco.complemento,
+        bairro: endereco.bairro,
+        quantidade: produto.quantidade,
+        celular: endereco.telefone,
+        estado: endereco.estado,
+        cuidados: endereco.cuidados,
+        raio: produto.raioProd,
+        produtos: produto.produtoId,
+        idProduto: produto.produtoId,
+        tipoEntrega: endereco.tipoEntrega,
+        frete: endereco.frete
+      });
+    });
+
+    const enderecos = await Promise.all(enderecosPromises);
+
+    const itensPedidoPromises = carrinhoQuebrado.map(async (produto, index) => {
+      const produtoInfo = await ProdutosExc.findByPk(produto.produtoId);
+      return ItensPedido.create({
+        idPed: pedido.id,
+        idUserPed: req.cookies.userId,
+        idProduto: produto.produtoId,
+        nomeProd: produtoInfo.nomeProd,
+        quantidade: produto.quantidade,
+        valorProd: produtoInfo.valorProd,
+        raio: produto.raioProd,
+        marca: produto.marca,
+        modelo: produto.modelo,
+        acabamento: produto.acabamento,
+        cor: produto.cor,
+        enobrecimento: produto.enobrecimento,
+        formato: produto.formato,
+        material: produto.material,
+        arquivo: produto.arquivo,
+        statusPed: carrinhoQuebrado.some(p => p.downloadLink === "Enviar Arte Depois") ? 'Pedido em Aberto' : 'Aguardando',
+        statusPag: metodPag === 'Boleto' ? 'Esperando Pagamento' : metodPag === 'Carteira Usuário' ? 'Pago' : 'Aguardando',
+        linkDownload: produto.downloadLink,
+        nomeArquivo: produto.nomeArquivo,
+        arteEmpresas: produto.arte == null || produto.arte === "" ? "Não há" : produto.arte,
         enderecoId: enderecos[index].id
       });
     });

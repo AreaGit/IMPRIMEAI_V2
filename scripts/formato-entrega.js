@@ -2,7 +2,7 @@ const btnRetirada = document.getElementById('btnRetirada');
 const avisoGeral = document.getElementById('avisoGeral');
 const erroEndereco = document.getElementById('erroEndereco');
 let downloadLinks = []; // Array para armazenar todos os links de download
-
+let tipo
 document.addEventListener('DOMContentLoaded', async() => {
     try {
         const response = await fetch('/api/carrinho');
@@ -13,7 +13,10 @@ document.addEventListener('DOMContentLoaded', async() => {
 
         const data = await response.json();
         console.log(data);
-
+        if(data[0].tipo) {
+            tipo = data[0].tipo;
+            console.log(tipo)
+        }
         // Itera sobre todos os produtos no carrinho e armazena seus links de download
         data.forEach(produto => {
             if (produto.downloadLink) {
@@ -87,7 +90,11 @@ btnRetirada.addEventListener("click", async () => {
             avisoGeral.style.display = 'block';
             window.setTimeout(() => {
                 avisoGeral.style.display = 'none';
-                window.location.href = '/pagamento'
+                if(tipo === "Empresas"){
+                    window.location.href = '/pagamento-empresas'
+                } else{
+                    window.location.href = '/pagamento'
+                }
             }, 5000);
         } else {
             erroEndereco.style.display = 'block';

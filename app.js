@@ -1843,6 +1843,38 @@ app.get('/api/quantidades-empresa/:produtoId', async (req, res) => {
     res.status(500).json({ error: 'Erro ao obter as quantidades' });
   }
 });
+// Rota dinâmica para carregar a página de carrinho com o nome da empresa
+app.get('/:empresa/carrinho', (req, res) => {
+  try {
+    const { empresa } = req.params;
+
+    // Validação básica para o nome da empresa
+    if (!empresa) {
+      return res.status(400).send("Nome da empresa não fornecido.");
+    }
+
+    // Carrega o arquivo HTML de carrinho
+    const carrinhoHtmlContent = fs.readFileSync(
+      path.join(__dirname, 'html', 'carrinho-empresa.html'),
+      'utf-8'
+    );
+
+    // Serve o arquivo HTML
+    res.send(carrinhoHtmlContent);
+  } catch (err) {
+    console.error("Erro ao carregar a página carrinho-empresa.html", err);
+    res.status(500).send("Erro interno do servidor.");
+  }
+});
+app.get('/pagamento-empresas', (req, res) => {
+  try {
+    const pagamentoEmpresasHtmlContent = fs.readFileSync(path.join(__dirname, "html", "pagamento-empresa.html"), "utf-8");
+    res.send(pagamentoEmpresasHtmlContent);
+  } catch(err) {
+    console.log("Erro ao carregar a página pagamento-empresa.html", err);
+    res.status(500).send("Erro interno do servidor.")
+  }
+});
 app.listen(PORT, () => {
   console.log(`Servidor rodando na porta ${PORT} https://localhost:${PORT}`);
 });

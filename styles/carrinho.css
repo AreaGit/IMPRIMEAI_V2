@@ -21,6 +21,10 @@ header {
   transition: 2s;
   width: 100%;
 }
+.logoLoja > img {
+  cursor: pointer;
+  width: 300px;
+}
 .mainContentHeader {
   position: absolute;
   height: 50vw;

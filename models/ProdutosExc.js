@@ -49,7 +49,7 @@ const Produtos = db.define('produtosexc', {
     allowNull: true, // Alterado para não permitir valores nulos, se as imagens forem obrigatórias.
   },
   gabaritoProd: {
-    type: Sequelize.BLOB('long'),
+    type: Sequelize.STRING,
     allowNull: true,
   },
 },  {

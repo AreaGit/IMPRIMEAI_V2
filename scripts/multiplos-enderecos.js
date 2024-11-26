@@ -4,6 +4,27 @@ const avisoGeral = document.getElementById('avisoGeral');
 const erroCarrinho = document.getElementById('erroCarrinho');
 const erroPl = document.getElementById('erroPl');
 const carregamento = document.getElementById('carregamento');
+let tipo;
+
+document.addEventListener('DOMContentLoaded', async() => {
+    try {
+        const response = await fetch('/api/carrinho');
+
+        if (!response.ok) {
+            throw new Error('Erro ao buscar os dados do carrinho');
+        }
+
+        const data = await response.json();
+        console.log(data);
+        if(data[0].tipo) {
+            tipo = data[0].tipo;
+            console.log(tipo)
+        }
+
+    } catch(err) {
+        console.log(err);
+    }
+});
 
 fileInput.addEventListener('change', function() {
     // Verifica se foi selecionado algum arquivo
@@ -35,7 +56,11 @@ const form = document.getElementById('formEnviarPlanilha');
                     carregamento.style.display = 'none'
                     setTimeout(() => {
                         avisoGeral.style.display = 'none'
-                        window.location.href = "/pagamento";
+                        if(tipo === "Empresas"){
+                            window.location.href = '/pagamento-empresas'
+                        } else{
+                            window.location.href = '/pagamento'
+                        }
                     }, 5000);    
                 } else {
                 erroCarrinho.style.display = 'block'

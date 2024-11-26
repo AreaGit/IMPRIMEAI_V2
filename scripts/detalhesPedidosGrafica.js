@@ -279,7 +279,7 @@ document.addEventListener('DOMContentLoaded', async() => {
             <p class=""><strong>Acabamento:</strong> ${variacoesProduto.acabamento}</p>
             <p class=""><strong>Cor:</strong> ${variacoesProduto.cor}</p>
             <p class=""><strong>Enobrecimento:</strong> ${variacoesProduto.enobrecimento}</p>
-            <a href="${detalhesPedido.itenspedidos[0].linkDownload}" target="_blank">Clique Aqui para Baixar</a>
+            <a href="${detalhesPedido.itenspedidos[0].linkDownload !== null ? detalhesPedido.itenspedidos[0].linkDownload : detalhesPedido.itenspedidos[0].arteEmpresas}" target="_blank">Clique Aqui para Baixar</a>
             `
         produtoInfo.appendChild(detalhesItens);
 

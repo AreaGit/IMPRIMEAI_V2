@@ -70,6 +70,9 @@ document.addEventListener('DOMContentLoaded', () => {
       produtos.forEach((produto) => {
         const produtoElement = document.createElement('div');
         produtoElement.classList.add('cxProd');
+        produtoElement.addEventListener('click', () => {
+          window.location.href = `detalhes-produtos?id=${produto.id}`;
+        });
         produtoElement.innerHTML = `
           <img src="${produto.imgProd}" alt="${produto.nomeProd}">
           <h3>${produto.nomeProd}</h3>

@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Detalhes do Produto</title>
+    <title>Carrinho</title>
     <link rel="shortcut icon" href="../images/favicon-imprimeai.png" type="image/x-icon">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -13,8 +13,8 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter+Tight:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0"/>
-    <link rel="stylesheet" href="../styles/detalhes-produtos.css">
-    <link rel="stylesheet" href="../styles/detalhes-produtos-resp.css">
+    <link rel="stylesheet" href="../styles/carrinho.css">
+    <link rel="stylesheet" href="../styles/carrinho-resp.css">
 </head>
 <body>
     <header>
@@ -60,67 +60,49 @@
               <span id="quantidadeCarrinho">0</span>
             </div>
             <div class="logoLoja">
-                <img src="" alt="Logo da Empresa">
+              <img src="" alt="Logo da Empresa">
             </div>
         </div>
   </header>
     <main>
-        <section id="detalhes-produto">
-            <h1></h1>
-            <p></p>
-            <div id="variacoes">
-
-            </div>
-            <br>
-        </section>
-        <section id="quantidades">
-            <div class="btnsCompra">
-                <label for="quantidade">Quantidade:</label>
+        <div id="carrinho-vazio">
+            <h1 id="tlt-vazio">Seu carrinho está vazio.</h1>
+            <p id="pr-vazio">Adicione produtos ao seu carrinho para continuar comprando.</p>
+            <button id="continuarComprando">Continue comprando</button>
+        </div>
+        <div id="carrinhoProdutos">
+            <!-- Os produtos do carrinho serão listados aqui -->
+        </div>
+        <div id="totalCarrinho">
+            <h1>O total de seu carrinho é R$ <span id="total"></span></h1>
+            <a href="/" id="voltar">Voltar ao Início</a>
+        </div>
+        <div id="resumo-compra">
+            <p class="prResumo">Total de desconto</p>
+            <p class="prResumo">Subtotal</p>
+            <p class="prResumo">Total de itens</p>
+            
+            <div id="linhaHR"></div>
+            <h2>Total</h2>
+            <div id="ladoDireito">
+                <span id="totalDesconto">0</span>
                 <br>
-                <input type="number" name="quantidade" id="quantidade" value="1">
+                <span id="subTotal">R$</span>
                 <br>
-                <button id="adicionarAoCarrinhoBtn">Adicionar ao Carrinho</button>
-                <button href="#" id="lnk-comp">Comprar</button>
+                <span id="totalItens"></span>
                 <br>
-                <a href="/" id="cont-comp">Continuar comprando</a>
+                <span id="totalComp">R$</span>
             </div>
-        </section>
-        <section id="img-produto">
-          <div id="image-container">
-            <div class="slides">
-              <img src="">
-          </div>
-          <div class="slides">
-              <img src="">
-          </div>
-          <div class="slides">
-              <img src="">
-          </div>
-          <div class="slides">
-              <img src="">
-          </div>
-      
-          <!-- Next and previous buttons -->
-          <button class="button" id="retrocederSlides">              
-            <?xml version="1.0" ?><svg fill="none" height="16px" stroke="white" viewBox="0 0 32 32" width="32" xmlns="http://www.w3.org/2000/svg"><path d="M22,2 L10,16 22,30" stroke-width="4"/></svg>
-            <div class="text">
+            <div id="btnsResumo">
+                <a href="/" class="btnResumo" id="voltarInicio">Voltar ao Início</a>
+                <a href="#" class="btnResumo" id="btnAvancar">Avançar</a>
             </div>
-          </button>
-          <button class="button" id="avancarSlides">              
-            <?xml version="1.0" ?><!DOCTYPE svg  PUBLIC '-//W3C//DTD SVG 1.1//EN'  'http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd'><svg enable-background="new 0 0 15 26" height="16px" id="Layer_1" version="1.1" viewBox="0 0 15 26" width="32px" xml:space="preserve" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"><polygon fill="white" points="2.019,0.58 -0.035,2.634 10.646,13.316 -0.035,23.997 2.019,26.052 14.755,13.316 "/></svg>
-            <div class="text">
+            <div id="cupomDesconto">
+                <label for="cupom">Cupom de desconto</label>
+                <input type="text" name="cupom" id="cupom" placeholder="Digite seu cupom..." maxlength="15">
+                <button id="btnEnviarCupom">Enviar</button>
             </div>
-          </button>
-          </div>
-            <div id="gabarito" style="display: none;">
-                <h2>Ver do Produto</h2>
-                <a href="#" id="downloadGab"><img src="../images/icone-adobe.png" alt=".." id="icone-adobe"></a>
-            </div>
-        </section>
-        <section id="descricao-produto">
-            <h2>Descrição do Produto</h2>
-            <p></p>
-        </section>
+        </div>
         <div id="avisoGeral">
             <div class="notifications-container">
                 <div class="success">
@@ -132,10 +114,10 @@
                     </div>
                     <div class="success-prompt-wrap">
                       <p class="success-prompt-heading">
-                        Produto adicionado ao carrinho!
+                        Cupom de desconto aplicado!
                       </p>
                       <div class="success-prompt-prompt">
-                        <p>Seu produto foi adicionado <br> ao carrinho com sucesso!</p>
+                        <p>O cupom de desconto foi aplicado <br> ao carrinho com sucesso!</p>
                       </div>
                     </div>
                   </div>
@@ -153,10 +135,10 @@
                       </svg>
                     </div>
                     <div class="error-prompt-container">
-                      <p class="error-prompt-heading">Erro ao adicionar ao Carrinho
+                      <p class="error-prompt-heading">Erro ao aplicar o cupom
                       </p><div class="error-prompt-wrap">
                         <ul class="error-prompt-list" role="list">
-                          <li>Erro ao adicionar ao carrinho, tente novamente mais tarde!</li>
+                          <li>Verifique se o cupom foi digitado corretamente</li>
                         </ul>
                     </div>
                     </div>
@@ -165,6 +147,6 @@
               </div>
         </div>
     </main>
-    <script src="../scripts/detalhes-produtos-empresa.js"></script>
+    <script src="../scripts/carrinho-empresa.js"></script>
 </body>
 </html>

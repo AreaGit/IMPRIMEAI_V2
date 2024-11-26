@@ -5,6 +5,32 @@ const retrocederSlides = document.getElementById('retrocederSlides');
 const downloadGab = document.getElementById('downloadGab');
 let modeloSelecionado
 let marcaSelecionada
+document.addEventListener('DOMContentLoaded', () => {
+  fetch('/api/empresa/logo', {
+      method: 'GET',
+      credentials: 'include', // Inclui cookies na requisição
+    })
+      .then((response) => {
+      if (!response.ok) {
+        throw new Error('Erro ao carregar a logo da empresa.');
+      }
+      return response.json();
+    })
+    .then((data) => {
+    // Define o caminho da logo na imagem
+    const logoElement = document.querySelector('.logoLoja img');
+    if (data.logo) {
+      logoElement.src = data.logo;
+    } else {
+      window.location.href = '/empresas/login';
+    }
+  })
+  .catch((error) => {
+      console.error('Erro ao carregar a logo:', error);
+      window.location.href = '/empresas/login';
+      alert('Erro ao carregar a logo da empresa.');
+  });
+});
 document.addEventListener('DOMContentLoaded', function() {
     // Obtenha o ID do produto da URL atual (por exemplo, /detalhes-produtos.html?id=1)
     const params = new URLSearchParams(window.location.search);
@@ -411,7 +437,7 @@ adicionarAoCarrinhoBtn.addEventListener('click', async () => {
             // Produto adicionado com sucesso ao carrinho
             avisoAdicionadoaoCarrinho.style.display = 'block';
             setTimeout(() => {
-              window.location.href = '/carrinho'
+              window.location.href = 'carrinho'
               avisoAdicionadoaoCarrinho.style.display = 'none';
             }, 2000);
             // Limpe o campo de entrada de quantidade

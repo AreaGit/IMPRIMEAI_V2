@@ -21,6 +21,10 @@ header {
   transition: 2s;
   width: 100%;
 }
+.logoLoja > img {
+  cursor: pointer;
+  width: 300px;
+}
 /*header.scrolled {
   position: fixed;
   top: 0%;
