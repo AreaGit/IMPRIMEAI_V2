@@ -1099,6 +1099,7 @@ app.post('/criar-pedidos', async (req, res) => {
         linkDownload: produto.downloadLink,
         nomeArquivo: produto.nomeArquivo,
         arteEmpresas: produto.arte == null || produto.arte === "" ? "Não há" : produto.arte,
+        tipo: "Normal",
         enderecoId: enderecos[index].id
       });
     });
@@ -1218,6 +1219,7 @@ app.post('/criar-pedidos-empresas', async (req, res) => {
         linkDownload: produto.downloadLink,
         nomeArquivo: produto.nomeArquivo,
         arteEmpresas: produto.arte == null || produto.arte === "" ? "Não há" : produto.arte,
+        tipo: "Empresas",
         enderecoId: enderecos[index].id
       });
     });
@@ -1819,6 +1821,7 @@ async function verificarGraficaMaisProximaEAtualizar2(itensPedido, enderecos) {
         include: [
           {
             model: ItensPedido,
+            where: { tipo: 'Normal' },
             attributes: ['statusPed', 'nomeProd', 'idProduto'], // Inclua apenas a coluna 'statusPed'
           }
         ],

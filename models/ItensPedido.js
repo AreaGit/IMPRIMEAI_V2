@@ -67,6 +67,9 @@ const ItensPedidos = db.define('itenspedidos', {
     arteEmpresas: {
         type: Sequelize.STRING(255)
     },
+    tipo: {
+        type: Sequelize.STRING(255)
+    },
     raio: {
         type: Sequelize.FLOAT,
         allowNull: false,
