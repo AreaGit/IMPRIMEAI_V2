@@ -1,3 +1,25 @@
+fetch('/api/empresa/nome')
+  .then(response => response.json())
+  .then(data => {
+    if (data.empresa) {
+      const empresa = data.empresa;
+      document.querySelector('.voltarPortal').addEventListener("click", () => {
+        window.location.href = `/${empresa}/inicio`;
+      });
+      document.getElementById('voltarInicio').addEventListener("click", () => {
+        window.location.href = `/${empresa}/inicio`;
+      });
+      document.getElementById('voltar').addEventListener("click", () => {
+        window.location.href = `/${empresa}/inicio`;
+      });
+      document.getElementById('cart').addEventListener("click", () => {
+        window.location.href = `/${empresa}/carrinho`;
+      });
+    } else {
+      console.error("Nome da empresa não encontrado na resposta.");
+    }
+  })
+  .catch(error => console.error('Erro ao buscar o nome da empresa:', error));
 const carrinhoVazio = document.getElementById('carrinho-vazio');
 const totalCarrinho = document.getElementById('totalCarrinho');
 const resumoCompra = document.getElementById('resumo-compra');
@@ -313,5 +335,15 @@ document.addEventListener("DOMContentLoaded", async () => {
 });
 
 document.getElementById('continuarComprando').addEventListener('click', () => {
-  window.location.href = '/'
+  fetch('/api/empresa/nome')
+  .then(response => response.json())
+  .then(data => {
+    if (data.empresa) {
+      const empresa = data.empresa;
+      window.location.href = `/${empresa}/inicio`;
+    } else {
+      console.error("Nome da empresa não encontrado na resposta.");
+    }
+  })
+  .catch(error => console.error('Erro ao buscar o nome da empresa:', error));
 });

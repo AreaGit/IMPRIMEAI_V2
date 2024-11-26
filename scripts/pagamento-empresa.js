@@ -1,3 +1,16 @@
+fetch('/api/empresa/nome')
+  .then(response => response.json())
+  .then(data => {
+    if (data.empresa) {
+      const empresa = data.empresa;
+      document.getElementById('voltarPortal').addEventListener("click", () => {
+        window.location.href = `/${empresa}/inicio`;
+      });
+    } else {
+      console.error("Nome da empresa não encontrado na resposta.");
+    }
+  })
+  .catch(error => console.error('Erro ao buscar o nome da empresa:', error));
 const btnContPag = document.getElementById("btnContPag");
 const divPix = document.getElementById("pix");
 const divBoleto = document.getElementById("boleto");

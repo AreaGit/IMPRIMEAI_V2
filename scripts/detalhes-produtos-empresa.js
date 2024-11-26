@@ -1,3 +1,19 @@
+fetch('/api/empresa/nome')
+  .then(response => response.json())
+  .then(data => {
+    if (data.empresa) {
+      const empresa = data.empresa;
+      document.querySelector('.voltarPortal').addEventListener("click", () => {
+        window.location.href = `/${empresa}/inicio`;
+      });
+      document.getElementById('cart').addEventListener("click", () => {
+        window.location.href = `/${empresa}/carrinho`;
+      });
+    } else {
+      console.error("Nome da empresa não encontrado na resposta.");
+    }
+  })
+  .catch(error => console.error('Erro ao buscar o nome da empresa:', error));
 const avisoAdicionadoaoCarrinho = document.getElementById('avisoGeral');
 const erroCarrinho = document.getElementById('erroCarrinho');
 const avancarSlides = document.getElementById('avancarSlides');

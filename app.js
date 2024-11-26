@@ -1677,6 +1677,13 @@ app.get('/:empresa/inicio', (req, res) => {
     res.status(500).send("Erro interno do servidor", err);
   }
 });
+app.get('/api/empresa/nome', (req, res) => {
+  const empresa = decodeURIComponent(req.cookies.empresa || '');
+  if (!empresa) {
+    return res.status(400).json({ message: 'Nome da empresa não encontrado.' });
+  }
+  res.json({ empresa });
+});
 //Rota get para pegar informações da empresa
 app.get('/api/empresa/logo', async (req, res) => {
   try {
