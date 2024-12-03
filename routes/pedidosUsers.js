@@ -78,6 +78,7 @@ app.use(session({
 }));
 const os = require('os');
 const ItensPedidos = require('../models/ItensPedido');
+const UserEmpresas = require('../models/Users-Empresas');
 const pagarmeKeyProd = "sk_e74e3fe1ccbe4ae080f70d85d94e2c68";
 const pagarmeKeyTest = "sk_test_05ddc95c6ce442a796c7ebbe2376185d";
 
@@ -1234,7 +1235,7 @@ app.post('/criar-pedidos-empresas', async (req, res) => {
     }
 
     // Buscar informações do usuário para o WhatsApp
-    const usuario = await User.findByPk(userId, { attributes: ['telefoneCad', 'userCad'] });
+    const usuario = await UserEmpresas.findByPk(userId, { attributes: ['telefoneCad', 'userCad'] });
     if (usuario) {
       const nome = usuario.userCad;
       const telefone = usuario.telefoneCad;
@@ -1352,7 +1353,7 @@ async function verificarGraficaMaisProximaEAtualizar(itensPedido, enderecoPedido
           }
 
           // Enviar notificação por e-mail para a gráfica
-          await enviarEmailNotificacao(graficaMaisProxima.emailCad, `Novo Pedido - ID ${itensPedido[0].idPed}`, mensagemStatus);
+          //await enviarEmailNotificacao(graficaMaisProxima.emailCad, `Novo Pedido - ID ${itensPedido[0].idPed}`, mensagemStatus);
 
           // Enviar notificação por WhatsApp para a gráfica
           await enviarNotificacaoWhatsapp(graficaMaisProxima.telefoneCad, mensagemStatus);
@@ -1866,6 +1867,28 @@ async function verificarGraficaMaisProximaEAtualizar2(itensPedido, enderecos) {
   
       // Consulta o banco de dados para obter a URL da imagem do produto pelo ID
       const produto = await Produtos.findByPk(idDoProduto);
+  
+      if (!produto || !produto.imgProd) {
+        // Se o produto não for encontrado ou não houver URL da imagem, envie uma resposta de erro 404
+        return res.status(404).send('Imagem não encontrada');
+      }
+  
+      const imgProdUrl = produto.imgProd;
+  
+      // Envie a URL da imagem como resposta
+      res.json({ imgProdUrl });
+    } catch (error) {
+      console.error('Erro ao buscar URL da imagem do produto:', error);
+      res.status(500).send('Erro interno do servidor');
+    }
+  });
+
+  app.get('/imagens-empresa/:id', async (req, res) => {
+    try {
+      const idDoProduto = req.params.id;
+  
+      // Consulta o banco de dados para obter a URL da imagem do produto pelo ID
+      const produto = await ProdutosExc.findByPk(idDoProduto);
   
       if (!produto || !produto.imgProd) {
         // Se o produto não for encontrado ou não houver URL da imagem, envie uma resposta de erro 404

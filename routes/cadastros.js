@@ -241,14 +241,27 @@ app.post("/login", async (req, res) => {
   }
 });
 
+// Função para gerar abreviação personalizada
+function gerarAbreviacao(empresa) {
+  // Palavras que devem ser ignoradas na sigla
+  const palavrasIgnoradas = ["de", "do", "da", "das", "dos", "e"];
+  
+  return empresa
+    .split(' ') // Divide o nome em palavras
+    .filter(palavra => !palavrasIgnoradas.includes(palavra.toLowerCase())) // Remove palavras ignoradas
+    .map(palavra => palavra[0]) // Pega a primeira letra das palavras restantes
+    .join('') // Junta as letras para formar a abreviação
+    .toLowerCase(); // Converte para minúsculas
+}
+
 app.post("/loginUser-empresas", async (req, res) => {
   try {
-    const { empresa, emailCad, passCad } = req.body;
+    const { emailCad, passCad } = req.body;
 
     // Verifique se o usuário e a empresa existem no banco de dados
     const user = await UsersEmpresas.findOne({
-      where: { emailCad: emailCad, empresa: empresa },
-      attributes: ['id', 'empresa', 'passCad', 'userCad'], // Inclui userCad na busca
+      where: { emailCad: emailCad },
+      attributes: ['id', 'passCad', 'userCad'], // Inclui userCad na busca
     });
 
     if (!user) {
@@ -261,16 +274,13 @@ app.post("/loginUser-empresas", async (req, res) => {
       return res.status(401).json({ message: "Credenciais inválidas." });
     }
 
-    // Configure os cookies: empresa, userId e username
-    res.cookie("empresa", user.empresa);
     res.cookie("userId", user.id);
     res.cookie('userCad', user.userCad);
 
-    // Retorne sucesso e a URL de redirecionamento
+    // Retorne sucesso e a URL de redirecionamento com a abreviação
     res.json({
       success: true,
       message: "Login bem-sucedido",
-      redirectUrl: `/${encodeURIComponent(user.empresa)}/inicio`,
     });
   } catch (error) {
     console.error("Erro ao fazer login:", error);

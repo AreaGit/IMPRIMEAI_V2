@@ -103,7 +103,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 // Função para obter a URL da imagem do produto
                 async function pegarImagemDoProduto(idDoProduto) {
                   try {
-                      const imgResponse = await fetch(`/imagens/${idDoProduto}`);
+                      const imgResponse = await fetch(`/imagens-empresa/${idDoProduto}`);
                       if (!imgResponse.ok) {
                           throw new Error('Erro ao obter a URL da imagem do produto');
                       }

@@ -1,0 +1,23 @@
+@media screen and (min-width: 2560px) {
+    .cxProd {
+        cursor: pointer;
+        padding: 15px;
+        display: inline-flex;
+        box-shadow: -1px -1px 8px #434344;
+        border-radius: 5px;
+        width: calc(22% - 20px);
+        overflow: hidden;
+        height: 456px;
+        position: relative;
+        top: 12%;
+        left: 15%;
+        transition: transform 0.8s;
+        margin: 50px;
+        transition: 0.8s;
+        background-color: white;
+    }
+    .logoLoja {
+        position: relative;
+        left: 8%;
+    }
+} 

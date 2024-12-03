@@ -78,7 +78,7 @@ const Produtos = db.define('produtosexc', {
 });
 
 // Configurar a associação com VariacoesProduto
-//Produtos.hasMany(VariacoesProdutoExc, { foreignKey: 'idProduto' });
+Produtos.hasMany(VariacoesProdutoExc, { foreignKey: 'idProduto' });
 
 // Sincronizar o modelo com o banco de dados
 Produtos.sync() // Use isso para criar ou atualizar a tabela

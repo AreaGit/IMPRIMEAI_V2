@@ -1668,7 +1668,7 @@ app.get('/empresas/cadastro-planilha-exclusivos', (req, res) => {
   }
 });
 //Rota get para o painel dinâmico da loja
-app.get('/:empresa/inicio', (req, res) => {
+/*app.get('/:empresa/inicio', (req, res) => {
   try {
     const portalEmpresaHtmlContent = fs.readFileSync(path.join(__dirname, "html", "portal.html"), "utf-8");
     res.send(portalEmpresaHtmlContent);
@@ -1676,7 +1676,7 @@ app.get('/:empresa/inicio', (req, res) => {
     console.log("Erro ao ler o arquivo portal.html", err);
     res.status(500).send("Erro interno do servidor", err);
   }
-});
+});*/
 app.get('/api/empresa/nome', (req, res) => {
   const empresa = decodeURIComponent(req.cookies.empresa || '');
   if (!empresa) {
@@ -1926,6 +1926,53 @@ app.get('/pagamento-empresas', (req, res) => {
   } catch(err) {
     console.log("Erro ao carregar a página pagamento-empresa.html", err);
     res.status(500).send("Erro interno do servidor.")
+  }
+});
+//Rota get para tela de login de usuários do portal da CPQ
+app.get('/cpq/login', (req, res) => {
+  try {
+    const cpqLoginHtmlContent = fs.readFileSync(path.join(__dirname, "html/empresas_cpq_html", "login.html"), "utf-8");
+    res.send(cpqLoginHtmlContent);
+  } catch(err) {
+    console.log("Erro ao carregar a página login.html", err);
+    res.status(500).send("Erro interno do servidor.")
+  }
+});
+//Rota get para a tela do portal de usuários da CPQ
+app.get('/cpq/inicio', (req, res) => {
+  try {
+    const cpqInicioHtmlContent = fs.readFileSync(path.join(__dirname, "html/empresas_cpq_html", "portal.html"), "utf-8");
+    res.send(cpqInicioHtmlContent);
+  } catch(err) {
+    console.log("Erro ao carregar a página portal.html", err);
+    res.status(500).send("Erro interno do servidor.")
+  }
+});
+app.get('/api-produtos/cpq', async (req, res) => {
+  try {
+    // Recupera o nome da empresa dos parâmetros da URL
+    const empresa = "Casa do Pão de Queijo";
+    console.log(empresa)
+    // Validação básica do parâmetro
+    if (!empresa) {
+      return res.status(400).json({ error: "Nome da empresa não fornecido ou inválido." });
+    }
+
+    // Busca os produtos no banco filtrando pelo nome da empresa
+    const produtos = await ProdutosExc.findAll({
+      where: { empresa }, // Substitua "empresa" pelo nome exato da coluna no banco
+    });
+
+    // Verifica se encontrou produtos
+    if (produtos.length === 0) {
+      return res.status(404).json({ message: "Nenhum produto encontrado para esta empresa." });
+    }
+
+    // Retorna os produtos encontrados
+    res.json(produtos);
+  } catch (error) {
+    console.error("Erro ao buscar produtos:", error);
+    res.status(500).json({ error: "Erro ao buscar produtos. Tente novamente mais tarde." });
   }
 });
 app.listen(PORT, () => {
