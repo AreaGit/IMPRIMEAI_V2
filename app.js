@@ -1743,8 +1743,92 @@ app.get('/api-produtos/empresa', async (req, res) => {
     res.status(500).json({ error: "Erro ao buscar produtos. Tente novamente mais tarde." });
   }
 });
-// Rota dinâmica para carregar a página de detalhes do produto com o nome da empresa
-app.get('/:empresa/detalhes-produtos', (req, res) => {
+//Rotas get para mostrar o produto e as suas variações
+app.get('/produto-empresa/:id', async (req, res) => {
+  try {
+    const productId = parseInt(req.params.id);
+    const produto = await ProdutosExc.findByPk(productId); // Use o método correto para buscar o produto
+
+    if (!produto) {
+      res.status(404).json({ mensagem: 'Produto não encontrado' });
+    } else {
+      res.json({
+        id: produto.id,
+        nomeProd: produto.nomeProd,
+        descProd: produto.descProd,
+        valorProd: produto.valorProd,
+        raioProd: produto.raioProd,
+        imgProd: produto.imgProd, // Include the main product image
+        imgProd2: produto.imgProd2, // Include additional image 1
+        imgProd3: produto.imgProd3, // Include additional image 2
+        imgProd4: produto.imgProd4, // Include additional image 3
+        gabaritoProd: produto.gabaritoProd,
+        // Adicione outras propriedades do produto conforme necessário
+      });
+    }
+  } catch (error) {
+    console.error('Erro ao buscar detalhes do produto:', error);
+    res.status(500).json({ mensagem: 'Erro interno do servidor' });
+  }
+}); 
+app.get('/produto-empresa/:id/gabarito', async (req, res) => {
+  try {
+    const productId = parseInt(req.params.id);
+    const produto = await ProdutosExc.findByPk(productId);
+
+    if (!produto || !produto.gabaritoProd) {
+      return res.status(404).json({ mensagem: 'Gabarito não encontrado' });
+    }
+
+    // Tratamento do conteúdo do PDF
+    const pdfContent = Buffer.from(produto.gabaritoProd, 'binary'); // Assumindo que o conteúdo está armazenado como string
+    res.setHeader('Content-Type', 'application/pdf');
+    res.setHeader('Content-Disposition', `attachment; filename=${produto.nomeProd}_gabarito.pdf`);
+    res.send(pdfContent);
+  } catch (error) {
+    console.error('Erro ao baixar gabarito:', error);
+    res.status(500).json({ mensagem: 'Erro interno do servidor' });
+  }
+});
+app.get('/variacoes-produto-empresa/:id', async (req, res) => {
+  try {
+    const produtoId = parseInt(req.params.id);
+
+    // Buscar as variações do produto com base no ID do produto
+    const variacoes = await VariacoesProdutoExc.findAll({
+      where: { idProduto: produtoId }
+    });
+
+    res.json(variacoes);
+  } catch (error) {
+    console.error('Erro ao buscar variações do produto:', error);
+    res.status(500).json({ mensagem: 'Erro interno do servidor' });
+  }
+});
+app.get('/api/quantidades-empresa/:produtoId', async (req, res) => {
+  try {
+    const { produtoId } = req.params;
+
+    // Encontre as variações do produto pelo ID do produto
+    const variacoesProduto = await VariacoesProdutoExc.findOne({
+      where: { idProduto: produtoId },
+    });
+
+    if (!variacoesProduto) {
+      return res.status(404).json({ error: 'Produto não encontrado' });
+    }
+
+    // Converta as quantidades de volta para um array de números
+    const quantidades = JSON.parse(variacoesProduto.quantidades);
+
+    res.json({ quantidades });
+  } catch (error) {
+    console.error('Erro ao obter as quantidades:', error);
+    res.status(500).json({ error: 'Erro ao obter as quantidades' });
+  }
+});
+// Rota dinâmica para carregar a página de pedidos do usuário com o nome da empresa
+app.get('/:empresa/pedidos-usuario', (req, res) => {
   try {
     const { empresa } = req.params;
 
@@ -1753,16 +1837,114 @@ app.get('/:empresa/detalhes-produtos', (req, res) => {
       return res.status(400).send("Nome da empresa não fornecido.");
     }
 
+    // Carrega o arquivo HTML de carrinho
+    const pedidosHtmlContent = fs.readFileSync(
+      path.join(__dirname, 'html', 'pedidosUsuario-empresa.html'),
+      'utf-8'
+    );
+
+    // Serve o arquivo HTML
+    res.send(pedidosHtmlContent);
+  } catch (err) {
+    console.error("Erro ao carregar a página pedidosUsuario-empresa.html", err);
+    res.status(500).send("Erro interno do servidor.");
+  }
+});
+// Rota dinâmica para carregar a página de pedidos do usuário com o nome da empresa
+app.get('/:empresa/detalhesPedidosUser', (req, res) => {
+  try {
+    const { empresa } = req.params;
+
+    // Validação básica para o nome da empresa
+    if (!empresa) {
+      return res.status(400).send("Nome da empresa não fornecido.");
+    }
+
+    // Carrega o arquivo HTML de carrinho
+    const pedidosHtmlContent = fs.readFileSync(
+      path.join(__dirname, 'html', 'detalhesPedidosUser-empresa.html'),
+      'utf-8'
+    );
+
+    // Serve o arquivo HTML
+    res.send(pedidosHtmlContent);
+  } catch (err) {
+    console.error("Erro ao carregar a página detalhesPedidosUser-empresa.html", err);
+    res.status(500).send("Erro interno do servidor.");
+  }
+});
+app.get('/pagamento-empresas', (req, res) => {
+  try {
+    const pagamentoEmpresasHtmlContent = fs.readFileSync(path.join(__dirname, "html", "pagamento-empresa.html"), "utf-8");
+    res.send(pagamentoEmpresasHtmlContent);
+  } catch(err) {
+    console.log("Erro ao carregar a página pagamento-empresa.html", err);
+    res.status(500).send("Erro interno do servidor.")
+  }
+});
+//Rota get para tela de login de usuários do portal da CPQ
+app.get('/cpq/login', (req, res) => {
+  try {
+    const cpqLoginHtmlContent = fs.readFileSync(path.join(__dirname, "html/empresas_cpq_html", "login.html"), "utf-8");
+    res.send(cpqLoginHtmlContent);
+  } catch(err) {
+    console.log("Erro ao carregar a página login.html", err);
+    res.status(500).send("Erro interno do servidor.")
+  }
+});
+//Rota get para a tela do portal de usuários da CPQ
+app.get('/cpq/inicio', (req, res) => {
+  try {
+    const cpqInicioHtmlContent = fs.readFileSync(path.join(__dirname, "html/empresas_cpq_html", "portal.html"), "utf-8");
+    res.send(cpqInicioHtmlContent);
+  } catch(err) {
+    console.log("Erro ao carregar a página portal.html", err);
+    res.status(500).send("Erro interno do servidor.")
+  }
+});
+//Rota de api para pegar produtos
+app.get('/api-produtos/cpq', async (req, res) => {
+  try {
+    // Recupera o nome da empresa dos parâmetros da URL
+    const empresa = "Casa do Pão de Queijo";
+    console.log(empresa)
+    // Validação básica do parâmetro
+    if (!empresa) {
+      return res.status(400).json({ error: "Nome da empresa não fornecido ou inválido." });
+    }
+
+    // Busca os produtos no banco filtrando pelo nome da empresa
+    const produtos = await ProdutosExc.findAll({
+      where: { empresa }, // Substitua "empresa" pelo nome exato da coluna no banco
+    });
+
+    // Verifica se encontrou produtos
+    if (produtos.length === 0) {
+      return res.status(404).json({ message: "Nenhum produto encontrado para esta empresa." });
+    }
+
+    // Retorna os produtos encontrados
+    res.json(produtos);
+  } catch (error) {
+    console.error("Erro ao buscar produtos:", error);
+    res.status(500).json({ error: "Erro ao buscar produtos. Tente novamente mais tarde." });
+  }
+});
+// Rota dinâmica para carregar a página de detalhes do produto da cpq
+app.get('/cpq/detalhes-produtos', (req, res) => {
+  try {
+    const { empresa } = "Casa do Pão de Queijo";
+
     // Carrega o arquivo HTML de detalhes do produto
     const detalhesHtmlContent = fs.readFileSync(
-      path.join(__dirname, 'html', 'detalhes-produtos-empresa.html'),
+      path.join(__dirname, 'html/empresas_cpq_html', 'detalhes-produtos.html'),
       'utf-8'
     );
 
     // Serve o arquivo HTML
     res.send(detalhesHtmlContent);
   } catch (err) {
-    console.error("Erro ao carregar a página detalhes-produtos-empresa.html", err);
+    console.error("Erro ao carregar a página detalhes-produtos.html", err);
     res.status(500).send("Erro interno do servidor.");
   }
 });
@@ -1850,19 +2032,12 @@ app.get('/api/quantidades-empresa/:produtoId', async (req, res) => {
     res.status(500).json({ error: 'Erro ao obter as quantidades' });
   }
 });
-// Rota dinâmica para carregar a página de carrinho com o nome da empresa
-app.get('/:empresa/carrinho', (req, res) => {
+// Rota dinâmica para carregar a página de carrinho da cpq
+app.get('/cpq/carrinho', (req, res) => {
   try {
-    const { empresa } = req.params;
-
-    // Validação básica para o nome da empresa
-    if (!empresa) {
-      return res.status(400).send("Nome da empresa não fornecido.");
-    }
-
     // Carrega o arquivo HTML de carrinho
     const carrinhoHtmlContent = fs.readFileSync(
-      path.join(__dirname, 'html', 'carrinho-empresa.html'),
+      path.join(__dirname, 'html/empresas_cpq_html', 'carrinho.html'),
       'utf-8'
     );
 
@@ -1871,108 +2046,6 @@ app.get('/:empresa/carrinho', (req, res) => {
   } catch (err) {
     console.error("Erro ao carregar a página carrinho-empresa.html", err);
     res.status(500).send("Erro interno do servidor.");
-  }
-});
-// Rota dinâmica para carregar a página de pedidos do usuário com o nome da empresa
-app.get('/:empresa/pedidos-usuario', (req, res) => {
-  try {
-    const { empresa } = req.params;
-
-    // Validação básica para o nome da empresa
-    if (!empresa) {
-      return res.status(400).send("Nome da empresa não fornecido.");
-    }
-
-    // Carrega o arquivo HTML de carrinho
-    const pedidosHtmlContent = fs.readFileSync(
-      path.join(__dirname, 'html', 'pedidosUsuario-empresa.html'),
-      'utf-8'
-    );
-
-    // Serve o arquivo HTML
-    res.send(pedidosHtmlContent);
-  } catch (err) {
-    console.error("Erro ao carregar a página pedidosUsuario-empresa.html", err);
-    res.status(500).send("Erro interno do servidor.");
-  }
-});
-// Rota dinâmica para carregar a página de pedidos do usuário com o nome da empresa
-app.get('/:empresa/detalhesPedidosUser', (req, res) => {
-  try {
-    const { empresa } = req.params;
-
-    // Validação básica para o nome da empresa
-    if (!empresa) {
-      return res.status(400).send("Nome da empresa não fornecido.");
-    }
-
-    // Carrega o arquivo HTML de carrinho
-    const pedidosHtmlContent = fs.readFileSync(
-      path.join(__dirname, 'html', 'detalhesPedidosUser-empresa.html'),
-      'utf-8'
-    );
-
-    // Serve o arquivo HTML
-    res.send(pedidosHtmlContent);
-  } catch (err) {
-    console.error("Erro ao carregar a página detalhesPedidosUser-empresa.html", err);
-    res.status(500).send("Erro interno do servidor.");
-  }
-});
-app.get('/pagamento-empresas', (req, res) => {
-  try {
-    const pagamentoEmpresasHtmlContent = fs.readFileSync(path.join(__dirname, "html", "pagamento-empresa.html"), "utf-8");
-    res.send(pagamentoEmpresasHtmlContent);
-  } catch(err) {
-    console.log("Erro ao carregar a página pagamento-empresa.html", err);
-    res.status(500).send("Erro interno do servidor.")
-  }
-});
-//Rota get para tela de login de usuários do portal da CPQ
-app.get('/cpq/login', (req, res) => {
-  try {
-    const cpqLoginHtmlContent = fs.readFileSync(path.join(__dirname, "html/empresas_cpq_html", "login.html"), "utf-8");
-    res.send(cpqLoginHtmlContent);
-  } catch(err) {
-    console.log("Erro ao carregar a página login.html", err);
-    res.status(500).send("Erro interno do servidor.")
-  }
-});
-//Rota get para a tela do portal de usuários da CPQ
-app.get('/cpq/inicio', (req, res) => {
-  try {
-    const cpqInicioHtmlContent = fs.readFileSync(path.join(__dirname, "html/empresas_cpq_html", "portal.html"), "utf-8");
-    res.send(cpqInicioHtmlContent);
-  } catch(err) {
-    console.log("Erro ao carregar a página portal.html", err);
-    res.status(500).send("Erro interno do servidor.")
-  }
-});
-app.get('/api-produtos/cpq', async (req, res) => {
-  try {
-    // Recupera o nome da empresa dos parâmetros da URL
-    const empresa = "Casa do Pão de Queijo";
-    console.log(empresa)
-    // Validação básica do parâmetro
-    if (!empresa) {
-      return res.status(400).json({ error: "Nome da empresa não fornecido ou inválido." });
-    }
-
-    // Busca os produtos no banco filtrando pelo nome da empresa
-    const produtos = await ProdutosExc.findAll({
-      where: { empresa }, // Substitua "empresa" pelo nome exato da coluna no banco
-    });
-
-    // Verifica se encontrou produtos
-    if (produtos.length === 0) {
-      return res.status(404).json({ message: "Nenhum produto encontrado para esta empresa." });
-    }
-
-    // Retorna os produtos encontrados
-    res.json(produtos);
-  } catch (error) {
-    console.error("Erro ao buscar produtos:", error);
-    res.status(500).json({ error: "Erro ao buscar produtos. Tente novamente mais tarde." });
   }
 });
 app.listen(PORT, () => {

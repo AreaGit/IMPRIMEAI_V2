@@ -47,3 +47,24 @@ const nameUserLog = document.getElementById('nameUserLog');
   // Limita o texto a 40 caracteres
   const limitedUsername = username.length > 20 ? `${username.slice(0, 20)}...` : username;
   nameUserLog.textContent = limitedUsername;
+
+  async function obterQuantidadeCarrinho() {
+    try {
+        // Fazer uma requisição para a rota /api/carrinho
+        const response = await fetch('/api/carrinho');
+        const carrinho = await response.json();
+        
+        // Calcular a quantidade total de produtos no carrinho
+        const quantidadeTotal = carrinho.length;
+        
+        // Exibir a quantidade total no elemento com id 'quantidadeCarrinho'
+        document.getElementById('quantidadeCarrinho').textContent = quantidadeTotal;
+    } catch (error) {
+        console.error('Erro ao obter a quantidade de produtos no carrinho:', error);
+    }
+  }
+  document.getElementById('quantidadeCarrinho').addEventListener('click', () => {
+    window.location.href = '/cpq/carrinho'
+  });
+  // Chamar a função ao carregar a página
+  document.addEventListener('DOMContentLoaded', obterQuantidadeCarrinho);

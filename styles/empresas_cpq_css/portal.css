@@ -195,6 +195,16 @@ header {
 .search-bar input:valid + .search-btn:active {
 	transform: translateY(1px);
 }
+.nomeUser {
+    width: 100%;
+}
+.nomeUser > p {
+    color: white;
+}
+.nomeUser > p > a {
+    text-decoration: none;
+    color: #BB9900;
+}
 .produtos {
     position: absolute;
     top: 20%;
@@ -251,14 +261,4 @@ header {
     font-size: 14px;
     font-weight: 400;
     border-radius: 2px;
-}
-.nomeUser {
-    width: 100%;
-}
-.nomeUser > p {
-    color: white;
-}
-.nomeUser > p > a {
-    text-decoration: none;
-    color: #BB9900;
 }
