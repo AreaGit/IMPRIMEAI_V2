@@ -30,7 +30,9 @@ const storage = multer.memoryStorage();
 const upload = multer({ storage: storage });
 const NodeCache = require('node-cache');
 const productCache = new NodeCache({ stdTTL: 200, checkperiod: 1 });
-const Sequelize = require('sequelize')
+const Sequelize = require('sequelize');
+const UserEmpresas = require('./models/Users-Empresas');
+const EnderecosEmpresas = require('./models/Enderecos-Empresas');
 const client = redis.createClient({
   host: '127.0.0.1', // Substitua pelo endereço IP do seu servidor Redis
   port: 6379,         // Porta onde o Redis está escutando
@@ -2046,6 +2048,88 @@ app.get('/cpq/carrinho', (req, res) => {
   } catch (err) {
     console.error("Erro ao carregar a página carrinho-empresa.html", err);
     res.status(500).send("Erro interno do servidor.");
+  }
+});
+//Rota para pesquisa de produtos da cpq
+app.post('/pesquisar-produtos-cpq', async (req, res) => {
+  try {
+    const { query } = req.body;
+
+    // Realize a pesquisa de produtos usando o operador "like" para correspondência parcial
+    const produtos = await ProdutosExc.findAll({
+      where: {
+        nomeProd: {
+          [Op.like]: `%${query}%`
+        }
+      }
+    });
+
+    res.json({ produtos });
+  } catch (error) {
+    console.error('Erro na pesquisa de produtos:', error);
+    res.status(500).json({ error: 'Erro na pesquisa de produtos', message: error.message });
+  }
+});
+// Rota dinâmica para carregar a página de carrinho da cpq
+app.get('/cpq/perfil', (req, res) => {
+  try {
+    // Carrega o arquivo HTML de carrinho
+    const perfilHtmlContent = fs.readFileSync(
+      path.join(__dirname, 'html/empresas_cpq_html', 'perfil.html'),
+      'utf-8'
+    );
+
+    // Serve o arquivo HTML
+    res.send(perfilHtmlContent);
+  } catch (err) {
+    console.error("Erro ao carregar a página perfil.html", err);
+    res.status(500).send("Erro interno do servidor.");
+  }
+});
+//Rota get para pegar os dados do perfil do usuário
+app.get("/perfil/dados-empresa", async (req, res) => {
+  try {
+    // Verifique se o cookie "userId" está definido
+    const userId = req.cookies.userId
+
+    if (!userId) {
+      return res.status(401).json({ message: "Usuário não autenticado" });
+    }
+
+    // Use o modelo User para buscar o usuário no banco de dados pelo ID
+    const user = await UserEmpresas.findByPk(userId);
+
+    if (!user) {
+      return res.status(404).json({ message: "Usuário não encontrado" });
+    }
+
+    // Retorna os dados do usuário como JSON
+    res.json({
+      emailCad: user.emailCad,
+      cepCad: user.cepCad,
+      cidadeCad: user.cidadeCad,
+      estadoCad: user.estadoCad,
+      endereçoCad: user.endereçoCad,
+      telefoneCad: user.telefoneCad,
+      numCad: user.numCad,
+      compCad: user.compCad,
+      bairroCad: user.bairroCad,
+      cpfCad: user.cpfCad,
+      userCad: user.userCad,
+      userId: userId,
+    });
+  } catch (error) {
+    console.error("Erro ao buscar os dados do usuário:", error);
+    res.status(500).json({ message: "Erro interno do servidor" });
+  }
+});
+app.get('/enderecos-empresa/:id_usuario', async (req, res) => {
+  const { id_usuario } = req.params;
+  try {
+      const enderecos = await EnderecosEmpresas.findAll({ where: { id_usuario } });
+      res.status(200).json(enderecos);
+  } catch (error) {
+      res.status(500).json({ error: 'Erro ao buscar endereços.' });
   }
 });
 app.listen(PORT, () => {

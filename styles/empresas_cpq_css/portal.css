@@ -43,6 +43,9 @@ header {
 .nav-bar > li {
     list-style: none;
     padding: 15px;
+    color: white;
+    text-decoration: none;
+    font-size: 18px;
 }
 .nav-bar > li > a {
     color: white;
@@ -54,6 +57,67 @@ header {
     font-weight: bold;
     color: #F6CA00;
     text-decoration: underline;
+}
+/* Estilização das categorias */
+/* Containers de categorias e produtos */
+#categoriaContainer,
+#produtosContainer {
+    position: absolute;
+    background-color: #fff;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+    z-index: 1000;
+    padding: 10px;
+    display: none; /* Escondido inicialmente */
+}
+
+/* Lista dentro dos containers */
+#categoriaContainer ul,
+#produtosContainer ul {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+}
+
+#categoriaContainer ul li,
+#produtosContainer ul li {
+    padding: 8px 12px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+    font-size: 14px;
+}
+
+#categoriaContainer ul li:hover,
+#produtosContainer ul li:hover {
+    background-color: #f7f7f7;
+}
+
+/* Posição dos containers */
+#categoriaContainer {
+    top: 60px; /* Alinha com o botão Categorias */
+    left: 20px;
+    width: 200px; /* Largura fixa opcional */
+}
+
+#produtosContainer {
+    top: 60px; /* Mesmo alinhamento vertical */
+    left: 240px; /* Lado direito do #categoriaContainer */
+    width: 200px;
+}
+
+/* Responsividade */
+@media (max-width: 768px) {
+    #categoriaContainer {
+        left: 0;
+        width: 100%;
+    }
+    #produtosContainer {
+        top: auto;
+        left: 0;
+        margin-top: 10px; /* Empilha abaixo das categorias */
+        width: 100%;
+    }
 }
 .carrinho {
     width: fit-content;
@@ -195,6 +259,65 @@ header {
 .search-bar input:valid + .search-btn:active {
 	transform: translateY(1px);
 }
+/* Container das sugestões */
+.suggestions-container {
+    position: absolute; /* Fixa abaixo do campo de busca */
+    background-color: #fff;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    width: 100%;
+    max-width: 400px; /* Tamanho máximo */
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+    z-index: 1000;
+    overflow: hidden;
+    top: 100%;
+}
+
+/* Lista de sugestões */
+.suggestions-container ul {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+}
+
+/* Itens da lista */
+.suggestions-container li {
+    padding: 10px 15px;
+    cursor: pointer;
+    font-size: 14px;
+    color: #333;
+    border-bottom: 1px solid #eee;
+    transition: background-color 0.2s ease;
+}
+
+/* Último item sem borda */
+.suggestions-container li:last-child {
+    border-bottom: none;
+}
+
+/* Hover e foco */
+.suggestions-container li:hover {
+    background-color: #f7f7f7;
+}
+
+/* Mensagem de nenhum produto encontrado */
+.suggestions-container p {
+    margin: 10px;
+    font-size: 14px;
+    color: #999;
+    text-align: center;
+}
+
+/* Responsividade */
+@media (max-width: 500px) {
+    .suggestions-container {
+        max-width: 100%; /* Usa toda a largura disponível */
+    }
+    .suggestions-container li {
+        font-size: 12px; /* Texto menor */
+    }
+}
+
 .nomeUser {
     width: 100%;
 }

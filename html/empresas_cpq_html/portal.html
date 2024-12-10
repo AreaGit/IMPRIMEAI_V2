@@ -19,11 +19,26 @@
 <body>
     <header>
         <div class="logo">
-            <img src="../../images/cpq_logo.png" alt="logo">
+            <img id="logo" src="../../images/cpq_logo.png" alt="logo">
         </div>
         <nav class="nav-bar">
-            <li><a href="#">Produtos</a></li>
-            <li><a href="#">Categorias</a></li>
+            <li><a href="/cpq/inicio">Produtos</a></li>
+            <li id="categorias">Categorias</li>
+            <div id="menuContainer">
+                <div id="categoriaContainer" class="hidden">
+                    <ul>
+                        <li id="categoriaD-ESP">D-ESP</li>
+                    </ul>
+                </div>
+                <div id="produtosContainer" class="hidden">
+                    <ul>
+                        <li>Banner</li>
+                        <li>Cardápios</li>
+                        <li>Frente de Caixa</li>
+                        <li>Menus</li>
+                    </ul>
+                </div>
+            </div>
             <li>
                 <div class="carrinho">
                     <a href="/cpq/carrinho"><img src="../../images/carrinho-de-compras.png" alt="..."></a>
@@ -31,16 +46,17 @@
                 </div>
             </li>
             <form class="search-bar">
-                <input type="search" name="search" pattern=".*\S.*" required>
+                <input type="search" name="search" id="searchInput" pattern=".*\S.*" required placeholder="Pesquise produtos...">
                 <button class="search-btn" type="submit">
                     <span>Search</span>
                 </button>
+                <div id="suggestionsContainer" class="suggestions-container" style="display: none;"></div>
             </form>
             <div class="nomeUser">
                 <p>Olá!, bem-vindo! <br> <a href="/perfil" id="nameUserLog"></a></p>
             </div>
         </nav>
-    </header>
+    </header>    
     <main>
         <div class="produtos">
         </div>

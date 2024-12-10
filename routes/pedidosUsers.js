@@ -10,6 +10,7 @@ const ItensPedido = require('../models/ItensPedido');
 const Enderecos = require('../models/Enderecos');
 const ProdutosExc = require('../models/ProdutosExc');
 const VariacoesProdutoExc = require('../models/VariacoesProdutoExc');
+const CarteiraEmpresas = require('../models/CarteiraEmpresas');
 const {Op} = require('sequelize');
 const multer = require('multer');
 const cookieParser = require('cookie-parser');
@@ -1713,6 +1714,172 @@ async function verificarGraficaMaisProximaEAtualizar2(itensPedido, enderecos) {
   
       // Consulte o banco de dados para obter as transações do usuário
       const transacoes = await Carteira.findAll({
+        where: { userId: userId }
+      });
+  
+      // Mapeie os dados das transações para um formato adequado (se necessário)
+      const transacoesFormatadas = transacoes.map(transacao => ({
+        id: transacao.id,
+        valor: transacao.saldo,
+        tipo: getTipoTransacao(transacao.statusPag) // Determina o tipo de transação com base no status
+      }));
+  
+      // Envie os dados das transações como resposta
+      res.json({ transacoes: transacoesFormatadas });
+    } catch (error) {
+      console.error('Erro ao buscar transações do usuário:', error);
+      res.status(500).json({ error: 'Erro ao buscar transações do usuário' });
+    }
+  });
+
+  cron.schedule('0 * * * *', async () => {
+    console.log('Verificação de pagamentos Carteira...');
+    verificarPagamentosPendentesCarteiraEmpresas();
+    console.log('Verificação de pagamentos Carteira concluída.');
+  })
+  
+  async function verificarPagamentosPendentesCarteiraEmpresas() {
+    try {
+    const transacoesPendentes = await CarteiraEmpresas.findAll({ where: { statusPag: 'ESPERANDO PAGAMENTO' } });
+    console.log('Transações pendentes:', transacoesPendentes); 
+    
+    // Iterar sobre as transações pendentes encontradas
+    for (const transacao of transacoesPendentes) {
+      // Verificar o status do pagamento no Pagarme usando o ID da transação
+      const transactionId = transacao.idTransacao;
+      console.log('Transaction ID:', transactionId); // Check if transactionId is defined
+      try {
+        const response = await axios.get(`https://api.pagar.me/core/v5/charges/${transactionId}`, {
+        headers: {
+          'Authorization': `Basic ${Buffer.from(`${pagarmeKeyProd}:`).toString('base64')}`
+          }
+        });
+        //console.log('Transaction found:', response); // Check if transaction is defined
+        const charge = response.data;
+        // Verificar se a transação está paga
+        if (charge.status === 'paid') {
+          // Atualizar o status da transação para 'PAGO'
+          transacao.statusPag = 'PAGO';
+          await transacao.save();
+        }
+      } catch (error) {
+          // Verificar se o erro é de transação não encontrada
+          if (error.response && error.response.status === 404) {
+            console.error(`Transação não encontrada para a transação ${transacao.id}:`, error);
+          } else {
+              throw error; // Rejeitar erro para tratamento superior
+          }
+      }
+    }
+    } catch(error) {
+      console.error('Erro ao verificar pagamentos pendentes:', error);
+    }
+  }
+
+  app.post('/registrarPagamento-empresas', async (req, res) => {
+    const { userId, valor, metodoPagamento, status, idTransacao } = req.body;
+    console.log("REGISTRANDO NA CARTEIRA", userId, valor, metodoPagamento, status)
+    try {
+      // Encontre a carteira do usuário pelo userId
+      let carteira = await CarteiraEmpresas.findOne({ where: { userId } });
+  
+      // Se a carteira não existir, crie uma nova
+      if (!carteira) {
+        //carteira = await Carteira.create({ userId, saldo: 0 }); // Saldo inicial 0
+      }
+  
+      // Crie uma entrada na tabela Carteira para registrar o pagamento
+      const pagamento = await CarteiraEmpresas.create({
+        saldo: valor,
+        statusPag: status,
+        userId: userId,
+        idTransacao: idTransacao
+      });
+  
+      console.log('Pagamento registrado com sucesso:', { userId, valor, metodoPagamento, status });
+  
+      res.status(200).send('Pagamento registrado com sucesso!');
+    } catch (error) {
+      console.error('Erro ao registrar o pagamento:', error);
+      res.status(500).send('Erro ao registrar o pagamento');
+    }
+  });
+  
+  // Rota para buscar o saldo do usuário e exibi-lo na página HTML
+  // Rota para buscar o saldo do usuário
+  app.get('/saldoUsuario-empresas', async (req, res) => {
+    const { userId } = req.cookies; // Obtenha o userId dos cookies
+  
+    try {
+      // Consulte o banco de dados para obter a soma de todos os depósitos pagos associados ao usuário
+      const saldoDepositosPagos = await CarteiraEmpresas.sum('saldo', {
+        where: {
+          userId: userId,
+          statusPag: 'PAGO' // Apenas transações com status "PAGO"
+        }
+      });
+  
+      // Consulte o banco de dados para obter a soma de todos os depósitos de saída associados ao usuário
+      const saldoSaidas = await CarteiraEmpresas.sum('saldo', {
+        where: {
+          userId: userId,
+          statusPag: 'SAIDA' // Apenas transações com status "SAÍDA"
+        }
+      });
+  
+      // Calcule o saldo final subtraindo o valor total das saídas do valor total dos depósitos pagos
+      const saldoFinal = saldoDepositosPagos - saldoSaidas;
+  
+      // Exiba o saldo final na resposta da API
+      res.json({ saldo: saldoFinal });
+    } catch (error) {
+      console.error('Erro ao buscar saldo do usuário:', error);
+      res.status(500).send('Erro ao buscar saldo do usuário');
+    }
+  });
+  
+  // Rota para descontar o valor da compra do saldo da carteira do usuário
+  app.post('/descontarSaldo-empresas', async (req, res) => {
+    const { userId } = req.cookies; // Obtenha o userId dos cookies
+    const { valorPed, metodPag } = req.body;
+    console.log(userId);
+    try {
+      // Encontre a carteira do usuário pelo userId
+      let carteira = await CarteiraEmpresas.findOne({ where: { userId } });
+  
+      // Verifique se a carteira existe
+      if (!carteira) {
+        throw new Error('Carteira não encontrada para o usuário');
+      }
+  
+      // Verifique se o saldo é suficiente para a compra
+      if (carteira.saldo < valorPed) {
+        throw new Error('Saldo insuficiente na carteira');
+      }
+  
+      // Crie uma nova entrada de transação de saída na tabela de Carteiras
+      await CarteiraEmpresas.create({
+        userId: userId,
+        saldo: valorPed, // O valor será negativo para indicar uma transação de saída
+        statusPag: 'SAIDA'
+      });
+  
+      // Envie uma resposta de sucesso
+      res.status(200).send('Saldo descontado com sucesso da carteira');
+    } catch (error) {
+      console.error('Erro ao descontar saldo da carteira:', error);
+      res.status(500).send('Erro ao descontar saldo da carteira');
+    }
+  });
+  
+  // Rota para buscar as transações do usuário com base no ID do usuário
+  app.get('/transacoesUsuario-empresas/:userId', async (req, res) => {
+    try {
+      // Obtenha o ID do usuário a partir dos parâmetros da URL
+      const userId = req.params.userId;
+  
+      // Consulte o banco de dados para obter as transações do usuário
+      const transacoes = await CarteiraEmpresas.findAll({
         where: { userId: userId }
       });
   

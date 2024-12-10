@@ -21,6 +21,7 @@ const request = require('request-promise');
 const xlsx = require('xlsx');
 const upload2 = multer({ storage: multer.memoryStorage() });
 const { client, sendMessage } = require('./api/whatsapp-web');
+const EnderecosEmpresas = require('../models/Enderecos-Empresas');
 client.on('ready', () => {
   console.log('Cliente WhatsApp pronto para uso no cadastros.js');
 })
@@ -724,7 +725,29 @@ app.post('/cadastrar-produtosexclusivos-planilha', upload.single('file'), async 
     res.status(500).json({ message: 'Erro ao cadastrar produtos', error: error.message });
   }
 }); 
+app.post('/cadastro-enderecos-empresa', async (req, res) => {
+  const { id_usuario, rua, cep, bairro, estado, cidade, numero, complemento } = req.body;
 
+  if (!id_usuario || !rua || !cep || !bairro || !estado || !cidade || !numero) {
+      return res.status(400).json({ error: 'Todos os campos obrigatórios devem ser preenchidos.' });
+  }
+
+  try {
+      const novoEndereco = await EnderecosEmpresas.create({
+          id_usuario,
+          rua,
+          cep,
+          bairro,
+          estado,
+          cidade,
+          numero,
+          complemento: complemento || null,
+      });
+      res.status(201).json(novoEndereco);
+  } catch (error) {
+      res.status(500).json({ error: 'Erro ao salvar endereço.' });
+  }
+});
 app.post("/cadastro-graficas", async (req, res) => { 
   try {
     const { userCad, cnpjCad, endereçoCad, cepCad, cidadeCad, estadoCad, bairroCad, compCad, numCad, telefoneCad, bancoCad, agenciaCad, contaCorrenteCad, codBanco, digitoConta, produtos, emailCad, passCad } = req.body;
