@@ -16,6 +16,16 @@ document.addEventListener('DOMContentLoaded', async() => {
         if(data[0].tipo) {
             tipo = data[0].tipo;
             console.log(tipo)
+            document.getElementById('salvos').style.display = 'block';
+            document.getElementById('inicio').href = '/cpq/inicio';
+            document.addEventListener('DOMContentLoaded', () => {
+                const redirecionarSalvos = document.getElementById('redSalvos');
+            
+                redirecionarSalvos.addEventListener('click', () => {
+                    // Substitua "/enderecos-salvos" pelo caminho correto para a página dos endereços salvos.
+                    window.location.href = '/enderecos-salvos';
+                });
+            });            
         }
         // Itera sobre todos os produtos no carrinho e armazena seus links de download
         data.forEach(produto => {

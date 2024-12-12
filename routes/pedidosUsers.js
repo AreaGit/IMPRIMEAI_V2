@@ -1667,6 +1667,7 @@ async function verificarGraficaMaisProximaEAtualizar2(itensPedido, enderecos) {
       // Exiba o saldo final na resposta da API
       res.json({ saldo: saldoFinal });
     } catch (error) {
+      
       console.error('Erro ao buscar saldo do usuário:', error);
       res.status(500).send('Erro ao buscar saldo do usuário');
     }

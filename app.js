@@ -800,6 +800,16 @@ app.get('/multiplos-enderecos', (req, res) => {
     res.status(500).send("Erro interno do servidor");
   }
 });
+//Rota get para a página de endereços salvos
+app.get('/enderecos-salvos', (req, res) => {
+  try {
+    const enderecosSalvosContentHtml = fs.readFileSync(path.join(__dirname, "html", "enderecos-salvos.html"), "utf-8");
+    res.send(enderecosSalvosContentHtml);
+  } catch (err) {
+    console.log("Erro ao ler o arquivo enderecos-salvos.html: ", err);
+    res.status(500).send("Erro interno do servidor");
+  }
+});
 //Rota get para a página de upload de arquivos
 app.get('/upload', (req, res) => {
   try {

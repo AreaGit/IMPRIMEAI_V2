@@ -262,7 +262,7 @@ app.post("/loginUser-empresas", async (req, res) => {
     // Verifique se o usuário e a empresa existem no banco de dados
     const user = await UsersEmpresas.findOne({
       where: { emailCad: emailCad },
-      attributes: ['id', 'passCad', 'userCad'], // Inclui userCad na busca
+      attributes: ['id', 'passCad', 'userCad', 'empresa'], // Inclui userCad na busca
     });
 
     if (!user) {
@@ -277,7 +277,10 @@ app.post("/loginUser-empresas", async (req, res) => {
 
     res.cookie("userId", user.id);
     res.cookie('userCad', user.userCad);
-
+    const empresa = encodeURIComponent(user.empresa);
+    res.cookie('empresa', empresa, {
+      encode: String, // Evita dupla codificação
+    });
     // Retorne sucesso e a URL de redirecionamento com a abreviação
     res.json({
       success: true,

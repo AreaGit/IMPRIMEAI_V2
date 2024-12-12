@@ -16,6 +16,7 @@ body {
     font-family: 'Open Sans';
     background-color: #F8F2D8;
 }
+a{text-decoration: none; color: black;}
 header {
     height: 15vh;
     box-shadow: 1px 2px 6px black;

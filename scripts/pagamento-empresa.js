@@ -4,7 +4,7 @@ fetch('/api/empresa/nome')
     if (data.empresa) {
       const empresa = data.empresa;
       document.getElementById('voltarPortal').addEventListener("click", () => {
-        window.location.href = `/${empresa}/inicio`;
+        window.location.href = `/cpq/inicio`;
       });
     } else {
       console.error("Nome da empresa não encontrado na resposta.");
@@ -228,7 +228,7 @@ async function criarPedido(metodoPag) {
             pedidoCriado.style.display = 'block';
             setTimeout(() => {
               pedidoCriado.style.display = 'none';
-              window.location.href = 'pedidosUsuario';
+              window.location.href = '/cpq/perfil';
             }, 10000);
           } else {
             // A solicitação não foi bem-sucedida, trate o erro aqui
@@ -278,7 +278,7 @@ async function criarPedidoBoleto(metodoPag, chargeId) {
             criacaoBoleto.style.display = 'block'
             setTimeout(() => {
               criacaoBoleto.style.display = 'none'
-              window.location.href = 'pedidosUsuario';
+              window.location.href = '/cpq/perfil';
             }, 15000);
           } else {
             // A solicitação não foi bem-sucedida, trate o erro aqui
@@ -780,7 +780,7 @@ async function pagamentoCarteira() {
         const metodoPag = "Carteira Usuário"
         // Faça uma solicitação para descontar o valor da compra do saldo da carteira
         const descontoRequest = new XMLHttpRequest();
-        descontoRequest.open('POST', '/descontarSaldo', true);
+        descontoRequest.open('POST', '/descontarSaldo-empresas', true);
         descontoRequest.setRequestHeader('Content-Type', 'application/json');
         descontoRequest.onload = function () {
           if (descontoRequest.status === 200) {

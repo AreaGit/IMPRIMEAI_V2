@@ -294,8 +294,38 @@ main > h2 {
     position: relative;
     left: 35%;
     top: -35px;
-    font-size: 17px;
+    font-size: 16px;
     font-weight: 600;
+}
+#salvos {
+  display: none;
+  border: 1px solid #F37160;
+  box-shadow: -1px -1px 5px black;
+  border-radius: 5px;
+  width: 257px;
+  height: 89px;
+  margin: 15px;
+  transition: 0.8s;
+}
+#salvos:hover {
+  transition: 0.8s;
+  box-shadow: -1px -1px 5px #EF4126;
+}
+#salvos > img {
+  position: relative;
+  left: 10%;
+  transform: translate(-10%);
+  top: 10px;
+  width: 55px;
+  height: 55px;
+}
+#salvos > h2 {
+  width: fit-content;
+  position: relative;
+  left: 35%;
+  top: -35px;
+  font-size: 17px;
+  font-weight: 600;
 }
 #avisoGeral {
     display: none;

@@ -1,0 +1,282 @@
+:root {
+    --branco: #ffffff;
+    --coral: #F37160;
+    --flamingo: #F69896;
+    --concreto: #F5F5F5;
+    --preto: #333333;
+    --vermelho: #EF4126;
+    --cinza-claro: #eaeaea;
+    --azul-claro: #eef3f8;
+    --transparente: rgba(0, 0, 0, 0.1);
+}
+  * {
+    margin: 0px;
+    padding: 0px;
+    box-sizing: border-box;
+  }
+  body {
+    font-family: "Open Sans";
+    background-color: #F5F5F7;
+  }
+  header {
+    background-color: transparent;
+    transition: 2s;
+    width: 100%;
+  }
+  /*header.scrolled {
+    position: fixed;
+    top: 0%;
+    transition: 2s;
+    color: black;
+    width: 100%;
+    z-index: 1000;
+    background-color: white;
+    height: 40px;
+  }*/
+  header.scrolled > #nav-bar > li > a {
+    color: #6E6E73;
+  }
+  header.scrolled > #nav-bar > li > a:hover {
+    color: #020202;
+  }
+  #logo2 {
+    display: none;
+  }
+  #logo {
+    position: absolute;
+    left: -3%;
+    width: 12%;
+    top: -11px;
+  }
+  li {
+    list-style: none;
+  }
+  a {
+    text-decoration: none;
+    color: black;
+  }
+  #nav-bar {
+    position: absolute;
+    left: 50%;
+    top: 15%;
+    width: 54%;
+    transform: translate(-50%);
+  }
+  #nav-bar > li {
+    display: inline;
+    position: relative;
+    left: 10%;
+    padding-right: 24px;
+  }
+  #nav-bar > li > a {
+    font-weight: 500;
+    font-size: 14px;
+    color: #6E6E73;
+  }
+  #nav-bar > li > a:hover {
+    transition: 1s;
+    color: #000000;
+  }
+  #icone-pesquisa {
+    width: 22px;
+    height: 24px;
+    position: fixed;
+    left: 112%;
+    transform: translate(-112%);
+    top: 1px;
+  }
+  #carrinho-compras {
+    width: 32px;
+    height: 34px;
+    position: fixed;
+    left: 110%;
+    transform: translate(-120%);
+    top: -6px;
+  }
+  span#quantidadeCarrinho {
+    position: absolute;
+    left: 111%;
+    transform: translate(-111%);
+    background: black;
+    color: white;
+    padding: 3px;
+    font-size: 12px;
+    border-radius: 51%;
+    cursor: pointer;
+  }
+  #menu-icon {
+      display: none;
+  }
+  #fechar-menu {
+      display: none;
+      cursor: pointer;
+  }
+  .logo-header {
+    position: absolute;
+    left: 49%;
+    transform: translate( -50%); 
+    width: fit-content;
+    }
+   .logo-header > a > img {
+    cursor: pointer;
+    width: 12vw;
+    }
+    .passosCompra  {
+      position: absolute;
+      left: 50%;
+      transform: translate(-50%);
+      top: 10%;
+  }
+  .passosCompra > ul {
+      list-style: none;
+      display: flex;
+  }
+  .passosCompra > ul >  li {
+      padding-right: 35px;
+      text-align: center;
+  }
+  .circleactive {
+      border: 1px solid #EF4126;
+      height: 50px;
+      width: 50px;
+      border-radius: 50%;
+      margin: auto;
+      margin-top: 10px;
+      cursor: pointer;
+  }
+  .circleactive > span {
+      background-color: #EF4126;
+      color: white;
+      display: flex;
+      justify-content: center;
+      margin: auto;
+      margin-top: 2px;
+      padding: 10px;
+      width: 44px;
+      height: 44px;
+      border-radius: 75%;
+  }   
+  .circlenonactive {
+      border: 1px solid #C9C9C9;
+      height: 50px;
+      width: 50px;
+      border-radius: 50%;
+      margin: auto;
+      margin-top: 10px;
+      cursor: pointer;
+  }
+  .circlenonactive > span {
+      background-color: white;
+      color: #C9C9C9;
+      display: flex;
+      justify-content: center;
+      margin: auto;
+      margin-top: 2px;
+      padding: 10px;
+      width: 44px;
+      height: 44px;
+      border-radius: 75%;
+  } 
+  main {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    position: relative;
+    top: 95px;
+  }
+  main > h1 {
+      font-weight: 500;
+      font-size: 24px;
+      position: absolute;
+      left: 15%;
+      top: 80px;
+  }
+  #linhaHr {
+      border: 1px solid black;
+      width: 90vw;
+      position: absolute;
+      top: 125px;
+      left: 50%;
+      transform: translate(-50%);
+  }
+  main > h2 {
+      font-weight: 700;
+      font-size: 40px;
+      line-height: 61px;
+      position: absolute;
+      top: 150px;
+      left: 20%;
+      transform: translate(-20%);
+  }
+/* Endereços Container */
+.enderecos-container {
+    position: relative;
+    top: 300px;
+    background: var(--branco);
+    border-radius: 12px;
+    box-shadow: 0 6px 12px var(--transparente);
+    padding: 20px;
+    margin: 20px auto;
+    text-align: left;
+    width: 50vw;
+}
+
+.enderecos-container h2 {
+    font-size: 20px;
+    color: var(--coral);
+    margin-bottom: 20px;
+}
+
+/* Lista de Endereços */
+#listaEnderecos {
+    list-style: none;
+    padding: 0;
+}
+
+.endereco {
+    cursor: pointer;
+    padding: 15px;
+    background-color: var(--azul-claro);
+    border: 1px solid var(--cinza-claro);
+    border-radius: 10px;
+    margin-bottom: 15px;
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+    transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.endereco:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 16px var(--transparente);
+}
+
+.endereco p {
+    margin: 0;
+    font-size: 14px;
+}
+
+.endereco p strong {
+    font-weight: bold;
+}
+
+/* Botão Adicionar */
+.btnEnderecos {
+    display: inline-block;
+    margin: 20px auto 0;
+    padding: 12px 25px;
+    font-size: 16px;
+    font-weight: 600;
+    color: var(--branco);
+    background: var(--vermelho);
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+    box-shadow: 0 4px 8px var(--transparente);
+}
+
+.btnEnderecos:hover {
+    background: var(--coral);
+    transform: translateY(-3px);
+}
