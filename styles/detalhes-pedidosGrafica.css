@@ -18,11 +18,10 @@ body {
     background-color: #F5F5F7;
 }
 #logo {
-    width: 135px;
-    height: 46px;
-    position: absolute;
-    left: 50%;
-    transform: translate(-50%);
+  width: 15%;
+  position: absolute;
+  left: 50%;
+  transform: translate(-50%);
 }
 header > h1 {
     font-weight: 500;
@@ -39,56 +38,75 @@ header > h1 {
     left: 50%;
     transform: translate(-50%);
 }
+main {
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  padding: 40px;
+  gap: 20px;
+  flex-wrap: wrap;
+}
 div#produto-info {
-    position: absolute;
-    top: 171px;
-    left: 50%;
-    transform: translate(-50%);
+    position: relative;
+    top: 150px;
     width: 52%;
-    border-radius: 5px;
-    padding: 15px;
-    background-color: white;
-    box-shadow: -1px 1px 12px black;
     height: 920px;
-}
-.infoProd > button {
-    width: 185px;
-    height: 51px;
-    font-weight: 600;
-    font-size: 17px;
-    color: white;
-    background-color: #EF4126;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-    transition: 0.8s;
-    position: relative;
-    left: 65%;
-    top: 700px;
-}
-.infoProd > a {
-    color: #EF4126;
-    position: relative;
-    left: 60%;
-    top: 700px;
-}
-.infoProd > button:hover {
-    transition: 0.8s;
+    border-radius: 10px;
     background-color: white;
-    color: #EF4126;
-    border: 1px solid #EF4126;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    padding: 20px;
+}
+button, #btnCancelarPedido {
+  cursor: pointer;
+  cursor: pointer;
+  font-size: 1.1rem;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+#btnCancelarPedido {
+  background-color: #ef4444;
+  color: white;
+  text-decoration: none;
+  display: inline-block;
+  margin-right: 10px;
+}
+
+#btnAceitarPedido {
+  background-color: #8EC8AA;
+  color: #1b3c2e;
+}
+
+button:hover, #btnCancelarPedido:hover {
+  transform: scale(1.05);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+#botoes-container {
+  width: fit-content;
+  position: relative;
+  left: 60%;
+  top: 95%;
 }
 .itensProduto {
     position: relative;
     left: 10%;
-    z-index: -1;
+    z-index: 1;
+    height: 750px;
 }
 .itensProduto > img {
   width: 380px;
+  border-radius: 15px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
 }
 .itensProduto > p {
-    margin-bottom: 10px;
     width: fit-content;
+    font-size: 1.1rem;
+    color: #555;
+    line-height: 1.5;
+    margin-bottom: 15px;
 }
 .itensProduto > a {
     color: #F37160;
@@ -103,6 +121,9 @@ div#produto-info {
 .detalhesEntrega > p {
     width: fit-content;
     margin-bottom: 10px;
+    color: #555;
+    line-height: 1.5;
+    margin-bottom: 15px;
 }
 .detalhesEntrega > h2 {
     width: fit-content;
@@ -112,6 +133,10 @@ div#produto-info {
     width: fit-content;
     margin-top: 6px;
     margin-bottom: 10px;
+    font-size: 1.5rem;
+    color: #EF4126;
+    line-height: 1.5;
+    margin-bottom: 15px;
 }
 #formEntrega {
     display: none;
@@ -123,7 +148,7 @@ div#produto-info {
     border-radius: 5px;
     width: 26%;
     padding: 15px;
-    height: 358px;
+    height: auto;
     z-index: 1;
     background-color: white;
 }
@@ -132,7 +157,7 @@ div#produto-info {
 }
 button#btnConfEnt {
     position: relative;
-    top: 30px;
+    top: 10px;
     left: 55%;
     padding: 16px 28px 16px 28px;
     font-size: 17px;

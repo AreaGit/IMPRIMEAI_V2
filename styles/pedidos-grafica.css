@@ -318,28 +318,30 @@ div#pedidos-list {
   top: 470px;
   left: 50%;
   transform: translate(-50%);
-  max-height: 500px; /* Defina a altura máxima para permitir a rolagem */
-  overflow-y: scroll; /* Adicione a rolagem vertical */
-  -ms-overflow-style: none;  /* Internet Explorer 10+ */
-  scrollbar-width: none;  /* Firefox */
+  max-height: 500px; /* Altura máxima para permitir a rolagem */
+  overflow-y: scroll; /* Rolagem vertical */
+  -ms-overflow-style: none; /* Internet Explorer 10+ */
+  scrollbar-width: none; /* Firefox */
+  display: flex; /* Ativa o flexbox */
+  flex-direction: column; /* Alinha itens verticalmente */
+  align-items: center; /* Centraliza horizontalmente as caixas */
+  gap: 15px; /* Espaço entre as caixas */
 }
 div#pedidos-list::-webkit-scrollbar { 
   display: none;  /* Safari and Chrome */
 }
 .cxPedido {
-    box-shadow: -1px 3px 5px black;
-    background-color: white;
-    border-radius: 5px;
-    margin: 5px;
-    padding: 25px;
-    transition: 0.8s;
-    cursor: pointer;
-    width: 70%;
-    position: relative;
-    left: 50%;
-    transform: translate(-50%);
-    height: 165px;
-    width: 900px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background-color: var(--branco);
+  padding: 15px;
+  margin-bottom: 10px;
+  border: 1px solid var(--concreto);
+  border-radius: 8px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  width: 60%;
+  height: 165px;
 }
 .cxPedido:hover {
     transition: 0.8s;
@@ -362,6 +364,10 @@ div#pedidos-list::-webkit-scrollbar {
     left: 25%;
     top: -110px;
 }
+.cxPedido > a:hover {
+  transition: 0.8s;
+  background-color: var(--vermelho);
+}
 .cxPedido > p {
     display: inline;
     color: #6E6E73;
@@ -376,6 +382,9 @@ div#pedidos-list::-webkit-scrollbar {
     position: relative;
     width: 96px;
     height: 120px;
+    background-color: var(--concreto);
+    border-radius: 8px;
+    object-fit: cover;
 }
 .spinnerContainer {
     display: flex;

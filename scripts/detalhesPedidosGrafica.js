@@ -416,11 +416,15 @@ document.addEventListener('DOMContentLoaded', async() => {
       const recEnt = document.getElementById('recEnt').value;
       const horEnt = document.getElementById('horEnt').value;
       const fotoEnt = document.getElementById('fotoEnt').files[0];
+      const produtoEnt = document.getElementById('produtoEnt').files[0];
+      const protocoloEnt = document.getElementById('protocoloEnt').files[0];
       const currentPedidoId = urlParams.get('idPedido');
       const formData = new FormData();
       formData.append('recEnt', recEnt);
       formData.append('horEnt', horEnt);
       formData.append('fotoEnt', fotoEnt);
+      formData.append('produtoEnt', produtoEnt);
+      formData.append('protocoloEnt', protocoloEnt);
       formData.append('pedidoId', currentPedidoId);
 
       try {

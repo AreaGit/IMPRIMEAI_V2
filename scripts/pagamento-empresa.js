@@ -765,7 +765,7 @@ async function pagamentoCarteira() {
   const userId = getCookie('userId');
   // Verifique o saldo da carteira do usuário
   const xhr = new XMLHttpRequest();
-  xhr.open('GET', '/saldoUsuario', true);
+  xhr.open('GET', '/saldoUsuario-empresa', true);
   xhr.setRequestHeader('Content-Type', 'application/json');
   xhr.onload = function () {
     if (xhr.status === 200) {

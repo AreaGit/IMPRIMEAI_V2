@@ -657,6 +657,8 @@ app.post('/dadosEntrega', upload.single('fotoEnt'), async (req, res) => {
   const horEnt = req.body.horEnt;
   const pedidoId = req.body.pedidoId;
   const fotoEnt = req.file; // Informações sobre o arquivo da imagem
+  const produtoEnt = req.file; // Informações sobre o arquivo da imagem
+  const protocoloEnt = req.file; // Informações sobre o arquivo da imagem
 
   console.log('Dados Recebidos:');
   console.log('Quem Recebeu:', recEnt);

@@ -1,90 +1,324 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="pt-BR">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>Painel de Pedidos</title>
     <style>
-        * {
-            font-family: Arial;
+        :root {
+            --branco: #ffff;
+            --coral: #F37160;
+            --flamingo: #F69896;
+            --concreto: #A7A9AC;
+            --preto: #000000;
+            --vermelho: #EF4126;
         }
-        .passosCompra  {
-            position: absolute;
-            left: 50%;
-            transform: translate(-50%);
+
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background-color: #f5f5f5;
+            color: var(--preto);
         }
-        .passosCompra > ul {
-            list-style: none;
+
+        .painel {
+            max-width: 1200px;
+            margin: 20px auto;
+            padding: 10px;
             display: flex;
+            justify-content: space-between;
+            gap: 10px;
         }
-        .passosCompra > ul >  li {
-            padding-right: 35px;
+
+        .caixa {
+            flex: 1;
+            padding: 20px;
+            background-color: var(--branco);
+            border: 1px solid var(--concreto);
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            cursor: pointer;
             text-align: center;
         }
-        .circleactive {
-            border: 1px solid #EF4126;
-            height: 50px;
-            width: 50px;
-            border-radius: 50%;
-            margin: auto;
-            margin-top: 10px;
+
+        .caixa h2 {
+            margin: 0;
+            color: var(--vermelho);
         }
-        .circleactive > .spancircle {
-            background-color: #EF4126;
-            color: white;
-            display: flex;
-            justify-content: center;
-            margin: auto;
-            margin-top: 2px;
-            padding: 10px;
-            width: 26px;
-            height: 26px;
-            border-radius: 75%;
-        }   
-        .circlenonactive {
-            border: 1px solid #C9C9C9;
-            height: 50px;
-            width: 50px;
-            border-radius: 50%;
-            margin: auto;
-            margin-top: 10px;
+
+        .caixa p {
+            margin: 5px 0 0;
+            font-size: 14px;
+            color: var(--preto);
         }
-        .circlenonactive > .spancircle {
-            background-color: white;
-            color: #C9C9C9;
+
+        .lista-pedidos {
+            margin: 20px auto;
+            max-width: 800px;
+        }
+
+        .pedido {
             display: flex;
-            justify-content: center;
-            margin: auto;
-            margin-top: 2px;
-            padding: 10px;
-            width: 26px;
-            height: 26px;
-            border-radius: 75%;
-        } 
+            justify-content: space-between;
+            align-items: center;
+            background-color: var(--branco);
+            padding: 15px;
+            margin-bottom: 10px;
+            border: 1px solid var(--concreto);
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+
+        .pedido img {
+            width: 50px;
+            height: 50px;
+            background-color: var(--concreto);
+            border-radius: 8px;
+            object-fit: cover;
+        }
+
+        .pedido-info {
+            flex: 1;
+            margin-left: 15px;
+        }
+
+        .pedido-info h3 {
+            margin: 0 0 5px;
+            font-size: 16px;
+            color: var(--preto);
+        }
+
+        .pedido-info p {
+            margin: 0;
+            font-size: 14px;
+            color: var(--concreto);
+        }
+
+        .botao-detalhes {
+            padding: 8px 15px;
+            background-color: var(--coral);
+            color: var(--branco);
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 14px;
+        }
+
+        .botao-detalhes:hover {
+            background-color: var(--vermelho);
+        }
+
     </style>
 </head>
 <body>
-    <div class="passosCompra">
-       <ul>
-        <li>
-            Arquivos
-            <div class="circleactive">
-                <span>1</span>
+    <div class="painel">
+        <div class="caixa">
+            <h2>Pedidos a Fazer</h2>
+            <p>5 pedidos</p>
+        </div>
+        <div class="caixa">
+            <h2>Pedidos Aceitos</h2>
+            <p>2 pedidos</p>
+        </div>
+        <div class="caixa">
+            <h2>Pedidos Finalizados</h2>
+            <p>3 pedidos</p>
+        </div>
+        <div class="caixa">
+            <h2>Pedidos Entregues</h2>
+            <p>1 pedido</p>
+        </div>
+    </div>
+
+    <div class="lista-pedidos">
+        <div class="pedido">
+            <img src="https://via.placeholder.com/50" alt="Imagem do Pedido">
+            <div class="pedido-info">
+                <h3>Frente de Caixa Combinações Perfeitas</h3>
+                <p>ID 3001 • R$ 42,00 • 1 unidade • 06/12/2024, 09:19</p>
             </div>
-        </li>
-        <li>
-            Frete
-            <div class="circlenonactive">
-                <span>2</span>
+            <button class="botao-detalhes">Detalhes do Pedido</button>
+        </div>
+
+        <div class="pedido">
+            <img src="https://via.placeholder.com/50" alt="Imagem do Pedido">
+            <div class="pedido-info">
+                <h3>Banner Promocional</h3>
+                <p>ID 3002 • R$ 80,00 • 2 unidades • 06/12/2024, 10:45</p>
             </div>
-        </li>
-        <li>
-            Pagamento
-            <div class="circlenonactive">
-                <span>3</span>
+            <button class="botao-detalhes">Detalhes do Pedido</button>
+        </div>
+
+        <div class="pedido">
+            <img src="https://via.placeholder.com/50" alt="Imagem do Pedido">
+            <div class="pedido-info">
+                <h3>Cartões de Visita</h3>
+                <p>ID 3003 • R$ 50,00 • 100 unidades • 06/12/2024, 12:30</p>
             </div>
-        </li>
-       </ul> 
+            <button class="botao-detalhes">Detalhes do Pedido</button>
+        </div>
+    </div>
+</body>
+</html>
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Painel de Pedidos</title>
+    <style>
+        :root {
+            --branco: #ffff;
+            --coral: #F37160;
+            --flamingo: #F69896;
+            --concreto: #A7A9AC;
+            --preto: #000000;
+            --vermelho: #EF4126;
+        }
+
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background-color: #f5f5f5;
+            color: var(--preto);
+        }
+
+        .painel {
+            max-width: 1200px;
+            margin: 20px auto;
+            padding: 10px;
+            display: flex;
+            justify-content: space-between;
+            gap: 10px;
+        }
+
+        .caixa {
+            flex: 1;
+            padding: 20px;
+            background-color: var(--branco);
+            border: 1px solid var(--concreto);
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            cursor: pointer;
+            text-align: center;
+        }
+
+        .caixa h2 {
+            margin: 0;
+            color: var(--vermelho);
+        }
+
+        .caixa p {
+            margin: 5px 0 0;
+            font-size: 14px;
+            color: var(--preto);
+        }
+
+        .lista-pedidos {
+            margin: 20px auto;
+            max-width: 800px;
+        }
+
+        .pedido {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background-color: var(--branco);
+            padding: 15px;
+            margin-bottom: 10px;
+            border: 1px solid var(--concreto);
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+
+        .pedido img {
+            width: 50px;
+            height: 50px;
+            background-color: var(--concreto);
+            border-radius: 8px;
+            object-fit: cover;
+        }
+
+        .pedido-info {
+            flex: 1;
+            margin-left: 15px;
+        }
+
+        .pedido-info h3 {
+            margin: 0 0 5px;
+            font-size: 16px;
+            color: var(--preto);
+        }
+
+        .pedido-info p {
+            margin: 0;
+            font-size: 14px;
+            color: var(--concreto);
+        }
+
+        .botao-detalhes {
+            padding: 8px 15px;
+            background-color: var(--coral);
+            color: var(--branco);
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 14px;
+        }
+
+        .botao-detalhes:hover {
+            background-color: var(--vermelho);
+        }
+
+    </style>
+</head>
+<body>
+    <div class="painel">
+        <div class="caixa">
+            <h2>Pedidos a Fazer</h2>
+            <p>5 pedidos</p>
+        </div>
+        <div class="caixa">
+            <h2>Pedidos Aceitos</h2>
+            <p>2 pedidos</p>
+        </div>
+        <div class="caixa">
+            <h2>Pedidos Finalizados</h2>
+            <p>3 pedidos</p>
+        </div>
+        <div class="caixa">
+            <h2>Pedidos Entregues</h2>
+            <p>1 pedido</p>
+        </div>
+    </div>
+
+    <div class="lista-pedidos">
+        <div class="pedido">
+            <img src="https://via.placeholder.com/50" alt="Imagem do Pedido">
+            <div class="pedido-info">
+                <h3>Frente de Caixa Combinações Perfeitas</h3>
+                <p>ID 3001 • R$ 42,00 • 1 unidade • 06/12/2024, 09:19</p>
+            </div>
+            <button class="botao-detalhes">Detalhes do Pedido</button>
+        </div>
+
+        <div class="pedido">
+            <img src="https://via.placeholder.com/50" alt="Imagem do Pedido">
+            <div class="pedido-info">
+                <h3>Banner Promocional</h3>
+                <p>ID 3002 • R$ 80,00 • 2 unidades • 06/12/2024, 10:45</p>
+            </div>
+            <button class="botao-detalhes">Detalhes do Pedido</button>
+        </div>
+
+        <div class="pedido">
+            <img src="https://via.placeholder.com/50" alt="Imagem do Pedido">
+            <div class="pedido-info">
+                <h3>Cartões de Visita</h3>
+                <p>ID 3003 • R$ 50,00 • 100 unidades • 06/12/2024, 12:30</p>
+            </div>
+            <button class="botao-detalhes">Detalhes do Pedido</button>
+        </div>
     </div>
 </body>
 </html>
