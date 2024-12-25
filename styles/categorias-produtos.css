@@ -21,6 +21,12 @@ header {
     transition: 2s;
     width: 100%;
 }
+.mainContentHeader {
+  position: absolute;
+  height: 50vw;
+  width: 100%;
+  z-index: -1;
+}
 /*header.scrolled {
     position: fixed;
     top: 0%;

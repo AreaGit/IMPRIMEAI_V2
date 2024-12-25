@@ -392,15 +392,18 @@ document.addEventListener('DOMContentLoaded', () => {
             e.preventDefault();
             const subCateg = parent.nextElementSibling;
 
-            // Fecha todas as subcategorias antes de abrir a nova
-            closeAllSubcategories();
+            // Se a subcategoria já estiver visível, fecha-a
+            if (subCateg && subCateg.style.display === 'block') {
+                subCateg.style.display = 'none';
+            } else {
+                // Fecha todas as subcategorias antes de abrir a nova
+                closeAllSubcategories();
 
-            // Abre ou fecha a subcategoria clicada
-            if (subCateg) {
-                subCateg.style.display = subCateg.style.display === 'block' ? 'none' : 'block';
+                // Abre a subcategoria clicada
+                if (subCateg) {
+                    subCateg.style.display = 'block';
 
-                // Ajusta colunas dinamicamente baseado na altura
-                if (subCateg.style.display === 'block') {
+                    // Ajusta colunas dinamicamente baseado na altura
                     adjustColumns(subCateg);
                 }
             }

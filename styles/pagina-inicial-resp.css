@@ -713,6 +713,35 @@
         height: auto;
         z-index: 1;
     }
+    .mainContentHeader {
+        position: absolute;
+        height: 65vw;
+        width: 100%;
+        z-index: -1;
+    }
+    div#suggestions-container {
+        display: none;
+        background-color: white;
+        width: 35vw;
+        box-shadow: -1px -1px 3px black;
+        height: auto;
+        z-index: 1;
+        position: relative;
+        top: 35px;
+        left: 50%;
+        transform: translate(-50%);
+        border-radius: 5px;
+        padding: 20px;
+        max-height: 455px;
+        overflow-y: auto;
+    }
+    .search-input > button {
+        background-color: transparent;
+        display: block;
+        position: relative;
+        left: 90%;
+        top: -22px;
+    }
     .notCad {
         width: fit-content;
         position: absolute;
@@ -774,14 +803,38 @@
         display: flex;
         justify-content: center;
     }
+    .linhaAbInp {
+        border: 1px solid #e0e0e0;
+        width: 90vw;
+        position: absolute;
+        left: 50%;
+        transform: translate(-50%);
+        top: 24%;
+    }
+    .linhaAbNav {
+        border: 1px solid #e0e0e0;
+        width: 90vw;
+        position: absolute;
+        left: 50%;
+        top: 30%;
+        transform: translate(-50%);
+    }
+    main {
+        position: absolute;
+        top: 155%;
+        width: 100%;
+        height: 100%;
+        padding: 15pc;
+        padding-top: 70px;
+    }
     .contentFooter {
-        height: 490px;
+        height: 520px;
         background-color: #2B2B2B;
         position: relative;
         top: 20px;
         left: 49%;
         transform: translate(-50%);
-        width: 101vw;
+        width: 100vw;
     }
     footer > a {
         color: white;

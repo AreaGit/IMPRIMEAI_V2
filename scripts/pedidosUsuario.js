@@ -20,6 +20,9 @@ function getCookie(name) {
 fetch(`/pedidos-usuario/${userId}`)
     .then(response => response.json())
     .then(data => {
+        if(data.pedidos == 0) {
+            document.getElementById('semPedidos').style.display = 'block'
+        }
         // Ordena os pedidos pelo id, do maior para o menor
         data.pedidos.sort((a, b) => b.id - a.id);
 

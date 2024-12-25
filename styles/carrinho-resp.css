@@ -505,38 +505,77 @@
     }
 }
 @media screen and (min-width:1301px) and (max-width:1440px){
-    span#quantidadeCarrinho {
+    .logo-header {
         position: absolute;
-        left: 111%;
-        top: 8%;
-        transform: translate(-111%);
-        background: black;
-        color: white;
-        padding: 3px;
-        font-size: 12px;
-        border-radius: 51%;
+        left: 17%;
+        transform: translate(-17%);
+        top: 14%;
+        width: fit-content;
+    }
+    .logo-header > a > img {
         cursor: pointer;
+        width: 56%;
+    }
+    .search-input {
+        position: absolute;
+        left: 50%;
+        transform: translate(-55%);
+        top: 16%;
+        width: fit-content;
+        height: auto;
+        z-index: 1;
+    }
+    .notCad {
+        width: fit-content;
+        position: absolute;
+        left: 80%;
+        transform: translate(-80%);
+        top: 16%;
+    }
+    .carrinho {
+        width: fit-content;
+        position: absolute;
+        left: 90%;
+        transform: translate(-90%);
+        top: 16%;
     }
     #nav-bar {
-        position: relative;
+        position: absolute;
         left: 50%;
-        top: 8px;
+        top: 25%;
         width: 700px;
         transform: translate(-50%);
     }
-    #logo {
-        position: absolute;
-        left: -14%;
-        top: -2px;
-        width: 107px;
+    .bannerCateg > img {
+        width: 730px;
     }
-    #icone-pesquisa {
-        width: 22px;
-        height: 24px;
+    .mainContentHeader {
         position: absolute;
-        left: 112%;
-        transform: translate(-112%);
-        top: 1px;
+        height: 65vw;
+        width: 100%;
+        z-index: 1;
+    }
+    div#suggestions-container {
+        display: none;
+        background-color: white;
+        width: 35vw;
+        box-shadow: -1px -1px 3px black;
+        height: auto;
+        z-index: 1;
+        position: relative;
+        top: 35px;
+        left: 50%;
+        transform: translate(-50%);
+        border-radius: 5px;
+        padding: 20px;
+        max-height: 455px;
+        overflow-y: auto;
+    }
+    .search-input > button {
+        background-color: transparent;
+        display: block;
+        position: relative;
+        left: 90%;
     }
     #carrinho-vazio {
         height: 165px;

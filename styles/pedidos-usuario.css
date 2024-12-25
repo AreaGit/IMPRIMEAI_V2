@@ -282,3 +282,39 @@ main > h2 {
     left: 5%;
     transform: translate(-5%);
 }
+#semPedidos{display: none;}
+.aviso-container {
+  background-color: white;
+  box-shadow: 1px 1px 3px black;
+  padding: 20px;
+  border-radius: 10px;
+  text-align: center;
+  max-width: 400px;
+  width: 100%;
+  position: absolute;
+  left: 50%;
+  transform: translate(-50%);
+  top: 50%;
+}
+
+.aviso-texto {
+  font-size: 1.2rem;
+  color: var(--preto);
+  margin-bottom: 20px;
+}
+
+.botao-pedido {
+  display: inline-block;
+  background-color: var(--coral);
+  color: var(--branco);
+  font-weight: bold;
+  padding: 10px 20px;
+  border-radius: 5px;
+  text-decoration: none;
+  font-size: 1rem;
+  transition: background-color 0.3s;
+}
+
+.botao-pedido:hover {
+  background-color: var(--vermelho);
+}
