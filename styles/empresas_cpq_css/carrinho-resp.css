@@ -1,0 +1,7 @@
+@media screen and (min-width: 1301px) and (max-width: 1400px) {
+    header {
+        height: 24vh;
+        box-shadow: 1px 2px 6px black;
+        background-color: #015524;
+    }
+}

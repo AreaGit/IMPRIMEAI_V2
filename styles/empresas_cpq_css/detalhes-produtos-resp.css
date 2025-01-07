@@ -211,6 +211,36 @@ section#quantidades {
     box-shadow: -1px 2px 8px #000000a3;
 }
 }
+@media screen and (min-width: 1301px) and (max-width: 1400px) {
+    header {
+        height: 24vh;
+        box-shadow: 1px 2px 6px black;
+        background-color: #015524;
+    }
+    #lnk-comp {
+        cursor: pointer;
+        width: 85%;
+        height: 51px;
+        border: 1px solid #015524;
+        color: #015524;
+        font-weight: 600;
+        font-size: 17px;
+        box-shadow: -1px 2px 8px #000000a3;
+        transition: 0.8s;
+        border-radius: 4px;
+        background-color: white;
+    }
+    #descricao-produto {
+        position: absolute;
+        top: 160%;
+        left: 50%;
+        width: 40%;
+        height: 255px;
+        transform: translate(-50%);
+        padding: 15px;
+        text-align: justify;
+    }
+}
 @media screen and (min-width:1635px) and (max-width:1879px) {
 #variacoes {
     position: relative;

@@ -1,3 +1,30 @@
+@media screen and (min-width: 1300px) and (max-width: 1400px) {
+    header {
+        height: 24vh;
+        box-shadow: 1px 2px 6px black;
+        background-color: #015524;
+    }
+    .produtos {
+        position: absolute;
+        top: 30%;
+        flex-wrap: nowrap;
+        justify-content: space-between;
+        left: 50%;
+        transform: translate(-50%);
+        width: 100%;
+    }
+    .cxProd > a {
+        position: absolute;
+        top: 89%;
+        left: 65%;
+        background-color: #015524;
+        color: white;
+        padding: 8px 18px 8px 18px;
+        font-size: 14px;
+        font-weight: 400;
+        border-radius: 2px;
+    }
+}
 @media screen and (min-width: 2560px) {
     .cxProd {
         cursor: pointer;

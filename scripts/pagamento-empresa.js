@@ -311,7 +311,7 @@ async function criarPedidoBoleto(metodoPag, chargeId) {
 async function pagamentoPix() {
 // Fetch para obter os dados do perfil do usuário
 try {
-  const response = await fetch('/perfil/dados');
+  const response = await fetch('/perfil/dados-empresa');
   if (!response.ok) {
       throw new Error('Erro ao obter dados do perfil');
   }
@@ -450,7 +450,7 @@ async function verificarStatusTransacao(chargeId) {
 async function pagamentoBoleto() {
   // Fetch para obter os dados do perfil do usuário
   try {
-    const response = await fetch('/perfil/dados');
+    const response = await fetch('/perfil/dados-empresa');
     if (!response.ok) {
         throw new Error('Erro ao obter dados do perfil');
     }
@@ -607,7 +607,7 @@ btnCartaoCredito.addEventListener('click', async() => {
     const [month, year] = expiryDate.split('/').map(str => parseInt(str));    
     // Fetch para obter os dados do perfil do usuário
     try {
-      const response = await fetch('/perfil/dados');
+      const response = await fetch('/perfil/dados-empresa');
       if (!response.ok) {
           throw new Error('Erro ao obter dados do perfil');
       }
@@ -765,7 +765,7 @@ async function pagamentoCarteira() {
   const userId = getCookie('userId');
   // Verifique o saldo da carteira do usuário
   const xhr = new XMLHttpRequest();
-  xhr.open('GET', '/saldoUsuario-empresa', true);
+  xhr.open('GET', '/saldoUsuario-empresas', true);
   xhr.setRequestHeader('Content-Type', 'application/json');
   xhr.onload = function () {
     if (xhr.status === 200) {

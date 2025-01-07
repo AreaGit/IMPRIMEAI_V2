@@ -44,77 +44,152 @@ document.addEventListener('DOMContentLoaded', async() => {
     }
 });
 btnRetirada.addEventListener("click", async () => {
-    try {
-        // Primeiro, obtenha os dados do perfil do usuário
-        const response = await fetch('/perfil/dados');
-
-        if (!response.ok) {
-            throw new Error('Erro ao buscar os dados do usuário');
+    if(tipo == 'Empresas') {
+        try {
+            // Primeiro, obtenha os dados do perfil do usuário
+            const response = await fetch('/perfil/dados-empresa');
+    
+            if (!response.ok) {
+                throw new Error('Erro ao buscar os dados do usuário');
+            }
+    
+            const data = await response.json();
+    
+            const nomeCliente = data.userCad;
+            const enderecoCad = data.endereçoCad;
+            const numCad = data.numCad;
+            const compCad = data.compCad;
+            const bairroCad = data.bairroCad;
+            const cepCad = data.cepCad;
+            const cidadeCad = data.cidadeCad;
+            const telefoneCad = data.telefoneCad;
+            const estadoCad = data.estadoCad;
+            const email = data.emailCad;
+    
+            // Aqui você pode adicionar o downloadLink ao endereçoData
+            const enderecoData = {
+                nomeCliente: nomeCliente,
+                rua: enderecoCad,
+                numeroRua: numCad,
+                complemento: compCad,
+                cep: cepCad,
+                estado: estadoCad,
+                cidade: cidadeCad,
+                bairro: bairroCad,
+                email: email,
+                telefone: telefoneCad,
+                downloadLinks: downloadLinks // Adiciona o downloadLink aqui
+            };
+    
+            // Enviar os dados para salvar no carrinho
+            const saveResponse = await fetch('/salvar-endereco-retirada-no-carrinho', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(enderecoData), // Envia o objeto completo, incluindo o downloadLink
+            });
+    
+            if (!saveResponse.ok) {
+                throw new Error(`Erro ao salvar endereço de retirada: ${saveResponse.statusText}`);
+            }
+    
+            const saveData = await saveResponse.json();
+    
+            // Verifica se a resposta foi bem-sucedida
+            if (saveData.success) {
+                avisoGeral.style.display = 'block';
+                window.setTimeout(() => {
+                    avisoGeral.style.display = 'none';
+                    if(tipo === "Empresas"){
+                        window.location.href = '/pagamento-empresas'
+                    } else{
+                        window.location.href = '/pagamento'
+                    }
+                }, 5000);
+            } else {
+                erroEndereco.style.display = 'block';
+                window.setTimeout(() => {
+                    erroEndereco.style.display = 'none';
+                    window.location.reload();
+                }, 5000);
+            }
+        } catch (error) {
+            console.error('Erro ao fazer a solicitação:', error);
         }
-
-        const data = await response.json();
-
-        const nomeCliente = data.userCad;
-        const enderecoCad = data.endereçoCad;
-        const numCad = data.numCad;
-        const compCad = data.compCad;
-        const bairroCad = data.bairroCad;
-        const cepCad = data.cepCad;
-        const cidadeCad = data.cidadeCad;
-        const telefoneCad = data.telefoneCad;
-        const estadoCad = data.estadoCad;
-        const email = data.emailCad;
-
-        // Aqui você pode adicionar o downloadLink ao endereçoData
-        const enderecoData = {
-            nomeCliente: nomeCliente,
-            rua: enderecoCad,
-            numeroRua: numCad,
-            complemento: compCad,
-            cep: cepCad,
-            estado: estadoCad,
-            cidade: cidadeCad,
-            bairro: bairroCad,
-            email: email,
-            telefone: telefoneCad,
-            downloadLinks: downloadLinks // Adiciona o downloadLink aqui
-        };
-
-        // Enviar os dados para salvar no carrinho
-        const saveResponse = await fetch('/salvar-endereco-retirada-no-carrinho', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify(enderecoData), // Envia o objeto completo, incluindo o downloadLink
-        });
-
-        if (!saveResponse.ok) {
-            throw new Error(`Erro ao salvar endereço de retirada: ${saveResponse.statusText}`);
+    } else {
+        try {
+            // Primeiro, obtenha os dados do perfil do usuário
+            const response = await fetch('/perfil/dados');
+    
+            if (!response.ok) {
+                throw new Error('Erro ao buscar os dados do usuário');
+            }
+    
+            const data = await response.json();
+    
+            const nomeCliente = data.userCad;
+            const enderecoCad = data.endereçoCad;
+            const numCad = data.numCad;
+            const compCad = data.compCad;
+            const bairroCad = data.bairroCad;
+            const cepCad = data.cepCad;
+            const cidadeCad = data.cidadeCad;
+            const telefoneCad = data.telefoneCad;
+            const estadoCad = data.estadoCad;
+            const email = data.emailCad;
+    
+            // Aqui você pode adicionar o downloadLink ao endereçoData
+            const enderecoData = {
+                nomeCliente: nomeCliente,
+                rua: enderecoCad,
+                numeroRua: numCad,
+                complemento: compCad,
+                cep: cepCad,
+                estado: estadoCad,
+                cidade: cidadeCad,
+                bairro: bairroCad,
+                email: email,
+                telefone: telefoneCad,
+                downloadLinks: downloadLinks // Adiciona o downloadLink aqui
+            };
+    
+            // Enviar os dados para salvar no carrinho
+            const saveResponse = await fetch('/salvar-endereco-retirada-no-carrinho', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(enderecoData), // Envia o objeto completo, incluindo o downloadLink
+            });
+    
+            if (!saveResponse.ok) {
+                throw new Error(`Erro ao salvar endereço de retirada: ${saveResponse.statusText}`);
+            }
+    
+            const saveData = await saveResponse.json();
+    
+            // Verifica se a resposta foi bem-sucedida
+            if (saveData.success) {
+                avisoGeral.style.display = 'block';
+                window.setTimeout(() => {
+                    avisoGeral.style.display = 'none';
+                    if(tipo === "Empresas"){
+                        window.location.href = '/pagamento-empresas'
+                    } else{
+                        window.location.href = '/pagamento'
+                    }
+                }, 5000);
+            } else {
+                erroEndereco.style.display = 'block';
+                window.setTimeout(() => {
+                    erroEndereco.style.display = 'none';
+                    window.location.reload();
+                }, 5000);
+            }
+        } catch (error) {
+            console.error('Erro ao fazer a solicitação:', error);
         }
-
-        const saveData = await saveResponse.json();
-
-        // Verifica se a resposta foi bem-sucedida
-        if (saveData.success) {
-            avisoGeral.style.display = 'block';
-            window.setTimeout(() => {
-                avisoGeral.style.display = 'none';
-                if(tipo === "Empresas"){
-                    window.location.href = '/pagamento-empresas'
-                } else{
-                    window.location.href = '/pagamento'
-                }
-            }, 5000);
-        } else {
-            erroEndereco.style.display = 'block';
-            window.setTimeout(() => {
-                erroEndereco.style.display = 'none';
-                window.location.reload();
-            }, 5000);
-        }
-    } catch (error) {
-        console.error('Erro ao fazer a solicitação:', error);
     }
 });
 
