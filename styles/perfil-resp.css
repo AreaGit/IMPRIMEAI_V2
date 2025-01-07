@@ -116,12 +116,6 @@
         width: 700px;
         transform: translate(-50%);
     }
-    #logo {
-        position: absolute;
-        left: -14%;
-        top: -2px;
-        width: 107px;
-    }
     #icone-pesquisa {
         width: 22px;
         height: 24px;
@@ -147,12 +141,6 @@
         width: 1050px;
         transform: translate(-50%);
     }
-    #logo {
-        position: absolute;
-        left: -2%;
-        top: -7px;
-        width: 107px;
-    }
     #icone-pesquisa {
         width: 22px;
         height: 24px;
@@ -169,12 +157,6 @@
         top: 8px;
         width: 1050px;
         transform: translate(-50%);
-    }
-    #logo {
-        position: absolute;
-        left: -2%;
-        top: -7px;
-        width: 107px;
     }
     #icone-pesquisa {
         width: 22px;
