@@ -2,12 +2,28 @@ let tipoEntrega;
 let pId
 let novoStatusPedido
 let idPedMult
+let nomeGrafica;
+let tipo;
 const btnAceitarPedido = document.getElementById('btnAceitarPedido');
 const btnCancelarPedido = document.getElementById('btnCancelarPedido');
 const formEntrega = document.getElementById('formEntrega');
 const btnConfEnt = document.getElementById('btnConfEnt');
 const avisoEntregue = document.getElementById('avisoEntregue');
 const carregamento = document.getElementById('carregamento');
+async function carregarInfoUsers() {
+  try {
+      const response = await fetch('/perfilGrafica/dados');
+      if (!response.ok) {
+          throw new Error('Erro ao buscar os dados do usuário');
+      }
+
+      const data = await response.json();
+      nomeGrafica = data.userCad;
+  } catch (error) {
+      console.log("erro ao buscar nome");
+  }
+}
+carregarInfoUsers();
 document.addEventListener('DOMContentLoaded', async() => { 
   // Obtém o ID do pedido e do produto da URL
   const urlParams = new URLSearchParams(window.location.search);
@@ -23,6 +39,7 @@ document.addEventListener('DOMContentLoaded', async() => {
     const detalhesPedido = data.pedido;
     const detalhesUsuario = data.usuario;
     const statusPedido = detalhesPedido.itenspedidos[0].statusPed;
+    tipo = detalhesPedido.itenspedidos[0].tipo;
     idPedMult = detalhesPedido.itenspedidos[0].id;
     if(statusPedido == "Aguardando") {
       novoStatusPedido = "Pedido Aceito Pela Gráfica";
@@ -279,7 +296,7 @@ document.addEventListener('DOMContentLoaded', async() => {
             <p class=""><strong>Acabamento:</strong> ${variacoesProduto.acabamento}</p>
             <p class=""><strong>Cor:</strong> ${variacoesProduto.cor}</p>
             <p class=""><strong>Enobrecimento:</strong> ${variacoesProduto.enobrecimento}</p>
-            <a href="${detalhesPedido.itenspedidos[0].linkDownload !== null ? detalhesPedido.itenspedidos[0].linkDownload : detalhesPedido.itenspedidos[0].arteEmpresas}" target="_blank">Clique Aqui para Baixar</a>
+            <a href="${detalhesPedido.itenspedidos[0].linkDownload !== null ? detalhesPedido.itenspedidos[0].linkDownload : detalhesPedido.itenspedidos[0].arteEmpresas}" target="_blank">Clique Aqui para Baixar a Arte</a>
             `
         produtoInfo.appendChild(detalhesItens);
 
@@ -307,6 +324,51 @@ document.addEventListener('DOMContentLoaded', async() => {
                     <p class="endCid"><strong>Cidade:</strong> ${endereco.cidade}</p>
                   `).join('<br>');
                 }
+                if (detalhesPedido.enderecos && detalhesPedido.enderecos.length > 0) {
+                  detalhesPedido.enderecos.forEach(endereco => {
+                      const protocoloBtn = document.createElement('a');
+                      protocoloBtn.id = 'btnGerarProtocolo';
+                      protocoloBtn.href = '#';
+                      protocoloBtn.textContent = 'Clique Aqui para Baixar o Protocolo de Entrega';
+                      detalhesEntrega.appendChild(protocoloBtn);
+              
+                      protocoloBtn.addEventListener('click', async () => {
+                        const enderecoData = {
+                          id: detalhesPedido.id,
+                          nomeGrafica: nomeGrafica,
+                          cliente: detalhesUsuario.userCad,
+                          endereco: detalhesPedido.enderecos[0].rua,
+                          cidade: detalhesPedido.enderecos[0].cidade,
+                          estado: detalhesPedido.enderecos[0].estado,
+                          responsavel: detalhesUsuario.userCad,
+                          quantidade: detalhesPedido.itenspedidos[0].quantidade,
+                          item: detalhesPedido.itenspedidos[0].nomeProd
+                        }
+                        try {
+                          // Mudando o método de GET para POST e serializando os dados
+                          const response = await fetch('/gerarProtocoloEntrega', {
+                            method: 'POST',  // Agora é POST
+                            headers: {
+                              'Content-Type': 'application/json',
+                            },
+                            body: JSON.stringify(enderecoData),  // Certificando-se de que os dados sejam passados como JSON
+                          });
+                      
+                          // Verificando se a resposta foi bem-sucedida
+                          if (response.ok) {
+                            const data = await response.json();  // Processa a resposta como JSON
+                            console.log('Protocolo gerado com sucesso:', data);
+                            window.open(data.protocolo.webViewLink);
+                            // Aqui você pode tratar a resposta, como exibir uma mensagem de sucesso ou fazer outra ação
+                          } else {
+                            console.error('Erro ao gerar o protocolo:', response.statusText);
+                          }
+                        } catch (err) {
+                          console.log('Erro ao tentar enviar a requisição:', err);
+                        }
+                      });
+                  });
+              }              
               } else {
                 console.error('Endereço não encontrado no pedido.');
               }
@@ -319,6 +381,19 @@ document.addEventListener('DOMContentLoaded', async() => {
       });
 
       async function pegarImagemProduto(idProduto) {
+        if(tipo == "Empresas") {
+          try {
+            const imgResponse = await fetch(`/imagens-empresa/${idProduto}`);
+            if (!imgResponse.ok) {
+              throw new Error('Erro ao obter a URL da imagem do produto');
+            }
+            const imgData = await imgResponse.json();
+            return imgData.imgProdUrl;
+          } catch (error) {
+            console.error('Erro ao carregar a imagem:', error);
+            return null;
+          }
+        } else {
         try {
           const imgResponse = await fetch(`/imagens/${idProduto}`);
           if (!imgResponse.ok) {
@@ -330,6 +405,7 @@ document.addEventListener('DOMContentLoaded', async() => {
           console.error('Erro ao carregar a imagem:', error);
           return null;
         }
+      }
       }
 
     // Defina uma variável global para armazenar os cookies
@@ -426,6 +502,7 @@ document.addEventListener('DOMContentLoaded', async() => {
       formData.append('produtoEnt', produtoEnt);
       formData.append('protocoloEnt', protocoloEnt);
       formData.append('pedidoId', currentPedidoId);
+      formData.append('tipo', tipo);
 
       try {
           const response = await fetch('/dadosEntrega', {

@@ -48,7 +48,6 @@ async function atualizarListaPedidos(status1, status2) {
     try {
         const response = await fetch('/pedidos-cadastrados');
         const data = await response.json();
-
         // Filtrar os pedidos com base no status
         const pedidosFiltrados = data.pedidos.filter(pedido => pedido.statusPed === status1 || pedido.statusPed === status2);
 
@@ -66,7 +65,9 @@ async function atualizarListaPedidos(status1, status2) {
             const dataCriacao = new Date(pedido.createdAt);
             const dataFormatada = dataCriacao.toLocaleString('pt-BR');
             const idProduto = pedido.idProduto;
-            const imgUrl = await pegarImagemProduto(idProduto);
+            const tipo = pedido.tipo;
+            console.log(tipo)
+            const imgUrl = await pegarImagemProduto(idProduto, tipo);
             li.innerHTML = `
                 <img src="${imgUrl}" alt="Imagem do produto">
                 <h2 class="ped-nome">${pedido.nomeProd}</h2>
@@ -84,18 +85,32 @@ async function atualizarListaPedidos(status1, status2) {
 }
 
 // Função para obter a URL da imagem do produto
-async function pegarImagemProduto(idProduto) {
-    try {
-        const imgResponse = await fetch(`/imagens/${idProduto}`);
+async function pegarImagemProduto(idProduto, tipo) {
+    if(tipo == "Empresas") {
+      try {
+        const imgResponse = await fetch(`/imagens-empresa/${idProduto}`);
         if (!imgResponse.ok) {
-            throw new Error('Erro ao obter a URL da imagem do produto');
+          throw new Error('Erro ao obter a URL da imagem do produto');
         }
         const imgData = await imgResponse.json();
         return imgData.imgProdUrl;
-    } catch (error) {
+      } catch (error) {
         console.error('Erro ao carregar a imagem:', error);
         return null;
+      }
+    } else {
+    try {
+      const imgResponse = await fetch(`/imagens/${idProduto}`);
+      if (!imgResponse.ok) {
+        throw new Error('Erro ao obter a URL da imagem do produto');
+      }
+      const imgData = await imgResponse.json();
+      return imgData.imgProdUrl;
+    } catch (error) {
+      console.error('Erro ao carregar a imagem:', error);
+      return null;
     }
+  }
 }
 
 // Adicionar eventos de clique para cada divisão de status

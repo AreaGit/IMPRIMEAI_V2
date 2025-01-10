@@ -3,6 +3,7 @@ const app = express();
 const Produtos = require('../models/Produtos');
 const Graficas = require('../models/Graficas');
 const User = require('../models/User');
+const UserEmpresas = require('../models/Users-Empresas');
 const Carteira = require('../models/Carteira');
 const VariacoesProduto = require('../models/VariacoesProduto');
 const Pedidos = require('../models/Pedidos');
@@ -34,6 +35,11 @@ const fs = require('fs');
 const ItensPedidos = require('../models/ItensPedido');
 const { Console } = require('console');
 const apiKeyBingMaps = 'Ao6IBGy_Nf0u4t9E88BYDytyK5mK3kObchF4R0NV5h--iZ6YgwXPMJEckhAEaKlH';
+const { PDFDocument } = require('pdf-lib');
+const {google} = require('googleapis');
+const GOOGLE_API_FOLDER_ID = '1F7sQzOnnbqn0EnUeT4kWrNOzsVFP-bG1';
+const stream = require('stream');
+const path = require('path');
 app.use(express.json());
 app.use(cookieParser());
 app.use(express.urlencoded({ extended: true }));
@@ -42,7 +48,7 @@ app.use(session({
   resave: false,
   saveUninitialized: true
 }));
-const { client, sendMessage } = require('./api/whatsapp-web');
+const { client, sendMessage, sendMedia } = require('./api/whatsapp-web');
 
 // Use o cliente conforme necessário
 client.on('ready', () => {
@@ -57,6 +63,22 @@ async function enviarNotificacaoWhatsapp(destinatario, corpo) {
   } catch (error) {
       console.error(`Erro ao enviar mensagem para a gráfica ${destinatario}:`, error);
       throw error;
+  }
+}
+
+async function enviarNotificacaoWhatsappComMidia(destinatario, caminhosMidia, legenda) {
+  try {
+    if (!Array.isArray(caminhosMidia) || caminhosMidia.length === 0) {
+      throw new Error('Nenhum caminho de mídia fornecido para envio.');
+    }
+
+    // Chama a função sendMedia com o número do destinatário, os caminhos das mídias e a legenda
+    const response = await sendMedia(destinatario, caminhosMidia, legenda);
+    console.log(`Mídia(s) enviada(s) com sucesso para o número ${destinatario}:`, response);
+    return response;
+  } catch (error) {
+    console.error(`Erro ao enviar mídia(s) para o número ${destinatario}:`, error);
+    throw error;
   }
 }
 
@@ -395,8 +417,12 @@ async function getCoordinatesFromAddressEnd(enderecoEntregaInfo, apiKey) {
   
       // Agora que temos o pedido, buscamos o usuário correspondente
       const { idUserPed } = pedido;
-      const usuario = await User.findByPk(idUserPed);
-  
+      let usuario;
+      if(pedido.itenspedidos[0].tipo == "Empresas") {
+        usuario = await UserEmpresas.findByPk(idUserPed);
+      } else {
+        usuario = await User.findByPk(idUserPed);
+      }
       if (!usuario) {
         return res.status(404).json({ error: 'Usuário não encontrado' });
       }
@@ -439,14 +465,14 @@ async function getCoordinatesFromAddressEnd(enderecoEntregaInfo, apiKey) {
       // Atualize o status do pedido na tabela Pedidos
       const graficaId = req.cookies.graficaId; // Assuming the graphics company's ID is stored in a cookie
       console.log(graficaId)
-      const pedido = await ItensPedido.findByPk(pedidoId);
-      const tablePedidos = await Pedidos.findByPk(pedidoId);
-      const tableEnderecos = await Enderecos.findByPk(pedidoId);
+      const pedido = await ItensPedido.findOne( { where: {idPed: pedidoId} } );
+      const tablePedidos = await Pedidos.findOne({ where: {id: pedidoId} });
+      const tableEnderecos = await Enderecos.findOne({ where: {idPed: pedidoId} });
       if (!pedido) {
         return res.json({ success: false, message: 'Pedido não encontrado.' });
       }
       // Procurar o usuário pelo idUser
-      const ped = await ItensPedidos.findByPk(pedidoId);
+      const ped = await ItensPedidos.findOne( { where: {idPed: pedidoId} } );
       const userId = ped.idUserPed; // Ou qualquer forma que você tenha o id do usuário
       const user = await User.findByPk(userId);
 
@@ -458,7 +484,7 @@ async function getCoordinatesFromAddressEnd(enderecoEntregaInfo, apiKey) {
       }
 
       // Atualiza o endereço do pedido com os dados da gráfica
-      const enderecoPedido = await Enderecos.findByPk(pedidoId);
+      const enderecoPedido = await Enderecos.findOne( { where: {idPed: pedidoId} } );
       if (enderecoPedido) {
         enderecoPedido.rua = grafica.enderecoCad;
         enderecoPedido.cidade = grafica.cidadeCad;
@@ -650,48 +676,183 @@ async function getCoordinatesFromAddressEnd(enderecoEntregaInfo, apiKey) {
       res.status(500).json({ error: 'Erro interno do servidor' });
     }
   });
+  app.post('/gerarProtocoloEntrega', async(req, res) => {
+    const enderecoData = req.body;  // Dados recebidos no corpo da requisição
+    
+    console.log('Dados recebidos para gerar protocolo:', enderecoData);
+  
+    // Caminho do arquivo
+    const pdfPath = path.resolve(__dirname, '../arquivos/PROTOCOLO DE ENTREGA - IMPRIMEAI.pdf');
+    
+    // Ler o arquivo PDF como bytes
+    const pdfBytes = fs.readFileSync(pdfPath);
 
-  // Rota para receber os dados do formulário de entrega
-app.post('/dadosEntrega', upload.single('fotoEnt'), async (req, res) => {
+    // Carregar o PDF
+    const pdfDoc = await PDFDocument.load(pdfBytes);
+
+    // Selecionar a página onde será feita a edição
+    const page = pdfDoc.getPage(0);
+
+    // Ajustar texto para as posições corretas dentro das caixas
+    page.drawText(`${enderecoData.id}`, { x: 158, y: 668, size: 12 }); // ID
+    page.drawText(`${enderecoData.nomeGrafica}`, { x: 260, y: 668, size: 12 }); // LOJA
+    page.drawText(`${enderecoData.cliente}`, { x: 160, y: 634, size: 12 }); // CLIENTE
+    page.drawText(`${enderecoData.endereco}`, { x: 160, y: 597, size: 12 }); // ENDEREÇO
+    page.drawText(`${enderecoData.cidade}`, { x: 134, y: 560, size: 9 }); // CIDADE
+    page.drawText(`${enderecoData.estado}`, { x: 270, y: 560, size: 12 }); // UF
+    page.drawText(`${enderecoData.responsavel}`, { x: 400, y: 560, size: 12 }); // RESPONSÁVEL PELO RECEBIMENTO
+    page.drawText(`${enderecoData.quantidade}`, { x: 145, y: 430, size: 12 }); // QUANTIDADE
+    page.drawText(`${enderecoData.item}`, { x: 280, y: 430, size: 12 }); // NOME DO ITEM
+
+    // Salvar o PDF editado
+    const pdfBytesEdited = await pdfDoc.save();
+    //fs.writeFileSync(`./routes/PROTOCOLO DE ENTREGA ${enderecoData.id}.pdf`, pdfBytesEdited);
+    const result = await uploadFile(pdfBytesEdited, `PROTOCOLO DE ENTREGA PEDIDO ${enderecoData.id}`);
+
+    console.log('PDF editado com sucesso!');
+    res.json({ success: true, message: 'Protocolo gerado com sucesso!', protocolo: result });
+  });
+  async function uploadFile(file, name) {
+    console.log('File Object:', file);
+  
+    const nomeArquivo = name;
+    const fileMetaData = {
+      'name': nomeArquivo, // Nome do arquivo
+      'parents': [GOOGLE_API_FOLDER_ID], // ID da pasta no Google Drive
+    };
+  
+    // Certifique-se de que file.buffer seja um Buffer
+    const buffer = Buffer.from(file.buffer); // Converter ArrayBuffer para Buffer
+  
+    // Criar o stream legível a partir do Buffer
+    const readableStream = stream.Readable.from(buffer); // Usar Readable.from para transformar o Buffer em um stream
+  
+    // Corpo da requisição para upload
+    const media = {
+      mimeType: file.mimetype,
+      body: readableStream, // Passar o stream legível aqui
+      length: file.size,
+    };
+  
+    const maxRetries = 3;
+    let retryCount = 0;
+  
+    // Tentativas de upload com retry
+    while (retryCount < maxRetries) {
+      try {
+        const auth = await new google.auth.GoogleAuth({
+          keyFile: './googledrive.json',
+          scopes: ['https://www.googleapis.com/auth/drive']
+        });
+  
+        const driveService = google.drive({
+          version: 'v3',
+          auth
+        });
+  
+        const response = await driveService.files.create({
+          resource: fileMetaData,
+          media: media,
+          fields: 'id,webViewLink', // Retorna o ID e o link para visualizar no Drive
+          timeout: 10000, // Timeout de 10 segundos para a requisição
+        });
+  
+        // Extraindo os dados da resposta
+        const fileId = response.data.id;
+        const webViewLink = response.data.webViewLink;
+  
+        const downloadLink = `https://drive.google.com/uc?export=download&id=${fileId}`;
+  
+        return { fileId, webViewLink, downloadLink, nomeArquivo };
+        
+      } catch (err) {
+        console.error(`Attempt ${retryCount + 1} failed:`, err.message);
+        retryCount++;
+        
+        if (retryCount >= maxRetries) {
+          console.error('Max retry attempts reached. Upload failed.');
+          throw new Error('Max retry attempts reached. Upload failed.');
+        }
+      }
+    }
+  }
+// Rota para receber os dados do formulário de entrega
+app.post('/dadosEntrega', upload.fields([
+  { name: 'fotoEnt', maxCount: 1 },
+  { name: 'produtoEnt', maxCount: 1 },
+  { name: 'protocoloEnt', maxCount: 1 }
+]), async (req, res) => {
   const recEnt = req.body.recEnt;
   const horEnt = req.body.horEnt;
   const pedidoId = req.body.pedidoId;
-  const fotoEnt = req.file; // Informações sobre o arquivo da imagem
-  const produtoEnt = req.file; // Informações sobre o arquivo da imagem
-  const protocoloEnt = req.file; // Informações sobre o arquivo da imagem
+  const tipo = req.body.tipo;
 
-  console.log('Dados Recebidos:');
-  console.log('Quem Recebeu:', recEnt);
-  console.log('Horário da Entrega:', horEnt);
-  console.log('ID do Pedido:', pedidoId);
-  console.log('Imagem:', fotoEnt);
-
-  // Verifica se o arquivo de imagem foi enviado
-  if (!fotoEnt) {
-    return res.status(400).send('Nenhuma imagem foi enviada.');
-  }
+  const fotoEnt = req.files['fotoEnt']?.[0];
+  const produtoEnt = req.files['produtoEnt']?.[0];
+  const protocoloEnt = req.files['protocoloEnt']?.[0];
 
   try {
-    // Aqui você pode fazer o que quiser com os dados recebidos, como salvar no banco de dados
+    // Salvar dados no banco de dados
     await Entregas.create({
       idPed: pedidoId,
       destinatario: recEnt,
       horario: horEnt,
-      foto: fotoEnt.buffer, // Salva o conteúdo da imagem no banco de dados
+      foto: fotoEnt.buffer,
+      produto: produtoEnt?.buffer,
+      protocolo: protocoloEnt?.buffer,
     });
 
     const ped = await Pedidos.findByPk(pedidoId);
-    const userId = ped.idUserPed; // Ou qualquer forma que você tenha o id do usuário
-    const user = await User.findByPk(userId);
-    //mensagem whatsapp
+    const userId = ped.idUserPed;
+    let user;
+
+    if (tipo === "Empresas") {
+      user = await UserEmpresas.findByPk(userId);
+    } else {
+      user = await User.findByPk(userId);
+    }
+
     const corpoMensagem = `Olá! Temos o prazer de informar que seu pedido foi entregue com sucesso para ${recEnt} no horário ${horEnt}. Esperamos que você esteja satisfeito com nossos produtos e serviços. Se precisar de mais alguma coisa, não hesite em nos contatar. Obrigado!😉`;
-    await enviarNotificacaoWhatsapp(user.telefoneCad, corpoMensagem);
-    console.log("Mensagem de entrega enviada Com Sucesso!");
+
+    const arquivosRecebidos = [
+      { arquivo: fotoEnt, prefixo: 'foto' },
+      { arquivo: produtoEnt, prefixo: 'produto' },
+      { arquivo: protocoloEnt, prefixo: 'protocolo' }
+    ];
+
+    // Array para armazenar os caminhos dos arquivos salvos
+    const imagePaths = [];
+
+    // Salvar cada arquivo no diretório temporário
+    arquivosRecebidos.forEach((item) => {
+      if (item.arquivo) {
+        const caminho = `./routes/${item.prefixo}_${Date.now()}_${item.arquivo.originalname}`;
+        fs.writeFileSync(caminho, item.arquivo.buffer);
+        imagePaths.push(caminho);
+      }
+    });
+    
+    try {
+      // Enviar mensagens pelo WhatsApp
+      await enviarNotificacaoWhatsapp(user.telefoneCad, corpoMensagem);
+      await enviarNotificacaoWhatsappComMidia(user.telefoneCad, imagePaths, 'Evidências');
+    
+      console.log('Mensagens enviadas com sucesso!');
+    } catch (error) {
+      console.error('Erro ao enviar mensagens:', error);
+    } finally {
+      // Remover arquivos temporários
+      imagePaths.forEach((path) => {
+        if (fs.existsSync(path)) {
+          fs.unlinkSync(path);
+        }
+      });
+    }
 
     res.send('Dados de entrega recebidos com sucesso!');
   } catch (error) {
-    console.error('Erro ao salvar imagem:', error);
-    res.status(500).send('Erro ao salvar imagem.');
+    console.error('Erro ao processar entrega:', error);
+    res.status(500).send('Erro ao processar entrega.');
   }
 });
 

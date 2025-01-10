@@ -19,7 +19,13 @@ const Entregas = db.define('entrega', {
     },
     foto: {
         type: Sequelize.BLOB('long'),
-    }
+    },
+    produto: {
+        type: Sequelize.BLOB('long'),
+    },
+    protocolo: {
+        type: Sequelize.BLOB('long'),
+    },
 })
 
 

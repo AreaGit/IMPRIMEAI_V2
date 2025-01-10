@@ -572,6 +572,8 @@ a{text-decoration: none; color: black;}
       top: 50px;
       width: 380px;
       height: 380px;
+      border-radius: 10px;
+      box-shadow: -2px -2px 8px black;
   }
   .remover-produto {
       cursor: pointer;

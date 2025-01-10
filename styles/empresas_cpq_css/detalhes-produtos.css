@@ -571,7 +571,8 @@ a{text-decoration: none; color: black;}
   .slides > img {
     width: 380px;
     height: 380px;
-    border-radius: 5px;
+    border-radius: 10px;
+    box-shadow: -2px -2px 8px black;
   }
   #avancarSlides {
     position: relative;

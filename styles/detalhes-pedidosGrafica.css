@@ -98,6 +98,7 @@ button:hover, #btnCancelarPedido:hover {
 }
 .itensProduto > img {
   width: 380px;
+  height: 380px;
   border-radius: 15px;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
 }
@@ -112,6 +113,7 @@ button:hover, #btnCancelarPedido:hover {
     color: #F37160;
 }
 .detalhesEntrega {
+    z-index: 1;
     position: relative;
     left: 65%;
     width: 30%;
@@ -128,6 +130,10 @@ button:hover, #btnCancelarPedido:hover {
 .detalhesEntrega > h2 {
     width: fit-content;
     margin-bottom: 10px;
+}
+.detalhesEntrega > a {
+  cursor: pointer;
+  color: #F37160;
 }
 .itensProduto > h2 {
     width: fit-content;
@@ -396,4 +402,5 @@ button#btnConfEnt:hover {
     width: 475px;
     height: 140px;
     background-color: white;
+    z-index: 1;
 }

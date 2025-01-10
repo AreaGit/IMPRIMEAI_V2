@@ -122,7 +122,7 @@ document.addEventListener('DOMContentLoaded', () => {
             listaEnderecos.innerHTML = ''; // Limpa a lista de endereços
             enderecos.forEach((endereco) => {
                 const li = document.createElement('li');
-                li.textContent = `${endereco.rua}, ${endereco.numero} - ${endereco.bairro}, ${endereco.cidade}/${endereco.estado}, CEP: ${endereco.cep}`;
+                li.textContent = `${endereco.rua}, ${endereco.numero}, ${endereco.complemento} - ${endereco.bairro}, ${endereco.cidade}/${endereco.estado}, CEP: ${endereco.cep}`;
                 listaEnderecos.appendChild(li);
             });
         } catch (error) {

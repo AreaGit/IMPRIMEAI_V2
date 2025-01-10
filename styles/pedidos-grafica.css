@@ -45,7 +45,7 @@ header > img {
     position: absolute;
     left: 50%;
     transform: translate(-50%);
-    width: 8%;
+    width: 15%;
     cursor: pointer;
 }
 #logo {

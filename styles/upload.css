@@ -229,6 +229,8 @@ img#imgProd {
     left: 15%;
     transform: translate(-15%);
     width: 380px;
+    border-radius: 10px;
+    box-shadow: -2px -2px 8px black;
 }
 div#inputsArt {
     display: flex;

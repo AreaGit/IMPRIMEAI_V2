@@ -636,6 +636,7 @@ async function encontrarGraficaMaisProxima(endereco) {
       
       // Lógica de escalonagem de frete por km
       let custoPorKm;
+      let custoDoFrete;
       if (distanciaMinima <= 2) {
         custoPorKm = 10.00;
       } else if (distanciaMinima <= 5) {
@@ -646,8 +647,11 @@ async function encontrarGraficaMaisProxima(endereco) {
         custoPorKm = 2.76;
       }
       
-      const custoDoFrete = parseFloat((distanciaMinima * custoPorKm).toFixed(2));
-
+      if(distanciaMinima * custoPorKm > 45) {
+        custoDoFrete = 45.00;
+      } else {
+        custoDoFrete = parseFloat((distanciaMinima * custoPorKm).toFixed(2));
+      }
       return {
         graficaMaisProxima,
         distanciaMinima,

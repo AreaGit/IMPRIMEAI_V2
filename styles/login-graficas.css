@@ -17,11 +17,10 @@ body {
     background-color: #F5F5F7;
 }
 #logo {
-    width: 135px;
-    height: 46px;
     position: absolute;
     left: 50%;
     transform: translate(-50%);
+    width: 15%;
 }
 header > h1 {
     font-weight: 500;

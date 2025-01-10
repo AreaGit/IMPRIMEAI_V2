@@ -1,5 +1,7 @@
-const { Client, LocalAuth } = require('whatsapp-web.js');
+const { Client, LocalAuth, MessageMedia } = require('whatsapp-web.js');
 const qrcode = require('qrcode-terminal');
+const fs = require('fs');
+const mime = require('mime-types');
 
 // Configuração do cliente do WhatsApp
 const client = new Client({
@@ -76,6 +78,54 @@ async function sendMessage(rawNumber, message) {
   }
 }
 
+/**
+ * Envia múltiplas imagens pelo WhatsApp.
+ * @param {string} rawNumber - Número do destinatário (apenas números).
+ * @param {Array<string>} imagePaths - Lista de caminhos completos para as imagens.
+ * @param {string} caption - Mensagem ou legenda das imagens.
+ */
+async function sendMedia(rawNumber, imagePaths, caption = '') {
+  if (!rawNumber || !imagePaths || !Array.isArray(imagePaths) || imagePaths.length === 0) {
+    throw new Error('Número ou lista de imagens não fornecidos.');
+  }
+
+  try {
+    if (!client.info) {
+      throw new Error('Cliente WhatsApp não está pronto.');
+    }
+
+    // Limpa e formata o número
+    const cleanedNumber = rawNumber.replace(/\D/g, '');
+    const chatId = `55${cleanedNumber}@c.us`;
+
+    for (const imagePath of imagePaths) {
+      // Verifica se o arquivo existe
+      if (!fs.existsSync(imagePath)) {
+        throw new Error(`Imagem não encontrada: ${imagePath}`);
+      }
+
+      // Determina o tipo MIME da imagem
+      const mimeType = mime.lookup(imagePath) || 'image/jpeg';
+
+      // Cria o objeto MessageMedia para envio
+      const media = new MessageMedia(
+        mimeType,
+        fs.readFileSync(imagePath).toString('base64'),
+        imagePath.split('/').pop()
+      );
+
+      console.log(`Enviando imagem para ${chatId}: ${imagePath}`);
+      await client.sendMessage(chatId, media, { caption });
+    }
+
+    console.log('Todas as imagens foram enviadas com sucesso!');
+    return { status: 'success', message: 'Imagens enviadas com sucesso.' };
+  } catch (error) {
+    console.error('Erro ao enviar imagens:', error.message);
+    throw new Error('Erro ao enviar imagens: ' + error.message);
+  }
+}
+
 // Inicializa o cliente
 client.initialize();
 
@@ -83,5 +133,6 @@ client.initialize();
 module.exports = {
     client,
     disconnectClient,
-    sendMessage
+    sendMessage,
+    sendMedia
 };

@@ -43,5 +43,8 @@
     "ultramsg-whatsapp-api": "^1.0.2",
     "whatsapp-web.js": "^1.25.0",
     "xlsx": "^0.18.5"
+  },
+  "devDependencies": {
+    "@ljharb/tsconfig": "^0.2.3"
   }
 }
