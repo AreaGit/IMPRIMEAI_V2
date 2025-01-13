@@ -108,6 +108,22 @@ input[readonly] {
     cursor: not-allowed;
 }
 
+#btnSairConta {
+    padding: 10px 20px;
+    background-color: var(--cor-primaria);
+    color: var(--cor-secundaria);
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    position: fixed;
+    left: 90%;
+    top: 90%;    
+}
+
+#btnSairConta:hover {
+    background-color: #013d1c;
+}
+
 .btn-salvar {
     padding: 10px 20px;
     background-color: var(--cor-primaria);

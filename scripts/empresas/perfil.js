@@ -65,6 +65,21 @@ async function carregarInfoUsers() {
 }
 carregarInfoUsers();
 
+const btnSairConta = document.getElementById('btnSairConta');
+
+btnSairConta.addEventListener('click', async() => {
+    try {
+        const response = await fetch('/logout');
+        if(!response.ok) {
+            throw new Error('Erro ao sair da conta');
+        }
+        window.location.href = '/cpq/login';
+    } catch(err) {
+        console.log(err);
+        window.location.reload();
+    }
+});
+
 document.addEventListener('DOMContentLoaded', () => {
     const form = document.getElementById('formCadastroEndereco');
     const listaEnderecos = document.getElementById('listaEnderecos');
