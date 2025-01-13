@@ -474,7 +474,12 @@ async function getCoordinatesFromAddressEnd(enderecoEntregaInfo, apiKey) {
       // Procurar o usuário pelo idUser
       const ped = await ItensPedidos.findOne( { where: {idPed: pedidoId} } );
       const userId = ped.idUserPed; // Ou qualquer forma que você tenha o id do usuário
-      const user = await User.findByPk(userId);
+      let user;
+      if(ped.tipo == "Empresas") {
+        user = await UserEmpresas.findByPk(userId);
+      } else {
+        user = await User.findByPk(userId)
+      }
 
       // Verifica se o tipo de entrega é "Entrega a Retirar na Loja"
     if (tableEnderecos.tipoEntrega === "Entrega a Retirar na Loja") {
