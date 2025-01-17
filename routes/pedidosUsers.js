@@ -644,7 +644,7 @@ async function encontrarGraficaMaisProxima(endereco) {
       } else if (distanciaMinima <= 10) {
         custoPorKm = 3.33;
       } else {
-        custoPorKm = 2.76;
+        custoPorKm = 2.15;
       }
       
       if(distanciaMinima * custoPorKm > 45) {
@@ -2021,6 +2021,10 @@ async function verificarGraficaMaisProximaEAtualizar2(itensPedido, enderecos) {
             model: ItensPedido,
             where: { tipo: 'Empresas' },
             attributes: ['statusPed', 'nomeProd', 'idProduto'], // Inclua apenas a coluna 'statusPed'
+          },
+          {
+            model: Enderecos,
+            attributes: ['frete']
           }
         ],
       });
@@ -2483,6 +2487,7 @@ app.post('/processarPagamento-cartao', (req ,res) => {
 
 app.post('/processarPagamento-pix-carteira', (req, res) => {
   const perfilData = req.body.perfilData;
+  console.log(perfilData)
   const carrinho = req.session.carrinho;
   // Define the request payload
   const body = {

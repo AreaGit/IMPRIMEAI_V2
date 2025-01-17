@@ -14,6 +14,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter+Tight:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" />
     <link rel="stylesheet" href="../styles/cadastroUser-empresas.css">
+    <link rel="stylesheet" href="../styles/cadastro-graficas-resp.css">
 </head>
 <body>
     <header>
@@ -56,6 +57,10 @@
             <br>
             <input type="text" name="complementoUser" id="complementoUser" placeholder="Digite seu Complemento..." size="35" class="custom-input">
             <br>
+            <div id="checkboxProdutos">
+              <h3>Marque os Produtos que o Cliente poderá comprar</h3> 
+              
+          </div>
         </div>
         <div id="rightForm">
             <label for="cpfUser">CPF</label>
@@ -92,7 +97,7 @@
                 Li e aceito os <a href="#" id="abrirTermos">termos e condições</a> da Imprimeai
             </label>
         </div>
-        <button id="btnCad" type="button">Continuar para o login</button>
+        <button id="btnCad" type="button" class="btnCad1">Continuar para o login</button>
         <a href="/login"></a>
     </form>
     <div id="popup" style="overflow-y: scroll; height: 550px;">

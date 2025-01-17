@@ -84,6 +84,9 @@ label {
     top: 5%;
     transform: translate(-10%);
 }
+.btnCad2 {
+  display: none;
+}
 form > button {
     width: 295px;
     height: 51px;
@@ -105,6 +108,22 @@ form > button:hover {
     transition: 0.8s;
     background-color: #F37160;
     color: white;
+}
+#checkboxProdutos > input {
+  width: 100px;
+}
+#checkboxProdutos > input[type="checkbox"] {
+ width: 30px;
+ width: 30px;
+}
+#checkboxProdutos > label {
+ position: relative;
+ top: -18px;
+ padding-left: 10px;
+}
+div#checkboxProdutos > h3 {
+ font-size: 17px;
+ width: fit-content;
 }
 .material-checkbox {
     display: flex;

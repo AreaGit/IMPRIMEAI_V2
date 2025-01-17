@@ -201,13 +201,22 @@ fetch(`/pedidos-usuario-empresa/${userId}`)
                 imgProduto.alt = 'Imagem não disponível';
             }
             divPedido.appendChild(imgProduto);
+            console.log(pedido.enderecos)
+            // Somando os valores de frete
+            let somaFrete = pedido.enderecos.reduce((acc, item) => acc + parseFloat(item.frete), 0);
+
+            // Convertendo o valor do pedido para número
+            let valorPedido = parseFloat(pedido.valorPed);
+
+            // Somando o valor do pedido com o total de frete
+            let valorTotal = somaFrete + valorPedido;
             
             // Adiciona as informações do pedido
             divPedido.innerHTML += `
                 <h2>${pedido.itenspedidos[0].nomeProd}</h2>
                 <div class="pedido-info">
                     <p>ID ${pedido.id}</p>
-                    <p>R$ ${pedido.valorPed.toFixed(2)}</p>
+                    <p>R$ ${valorTotal.toFixed(2)}</p>
                     <p>${pedido.quantPed} unidade${pedido.quantPed > 1 ? 's' : ''}</p>
                 </div>
                 <a href="detalhesPedidosUser?idPedido=${pedido.id}">Detalhes do pedido</a>
@@ -271,6 +280,30 @@ btnFecharValores.addEventListener('click', () => {
     divValoresRecarga.style.display = 'none';
 });
 
+const inputSaldo = document.getElementById('valor');
+inputSaldo.addEventListener('input', () => {
+    // Remove tudo que não for número
+    let valor = inputSaldo.value.replace(/\D/g, '');
+
+    // Garante que o valor seja tratado como um número inteiro para evitar erros
+    valor = parseInt(valor || '0', 10);
+
+    // Adiciona os centavos ao valor
+    valor = (valor / 100).toFixed(2);
+
+    // Formata com vírgula para separador decimal
+    inputSaldo.value = valor.replace('.', ',');
+
+    // Opcional: Exibe formatado como moeda brasileira
+    const saldoFormatado = parseFloat(valor).toLocaleString('pt-BR', {
+        style: 'currency',
+        currency: 'BRL'
+    });
+    document.getElementById('formatado').textContent = saldoFormatado;
+    valorSelecionado = inputSaldo.value;
+    abrirMetodosBtn.disabled = false;
+});
+
 // Seleção de valor para recarga
 valores.forEach(valor => {
     valor.addEventListener('click', () => {
@@ -280,11 +313,77 @@ valores.forEach(valor => {
         abrirMetodosBtn.disabled = false;
     });
 });
-
+let perfilCarteira;
 // Abrir métodos de pagamento
 abrirMetodosBtn.addEventListener('click', () => {
     divValoresRecarga.style.display = 'none';
     metodosRecarga.style.display = 'block';
+    function dadosUsuario() {
+        return fetch('/perfil/dados-empresa')
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Erro ao obter dados do perfil');
+                }
+                return response.json();
+            })
+            .then(perfilData => {
+                function formatarTelefone(numero) {
+                const numeroLimpo = numero.replace(/\D/g, '');
+                const ddd = numeroLimpo.substring(0, 2);
+                const numeroTelefone = numeroLimpo.substring(2);
+                return { ddd, numeroTelefone };
+            }
+
+            const telefoneFormatado = formatarTelefone(perfilData.telefoneCad);
+            const codPaisCliente = "55";
+            const dddCliente = telefoneFormatado.ddd;
+            const numeroTelefoneCliente = telefoneFormatado.numeroTelefone;
+            
+            const cpf = perfilData.cpfCad.replace(/\D/g, '');
+            const cpfCliente = cpf;
+            
+            const emailCliente = perfilData.emailCad;
+            const cepCliente = perfilData.cepCad;
+            const cidadeCliente = perfilData.cidadeCad;
+            const ruaCliente = perfilData.endereçoCad;
+            const numeroResidenciaCliente = perfilData.numCad;
+            const bairroCliente = perfilData.bairroCad;
+            const numeroDocumento = perfilData.cpfCad;
+            const nomeCliente = perfilData.userCad;
+            const paisCliente = "BR";
+            const idCliente = perfilData.userId;
+            const estadoCliente = perfilData.estadoCad;
+            
+            const perfilUsuario = {
+                emailCliente: emailCliente,
+                cpfCliente: cpfCliente,
+                cepCliente: cepCliente,
+                cidadeCliente: cidadeCliente,
+                estadoCliente: estadoCliente,
+                ruaCliente: ruaCliente,
+                numeroResidenciaCliente: numeroResidenciaCliente,
+                bairroCliente: bairroCliente,
+                numeroDocumento: numeroDocumento,
+                nomeCliente: nomeCliente,
+                paisCliente: paisCliente,
+                codPaisCliente: codPaisCliente,
+                dddCliente: dddCliente,
+                numeroTelefoneCliente: numeroTelefoneCliente,
+                userId: idCliente,
+                totalCompra: valorSelecionado, // Certifique-se de que valorSelecionado está definido
+            };
+            console.log(valorSelecionado)
+            return perfilUsuario;
+        })
+        .catch(err => {
+            console.log(err);
+        });
+}
+
+// Chama a função e manipula o resultado com .then()
+dadosUsuario().then(perfil => {
+    perfilCarteira = perfil; // Agora a variável global estará preenchida
+});
 });
 
 // Fechar métodos de pagamento
@@ -314,7 +413,7 @@ document.getElementById('pix').addEventListener('click', async () => {
         const response = await fetch('/processarPagamento-pix-carteira', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ valor: valorSelecionado }),
+            body: JSON.stringify({ valor: valorSelecionado, perfilData: perfilCarteira }),
         });
         if (!response.ok) throw new Error('Erro ao processar pagamento via Pix');
         const { qr_code_url, charge_id } = await response.json();

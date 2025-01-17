@@ -708,6 +708,17 @@ app.get('/api-graf/produtos', async (req, res) => {
     res.status(500).json({ error: "Erro ao buscar produtos" });
   }
 });
+app.get('/api-empresas/produtos', async (req, res) => {
+  try {
+    const produtos = await ProdutosExc.findAll({
+      attributes: ['nomeProd'] // Retorna apenas o campo nome
+    });
+    res.json(produtos);
+  } catch (error) {
+    console.error("Erro ao buscar produtos:", error);
+    res.status(500).json({ error: "Erro ao buscar produtos" });
+  }
+});
 //Rotas get para mostrar o produto e as suas variações
 app.get('/produto/:id', async (req, res) => {
   try {
@@ -1919,15 +1930,48 @@ app.get('/api-produtos/cpq', async (req, res) => {
   try {
     // Recupera o nome da empresa dos parâmetros da URL
     const empresa = "Casa do Pão de Queijo";
+    const userId = req.cookies.userId;
     console.log(empresa)
     // Validação básica do parâmetro
     if (!empresa) {
       return res.status(400).json({ error: "Nome da empresa não fornecido ou inválido." });
     }
 
-    // Busca os produtos no banco filtrando pelo nome da empresa
+    if (!userId) {
+      return res.status(401).json({ error: "Usuário não autenticado." });
+    }
+
+    // Busca o registro do usuário na tabela UserEmpresas
+    const user = await UserEmpresas.findOne({
+      where: { id: userId },
+      attributes: ['produtos'], // Busca apenas a coluna de produtos
+    });
+
+    if (!user || !user.produtos) {
+      return res.status(404).json({
+        error: "Produtos não encontrados para este usuário.",
+      });
+    }
+
+    // Converte os produtos (JSON) em um array de chaves
+    // Converte os produtos (JSON) em um array de chaves, removendo espaços extras
+    const produtosUsuario = Object.keys(user.produtos)
+      .filter((key) => user.produtos[key] === true)
+      .map((produto) => produto.trim()); // Remove espaços em torno do nome do produto
+
+
+    if (produtosUsuario.length === 0) {
+      return res.status(404).json({
+        message: "Nenhum produto habilitado para este usuário.",
+      });
+    }
+      
+    // Busca os produtos no banco filtrando pelo nome da empresa e lista de produtos
     const produtos = await ProdutosExc.findAll({
-      where: { empresa }, // Substitua "empresa" pelo nome exato da coluna no banco
+      where: {
+        empresa, // Certifique-se de que "empresa" é o nome correto da coluna no banco
+        nomeProd: { [Sequelize.Op.in]: produtosUsuario }, // Usando Sequelize.Op.in para filtrar pela lista
+      },
     });
 
     // Verifica se encontrou produtos
@@ -2142,6 +2186,95 @@ app.get('/enderecos-empresa/:id_usuario', async (req, res) => {
       res.status(500).json({ error: 'Erro ao buscar endereços.' });
   }
 });
+app.get('/cpq/categorias', (req,res) => {
+  try {
+    const categoriasHtmlContent = fs.readFileSync(path.join(__dirname, "html/empresas_cpq_html", "categorias.html"), "utf8");
+    res.send(categoriasHtmlContent);
+  } catch (err) {
+    console.error("Erro ao ler o arquivo categorias.html:", err);
+    res.status(500).send("Erro interno do servidor");
+  }
+});
+// Função para renderizar os produtos com caching
+app.get('/api/produtos-empresas/:categoria', async (req, res) => {
+  const { page = 1, limit = 1000 } = req.query;
+  const categoria = req.params.categoria;
+  const userId = req.cookies.userId;
+
+  if (!userId) {
+    return res.status(401).json({ error: "Usuário não autenticado." });
+  }
+
+  try {
+    const produtos = await getCachedProductsByCategoryEmpresas(userId, categoria, page, limit);
+    res.json({
+      totalItems: produtos.count,
+      totalPages: Math.ceil(produtos.count / limit),
+      currentPage: parseInt(page),
+      produtos: produtos.rows,
+    });
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+});
+
+// Função para obter produtos de uma categoria específica com caching
+const getCachedProductsByCategoryEmpresas = async (userId, categoria, page, limit) => {
+  console.log("Categoria buscada: ", categoria);
+
+  // Recupera os produtos habilitados para o usuário
+  const user = await UserEmpresas.findOne({
+    where: { id: userId },
+    attributes: ['produtos'],
+  });
+
+  if (!user || typeof user.produtos !== 'object') {
+    throw new Error("Produtos não encontrados ou inválidos para este usuário.");
+  }
+
+  const produtosUsuario = Object.keys(user.produtos)
+    .filter((key) => user.produtos[key] === true)
+    .map((produto) => produto.trim());
+
+  if (produtosUsuario.length === 0) {
+    throw new Error("Nenhum produto habilitado para este usuário.");
+  }
+
+  // Gera uma chave de cache que inclui o ID do usuário e a lista de produtos habilitados
+  const cacheKey = `${userId}:${categoria}:products:${page}:${limit}`;
+  const cachedData = await client.get(cacheKey);
+
+  if (cachedData) {
+    return JSON.parse(cachedData);
+  }
+
+  // Busca produtos que correspondem à categoria e são habilitados para o usuário
+  const produtos = await ProdutosExc.findAndCountAll({
+    where: {
+      [Op.and]: [
+        { 
+          nomeProd: { [Op.in]: produtosUsuario },
+        },
+        {
+          [Op.or]: [
+            { categProd: categoria },
+            { categProd2: categoria },
+            { categProd3: categoria },
+          ],
+        },
+      ],
+    },
+    offset: (page - 1) * limit,
+    limit: parseInt(limit),
+    order: [['nomeProd', 'ASC']],
+  });
+
+  await client.set(cacheKey, JSON.stringify(produtos), {
+    EX: 3600, // Expira após 1 hora
+  });
+
+  return produtos;
+};
 app.listen(PORT, () => {
   console.log(`Servidor rodando na porta ${PORT} https://localhost:${PORT}`);
 });

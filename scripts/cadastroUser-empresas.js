@@ -41,6 +41,7 @@ let validConfirmEmailUser = false;
 const senhaUser = document.getElementById('senhaUser');
 let validSenhaUser = false;
 const btnCad = document.getElementById('btnCad');
+const btnCad2 = document.getElementById('btnCad2');
 const mostrarSenha = document.getElementById('mostrarSenha');
 const ocultarSenha = document.getElementById('ocultarSenha');
 const avisoUser = document.getElementById('avisoUser');
@@ -233,6 +234,15 @@ btnCad.addEventListener('click', () => {
     const empresaUser = document.getElementById("empresaUser").value;
     const emailUser = document.getElementById('emailUser').value;
     const senhaUser = document.getElementById('senhaUser').value;
+    const checkboxElements = document.querySelectorAll('#checkboxProdutos input[type="checkbox"]:checked');
+    const produtosMarcados = Array.from(checkboxElements).map(checkbox => checkbox.id.replace('check', ''));
+
+    const jsonData = {
+        produtos: produtosMarcados.reduce((acc, produto) => {
+            acc[produto] = true;
+            return acc;
+        }, {}),
+    };
     
     if(nomeUser.length <= 4) {
         avisoUser.style.display = 'block'
@@ -302,7 +312,7 @@ btnCad.addEventListener('click', () => {
             headers: {
               'Content-Type': 'application/json'
             },
-            body: JSON.stringify(userData)
+            body: JSON.stringify({...userData, ...jsonData})
           })
           .then(response => response.json())
           .then(data => {
@@ -332,5 +342,155 @@ btnCad.addEventListener('click', () => {
                 erroUsuario.style.display = 'none'
             }, 5000);
           });
+    }
+});
+
+/*btnCad2.addEventListener('click', () => {
+    const nomeUser = document.getElementById('nomeUser').value;
+    const cepUser = document.getElementById('cepUser').value;
+    const ruaUser = document.getElementById('ruaUser').value;
+    const numResidenciaUser = document.getElementById('numResidenciaUser').value;
+    const estadoUser = document.getElementById('estadoUser').value;
+    const cidadeUser = document.getElementById('cidadeUser').value;
+    const bairroUser = document.getElementById('bairroUser').value;
+    const complementoUser = document.getElementById('complementoUser').value;
+    const cpfUser = document.getElementById('cpfUser').value;
+    const telefoneUser = document.getElementById('telefoneUser').value;
+    const empresaUser = document.getElementById("empresaUser").value;
+    const emailUser = document.getElementById('emailUser').value;
+    const senhaUser = document.getElementById('senhaUser').value;
+    const checkboxElements = document.querySelectorAll('#checkboxProdutos input[type="checkbox"]:checked');
+    const produtosMarcados = Array.from(checkboxElements).map(checkbox => checkbox.id.replace('check', ''));
+
+    const jsonData = {
+        produtos: produtosMarcados.reduce((acc, produto) => {
+            acc[produto] = true;
+            return acc;
+        }, {}),
+    };
+    
+    if(nomeUser.length <= 4) {
+        avisoUser.style.display = 'block'
+        setTimeout(() => {
+            avisoUser.style.display = 'none'
+        }, 5000);
+    } else if(cepUser.length <= 8) {
+        avisoCep.style.display = 'block'
+        setTimeout(() => {
+            avisoCep.style.display = 'none'
+        }, 5000);
+    } else if(validEmailUser === false) {
+        avisoEmail.style.display = 'block'
+        setTimeout(() => {
+            avisoEmail.style.display = 'none'
+        }, 5000);
+    }else if (validConfirmEmailUser === false) {
+        avisoConfirmEmail.style.display = 'block'
+        setTimeout(() => {
+            avisoConfirmEmail.style.display = 'none'
+        }, 5000);
+    }
+     else if(validSenhaUser === false) {
+        avisoSenha.style.display = 'block'
+        setTimeout(() => {
+            avisoSenha.style.display = 'none'
+        }, 5000);
+    } else if(validTelefoneUser === false) {
+        avisoTelefone.style.display = 'block'
+        setTimeout(() => {
+            avisoTelefone.style.display = 'none'
+        }, 5000);
+    }else if(validEmpresaUser === false) {
+        avisoEmpresaUser.style.display = 'block'
+        setTimeout(() => {
+            avisoEmpresaUser.style.display = 'none'
+        }, 5000);
+    }else if(validCpfUser === false) {
+        avisoCpf.style.display = 'block'
+        setTimeout(() => {
+            avisoCpf.style.display = 'none'
+        }, 5000);
+    }/*else if(validRuaUser || validEstadoUser || validCidadeUser || validBairroUser || validNumResidenciaUser == false) {
+        avisoEnderecos.style.display = 'block'
+        setTimeout(() => {
+            avisoEnderecos.style.display = 'none'
+        }, 5000);
+    }*//*else {
+        const userData = {
+            userCad : nomeUser,
+            endereçoCad : ruaUser,
+            cepCad : cepUser,
+            estadoCad : estadoUser,
+            cidadeCad : cidadeUser,
+            bairroCad : bairroUser,
+            numCad : numResidenciaUser,
+            compCad : complementoUser,
+            cpfCad : cpfUser,
+            telefoneCad : telefoneUser,
+            empresa : empresaUser,
+            emailCad : emailUser,
+            passCad : senhaUser
+        }
+        console.log(userData)
+        fetch('/cadastrarUser-empresas', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(userData, jsonData)
+          })
+          .then(response => response.json())
+          .then(data => {
+            if (data.message === 'Usuário cadastrado com sucesso!') {
+                avisoGeral.style.display = 'block'
+                // Salva o e-mail nos cookies
+                document.cookie = `email=${emailUser}; path=/; max-age=31536000`; 
+                setTimeout(() => {
+                    avisoGeral.style.display = 'none'
+                    window.location.href = "/empresas/login"
+                }, 5000);
+           }else if (data.message === 'Já existe um usuário com este e-mail cadastrado'){
+                emailCadastrado.style.display = 'block'
+                setTimeout(() => {
+                    emailCadastrado.style.display = 'none'
+                }, 5000);
+            } else {
+                emailCadastrado.style.display = 'block'
+                setTimeout(() => {
+                    emailCadastrado.style.display = 'none'
+                }, 5000);
+            }
+          })
+          .catch(error => {
+            erroUsuario.style.display = 'block'
+            setTimeout(() => {
+                erroUsuario.style.display = 'none'
+            }, 5000);
+          });
+    }
+});*/
+
+document.addEventListener('DOMContentLoaded', async () => {
+    try {
+        const response = await fetch('/api-empresas/produtos');
+        const produtos = await response.json();
+        const checkboxContainer = document.getElementById('checkboxProdutos');
+
+        produtos.forEach(produto => {
+            const checkbox = document.createElement('input');
+            checkbox.type = 'checkbox';
+            checkbox.name = `check${produto.nomeProd.replace(/\s+/g, ' ')}`;
+            checkbox.id = `check ${produto.nomeProd.replace(/\s+/g, ' ')}`;
+
+            const label = document.createElement('label');
+            label.htmlFor = checkbox.id;
+            label.textContent = produto.nomeProd;
+
+            checkboxContainer.appendChild(checkbox);
+            checkboxContainer.appendChild(label);
+            checkboxContainer.appendChild(document.createElement('br'));
+        });
+    } catch (error) {
+        console.error("Erro ao carregar produtos:", error);
     }
 });

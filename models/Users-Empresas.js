@@ -51,6 +51,10 @@ const  UserEmpresas = db.define('usersempresas', {
         type: Sequelize.STRING(255),
         allowNull: true
     },
+    produtos: {
+        type: Sequelize.JSON,
+        allowNull: true,
+    },
     emailCad: {
         type: Sequelize.STRING(255),
         allowNull: true

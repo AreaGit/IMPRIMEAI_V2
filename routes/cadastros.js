@@ -137,7 +137,7 @@ app.post('/cadastrar-marca', async (req, res) => {
 
 app.post("/cadastrarUser-empresas", async (req, res) => { 
   try {
-      const { userCad, cpfCad, endereçoCad, numCad, compCad, bairroCad, cepCad, cidadeCad, estadoCad, inscricaoEstadualCad, telefoneCad, empresa, emailCad, passCad } = req.body;
+      const { userCad, cpfCad, endereçoCad, numCad, compCad, bairroCad, cepCad, cidadeCad, estadoCad, inscricaoEstadualCad, telefoneCad, produtos, empresa, emailCad, passCad } = req.body;
       const hashedPassword = await bcrypt.hash(passCad, 10);
 
   // Verifique se já existe um usuário com o mesmo CPF, email ou senha
@@ -170,13 +170,14 @@ app.post("/cadastrarUser-empresas", async (req, res) => {
           inscricaoEstadualCad: inscricaoEstadualCad,
           telefoneCad: telefoneCad,
           empresa: empresa,
+          produtos: produtos,
           emailCad: emailCad,
           passCad: hashedPassword,
           verificationCode: verificationCode // Salve o código de verificação
       });
       const mensagemStatus = `Seu código de verificação é: ${verificationCode}`
-      await enviarEmailNotificacao(emailCad, `Código de Verificação do usuário ${userCad}`, mensagemStatus);
-      await enviarNotificacaoWhatsapp(telefoneCad, `Seu código de verificação é: ${verificationCode}`);
+      //await enviarEmailNotificacao(emailCad, `Código de Verificação do usuário ${userCad}`, mensagemStatus);
+      //await enviarNotificacaoWhatsapp(telefoneCad, `Seu código de verificação é: ${verificationCode}`);
       res.json({ message: 'Usuário cadastrado com sucesso!', user: newUser });
       
   } catch (error) {
