@@ -791,6 +791,7 @@ app.post('/dadosEntrega', upload.fields([
   const horEnt = req.body.horEnt;
   const pedidoId = req.body.pedidoId;
   const tipo = req.body.tipo;
+  const obsEnt = req.body.obsEnt;
 
   const fotoEnt = req.files['fotoEnt']?.[0];
   const produtoEnt = req.files['produtoEnt']?.[0];
@@ -805,6 +806,7 @@ app.post('/dadosEntrega', upload.fields([
       foto: fotoEnt.buffer,
       produto: produtoEnt?.buffer,
       protocolo: protocoloEnt?.buffer,
+      observacoes: obsEnt,
     });
 
     const ped = await Pedidos.findByPk(pedidoId);
@@ -818,6 +820,7 @@ app.post('/dadosEntrega', upload.fields([
     }
 
     const corpoMensagem = `Olá! Temos o prazer de informar que seu pedido foi entregue com sucesso para ${recEnt} no horário ${horEnt}. Esperamos que você esteja satisfeito com nossos produtos e serviços. Se precisar de mais alguma coisa, não hesite em nos contatar. Obrigado!😉`;
+    const corpoObs = `Observações do pedido ${obsEnt}`;
 
     const arquivosRecebidos = [
       { arquivo: fotoEnt, prefixo: 'foto' },
@@ -839,6 +842,9 @@ app.post('/dadosEntrega', upload.fields([
     
     try {
       // Enviar mensagens pelo WhatsApp
+      if(obsEnt.length) {
+        await enviarNotificacaoWhatsapp(user.telefoneCad, corpoObs);
+      }
       await enviarNotificacaoWhatsapp(user.telefoneCad, corpoMensagem);
       await enviarNotificacaoWhatsappComMidia(user.telefoneCad, imagePaths, 'Evidências');
     

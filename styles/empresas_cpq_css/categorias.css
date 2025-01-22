@@ -330,59 +330,66 @@ header {
     color: #BB9900;
 }
 .produtos {
-    position: absolute;
-    top: 20%;
-    flex-wrap: nowrap;
-    justify-content: space-between;
-    left: 50%;
-    transform: translate(-50%);
-    width: 100%;
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+    gap: 22px;
+    padding: 20px;
 }
+
 .cxProd {
-    cursor: pointer;
-    padding: 15px;
-    display: inline-flex;
-    box-shadow: -1px -1px 8px #434344;
-    border-radius: 5px;
-    width: calc(24% - 20px);
-    overflow: hidden; /* Oculta o conteúdo que ultrapassa a altura definida */
-    height: 456px;
+    background: #fff;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s, box-shadow 0.3s;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
     position: relative;
-    top: 12%;
-    left: 15%;
-    transition: transform 0.8s;
-    margin: 20px;
-    transition: 0.8s;
-    background-color: white;
+    cursor: pointer;
+    height: 100%;
 }
+
 .cxProd:hover {
-    box-shadow: -1px 1px 8px #015524;
-    transform: scale(1.1);
+    transform: translateY(-5px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
 }
-.cxProd > img {
-    width: 235px;
-    height: 292px;
+
+.cxProd img {
+    width: 100%;
+    height: 75%;
+    display: block;
+}
+
+.cxProd h3 {
+    padding: 10px 15px;
+    font-size: 18px;
+    color: #026635;
+    font-weight: bold;
+}
+
+.cxProd p {
+    padding: 0 15px;
+    font-size: 16px;
+    color: #555;
+}
+
+.cxProd a {
     position: absolute;
-    left: 50%;
-    transform: translate(-50%);
-    top: 15%;
+    bottom: 0;
+    width: 100%;
+    display: block;
+    padding: 10px;
+    text-align: center;
+    background-color: #026635;
+    color: #fff;
+    text-decoration: none;
+    font-weight: bold;
+    border-top: 1px solid #ddd;
+    transition: background-color 0.3s;
 }
-.cxProd > h2 {
-    height: 31px;
-}
-.cxProd > p {
-    position: absolute;
-    top: 87%;
-    left: 6%;
-}
-.cxProd > a {
-    position: absolute;
-    top: 89%;
-    left: 75%;
-    background-color: #015524;
-    color: white;
-    padding: 8px 18px 8px 18px;
-    font-size: 14px;
-    font-weight: 400;
-    border-radius: 2px;
+
+.cxProd a:hover {
+    background-color: #02572d;
 }

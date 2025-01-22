@@ -17,6 +17,7 @@ const Newsletter = require('./models/Newsletter');
 const Saques = require('./models/Saques');
 const ProdutosExc = require('./models/ProdutosExc');
 const VariacoesProdutoExc = require('./models/VariacoesProdutoExc');
+const UsersEmpresas = require('./models/Users-Empresas');
 const nodemailer = require('nodemailer');
 const { Op } = require('sequelize');
 const redis = require('redis');
@@ -308,6 +309,59 @@ app.get('/imagens/:id', async (req, res) => {
     res.status(500).send('Erro interno do servidor');
   }
 });
+
+const getCategoriasPorProdutosUsuario = async (userId) => {
+  try {
+    const user = await UsersEmpresas.findByPk(userId);
+    if (!user) {
+      throw new Error("Usuário não encontrado.");
+    }
+
+    let produtosUsuario;
+    if (typeof user.produtos === "string") {
+      try {
+        produtosUsuario = JSON.parse(user.produtos);
+      } catch (parseError) {
+        throw new Error("Erro ao analisar o campo 'produtos'.");
+      }
+    } else if (typeof user.produtos === "object" && user.produtos !== null) {
+      produtosUsuario = user.produtos;
+    } else {
+      throw new Error("O campo 'produtos' não é válido.");
+    }
+
+    const nomesProdutos = Object.keys(produtosUsuario).map((nome) =>
+      nome.trim().toLowerCase()
+    );
+
+    console.log("Nomes dos produtos:", nomesProdutos); // Verificar os nomes dos produtos
+
+    const produtos = await ProdutosExc.findAll({
+      where: {
+        nomeProd: nomesProdutos,
+      },
+      attributes: ["nomeProd", "categProd2"], // Usar o campo correto
+    });
+
+    if (produtos.length === 0) {
+      throw new Error("Nenhuma categoria encontrada para os produtos do usuário.");
+    }
+
+    const categoriasUnicas = Array.from(
+      new Set(produtos.map((produto) => produto.categProd2)) // Ajuste conforme o nome correto
+    );
+
+
+    console.log(categoriasUnicas)
+
+    return categoriasUnicas;
+  } catch (error) {
+    console.error("Erro ao buscar categorias:", error);
+    throw new Error(error.message);
+  }
+};
+
+getCategoriasPorProdutosUsuario(2);
 //Rota get da página de comunicação visual
 app.get('/comunicacao-visual', async(req, res) => {
   try {
@@ -1923,6 +1977,20 @@ app.get('/cpq/inicio', (req, res) => {
   } catch(err) {
     console.log("Erro ao carregar a página portal.html", err);
     res.status(500).send("Erro interno do servidor.")
+  }
+});
+// Rota get para pegar as categorias do usuário
+app.get("/categorias-produtos-usuario/:userId", async (req, res) => {
+  try {
+    const { userId } = req.params;
+    const categorias = await getCategoriasPorProdutosUsuario(userId);
+
+    res.json({
+      message: "Categorias únicas recuperadas com sucesso.",
+      categorias,
+    });
+  } catch (error) {
+    res.status(400).json({ message: error.message });
   }
 });
 //Rota de api para pegar produtos

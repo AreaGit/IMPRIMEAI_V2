@@ -404,3 +404,9 @@ button#btnConfEnt:hover {
     background-color: white;
     z-index: 1;
 }
+textarea#obsEnt {
+  margin-top: 10px;
+  width: 100%;
+  padding: 15px;
+  font-size: 16px;
+}

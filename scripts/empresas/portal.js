@@ -1,5 +1,38 @@
+function getCookie(name) {
+  const value = `; ${document.cookie}`;
+  const parts = value.split(`; ${name}=`);
+
+  if (parts.length === 2) {
+    return decodeURIComponent(parts.pop().split(';').shift());
+  }
+
+  return null; // Retorna null caso o cookie não seja encontrado
+}
+let userId;
+userId = getCookie("userId");
 document.addEventListener('DOMContentLoaded', () => {
-  fetch(`/api-produtos/cpq`)
+  // Fazendo a requisição para a API
+  fetch(`/categorias-produtos-usuario/${userId}`)
+  .then(response => response.json())
+  .then(data => {
+    if (data.categorias) {
+      const ul = document.querySelector('.categorias-container ul');
+      data.categorias.forEach(categoria => {
+        const li = document.createElement('li');
+        const a = document.createElement('a');
+        a.href = `/cpq/categorias?categoria=${categoria.toLowerCase().replace(/\s+/g, '-')}`; // Ajuste do link para categorias // Defina o link da categoria conforme necessário
+        a.textContent = categoria;
+        li.appendChild(a);
+        ul.appendChild(li);
+      });
+    } else {
+      console.log("Nenhuma categoria encontrada.");
+    }
+  })
+  .catch(error => {
+    console.error("Erro ao fazer a requisição:", error);
+  });
+  /*fetch(`/api-produtos/cpq`)
     .then((response) => {
       if (!response.ok) {
         throw new Error('Erro ao carregar os produtos.');
@@ -28,19 +61,8 @@ document.addEventListener('DOMContentLoaded', () => {
     .catch((error) => {
       console.error('Erro ao carregar produtos:', error);
       //alert('Erro ao carregar produtos.');
-    });
+    });*/
 });
-function getCookie(name) {
-  const value = `; ${document.cookie}`;
-  const parts = value.split(`; ${name}=`);
-
-  if (parts.length === 2) {
-    return decodeURIComponent(parts.pop().split(';').shift());
-  }
-
-  return null; // Retorna null caso o cookie não seja encontrado
-}
-
 // Pega o username do cookie
 const username = getCookie('userCad');
 const nameUserLog = document.getElementById('nameUserLog');

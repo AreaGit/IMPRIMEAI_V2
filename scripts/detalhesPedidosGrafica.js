@@ -495,6 +495,7 @@ document.addEventListener('DOMContentLoaded', async() => {
       const produtoEnt = document.getElementById('produtoEnt').files[0];
       const protocoloEnt = document.getElementById('protocoloEnt').files[0];
       const currentPedidoId = urlParams.get('idPedido');
+      const obsEnt = document.getElementById('obsEnt').value;
       const formData = new FormData();
       formData.append('recEnt', recEnt);
       formData.append('horEnt', horEnt);
@@ -503,6 +504,7 @@ document.addEventListener('DOMContentLoaded', async() => {
       formData.append('protocoloEnt', protocoloEnt);
       formData.append('pedidoId', currentPedidoId);
       formData.append('tipo', tipo);
+      formData.append('obsEnt', obsEnt);
 
       try {
           const response = await fetch('/dadosEntrega', {

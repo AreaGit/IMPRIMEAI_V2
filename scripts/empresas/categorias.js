@@ -31,7 +31,7 @@ document.addEventListener('DOMContentLoaded', () => {
             const produtoDiv = document.createElement('div');
             produtoDiv.classList.add('cxProd');
             produtoDiv.addEventListener("click", () => {
-                window.location.href = `/detalhes-produtos?id=${produto.id}`;
+                window.location.href = `/cpq/detalhes-produtos?id=${produto.id}`;
             })
             produto.nomeProd = produto.nomeProd.substring(0, 40)
             produtoDiv.innerHTML = `

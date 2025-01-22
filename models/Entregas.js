@@ -26,6 +26,9 @@ const Entregas = db.define('entrega', {
     protocolo: {
         type: Sequelize.BLOB('long'),
     },
+    observacoes: {
+        type: Sequelize.STRING(255)
+    }
 })
 
 
