@@ -1041,24 +1041,7 @@
         display: flex;
         justify-content: center;
     }
-    .contentFooter {
-        height: 490px;
-        background-color: #2B2B2B;
-        position: relative;
-        top: 20px;
-        left: 49%;
-        transform: translate(-50%);
-        width: 101vw;
-    }
-    footer > a {
-        color: white;
-        font-size: 12px;
-        position: absolute;
-        transition: 1s;
-        position: relative;
-        left: 40%;
-        top: 8%;
-    }
+
     #institucional {
         width: 30%;
         position: relative;
@@ -1128,13 +1111,7 @@
       .links > h3 {
         font-size: 20px; /* Aumenta o tamanho da fonte dos links */
       }
-      footer > a {
-        color: white;
-        font-size: 12px;
-        transition: 1s;
-        position: absolute;
-        left: 50%;
-        transform: translate(-50%);
-        top: 95%;
+      footer {
+        height: 18vw;
       }
 }

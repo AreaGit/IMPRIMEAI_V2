@@ -592,8 +592,9 @@ ul {
   top: 40%;
 }
 #detalhes-produto > h1 {
-    font-size: 32px;
-    font-weight: 600;
+  font-size: 2rem;
+  font-weight: 700;
+  color: #333;
 }
 #detalhes-produto > p {
     font-size: 17px;
@@ -619,10 +620,10 @@ ul {
     border-radius: 5px;
     margin: 10px;
     margin-top: 15px;
-    font-size: 17px;
-    font-weight: 400;
-    border: none;
-    box-shadow: -1px -1px 3px black;
+    border-radius: 8px;
+    border: 1px solid #ddd;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    font-size: 1rem;
     padding: 15px;
 }
 .btnsCompra {
@@ -635,51 +636,70 @@ ul {
 .btnsCompra > input[type="number"] {
     width: 50px;
     height: 50px;
-    border-radius: 5px;
-    border: none;
-    box-shadow: -1px -1px 3px black;
+    border-radius: 10px;
+    border: 1px solid #dee2e6;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
     text-align: center;
-    font-size: 17px;
+    font-size: 16px;
+    transition: border-color 0.3s ease, box-shadow 0.3s ease;
     margin: 8px;
+}
+.btnsCompra > input[type="number"]:focus {
+  border-color: #ff6b6b;
+  box-shadow: 0 0 8px rgba(255, 107, 107, 0.5);
 }
 #adicionarAoCarrinhoBtn {
     cursor: pointer;
     margin-top: 15px;
-    background-color: #F37160;
+    background-color: #ff6b6b;
     border: none;
     border-radius: 4px;
     width: 195px;
     height: 51px;
     color: white;
     font-size: 17px;
-    font-weight: 500;
+    font-weight: 700;
     box-shadow: -1px 2px 8px #000000a3;
+}
+#adicionarAoCarrinhoBtn:hover {
+  transition: 0.5s;
+  background-color: #ff3b3b;
+  box-shadow: 0 6px 12px rgba(255, 107, 107, 0.3);
+  transform: translateY(-2px);
 }
 #lnk-comp {
   cursor: pointer;
   width: 38%;
   height: 51px;
-  border: 1px solid #EF4126;
-  color: #EF4126;
+  border: 2px solid #ff6b6b;
+  color: #ff6b6b;
   font-weight: 600;
   font-size: 17px;
   box-shadow: -1px 2px 8px #000000a3;
   transition: 0.8s;
   border-radius: 4px;
   background-color: white;
+  text-align: center;
 }
 #lnk-comp:hover {
-    transition: 0.8s;
-    background-color: #F37160;
+    transition: 0.5s;
+    background-color: #ff6b6b;
     color: white;
+    box-shadow: 0 6px 12px rgba(255, 107, 107, 0.3);
+    transform: translateY(-2px);
 }
 #cont-comp {
+    background-color: transparent;
     text-decoration: underline;
-    color: #F37160;
+    color: #ff6b6b;
     position: relative;
     top: 10px;
     left: 2%;
     transform: translate(-2%);
+}
+#cont-comp:hover {
+  color: #ff3b3b;
+  text-decoration: none;
 }
 #img-produto {
   width: 40%;
@@ -696,7 +716,15 @@ ul {
 .slides > img {
   width: 380px;
   height: 380px;
-  border-radius: 5px;
+  aspect-ratio: 1; /* Garante um formato quadrado */
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2); /* Sombra mais suave */
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  object-fit: cover; /* Garante que a imagem fique bem ajustada no espaço */
+}
+.slides > img:hover {
+  transform: scale(1.05); /* Leve aumento no tamanho */
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.3); /* Sombra mais pronunciada */
 }
 #avancarSlides {
   position: relative;
@@ -746,24 +774,38 @@ ul {
     transform: translate(-50%);
 }
 #descricao-produto {
-    position: absolute;
-    top: 140%;
-    left: 50%;
-    width: 40%;
-    height: 255px;
-    transform: translate(-50%);
-    padding: 15px;
-    text-align: justify;
+  position: absolute;
+  top: 140%;
+  left: 50%;
+  width: 50%; /* Levemente mais largo para uma melhor leitura */
+  max-width: 600px; /* Limite para telas grandes */
+  height: auto; /* Altura ajustável ao conteúdo */
+  transform: translate(-50%);
+  padding: 20px;
+  text-align: justify;
+  color: #333; /* Texto em um tom escuro confortável */
+  line-height: 1.6; /* Melhor espaçamento entre linhas */
 }
+
 #descricao-produto > h2 {
-    font-size: 32px;
-    font-weight: 600;
+  font-size: 28px; /* Um pouco menor para equilíbrio */
+  font-weight: 700; /* Mais destacado */
+  margin-bottom: 10px; /* Espaço entre o título e o texto */
+  color: #111; /* Texto mais escuro para contraste */
+  text-align: center; /* Centralizado para destaque */
+  text-transform: uppercase; /* Letras maiúsculas para impacto */
+  letter-spacing: 1px; /* Melhor espaçamento entre letras */
+  border-bottom: 2px solid #ddd; /* Linha sutil abaixo do título */
+  padding-bottom: 5px;
 }
+
 #descricao-produto > p {
-    margin-top: 15px;
-    font-size: 17px;
-    font-weight: 400;
-    text-indent: 5px;
+  margin-top: 20px;
+  font-size: 18px;
+  font-weight: 400;
+  color: #555; /* Um tom mais claro para contraste com o título */
+  text-indent: 15px; /* Recuo mais perceptível */
+  line-height: 1.8; /* Mais espaçamento para melhorar a leitura */
 }
 
 #avisoGeral {
@@ -1000,25 +1042,43 @@ section#quantidades {
   left: 80%;
   transform: translate(-80%);
   top: 55%;
-  background-color: white;
-  border: 1px solid #DEE2E6;
   width: 17vw;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  background-color: #ffffff;
+  border: 1px solid #dee2e6;
+  border-radius: 12px;
 }
 .checkQuant {
   cursor: pointer;
   background-color: white;
   width: 17vw;
   height: 61px;
-  padding: 18px;
-  transition: 0.8s;
-  border-bottom: 1px solid #DEE2E6;
+  padding: 15px 20px;
+  background-color: #fff;
+  transition: background-color 0.3s ease;
+  border-bottom: 1px solid #dee2e6;
+}
+.checkQuant:hover {
+  background-color: #f8f9fa;
+}
+.checkQuant:last-child {
+  border-bottom: none;
+}
+.checkQuant > input[type="checkbox"] {
+  width: 20px;
+  height: 20px;
+  accent-color: #ff6b6b; /* Modern checkbox color */
+  cursor: pointer;
 }
 .checkQuant > input {
   width: 55px;
   height: 15px;
 }
 .checkQuant > label {
-  font-size: 17px;
-  font-weight: 300;
+  font-size: 1rem;
+  font-weight: 400;
+  color: #333;
   cursor: pointer;
-}
+  flex: 1;
+  margin-left: 10px;
+} 

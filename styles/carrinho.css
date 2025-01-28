@@ -688,6 +688,8 @@ main {
     top: 50px;
     width: 380px;
     height: 380px;
+    border-radius: 12px;
+    box-shadow: -1px 3px 8px black;
 }
 .remover-produto {
     cursor: pointer;
