@@ -280,15 +280,4 @@
         height: 31px;
         font-size: 20px;
     }
-    .cxProd > a {
-        position: absolute;
-        top: 89%;
-        left: 60%;
-        background-color: #F37160;
-        color: white;
-        padding: 8px 18px 8px 18px;
-        font-size: 14px;
-        font-weight: 400;
-        border-radius: 2px;
-    }
 }

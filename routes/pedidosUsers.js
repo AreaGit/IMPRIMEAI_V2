@@ -80,7 +80,7 @@ app.use(session({
 const os = require('os');
 const ItensPedidos = require('../models/ItensPedido');
 const UserEmpresas = require('../models/Users-Empresas');
-const pagarmeKeyProd = "sk_e74e3fe1ccbe4ae080f70d85d94e2c68";
+const pagarmeKeyProd = "sk_KVlgJBsKOTQagkmR";
 const pagarmeKeyTest = "sk_test_05ddc95c6ce442a796c7ebbe2376185d";
 
 // Obtém os detalhes da rede da máquina
@@ -1996,6 +1996,10 @@ async function verificarGraficaMaisProximaEAtualizar2(itensPedido, enderecos) {
             model: ItensPedido,
             where: { tipo: 'Normal' },
             attributes: ['statusPed', 'nomeProd', 'idProduto'], // Inclua apenas a coluna 'statusPed'
+          },
+          {
+            model: Enderecos,
+            attributes: ['frete']
           }
         ],
       });

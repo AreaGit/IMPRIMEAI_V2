@@ -9,6 +9,16 @@ function getCookie(name) {
   return null; // Retorna null caso o cookie não seja encontrado
 }
 let userId;
+async function exibirSaldoUsuario() {
+  try {
+      const response = await fetch('/saldoUsuario-empresas');
+      const data = await response.json();
+      saldoUser.textContent = data.saldo.toFixed(2);
+  } catch (error) {
+      console.error('Erro ao buscar saldo do usuário:', error);
+  }
+}
+exibirSaldoUsuario();
 userId = getCookie("userId");
 document.addEventListener('DOMContentLoaded', () => {
   // Fazendo a requisição para a API

@@ -1,4 +1,14 @@
 document.addEventListener('DOMContentLoaded', () => {
+    async function exibirSaldoUsuario() {
+        try {
+            const response = await fetch('/saldoUsuario-empresas');
+            const data = await response.json();
+            saldoUser.textContent = data.saldo.toFixed(2);
+        } catch (error) {
+            console.error('Erro ao buscar saldo do usuário:', error);
+        }
+      }
+      exibirSaldoUsuario();
     // Função para obter o valor de um parâmetro da URL
     function getParametroUrl(nome) {
         const urlParams = new URLSearchParams(window.location.search);
@@ -142,32 +152,16 @@ document.addEventListener('DOMContentLoaded', () => {
           e.preventDefault();
       });
   });
-  document.addEventListener('DOMContentLoaded', () => {
-    const categorias = document.getElementById('categorias');
-    const categoriaContainer = document.getElementById('categoriaContainer');
-    const categoriaDesp = document.getElementById('categoriaD-ESP');
-    const produtosContainer = document.getElementById('produtosContainer');
-  
-    // Exibir ou ocultar o container de categorias ao clicar em "Categorias"
-    categorias.addEventListener('click', () => {
-        categoriaContainer.style.display =
-            categoriaContainer.style.display === 'block' ? 'none' : 'block';
-    });
-  
-    // Exibir os produtos ao lado ao clicar em "D-ESP"
-    categoriaDesp.addEventListener('click', () => {
-        produtosContainer.style.display = 'block';
-    });
-  
-    // Fecha o container de categorias ao clicar fora
-    document.addEventListener('click', (e) => {
-        if (!e.target.closest('#menuContainer') && !e.target.closest('#categorias')) {
-            categoriaContainer.style.display = 'none';
-            produtosContainer.style.display = 'none';
-        }
-    });
-  });
   
   document.getElementById('logo').addEventListener('click', () => {
     window.location.href = '/cpq/inicio'
   });
+
+
+  document.getElementById('btnVoltar').addEventListener('click', () => {
+    if(document.referrer) {
+        window.history.back();
+    } else {
+        window.location.href = "/"
+    }
+  })

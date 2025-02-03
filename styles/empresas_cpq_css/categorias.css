@@ -329,6 +329,22 @@ header {
     text-decoration: none;
     color: #BB9900;
 }
+e
+#btnVoltar {
+    margin: 25px;
+    padding: 12px 28px;
+    color: #BB9900;
+    background-color: transparent;
+    font-size: 16px;
+    font-weight: bold;
+    border: none;
+    cursor: pointer;
+    text-decoration: underline;
+}
+#btnVoltar:hover {
+    transition: 0.8s;
+    transform: translateY(-10px);
+}
 .produtos {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));

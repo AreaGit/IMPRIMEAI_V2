@@ -2,6 +2,24 @@ const carrinhoVazio = document.getElementById('carrinho-vazio');
 const totalCarrinho = document.getElementById('totalCarrinho');
 const resumoCompra = document.getElementById('resumo-compra');
 document.addEventListener('DOMContentLoaded', function() {
+  async function exibirSaldoUsuario() {
+    try {
+        const response = await fetch('/saldoUsuario-empresas');
+        const data = await response.json();
+        saldoUser.textContent = data.saldo.toFixed(2);
+    } catch (error) {
+        console.error('Erro ao buscar saldo do usuário:', error);
+    }
+  }
+  exibirSaldoUsuario();
+  
+  document.getElementById('btnVoltar').addEventListener('click', () => {
+    if(document.referrer) {
+        window.history.back();
+    } else {
+        window.location.href = "/"
+    }
+  })
     // Função para carregar e exibir os produtos do carrinho
     async function carregarProdutosCarrinho() {
       try {

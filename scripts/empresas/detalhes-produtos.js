@@ -6,6 +6,24 @@ const downloadGab = document.getElementById('downloadGab');
 let modeloSelecionado
 let marcaSelecionada
 document.addEventListener('DOMContentLoaded', function() {
+  async function exibirSaldoUsuario() {
+    try {
+        const response = await fetch('/saldoUsuario-empresas');
+        const data = await response.json();
+        saldoUser.textContent = data.saldo.toFixed(2);
+    } catch (error) {
+        console.error('Erro ao buscar saldo do usuário:', error);
+    }
+  }
+  exibirSaldoUsuario();
+  
+  document.getElementById('btnVoltar').addEventListener('click', () => {
+    if(document.referrer) {
+        window.history.back();
+    } else {
+        window.location.href = "/"
+    }
+  })
     // Obtenha o ID do produto da URL atual (por exemplo, /detalhes-produtos.html?id=1)
     const params = new URLSearchParams(window.location.search);
     const produtoId = params.get('id');
