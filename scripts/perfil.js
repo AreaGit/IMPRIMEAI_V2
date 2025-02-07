@@ -103,15 +103,23 @@ fetch(`/pedidos-usuario/${userId}`)
                 imgProduto.alt = 'Imagem não disponível';
             }
             divPedido.appendChild(imgProduto);
-            console.log(pedido.enderecos)
-            // Somando os valores de frete
-            let somaFrete = pedido.enderecos.reduce((acc, item) => acc + parseFloat(item.frete), 0);
+            let somaFrete
+            let valorPedido
+            let valorTotal
+            console.log(pedido.enderecos[0].frete)
+            if(pedido.enderecos[0].frete == null) {
+                valorTotal = pedido.valorPed;
+            } else {
+                // Somando os valores de frete
+                somaFrete = pedido.enderecos.reduce((acc, item) => acc + parseFloat(item.frete), 0);
 
-            // Convertendo o valor do pedido para número
-            let valorPedido = parseFloat(pedido.valorPed);
+                // Convertendo o valor do pedido para número
+                valorPedido = parseFloat(pedido.valorPed);
+                
+                // Somando o valor do pedido com o total de frete
+                valorTotal = somaFrete + valorPedido;
+            }
 
-            // Somando o valor do pedido com o total de frete
-            let valorTotal = somaFrete + valorPedido;
             
             // Adiciona as informações do pedido
             divPedido.innerHTML += `

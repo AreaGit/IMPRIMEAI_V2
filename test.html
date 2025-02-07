@@ -1,324 +1,287 @@
 <!DOCTYPE html>
-<html lang="pt-BR">
+<html lang="pt">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Painel de Pedidos</title>
+    <title>Cadastro Responsivo</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
     <style>
-        :root {
-            --branco: #ffff;
-            --coral: #F37160;
-            --flamingo: #F69896;
-            --concreto: #A7A9AC;
-            --preto: #000000;
-            --vermelho: #EF4126;
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Poppins', sans-serif;
         }
 
         body {
-            margin: 0;
-            font-family: Arial, sans-serif;
-            background-color: #f5f5f5;
-            color: var(--preto);
-        }
-
-        .painel {
-            max-width: 1200px;
-            margin: 20px auto;
-            padding: 10px;
             display: flex;
-            justify-content: space-between;
-            gap: 10px;
-        }
-
-        .caixa {
-            flex: 1;
-            padding: 20px;
-            background-color: var(--branco);
-            border: 1px solid var(--concreto);
-            border-radius: 8px;
-            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-            cursor: pointer;
-            text-align: center;
-        }
-
-        .caixa h2 {
-            margin: 0;
-            color: var(--vermelho);
-        }
-
-        .caixa p {
-            margin: 5px 0 0;
-            font-size: 14px;
-            color: var(--preto);
-        }
-
-        .lista-pedidos {
-            margin: 20px auto;
-            max-width: 800px;
-        }
-
-        .pedido {
-            display: flex;
-            justify-content: space-between;
+            flex-direction: column;
             align-items: center;
-            background-color: var(--branco);
-            padding: 15px;
-            margin-bottom: 10px;
-            border: 1px solid var(--concreto);
-            border-radius: 8px;
-            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            justify-content: center;
+            min-height: 100vh;
+            background: white;
+            position: relative;
+            color: #333;
+            padding: 20px;
         }
 
-        .pedido img {
-            width: 50px;
-            height: 50px;
-            background-color: var(--concreto);
-            border-radius: 8px;
+        /* Imagem no topo e centralizada */
+        .background-image {
+            position: absolute;
+            top: 2%;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 25vw;
+            max-width: 400px;
+            min-width: 200px;
+            opacity: 1;
+        }
+
+        /* Imagem de borda decorativa */
+        .background-border {
+            position: fixed;
+            top: 0;
+            right: 0;
+            height: 100vh;
+            width: 70%;
+            min-width: 600px;
+            opacity: 0.8;
+            z-index: -1;
             object-fit: cover;
         }
 
-        .pedido-info {
-            flex: 1;
-            margin-left: 15px;
-        }
-
-        .pedido-info h3 {
-            margin: 0 0 5px;
-            font-size: 16px;
-            color: var(--preto);
-        }
-
-        .pedido-info p {
-            margin: 0;
-            font-size: 14px;
-            color: var(--concreto);
-        }
-
-        .botao-detalhes {
-            padding: 8px 15px;
-            background-color: var(--coral);
-            color: var(--branco);
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-            font-size: 14px;
-        }
-
-        .botao-detalhes:hover {
-            background-color: var(--vermelho);
-        }
-
-    </style>
-</head>
-<body>
-    <div class="painel">
-        <div class="caixa">
-            <h2>Pedidos a Fazer</h2>
-            <p>5 pedidos</p>
-        </div>
-        <div class="caixa">
-            <h2>Pedidos Aceitos</h2>
-            <p>2 pedidos</p>
-        </div>
-        <div class="caixa">
-            <h2>Pedidos Finalizados</h2>
-            <p>3 pedidos</p>
-        </div>
-        <div class="caixa">
-            <h2>Pedidos Entregues</h2>
-            <p>1 pedido</p>
-        </div>
-    </div>
-
-    <div class="lista-pedidos">
-        <div class="pedido">
-            <img src="https://via.placeholder.com/50" alt="Imagem do Pedido">
-            <div class="pedido-info">
-                <h3>Frente de Caixa Combinações Perfeitas</h3>
-                <p>ID 3001 • R$ 42,00 • 1 unidade • 06/12/2024, 09:19</p>
-            </div>
-            <button class="botao-detalhes">Detalhes do Pedido</button>
-        </div>
-
-        <div class="pedido">
-            <img src="https://via.placeholder.com/50" alt="Imagem do Pedido">
-            <div class="pedido-info">
-                <h3>Banner Promocional</h3>
-                <p>ID 3002 • R$ 80,00 • 2 unidades • 06/12/2024, 10:45</p>
-            </div>
-            <button class="botao-detalhes">Detalhes do Pedido</button>
-        </div>
-
-        <div class="pedido">
-            <img src="https://via.placeholder.com/50" alt="Imagem do Pedido">
-            <div class="pedido-info">
-                <h3>Cartões de Visita</h3>
-                <p>ID 3003 • R$ 50,00 • 100 unidades • 06/12/2024, 12:30</p>
-            </div>
-            <button class="botao-detalhes">Detalhes do Pedido</button>
-        </div>
-    </div>
-</body>
-</html>
-<!DOCTYPE html>
-<html lang="pt-BR">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Painel de Pedidos</title>
-    <style>
-        :root {
-            --branco: #ffff;
-            --coral: #F37160;
-            --flamingo: #F69896;
-            --concreto: #A7A9AC;
-            --preto: #000000;
-            --vermelho: #EF4126;
-        }
-
-        body {
-            margin: 0;
-            font-family: Arial, sans-serif;
-            background-color: #f5f5f5;
-            color: var(--preto);
-        }
-
-        .painel {
-            max-width: 1200px;
-            margin: 20px auto;
-            padding: 10px;
-            display: flex;
-            justify-content: space-between;
-            gap: 10px;
-        }
-
-        .caixa {
-            flex: 1;
-            padding: 20px;
-            background-color: var(--branco);
-            border: 1px solid var(--concreto);
-            border-radius: 8px;
-            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-            cursor: pointer;
+        h2 {
+            color: #EF4126;
+            font-size: 28px;
+            margin-bottom: 15px;
             text-align: center;
         }
 
-        .caixa h2 {
-            margin: 0;
-            color: var(--vermelho);
+        .container > p {
+            margin-bottom: 20px;
         }
 
-        .caixa p {
-            margin: 5px 0 0;
+        .container {
+            background: white;
+            padding: 30px;
+            width: 90%;
+            max-width: 750px;
+            border-radius: 12px;
+            box-shadow: 0px 10px 30px rgba(0, 0, 0, 0.1);
+            text-align: center;
+            margin-top: 180px;
+        }
+
+        .form-container {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            text-align: left;
+        }
+
+        .input-group {
+            position: relative;
+        }
+
+        .input-group label {
             font-size: 14px;
-            color: var(--preto);
+            font-weight: bold;
+            margin-bottom: 5px;
+            display: block;
+            color: #666;
         }
 
-        .lista-pedidos {
-            margin: 20px auto;
-            max-width: 800px;
-        }
-
-        .pedido {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            background-color: var(--branco);
-            padding: 15px;
-            margin-bottom: 10px;
-            border: 1px solid var(--concreto);
-            border-radius: 8px;
-            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-        }
-
-        .pedido img {
-            width: 50px;
-            height: 50px;
-            background-color: var(--concreto);
-            border-radius: 8px;
-            object-fit: cover;
-        }
-
-        .pedido-info {
-            flex: 1;
-            margin-left: 15px;
-        }
-
-        .pedido-info h3 {
-            margin: 0 0 5px;
+        .input-group input {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #ccc;
+            border-radius: 6px;
             font-size: 16px;
-            color: var(--preto);
+            background: rgba(255, 255, 255, 0.9);
+            outline: none;
+            transition: 0.3s;
         }
 
-        .pedido-info p {
-            margin: 0;
-            font-size: 14px;
-            color: var(--concreto);
+        .input-group input:focus {
+            border-color: #F04D41;
+            background: white;
+            box-shadow: 0px 0px 8px rgba(240, 77, 65, 0.3);
         }
 
-        .botao-detalhes {
-            padding: 8px 15px;
-            background-color: var(--coral);
-            color: var(--branco);
+        .btn {
+            width: 100%;
+            padding: 12px;
+            background: #F04D41;
             border: none;
-            border-radius: 5px;
+            color: #fff;
+            font-size: 18px;
+            font-weight: 600;
+            border-radius: 6px;
             cursor: pointer;
+            transition: 0.3s;
+            margin-top: 20px;
+        }
+
+        .btn:hover {
+            background: #D93A33;
+            box-shadow: 0px 5px 15px rgba(217, 58, 51, 0.3);
+        }
+
+        .link {
+            margin-top: 15px;
+            display: block;
+            color: #333;
             font-size: 14px;
         }
 
-        .botao-detalhes:hover {
-            background-color: var(--vermelho);
+        .link:hover {
+            transition: 0.8s;
+            text-decoration: underline;
+            color: #F37160;
         }
 
+        /* Ajustes para telas menores */
+        @media (max-width: 768px) {
+            .form-container {
+                grid-template-columns: 1fr;
+            }
+
+            .background-border {
+                width: 100%;
+                min-width: auto;
+            }
+        }
+
+        .ocult > .container-eye {
+        --color: #a5a5b0;
+        --size: 25px;
+        position: relative;
+        left: 85%;
+        top: 10px;
+        transform: translateY(-85%);
+        cursor: pointer;
+        font-size: var(--size);
+        user-select: none;
+        fill: var(--color);
+        }
+
+        .ocult > .container-eye .eye {
+        position: absolute;
+        animation: keyframes-fill .5s;
+        }
+
+        .ocult > .container-eye .eye-slash {
+        position: absolute;
+        animation: keyframes-fill .5s;
+        display: none;
+        }
+
+        /* ------ On check event ------ */
+        .ocult > .container-eye input:checked ~ .eye {
+        display: none;
+        }
+
+        .ocult > .container-eye input:checked ~ .eye-slash {
+        display: block;
+        }
+
+        /* ------ Hide the default checkbox ------ */
+        .ocult > .container-eye input {
+        position: absolute;
+        opacity: 0;
+        cursor: pointer;
+        height: 0;
+        width: 0;
+        }
     </style>
 </head>
 <body>
-    <div class="painel">
-        <div class="caixa">
-            <h2>Pedidos a Fazer</h2>
-            <p>5 pedidos</p>
-        </div>
-        <div class="caixa">
-            <h2>Pedidos Aceitos</h2>
-            <p>2 pedidos</p>
-        </div>
-        <div class="caixa">
-            <h2>Pedidos Finalizados</h2>
-            <p>3 pedidos</p>
-        </div>
-        <div class="caixa">
-            <h2>Pedidos Entregues</h2>
-            <p>1 pedido</p>
-        </div>
+
+    <img class="background-image" src="images/logo-fundo-imprimeai.png" alt="Imagem de fundo">
+    <img class="background-border" src="images/borda-imprimeai.png" alt="Imagem de borda">
+
+    <div class="container">
+        <h2>Cadastro</h2>
+        <p>Prencha os campos abaixo para criar a sua conta</p>
+            <form class="form-container">
+                <div class="input-group">
+                    <label for="nomeUser">Nome</label>
+                    <input type="text" name="nomeUser" id="nomeUser" placeholder="Digite o seu Nome..." size="35" required minlength="4" class="custom-input">
+                </div>
+
+                <div class="input-group">
+                    <label for="cepUser">Cep</label>
+                    <input type="text" name="cepUser" id="cepUser" placeholder="Digite o seu Cep..." size="35" required class="custom-input" minlength="8">
+                </div>
+
+                <div class="input-group">
+                    <label for="ruaUser">Rua</label>
+                    <input type="text" name="ruaUser" id="ruaUser" placeholder="Digite a sua Rua..." size="35" required minlength="4" class="custom-input">
+                </div>
+
+                <div class="input-group">
+                    <label for="estadoUser">Estado</label>
+                    <input type="text" name="estadoUser" id="estadoUser" placeholder="Digite o seu Estado..." size="35" required class="custom-input">
+                </div>
+
+                <div class="input-group">
+                    <label for="cidadeUser">Cidade</label>
+                    <input type="text" name="cidadeUser" id="cidadeUser" placeholder="Digite a sua Cidade..." size="35" required class="custom-input">
+                </div>
+
+                <div class="input-group">
+                    <label for="bairroUser">Bairro</label>
+                    <input type="text" name="bairroUser" id="bairroUser" placeholder="Digite o seu Bairro..." size="35" required class="custom-input">
+                </div>
+
+                <div class="input-group">
+                    <label for="numResidenciaUser">Número da Residência</label>
+                    <input type="text" name="numResidenciaUser" id="numResidenciaUser" placeholder="Digite o número de sua Residência..." size="35" required class="custom-input">
+                </div>
+
+                <div class="input-group">
+                    <label for="complementoUser">Complemento</label>
+                    <input type="text" name="complementoUser" id="complementoUser" placeholder="Digite seu Complemento..." size="35" class="custom-input">
+                </div>
+
+                <div class="input-group">
+                    <label for="cpfUser">CPF</label>
+                    <input type="text" name="cpfUser" id="cpfUser" placeholder="Digite seu CPF..." size="35" required minlength="11" class="custom-input">
+                </div>
+
+                <div class="input-group">
+                    <label for="telefoneUser">Telefone</label>
+                    <input type="text" name="telefoneUser" id="telefoneUser" placeholder="Digite seu Telefone..." size="35" required minlength="11" class="custom-input">
+                </div>
+
+                <div class="input-group">
+                    <label for="emailUser">E-mail</label>
+                    <input type="email" name="emailUser" id="emailUser" placeholder="Digite seu E-mail" size="35" autocomplete="email" required class="custom-input">
+                </div>
+
+                <div class="input-group">
+                    <label for="emailUser">*Confirme seu e-mail</label>
+                    <input type="email" name="confirmEmailUser" id="confirmEmailUser" placeholder="Digite seu E-mail" size="35" autocomplete="email" required class="custom-input">
+                </div>
+
+                <div class="input-group">
+                    <label for="senhaUser">Senha</label>
+                    <div class="ocult">
+                        <label class="container-eye">
+                            <input type="checkbox" checked="checked">
+                            <svg class="eye" xmlns="http://www.w3.org/2000/svg" height="1em" viewBox="0 0 576 512" id="ocultarSenha"><path d="M288 32c-80.8 0-145.5 36.8-192.6 80.6C48.6 156 17.3 208 2.5 243.7c-3.3 7.9-3.3 16.7 0 24.6C17.3 304 48.6 356 95.4 399.4C142.5 443.2 207.2 480 288 480s145.5-36.8 192.6-80.6c46.8-43.5 78.1-95.4 93-131.1c3.3-7.9 3.3-16.7 0-24.6c-14.9-35.7-46.2-87.7-93-131.1C433.5 68.8 368.8 32 288 32zM144 256a144 144 0 1 1 288 0 144 144 0 1 1 -288 0zm144-64c0 35.3-28.7 64-64 64c-7.1 0-13.9-1.2-20.3-3.3c-5.5-1.8-11.9 1.6-11.7 7.4c.3 6.9 1.3 13.8 3.2 20.7c13.7 51.2 66.4 81.6 117.6 67.9s81.6-66.4 67.9-117.6c-11.1-41.5-47.8-69.4-88.6-71.1c-5.8-.2-9.2 6.1-7.4 11.7c2.1 6.4 3.3 13.2 3.3 20.3z"></path></svg>
+                            <svg class="eye-slash" xmlns="http://www.w3.org/2000/svg" height="1em" viewBox="0 0 640 512" id="mostrarSenha"><path d="M38.8 5.1C28.4-3.1 13.3-1.2 5.1 9.2S-1.2 34.7 9.2 42.9l592 464c10.4 8.2 25.5 6.3 33.7-4.1s6.3-25.5-4.1-33.7L525.6 386.7c39.6-40.6 66.4-86.1 79.9-118.4c3.3-7.9 3.3-16.7 0-24.6c-14.9-35.7-46.2-87.7-93-131.1C465.5 68.8 400.8 32 320 32c-68.2 0-125 26.3-169.3 60.8L38.8 5.1zM223.1 149.5C248.6 126.2 282.7 112 320 112c79.5 0 144 64.5 144 144c0 24.9-6.3 48.3-17.4 68.7L408 294.5c8.4-19.3 10.6-41.4 4.8-63.3c-11.1-41.5-47.8-69.4-88.6-71.1c-5.8-.2-9.2 6.1-7.4 11.7c2.1 6.4 3.3 13.2 3.3 20.3c0 10.2-2.4 19.8-6.6 28.3l-90.3-70.8zM373 389.9c-16.4 6.5-34.3 10.1-53 10.1c-79.5 0-144-64.5-144-144c0-6.9 .5-13.6 1.4-20.2L83.1 161.5C60.3 191.2 44 220.8 34.5 243.7c-3.3 7.9-3.3 16.7 0 24.6c14.9 35.7 46.2 87.7 93 131.1C174.5 443.2 239.2 480 320 480c47.8 0 89.9-12.9 126.2-32.5L373 389.9z"></path></svg>
+                          </label>
+                    </div>
+                    <input type="password" name="senhaUser" id="senhaUser" placeholder="Digite sua Senha..." size="35" autocomplete="current-password" required minlength="8" class="custom-input">
+                </div>
+
+                <div class="input-group">
+                    <button class="btn" type="button">Cadastrar</button>
+                    <a href="/login" class="link">Já tem uma conta?</a>
+                </div>
+            </form>
     </div>
 
-    <div class="lista-pedidos">
-        <div class="pedido">
-            <img src="https://via.placeholder.com/50" alt="Imagem do Pedido">
-            <div class="pedido-info">
-                <h3>Frente de Caixa Combinações Perfeitas</h3>
-                <p>ID 3001 • R$ 42,00 • 1 unidade • 06/12/2024, 09:19</p>
-            </div>
-            <button class="botao-detalhes">Detalhes do Pedido</button>
-        </div>
-
-        <div class="pedido">
-            <img src="https://via.placeholder.com/50" alt="Imagem do Pedido">
-            <div class="pedido-info">
-                <h3>Banner Promocional</h3>
-                <p>ID 3002 • R$ 80,00 • 2 unidades • 06/12/2024, 10:45</p>
-            </div>
-            <button class="botao-detalhes">Detalhes do Pedido</button>
-        </div>
-
-        <div class="pedido">
-            <img src="https://via.placeholder.com/50" alt="Imagem do Pedido">
-            <div class="pedido-info">
-                <h3>Cartões de Visita</h3>
-                <p>ID 3003 • R$ 50,00 • 100 unidades • 06/12/2024, 12:30</p>
-            </div>
-            <button class="botao-detalhes">Detalhes do Pedido</button>
-        </div>
-    </div>
 </body>
 </html>

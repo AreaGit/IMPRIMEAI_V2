@@ -100,7 +100,7 @@ app.post("/cadastrar", async (req, res) => {
             verificationCode: verificationCode // Salve o código de verificação
         });
         const mensagemStatus = `Seu código de verificação é: ${verificationCode}`
-        await enviarEmailNotificacao(emailCad, `Código de Verificação do usuário ${userCad}`, mensagemStatus);
+        //await enviarEmailNotificacao(emailCad, `Código de Verificação do usuário ${userCad}`, mensagemStatus);
         await enviarNotificacaoWhatsapp(telefoneCad, `Seu código de verificação é: ${verificationCode}`);
         res.json({ message: 'Usuário cadastrado com sucesso!', user: newUser });
         

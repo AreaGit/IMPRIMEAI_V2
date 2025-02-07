@@ -11,137 +11,182 @@
     margin: 0px;
     padding: 0px;
     box-sizing: border-box;
+    font-family: var(--font-padrao);
 }
 body {
-    font-family: var(--font-padrao);
-    background-color: #F5F5F7;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100vh;
+  background: white;
+  position: relative;
+  color: #333;
 }
-#logo {
-  width: 15%;
+
+/* Imagem no topo e centralizada */
+.background-image {
   position: absolute;
+  top: 0%;
   left: 50%;
-  transform: translate(-50%);
+  transform: translateX(-50%);
+  width: 30vw;
+  max-width: 430px;
+  min-width: 300px;
+  opacity: 1;
+  cursor: pointer;
 }
-header > h1 {
-    font-weight: 500;
-    font-size: 24px;
-    position: absolute;
-    left: 15%;
-    top: 80px;
+
+/* Imagem de borda decorativa */
+.background-border {
+  position: fixed;
+  top: 0%;
+  left: 100%;
+  transform: translateX(-100%);
+  height: 100vh;
+  width: 70%;
+  min-width: 900px;
+  opacity: 0.8;
+  cursor: pointer;
+  z-index: -1;
+  object-fit: cover; /* Garante que a imagem cubra toda a área sem distorcer */
 }
-#linhaHr {
-    border: 1px solid black;
-    width: 90vw;
-    position: absolute;
-    top: 125px;
-    left: 50%;
-    transform: translate(-50%);
-}
-header > h2 {
-    font-weight: 700;
-    font-size: 40px;
-    line-height: 61px;
-    position: absolute;
-    top: 150px;
-    left: 20%;
-    transform: translate(-20%);
-}
-form {
-    position: absolute;
-    top: 30%;
-    width: 40vw;
-    height: 600px;
-    left: 50%;
-    transform: translate(-50%);
-}
-input {
-    padding: 10px;
-    border-radius: 2px;
-    border-color: none;
-    border: 1px solid #86868B;
-    font-size: 17px;
-    margin-top: 5px;
-    margin-bottom: 10px;
-    background-color: white;
-    width: 347px;
-    height: 51px;
-}
-label {
-    margin-top: 5px;
-}
-form > button {
-    width: 295px;
-    height: 51px;
-    font-size: 17px;
-    font-weight: bold;
-    color: #EF4126;
-    border: 1px solid #EF4126;
-    background-color: white;
-    box-shadow: -1px -1px 8px black;
-    cursor: pointer;
-    position: absolute;
-    left: 50%;
-    transform: translate(-50%);
-    top: 60%;
-    border-radius: 5px;
-    transition: 0.8s;
-}
-form > button:hover {
-    transition: 0.8s;
-    background-color: #F37160;
-    color: white;
-}
-div#conteudo {
-    width: min-content;
-    position: absolute;
-    left: 50%;
-    transform: translate(-50%);
-    top: 25%;
-}
+
 .container {
-    --color: #a5a5b0;
-    --size: 25px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    cursor: pointer;
-    font-size: var(--size);
-    user-select: none;
-    fill: var(--color);
-    position: absolute;
-    left: 93%;
-    transform: translate(-93%);
-    top: 77%;
+  background: rgba(255, 255, 255, 0.15);
+  padding: 50px;
+  width: 90%; /* Use porcentagem para tornar responsivo */
+  max-width: 700px; /* Limite de largura máxima */
+  min-width: 300px; /* Largura mínima para telas muito pequenas */
+  border-radius: 10px;
+  backdrop-filter: blur(10px);
+  box-shadow: 0px 10px 30px rgba(0, 0, 0, 0.2);
+  text-align: center;
+  z-index: 1;
+}
+
+/* Ajustes para telas pequenas */
+@media (max-width: 600px) {
+  .container {
+      padding: 30px; /* Menos padding em telas menores */
   }
-  
-  .container .eye {
-    position: absolute;
-    animation: keyframes-fill .5s;
+}
+
+/* Ajustes para telas maiores */
+@media (min-width: 1200px) {
+  .container {
+      width: 40vw; /* Largura maior em telas grandes */
   }
-  
-  .container .eye-slash {
-    position: absolute;
-    animation: keyframes-fill .5s;
-    display: none;
-  }
-  
-  /* ------ On check event ------ */
-  .container input:checked ~ .eye {
-    display: none;
-  }
-  
-  .container input:checked ~ .eye-slash {
-    display: block;
-  }
-  
-  /* ------ Hide the default checkbox ------ */
-  .container input {
-    position: absolute;
-    opacity: 0;
-    cursor: pointer;
-    height: 0;
-    width: 0;
-  }
+}
+
+
+h2 {
+  color: #EF4126;
+  font-size: 32px;
+  margin-bottom: 5px;
+}
+
+.container > p {
+  margin-bottom: 20px;
+}
+
+.input-group {
+  margin-bottom: 30px;
+}
+
+.input-group input {
+  width: 100%;
+  padding: 15px;
+  border: 1px solid;
+  border-radius: 5px;
+  font-size: 16px;
+  background: rgba(255, 255, 255, 0.2);
+  color: #333;
+  outline: none;
+}
+
+.input-group input::placeholder {
+  color: #333;
+}
+
+.input-group input:focus {
+  transition: 0.8s;
+  border-color: #F04D41;
+  background: white;
+  box-shadow: 0px 0px 8px rgba(240, 77, 65, 0.3);
+}
+
+.btn {
+  width: 100%;
+  padding: 10px;
+  background: #F04D41;
+  border: none;
+  color: #fff;
+  font-size: 18px;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: 0.3s;
+  font-weight: bold;
+}
+
+.btn:hover {
+  background: #D93A33;
+  box-shadow: 0px 5px 15px rgba(217, 58, 51, 0.3);
+}
+
+.link {
+  margin-top: 15px;
+  display: block;
+  color: #333;
+  font-size: 14px;
+}
+
+.link:hover {
+  transition: 0.8s;
+  text-decoration: underline;
+  color: #F37160;
+}
+.container-eye {
+  --color: #a5a5b0;
+  --size: 25px;
+  position: relative;
+  left: 90%;
+  top: 15px;
+  transform: translateX(-90%);
+  cursor: pointer;
+  font-size: var(--size);
+  user-select: none;
+  fill: var(--color);
+}
+
+.container-eye .eye {
+  position: absolute;
+  animation: keyframes-fill .5s;
+}
+
+.container-eye .eye-slash {
+  position: absolute;
+  animation: keyframes-fill .5s;
+  display: none;
+}
+
+/* ------ On check event ------ */
+.container-eye input:checked ~ .eye {
+  display: none;
+}
+
+.container-eye input:checked ~ .eye-slash {
+  display: block;
+}
+
+/* ------ Hide the default checkbox ------ */
+.container-eye input {
+  position: absolute;
+  opacity: 0;
+  cursor: pointer;
+  height: 0;
+  width: 0;
+}
   
   /* ------ Animation ------ */
   @keyframes keyframes-fill {
