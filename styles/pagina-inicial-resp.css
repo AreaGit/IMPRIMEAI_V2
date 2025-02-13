@@ -19,7 +19,7 @@
     }
     .mainContentHeader {
         position: absolute;
-        height: 500px;
+        height: 600px;
         width: 100%;
         z-index: -1;
     }
@@ -39,6 +39,7 @@
         width: fit-content;
         position: relative;
         left: 70%;
+        top: 0;
     }
     .linksHeader > ul > li {
         padding-right: 0px;
@@ -57,19 +58,23 @@
     }
     .logo-header {
         position: relative;
-        left: 10%;
+        left: 50%;
+        transform: translate(-50%);
         top: 30px;
         width: fit-content;
     }
     .logo-header > a > img {
         cursor: pointer;
         width: 65%;
+        position: relative;
+        left: 50%;
+        transform: translate(-50%);
     }
     .notCad {
         width: fit-content;
         position: relative;
-        left: 85%;
-        top: -17px;
+        left: 30%;
+        top: 50px;
     }
     .notCad > a {
         font-weight: 300;
@@ -78,9 +83,10 @@
     .carrinho {
         width: fit-content;
         position: relative;
-        left: 80%;
-        top: -7px;
+        left: 70%;
+        top: 20px;
     }
+    .mobile-menu {display: block;}
     .linhaAbInp {display: none;}
     .linhaAbNav {display: none;}
     .menu {
@@ -141,7 +147,7 @@
         position: relative;
         left: 50%;
         transform: translate(-50%);
-        top: 110px;
+        top: 200px;
     }
     #prev {
         top: 85%;

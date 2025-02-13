@@ -111,6 +111,112 @@ margin-top: 15px;
 overflow-x: auto;
 max-height: 480px;
 }
+.mobile-menu{display: none;}
+.mobile-menu > nav {
+  border-right: 2px solid #333;
+  width: 250px;
+  height: 100vh;
+  background-color: #24292F;
+  position: fixed;
+  left: -250px;
+  top: 0;
+  z-index: 999;
+  padding: 20px;
+  overflow-y: auto;
+  transition: left 0.3s ease-in-out;
+}
+
+nav.show {
+  left: 0;
+}
+
+.content-menu {
+  padding: 0;
+}
+
+.content-menu > ul {
+  list-style: none;
+  padding: 0;
+}
+
+.content-menu > li {
+  padding: 15px;
+  margin-bottom: 10px;
+  border-radius: 6px;
+  transition: background-color 0.3s ease, transform 0.3s ease;
+}
+
+.content-menu > li:hover {
+  background-color: #3A3F47;
+  transform: translateX(10px);
+}
+
+.content-menu > li > a {
+  color: #FFF;
+  text-decoration: none;
+  font-size: 16px;
+  font-weight: 500;
+  display: block;
+}
+
+.openSubsCategories {
+  font-weight: bold;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  color: #FFF;
+}
+
+.subsCategories {
+  margin-top: 10px;
+  padding-left: 20px;
+  display: none;
+  transition: all 0.3s ease;
+}
+
+.subsCategories > li > a {
+  color: white;
+}
+
+.subsCategories.show {
+  display: block;
+}
+
+.subsCategories li {
+  background-color: #3A3F47;
+  margin-bottom: 8px;
+  border-radius: 6px;
+}
+
+.btnsMenu {
+  cursor: pointer;
+  position: absolute;
+  left: 15%;
+  top: 20px;
+  z-index: 9999;
+}
+
+.btnsMenu > .material-symbols-outlined {
+  font-size: 36px;
+  color: #24292F;
+  transition: transform 0.3s ease;
+}
+
+.btnsMenu > .material-symbols-outlined:hover {
+  transform: scale(1.2);
+}
+
+/* Responsividade */
+@media (max-width: 768px) {
+  .mobile-menu > nav {
+      width: 200px;
+  }
+  .btnsMenu {
+      left: 85%;
+      transform: translate(-85%);
+      top: 36%;
+  }
+}
 ul {
 list-style: none;
 }

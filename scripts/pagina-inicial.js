@@ -525,3 +525,34 @@ document.getElementById('bannerSacolas').addEventListener('click', () => {
 document.getElementById('bannerFolhetos').addEventListener('click', () => {
     window.location.href = "/categorias?categoria=folders"
 });
+
+        // Seletor para categorias e subcategorias
+        const openSubsButtons = document.querySelectorAll('.openSubsCategories');
+
+        openSubsButtons.forEach((button) => {
+            const subsCategories = button.nextElementSibling;
+            const span = button.querySelector('span');
+
+            button.addEventListener('click', () => {
+                const isOpen = subsCategories.classList.toggle('show');
+                span.textContent = isOpen ? '−' : '+';
+            });
+        });
+
+        const abrirMenu = document.getElementById('abrirMenu');
+        const navbar = document.getElementById('navbar');
+        const fecharMenu = document.getElementById('fecharMenu');
+
+        // Evento para abrir o menu
+        abrirMenu.addEventListener('click', () => {
+            navbar.classList.add('show');
+            fecharMenu.style.display = 'block';
+            abrirMenu.style.display = 'none';
+        });
+
+        // Evento para fechar o menu
+        fecharMenu.addEventListener('click', () => {
+            navbar.classList.remove('show');
+            abrirMenu.style.display = 'block';
+            fecharMenu.style.display = 'none';
+        });

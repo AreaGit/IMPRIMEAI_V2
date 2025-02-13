@@ -164,34 +164,6 @@
         left: 50%;
         transform: translate(-50%);
     }
-    .cxProd {
-        cursor: pointer;
-        padding: 15px;
-        display: inline-flex;
-        box-shadow: -1px -1px 8px #434344;
-        border-radius: 5px;
-        width: calc(90% - 20px);
-        overflow: hidden;
-        height: 456px;
-        position: relative;
-        top: 12%;
-        left: 0%;
-        transition: transform 0.8s;
-        margin: 20px;
-        transition: 0.8s;
-        background-color: white;
-    }
-    .cxProd > a {
-        position: absolute;
-        top: 89%;
-        left: 65%;
-        background-color: #F37160;
-        color: white;
-        padding: 8px 18px 8px 18px;
-        font-size: 14px;
-        font-weight: 400;
-        border-radius: 2px;
-    }
 }
 @media screen and (min-width: 768px) and (max-width: 1440px) {
     .logo-header {
