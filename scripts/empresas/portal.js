@@ -32,6 +32,17 @@ document.addEventListener('DOMContentLoaded', () => {
         const a = document.createElement('a');
         a.href = `/cpq/categorias?categoria=${categoria.toLowerCase().replace(/\s+/g, '-')}`; // Ajuste do link para categorias // Defina o link da categoria conforme necessário
         a.textContent = categoria;
+
+        const imagem = document.createElement('img');
+        const imageUrl = `../../images/CPQ_IMAGES/${categoria.toLowerCase().replace(/\s+/g, '-')}.png`;  // Caminho para a imagem
+        imagem.src = imageUrl;  // Define a imagem a partir do caminho
+        imagem.alt = categoria;
+        imagem.style.width = '50px';
+        imagem.style.height = '50px';
+
+        a.style.display = "inline-block";
+
+        li.appendChild(imagem);
         li.appendChild(a);
         ul.appendChild(li);
       });

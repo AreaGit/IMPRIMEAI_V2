@@ -31,7 +31,7 @@ header {
     width: fit-content;
     display: flex;
     justify-content: center;
-    position: absolute;
+    position: relative;
     left: 20%;
     top: -1%;
     cursor: pointer;
@@ -44,7 +44,7 @@ header {
     display: flex;
     position: relative;
     left: 35%;
-    top: 65px;
+    top: -90px;
 }
 .nav-bar > li {
     list-style: none;
@@ -451,6 +451,13 @@ header {
         padding: 10px;
         border-bottom: 1px solid #ddd;
         transition: background-color 0.3s, padding-left 0.3s;
+        display: flex;
+        align-items: center;
+      }
+
+      .categorias-container ul li img {
+        border-radius: 8px;
+        box-shadow: -1px 1px 2px;
       }
   
       /* Estilo do link */

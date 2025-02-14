@@ -2344,7 +2344,7 @@ const getCachedProductsByCategoryEmpresas = async (userId, categoria, page, limi
   return produtos;
 };
 
-const nfs = require('./nfs')
+//const nfs = require('./nfs')
 
 app.listen(PORT, () => {
   console.log(`Servidor rodando na porta ${PORT} https://localhost:${PORT}`);
