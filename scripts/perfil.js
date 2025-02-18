@@ -296,6 +296,67 @@ dadosUsuario().then(perfil => {
 });
 });
 
+let perfilUsuario
+
+fetch('/perfil/dados')
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Erro ao obter dados do perfil');
+                }
+                return response.json();
+            })
+            .then(perfilData => {
+                function formatarTelefone(numero) {
+                const numeroLimpo = numero.replace(/\D/g, '');
+                const ddd = numeroLimpo.substring(0, 2);
+                const numeroTelefone = numeroLimpo.substring(2);
+                return { ddd, numeroTelefone };
+            }
+
+            const telefoneFormatado = formatarTelefone(perfilData.telefoneCad);
+            const codPaisCliente = "55";
+            const dddCliente = telefoneFormatado.ddd;
+            const numeroTelefoneCliente = telefoneFormatado.numeroTelefone;
+            
+            const cpf = perfilData.cpfCad.replace(/\D/g, '');
+            const cpfCliente = cpf;
+            
+            const emailCliente = perfilData.emailCad;
+            const cepCliente = perfilData.cepCad;
+            const cidadeCliente = perfilData.cidadeCad;
+            const ruaCliente = perfilData.endereçoCad;
+            const numeroResidenciaCliente = perfilData.numCad;
+            const bairroCliente = perfilData.bairroCad;
+            const numeroDocumento = perfilData.cpfCad;
+            const nomeCliente = perfilData.userCad;
+            const paisCliente = "BR";
+            const idCliente = perfilData.userId;
+            const estadoCliente = perfilData.estadoCad;
+           
+           
+            perfilUsuario = {
+                emailCliente: emailCliente,
+                cpfCliente: cpfCliente,
+                cepCliente: cepCliente,
+                cidadeCliente: cidadeCliente,
+                estadoCliente: estadoCliente,
+                ruaCliente: ruaCliente,
+                numeroResidenciaCliente: numeroResidenciaCliente,
+                bairroCliente: bairroCliente,
+                numeroDocumento: numeroDocumento,
+                nomeCliente: nomeCliente,
+                paisCliente: paisCliente,
+                codPaisCliente: codPaisCliente,
+                dddCliente: dddCliente,
+                numeroTelefoneCliente: numeroTelefoneCliente,
+                userId: idCliente,
+                totalCompra: valorSelecionado, // Certifique-se de que valorSelecionado está definido
+            };
+        
+        })
+
+        
+
 // Fechar métodos de pagamento
 fecharRecargaBtn.addEventListener('click', () => {
     metodosRecarga.style.display = 'none';
@@ -326,12 +387,14 @@ document.getElementById('pix').addEventListener('click', async () => {
             body: JSON.stringify({ valor: valorSelecionado, perfilData: perfilCarteira }),
         });
         if (!response.ok) throw new Error('Erro ao processar pagamento via Pix');
-        const { qr_code_url, charge_id } = await response.json();
+        console.log('ESSE É O RESPONSE', response)
+        const { qr_code_url, charge_id, qr_code } = await response.json();
+        console.log('AQUI: ', qr_code)
         qrCodeContainer.innerHTML = `<img src="${qr_code_url}"><button id="copiarCodigo">Copiar QR Code</button>`;
         qrCodeContainer.style.display = 'block';
 
         document.getElementById('copiarCodigo').addEventListener('click', async () => {
-            await navigator.clipboard.writeText(qr_code_url);
+            await navigator.clipboard.writeText(qr_code);
             alert('Código copiado!');
         });
 
@@ -347,11 +410,15 @@ document.getElementById('boleto').addEventListener('click', async () => {
         const response = await fetch('/processarPagamento-boleto-carteira', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ valor: valorSelecionado }),
+            body: JSON.stringify({ valor: valorSelecionado, perfilData: perfilUsuario }),
         });
         if (!response.ok) throw new Error('Erro ao processar pagamento via Boleto');
-        const { boleto_url, charge_id } = await response.json();
-        boletoContainer.innerHTML = `<a href="${boleto_url}" target="_blank">Abrir Boleto</a>`;
+        const dados = await response.json();
+        console.log(dados.id)
+        const charge_id = dados[0].id;
+        const url = dados[0].last_transaction.url
+        console.log(dados)
+        boletoContainer.innerHTML = `<a href="${url}" target="_blank">Abrir Boleto</a>`;
         boletoContainer.style.display = 'block';
         verificarStatusTransacao(charge_id);
     } catch (error) {
@@ -372,13 +439,23 @@ btnCartaoCredito.addEventListener('click', async () => {
         const [mesExp, anoExp] = document.getElementById('expiry_date_field').value.split('/');
         const cvv = document.getElementById('cvv_field').value;
 
+        const formData = {
+            numCar: numeroCartao,
+            nomeTitular: nomeTitular,
+            mesExp: mesExp,
+            anoExp: anoExp,
+            cvvCard: cvv
+        };
+
         const response = await fetch('/processarPagamento-cartao-carteira', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ valor: valorSelecionado, nomeTitular, numeroCartao, mesExp, anoExp, cvv }),
+            body: JSON.stringify({ valor: valorSelecionado, perfilData: perfilUsuario, formData, nomeTitular, numeroCartao, mesExp, anoExp, cvv }),
         });
         if (!response.ok) throw new Error('Erro ao processar pagamento via Cartão de Crédito');
-        const { charge_id } = await response.json();
+        const dados = await response.json();
+        console.log(dados)
+        const charge_id = dados[0].id
         verificarStatusTransacao(charge_id);
     } catch (error) {
         console.error('Erro no Cartão de Crédito:', error);

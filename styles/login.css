@@ -76,6 +76,8 @@ body {
 @media (min-width: 1200px) {
   .container {
       width: 40vw; /* Largura maior em telas grandes */
+      position: relative;
+      top: 100px;
   }
 }
 

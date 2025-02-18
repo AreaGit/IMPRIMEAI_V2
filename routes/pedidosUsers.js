@@ -1958,7 +1958,7 @@ async function verificarGraficaMaisProximaEAtualizar2(itensPedido, enderecos) {
   app.get('/verificarStatusTransacao', async (req, res) => {
     try {
         const chargeId = req.query.chargeId; // Obtenha o ID da transação do cliente
-        const apiKey = 'sk_5956e31434bb4c618a346da1cf6c107b'; // Substitua pelo sua chave de API do Pagarme
+        const apiKey = 'sk_KVlgJBsKOTQagkmR'; // Substitua pelo sua chave de API do Pagarme
         
         // Faça uma solicitação GET para a API do Pagarme para obter o status da transação
         const response = await axios.get(`https://api.pagar.me/core/v5/charges/${chargeId}`, {
@@ -2543,8 +2543,18 @@ app.post('/processarPagamento-pix-carteira', (req, res) => {
 
   rp(options)
   .then(response => {
-    console.log(response.charges);
-    res.status(200).send(response.charges);
+    console.log(response); // Exibir a resposta completa para depuração
+
+    if (response.charges && response.charges.length > 0) {
+      const charge = response.charges[0]; // Pegando a primeira transação
+      res.status(200).json({
+        qr_code_url: charge.last_transaction.qr_code_url,
+        charge_id: charge.id,
+        qr_code: charge.last_transaction.qr_code
+      });
+    } else {
+      res.status(500).send("Erro ao processar o pagamento.");
+    }
   })
   .catch(error => {
       // Handle error response
@@ -2559,12 +2569,14 @@ app.post('/processarPagamento-pix-carteira', (req, res) => {
 
 app.post('/processarPagamento-boleto-carteira', (req, res) => {
   const perfilData = req.body.perfilData;
+  const totalCompra = req.body.valor
   const carrinho = req.session.carrinho;
   // Define the request payload
+  console.log(totalCompra)
   const body = {
     "items": [
       {
-          "amount": Math.max(Math.round(parseFloat(perfilData.totalCompra) * 100), 1),
+          "amount": Math.max(Math.round(parseFloat(req.body.valor) * 100), 1), //Math.max(Math.round(parseFloat(perfilData.totalCompra) * 100), 1),
           "description": "CARTEIRA",
           "quantity": 1,
           "code": "123"
@@ -2626,13 +2638,15 @@ app.post('/processarPagamento-boleto-carteira', (req, res) => {
 app.post('/processarPagamento-cartao-carteira', (req ,res) => {
   const formData = req.body.formData;
   const perfilData = req.body.perfilData;
+  const totalCompra = req.body.valor
   const carrinho = req.session.carrinho;
   console.log(formData)
+  console.log(totalCompra)
   // Monte o body com os dados do usuário e do carrinho
   const body = {
     "items": [
       {
-          "amount": Math.max(Math.round(parseFloat(perfilData.totalCompra) * 100), 1),
+          "amount": Math.max(Math.round(parseFloat(req.body.valor) * 100), 1),
           "description": "CARTEIRA",
           "quantity": 1,
           "code": "123"

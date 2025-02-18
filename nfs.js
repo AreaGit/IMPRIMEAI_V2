@@ -1,80 +1,46 @@
-const express = require('express');
-const app = express();
 const fs = require('fs');
-const { DOMParser } = require('xmldom');
 const { SignedXml } = require('xml-crypto');
-const { readFileSync } = require('fs');
-const path = require('path');
 const forge = require('node-forge');
-const axios = require('axios');
 
-// Configuração do certificado digital A1
-const certPath = path.join(__dirname, 'IMPRIMEAI_SERVICOS_DE_IMPRESSAO_LTDA_54067133000104_1739199014437633600.pfx');
-const certPassword = 'Dna12345678';
-const pfxBuffer = readFileSync(certPath);
+// Caminho para seu certificado A1 (arquivo .pfx ou .p12)
+const pfxPath = './IMPRIMEAI_SERVICOS_DE_IMPRESSAO_LTDA_54067133000104_1739199014437633600.pfx';
+const passphrase = 'Dna12345678';
 
-// Extrair chave privada do certificado PFX
-const pfxAsn1 = forge.asn1.fromDer(pfxBuffer.toString('binary'));
-const pfx = forge.pkcs12.pkcs12FromAsn1(pfxAsn1, certPassword);
-const keyBags = pfx.getBags({ bagType: forge.pki.oids.pkcs8ShroudedKeyBag });
-const privateKey = keyBags[forge.pki.oids.pkcs8ShroudedKeyBag][0].key;
+// Carregar certificado
+const pfxBuffer = fs.readFileSync(pfxPath);
+const p12Asn1 = forge.asn1.fromDer(pfxBuffer.toString('binary'));
+const p12 = forge.pkcs12.pkcs12FromAsn1(p12Asn1, passphrase);
 
-// Função para assinar o XML
-function assinarXML(xml) {
-    const sig = new SignedXml();
-    sig.addReference("/*", [
-        "http://www.w3.org/2000/09/xmldsig#enveloped-signature",
-        "http://www.w3.org/2001/10/xml-exc-c14n#"
-    ], "http://www.w3.org/2000/09/xmldsig#sha1");
-    
-    sig.signingKey = forge.pki.privateKeyToPem(privateKey);
-    sig.computeSignature(xml);
-    return sig.getSignedXml();
-}
+const certBags = p12.getBags({ bagType: forge.pki.oids.certBag });
+const keyBags = p12.getBags({ bagType: forge.pki.oids.pkcs8ShroudedKeyBag });
 
+const certificate = forge.pki.certificateToPem(certBags[forge.pki.oids.certBag][0].cert);
+const privateKey = forge.pki.privateKeyToPem(keyBags[forge.pki.oids.pkcs8ShroudedKeyBag][0].key);
 
-// Exemplo de uso
-const xmlOriginal = `<?xml version="1.0" encoding="UTF-8"?>
-<NotaFiscal>
-    <InfNfse Id="RPS235">
-        <Numero>123</Numero>
-        <Cnpj>54067133000104</Cnpj>
-    </InfNfse>
-</NotaFiscal>`;
+// Ler XML sem assinatura
+const xml = fs.readFileSync('lote-rps.xml', 'utf-8');
 
-const xmlAssinado = assinarXML(xmlOriginal);
-console.log("XML Assinado:", xmlAssinado);
+// Criar e adicionar assinatura
+const sig = new SignedXml();
+// ** Definir os algoritmos antes de adicionar a referência **
+sig.signatureAlgorithm = "http://www.w3.org/2001/04/xmldsig-more#rsa-sha256";
+sig.canonicalizationAlgorithm = "http://www.w3.org/TR/2001/REC-xml-c14n-20010315";
 
-// Salvar o XML assinado para download
-const xmlPath = path.join(__dirname, 'nfse_assinada.xml');
-fs.writeFileSync(xmlPath, xmlAssinado);
-console.log("XML assinado salvo em:", xmlPath);
+// 🚀 Adicione a referência corretamente
+sig.addReference({
+    xpath: "//*[local-name(.)='EnviarLoteRpsEnvio']",
+    transforms: ["http://www.w3.org/2000/09/xmldsig#enveloped-signature"],
+    digestAlgorithm: "http://www.w3.org/2001/04/xmlenc#sha256" // SHA-256 para digest
+});
+sig.signingKey = privateKey;
+sig.keyInfoProvider = {
+    getKeyInfo: () => `<X509Data><X509Certificate>${certificate.replace(/-----BEGIN CERTIFICATE-----|-----END CERTIFICATE-----|\n/g, '')}</X509Certificate></X509Data>`,
+};
 
-// Enviar para o Ginfes via SOAP
-async function enviarNFSe(xml) {
-    const soapEnvelope = `<?xml version="1.0" encoding="UTF-8"?>
-    <soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:gin="http://www.ginfes.com.br/">
-        <soapenv:Header/>
-        <soapenv:Body>
-            <gin:RecepcionarLoteRps>
-                <gin:loteRps>${xml}</gin:loteRps>
-            </gin:RecepcionarLoteRps>
-        </soapenv:Body>
-    </soapenv:Envelope>`;
-    
-    try {
-        const response = await axios.post('https://saocaetanodosul.ginfes.com.br/ServiceGinfesImpl', soapEnvelope, {
-            headers: {
-                'Content-Type': 'text/xml; charset=utf-8',
-                'SOAPAction': ''
-            }
-        });
-        console.log("Resposta do Ginfes:", response.data);
-    } catch (error) {
-        console.error("Erro ao enviar NFS-e:", error.message);
-    }
-}
+// Assinar XML
+sig.computeSignature(xml);
 
-enviarNFSe(xmlAssinado);
+// Salvar XML assinado
+fs.writeFileSync('lote-rps-assinado.xml', sig.getSignedXml());
 
-module.exports = app;
+console.log('✅ XML assinado com sucesso!');
