@@ -73,7 +73,7 @@ body {
 }
 
 /* Ajustes para telas maiores */
-@media (min-width: 1200px) {
+@media (min-width: 1200px) and (max-width:1400px) {
   .container {
       width: 40vw; /* Largura maior em telas grandes */
       position: relative;
