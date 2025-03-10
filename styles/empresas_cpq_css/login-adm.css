@@ -1,13 +1,4 @@
-<!DOCTYPE html>
-<html lang="pt-BR">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Login - Painel Administrativo</title>
-    <link rel="stylesheet" href="style.css">
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
-    <style>
-        :root {
+:root {
     --dark-green: #015524;
     --light-beige: #F8F2D8;
     --medium-green: #02572D;
@@ -21,7 +12,11 @@ body {
     margin: 0;
     padding: 0;
     font-family: "Poppins", sans-serif;
-    background: linear-gradient(to right, var(--dark-green), var(--medium-green));
+    background-image: url(https://images.rappi.com.br/restaurants_background/3-1692212180781.jpg);
+    background-repeat: no-repeat;
+    background-position: center center;
+    background-size: cover;
+    background-attachment: fixed;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -34,8 +29,8 @@ body {
     border-radius: 12px;
     box-shadow: 0px 5px 15px var(--shadow);
     text-align: center;
-    width: 350px;
-    transition: transform 0.3s ease-in-out;
+width: 350px;
+transition: transform 0.3s ease-in-out;
 }
 
 .login-container:hover {
@@ -60,11 +55,11 @@ label {
 input {
     width: 90%;
     padding: 12px;
-    margin-top: 5px;
-    border: 1px solid var(--gray);
-    border-radius: 8px;
-    font-size: 16px;
-    transition: 0.3s;
+margin-top: 5px;
+border: 1px solid var(--gray);
+border-radius: 8px;
+font-size: 16px;
+transition: 0.3s;
 }
 
 input:focus {
@@ -103,22 +98,3 @@ button:hover {
 .forgot-password:hover {
     text-decoration: underline;
 }
-
-    </style>
-</head>
-<body>
-    <div class="login-container">
-        <form id="login-form">
-            <h2>Bem-vindo ao <br> Painel Administrativo</h2>
-            <label for="email">E-mail</label>
-            <input type="email" id="email" placeholder="Digite seu e-mail" required>
-            
-            <label for="password">Senha</label>
-            <input type="password" id="password" placeholder="Digite sua senha" required>
-            
-            <button type="submit">Entrar</button>
-            <p class="forgot-password">Esqueceu a senha?</p>
-        </form>
-    </div>
-</body>
-</html>

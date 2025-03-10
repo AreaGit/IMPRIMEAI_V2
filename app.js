@@ -34,6 +34,7 @@ const productCache = new NodeCache({ stdTTL: 200, checkperiod: 1 });
 const Sequelize = require('sequelize');
 const UserEmpresas = require('./models/Users-Empresas');
 const EnderecosEmpresas = require('./models/Enderecos-Empresas');
+const CarteiraEmpresas = require('./models/CarteiraEmpresas');
 const client = redis.createClient({
   host: '127.0.0.1', // Substitua pelo endereço IP do seu servidor Redis
   port: 6379,         // Porta onde o Redis está escutando
@@ -2344,7 +2345,84 @@ const getCachedProductsByCategoryEmpresas = async (userId, categoria, page, limi
   return produtos;
 };
 
-//const nfs = require('./nfs')
+app.get('/cpq/painel-administrativo', (req,res) => {
+  try {
+    const administrativoHtmlContent = fs.readFileSync(path.join(__dirname, "html/empresas_cpq_html", "administrativo.html"), "utf8");
+    res.send(administrativoHtmlContent);
+  } catch (err) {
+    console.error("Erro ao ler o arquivo administrativo.html:", err);
+    res.status(500).send("Erro interno do servidor");
+  }
+});
+
+app.get('/saldo-allusers', async (req, res) => {
+  try {
+      const users = await UsersEmpresas.findAll({ attributes: ['id', 'userCad', 'emailCad'] });
+
+      const usersWithBalance = await Promise.all(users.map(async user => {
+          const carteira = await CarteiraEmpresas.findOne({ where: { userId: user.id } }); // findPkId (Find by Primary Key)
+          return {
+              id: user.id,
+              name: user.userCad,
+              email: user.emailCad,
+              balance: carteira ? carteira.saldo : 0
+          };
+      }));
+
+      res.json(usersWithBalance);
+  } catch (error) {
+      console.error(error);
+      res.status(500).json({ error: 'Erro ao buscar usuários e saldos' });
+  }
+});
+
+app.get('/pedidos-allusers', async (req, res) => {
+  try {
+    const { userId } = req.params;
+
+    const pedidos = await Pedidos.findAll({
+        where: { idUserPed: userId },
+        include: [
+            {
+                model: ItensPedido,
+                where: { tipo: "Empresas" },
+                attributes: ["idPed", "statusPed"],
+                required: true
+            }
+        ]
+    });
+
+    // Remover pedidos duplicados pelo idPedido
+    const pedidosUnicos = [];
+    const pedidosMap = new Set();
+
+    pedidos.forEach(pedido => {
+      const idPedido = pedido.ItensPedidos[0].idPed; // Ajustado para acessar corretamente a relação
+      if (!pedidosMap.has(idPedido)) {
+          pedidosMap.add(idPedido);
+          pedidosUnicos.push({
+              idPedido,
+              statusPed: pedido.ItensPedidos[0].statusPed
+          });
+      }
+  });
+
+    res.json({ pedidos: pedidosUnicos });
+} catch (error) {
+    console.error("Erro ao buscar pedidos:", error);
+    res.status(500).json({ error: "Erro ao buscar pedidos" });
+}
+});
+
+app.get('/cpq/login-adm', (req, res) => {
+  try {
+    const loginAdmContentHtml = fs.readFileSync(path.join(__dirname, "html/empresas_cpq_html", "login-adm.html"), "utf8");
+    res.send(loginAdmContentHtml)
+  } catch (error) {
+    console.error("Erro ao ler o arquivo login-adm.html:", err);
+    res.status(500).send("Erro interno do servidor");
+  }
+});
 
 app.listen(PORT, () => {
   console.log(`Servidor rodando na porta ${PORT} https://localhost:${PORT}`);

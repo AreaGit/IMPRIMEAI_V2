@@ -194,6 +194,50 @@ app.post('/adicionar-ao-carrinho/:produtoId', async (req, res) => {
     }
   });
 
+  app.post('/editar-carrinho/:produtoId', async (req, res) => {
+    try {
+      let userId = req.cookies.userId;
+  
+      console.log("Recebido no Backend - Produto ID:", req.params.produtoId);
+      console.log("Recebido no Backend - Quantidade:", req.body);
+  
+      const produtoId = Number(req.params.produtoId);
+      const quantidade = Number(req.body.quantidade);
+
+      if (!userId) {
+        userId = req.cookies.userIdTemp;
+      }
+  
+      // Verifique se a quantidade é um número válido
+      if (typeof quantidade !== 'number' || quantidade <= 0) {
+        return res.status(400).json({ message: 'Quantidade inválida' });
+      }
+  
+      // Verifique se o carrinho existe na sessão
+      if (!req.session.carrinho) {
+        return res.status(400).json({ message: 'Carrinho não encontrado' });
+      }
+  
+      // Encontre o produto no carrinho
+      const produtoNoCarrinho = req.session.carrinho.find((item) => item.produtoId === produtoId && item.userId === userId);
+  
+      if (!produtoNoCarrinho) {
+        return res.status(404).json({ message: 'Produto não encontrado no carrinho' });
+      }
+  
+      // Atualize a quantidade e o subtotal
+      produtoNoCarrinho.quantidade = quantidade;
+      produtoNoCarrinho.subtotal = produtoNoCarrinho.quantidade * produtoNoCarrinho.valorUnitario;
+  
+      // Responda com uma mensagem de sucesso e o carrinho atualizado
+      res.json({ message: 'Quantidade do produto atualizada com sucesso', carrinho: req.session.carrinho, novoSubTotal: produtoNoCarrinho.subtotal });
+      console.log(req.session.carrinho);
+    } catch (error) {
+      console.error('Erro ao editar a quantidade do produto no carrinho:', error);
+      res.status(500).json({ message: 'Erro ao editar a quantidade do produto no carrinho' });
+    }
+  });  
+
   app.post('/adicionar-ao-carrinho-empresa/:produtoId', async (req, res) => {
     try {
       const produtoId = req.params.produtoId;

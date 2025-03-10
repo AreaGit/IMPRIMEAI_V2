@@ -727,6 +727,9 @@ p.sub {
     font-size: 24px;
     font-weight: 500;
 }
+#quantidadeProduto > input {
+  text-align: center;
+}
 #resumo-compra {
     display: none;
     width: 635px;

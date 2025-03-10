@@ -833,6 +833,11 @@
         padding: 15pc;
         padding-top: 70px;
     }
+    footer.modern-footer {
+        background: none;
+        color: #fff;
+        padding: 50px 20px;
+    }
     .contentFooter {
         height: 520px;
         background-color: #2B2B2B;

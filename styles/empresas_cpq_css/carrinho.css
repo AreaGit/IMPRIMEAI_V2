@@ -514,6 +514,8 @@ a{text-decoration: none; color: black;}
     border: none;
     cursor: pointer;
     text-decoration: underline;
+    position: relative;
+    z-index: 1;
   }
   #btnVoltar:hover {
     transition: 0.8s;

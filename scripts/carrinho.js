@@ -46,8 +46,8 @@ document.addEventListener('DOMContentLoaded', function() {
               produtoElement.innerHTML = `
                 <img src="${srcDaImagem}" alt="Imagem do Produto">
                 <h2 class="nomeProduto">${produto.nomeProd}</h2>
-                <p class="qnt">Quantidade: ${produto.quantidade}</p>
-                <p class="sub">R$ ${produto.subtotal.toFixed(2)}</p>
+                <p class="qnt">Quantidade: <span id="quantidadeProduto">${produto.quantidade}</span> <span id="editarQuantidade">✎</span></p>
+                <p class="sub" id="subtotalProduto-${produto.produtoId}">R$ ${produto.subtotal.toFixed(2)}</p>
                 <button class="remover-produto" data-produto-id="${produto.produtoId}">Remover</button>
               `;
     
@@ -67,6 +67,77 @@ document.addEventListener('DOMContentLoaded', function() {
                   }
                 }
     
+                document.getElementById('editarQuantidade').addEventListener('click', function() {
+                  // Captura a quantidade atual
+                  const quantidadeAtual = document.getElementById('quantidadeProduto').textContent;
+                  const produtoId = idDoProduto;  // Supondo que o produto tem um ID já definido no contexto
+              
+                  // Cria o input para editar a quantidade
+                  const inputQuantidade = document.createElement('input');
+                  inputQuantidade.type = 'number';
+                  inputQuantidade.value = quantidadeAtual;
+                  inputQuantidade.min = 1;  // Define o valor mínimo (caso queira)
+                  inputQuantidade.style.width = '50px';  // Opcional, para definir largura do input
+              
+                  // Substitui o texto pela caixa de input
+                  const spanQuantidade = document.getElementById('quantidadeProduto');
+                  spanQuantidade.innerHTML = '';
+                  spanQuantidade.appendChild(inputQuantidade);
+              
+                  // Quando o usuário perder o foco no input (blur), ou pressionar Enter, o valor será enviado
+                  inputQuantidade.addEventListener('blur', function() {
+                      atualizarQuantidade(inputQuantidade.value);
+                  });
+              
+                  inputQuantidade.addEventListener('keypress', function(event) {
+                      if (event.key === 'Enter') {
+                          atualizarQuantidade(inputQuantidade.value);
+                      }
+                  });
+              
+                  // Função para enviar a nova quantidade para o backend
+                  function atualizarQuantidade(novaQuantidade) {
+                    novaQuantidade = Number(novaQuantidade);
+
+                    console.log("Produto ID:", produtoId);
+                    console.log("Nova Quantidade:", novaQuantidade);
+                      if (novaQuantidade && novaQuantidade !== quantidadeAtual) {
+                          // Envia a requisição para o backend para editar a quantidade do produto no carrinho
+                          fetch(`/editar-carrinho/${produtoId}`, {
+                              method: 'POST',
+                              headers: {
+                                  'Content-Type': 'application/json',
+                              },
+                              body: JSON.stringify({
+                                  quantidade: novaQuantidade,  // Envia a nova quantidade para o backend
+                              }),
+                          })
+                          .then(response => response.json())
+                          .then(data => {
+                              // Se a quantidade for atualizada com sucesso, exiba a nova quantidade
+                              if (data.message === 'Quantidade do produto atualizada com sucesso') {
+                                  spanQuantidade.innerHTML = novaQuantidade;
+                                  console.log(data)
+                                  document.getElementById(`subtotalProduto-${produtoId}`).textContent = `R$ ${data.novoSubTotal.toFixed(2)}`; // Atualiza o subtotal
+                                  document.getElementById(`total`).textContent = `${data.novoSubTotal.toFixed(2)}`;
+                              } else {
+                                  alert('Erro ao atualizar quantidade');
+                                  spanQuantidade.innerHTML = quantidadeAtual;  // Retorna ao valor original
+                              }
+                          })
+                          .catch(error => {
+                              alert('Erro de conexão');
+                              spanQuantidade.innerHTML = quantidadeAtual;  // Retorna ao valor original
+                          });
+                      } else {
+                          // Se a quantidade não foi alterada, apenas retorna o valor original
+                          spanQuantidade.innerHTML = quantidadeAtual;
+                      }
+                  }
+              });
+              
+              
+
               const removerProdutoBtn = produtoElement.querySelector('.remover-produto');
               removerProdutoBtn.addEventListener('click', async () => {
                 const produtoId = removerProdutoBtn.getAttribute('data-produto-id');
