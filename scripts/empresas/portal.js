@@ -28,17 +28,31 @@ document.addEventListener('DOMContentLoaded', () => {
     if (data.categorias) {
       const ul = document.querySelector('.categorias-container ul');
       data.categorias.forEach(categoria => {
+        const urls = {
+          cardápios: 'https://i.imgur.com/9Vi90AZ.png',
+          banners: 'https://i.imgur.com/GEyS5gi.png',
+          caixa: 'https://i.imgur.com/gJWpdrK.png',
+          menus: 'https://i.imgur.com/Ck96grH.png',
+          displays: 'https://i.imgur.com/85HoIul.png',
+          cafe_do_centro: 'https://i.imgur.com/GzLGgyp.png',
+          campanha: 'https://i.imgur.com/hshtap8.png',
+          lamina_de_menu: 'https://i.imgur.com/aOHq8py.png',
+        }
         const li = document.createElement('li');
         const a = document.createElement('a');
         a.href = `/cpq/categorias?categoria=${categoria.toLowerCase().replace(/\s+/g, '-')}`; // Ajuste do link para categorias // Defina o link da categoria conforme necessário
         a.textContent = categoria;
 
         const imagem = document.createElement('img');
-        const imageUrl = `../../images/CPQ_IMAGES/${categoria.toLowerCase().replace(/\s+/g, '-')}.png`;  // Caminho para a imagem
-        imagem.src = imageUrl;  // Define a imagem a partir do caminho
-        imagem.alt = categoria;
-        imagem.style.width = '50px';
-        imagem.style.height = '50px';
+        const imageUrl = urls[categoria.toLowerCase().replace(/\s+/g, '-')];  // Pegando a URL da imagem a partir da variável urls
+        if (imageUrl) {
+          imagem.src = imageUrl;  // Define a imagem a partir do URL da variável
+          imagem.alt = categoria;
+          imagem.style.width = '50px';
+          imagem.style.height = '50px';
+        } else {
+          console.log(`Imagem não encontrada para a categoria: ${categoria}`);
+        }
 
         a.style.display = "inline-block";
 
