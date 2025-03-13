@@ -35,13 +35,13 @@ async function enviarEmailNotificacao(destinatario, assunto, corpo) {
     port: 465,                 // Porta para SSL (465)
     secure: true,              // Usar conexão segura (SSL)
     auth: {
-      user: 'no-reply@imprimeai.com.br',  // E-mail que você vai usar para enviar
-      pass: 'H0ndur@s',                    // Senha do e-mail
+      user: 'atendimento@imprimeai.com.br',  // E-mail que você vai usar para enviar
+      pass: 'Z1mb@bue',                    // Senha do e-mail
     },
   })
 
   const info = await transporter.sendMail({
-    from: 'no-reply@imprimeai.com.br',
+    from: 'atendimento@imprimeai.com.br',
     to: destinatario,
     subject: assunto,
     text: corpo,
@@ -933,6 +933,94 @@ app.post("/login-graficas", async (req, res) => {
   } catch (error) {
     console.error("Erro ao fazer login:", error);
     res.status(500).json({ message: "Erro ao Fazer o Login <br> Preencha os Campos Corretamente" });
+  }
+});
+
+// Função para gerar um código de 4 dígitos
+function gerarCodigo() {
+  return Math.floor(1000 + Math.random() * 9000).toString();
+}
+
+// Rota 1 - Enviar código para o e-mail
+app.post("/enviar-codigo-cpq", async (req, res) => {
+  const { email } = req.body;
+
+  try {
+    const user = await UsersEmpresas.findOne({ where: { emailCad: email } });
+
+    if (!user) {
+      return res.status(404).json({ success: false, message: "E-mail não encontrado." });
+    }
+
+    const codigo = gerarCodigo();
+    console.log("Código Gerado: ", codigo);
+    user.verificationCode = codigo;
+    await user.save();
+
+    // Enviar e-mail com o código
+    await enviarEmailNotificacao(email, "Código de recuperação de senha", `Seu código de recuperação é: ${codigo}`);
+
+    res.cookie("email", email, { httpOnly: true });
+    return res.json({ success: true, message: "Código enviado para o e-mail." });
+  } catch (error) {
+    console.error("Erro ao enviar código:", error);
+    return res.status(500).json({ success: false, message: "Erro ao enviar código." });
+  }
+});
+
+// Rota 2 - Verificar código
+app.post("/verificar-codigo-cpq", async (req, res) => {
+  const { codigo } = req.body;
+  const email = req.body.email;
+  console.log(email)
+
+  if (!email) {
+    return res.status(400).json({ success: false, message: "Sessão expirada. Tente novamente." });
+  }
+
+  try {
+    const user = await UsersEmpresas.findOne({ where: {emailCad: email, verificationCode: codigo } });
+
+    if (!user) {
+      return res.status(400).json({ success: false, message: "Código incorreto." });
+    }
+
+    return res.json({ success: true, message: "Código validado." });
+  } catch (error) {
+    console.error("Erro ao verificar código:", error);
+    return res.status(500).json({ success: false, message: "Erro interno." });
+  }
+});
+
+// Rota 3 - Trocar senha
+app.post("/trocar-senha-cpq", async (req, res) => {
+  const { senha } = req.body;
+  const email = req.body.email;
+
+  if (!email) {
+    return res.status(400).json({ success: false, message: "Sessão expirada. Tente novamente." });
+  }
+
+  try {
+    const user = await UsersEmpresas.findOne({ where: { emailCad: email } });
+
+    if (!user) {
+      return res.status(404).json({ success: false, message: "Usuário não encontrado." });
+    }
+
+    // Hash da nova senha
+    const hashedSenha = await bcrypt.hash(senha, 10);
+
+    user.passCad = hashedSenha;
+    user.codigoRecuperacao = null;
+    await user.save();
+
+    res.clearCookie("email");
+
+    return res.json({ success: true, message: "Senha alterada com sucesso!" });
+  } catch (error) {
+    console.error("Erro ao trocar senha:", error);
+    return res.status(500).json({ success: false, message: "Erro ao trocar senha." });
   }
 });
 

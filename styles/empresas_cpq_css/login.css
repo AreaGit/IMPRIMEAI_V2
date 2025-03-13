@@ -81,10 +81,9 @@ form > button:hover {
     font-size: var(--size);
     user-select: none;
     fill: var(--color);
-    position: absolute;
-    left: 80%;
-    transform: translate(-80%);
-    top: 62%;
+    position: relative;
+    left: 35%;
+    top: 37px;
 }
 
   .esconder .eye {
@@ -126,6 +125,14 @@ form > button:hover {
     50% {
       transform: scale(1.2);
     }
+}
+form > a {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  top: 35px;
+  color: #016002;
 }
 #avisoSucesso {
   display: none;

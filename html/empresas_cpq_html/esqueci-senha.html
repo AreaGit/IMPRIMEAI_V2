@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Esqueci a Senha</title>
+    <link rel="shortcut icon" href="../../images/favicon-imprimeai.png" type="image/x-icon">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,300;1,400;1,500;1,600;1,700;1,800&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter+Tight:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" />
+    <link rel="stylesheet" href="../../styles/empresas_cpq_css/esqueci-senha.css">
+</head>
+<body>
+    <div id="aviso" class="aviso"></div>
+    <div class="container">
+        <div class="enviarCodigo">
+            <h1>Esqueci a Senha</h1>
+            <p>Digite o e-mail cadastrado na plataforma para enviarmos o código de verificação</p>
+            <form>
+                <input type="email" name="email" id="email" placeholder="Digite seu e-mail...">
+                <button type="button">Enviar</button>
+            </form>
+        </div>
+        <div class="inserirCodigo">
+            <h1>Código de verificação</h1>
+            <p>Digite abaixo o código de verificação de 4 dígitos abaixo para verificarmos o e-mail</p>
+            <form>
+                <input type="text" name="codigo" id="codigo" minlength="1" maxlength="4">
+                <button type="button">Enviar</button>
+            </form>
+        </div>
+        <div class="trocarSenha">
+            <h1>Trocar Senha</h1>
+            <p>Digite abaixo a nova senha para o e-mail <span id="emailUser"></span></p>
+            <form>
+                <label for="novaSenha">Digite a Nova Senha</label>
+                <input type="password" name="novaSenha" id="novaSenha" placeholder="Digite sua senha...">
+                <label for="repetirSenha">Repita a Nova Senha</label>
+                <input type="password" name="repetirSenha" id="repetirSenha" placeholder="Digite sua senha...">
+                <button type="button">Enviar</button>
+            </form>
+        </div>
+    </div>
+    <script src="../../scripts/empresas/esqueci-senha.js"></script>
+</body>
+</html>

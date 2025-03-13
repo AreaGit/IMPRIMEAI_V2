@@ -2424,6 +2424,16 @@ app.get('/cpq/login-adm', (req, res) => {
   }
 });
 
+app.get('/cpq/esqueci-senha', (req, res) => {
+  try {
+    const esqueciContentHtml = fs.readFileSync(path.join(__dirname, "html/empresas_cpq_html", "esqueci-senha.html"), "utf-8");
+    res.send(esqueciContentHtml);
+  } catch (error) {
+    console.error("Erro ao ler o arquivo esqueci-senha.html:", error);
+    res.status(500).send("Erro interno do servidor");
+  }
+});
+
 app.listen(PORT, () => {
   console.log(`Servidor rodando na porta ${PORT} https://localhost:${PORT}`);
 });
