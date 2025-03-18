@@ -14,24 +14,20 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter+Tight:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" />
     <link rel="stylesheet" href="../styles/redefinir-senha.css">
-    <link rel="stylesheet" href="../styles/redefinir-senha-resp.css">
 </head>
 <body>
-    <header>
-        <a href="/"><img src="../images/logo-imprimeai.png" alt="..." id="logo"></a>
-        <h1>Redefinir senha</h1>
-        <div id="linhaHr"></div>
-        <h2>Preencha o campo abaixo <br> para redefinir sua senha</h2>
-    </header>
-    <form>
-        <div id="conteudo">
-            <label for="senhaUser">Senha</label>
-            <br>
-            <input type="password" name="senhaUser" id="senhaUser" placeholder="Digite sua Senha...">
-            <br>
-        </div>
-        <button id="btnRedefinir" type="button">Redefinir</button>
-    </form>
+  <a href="/"><img class="background-image" src="../images/logo-fundo-imprimeai.png" alt="Imagem de fundo"></a>
+  <img class="background-border" src="../images/borda-imprimeai.png" alt="Imagem de borda">  
+    <div class="container">
+      <h2>Redefinir senha</h2>
+      <p>Preencha o campo abaixo para redefinir sua senha</p>
+      <form>
+            <div class="input-group">
+              <input type="password" name="senhaUser" id="senhaUser" placeholder="Digite sua Senha...">
+            </div>
+          <button id="btnRedefinir" class="btn" type="button">Redefinir</button>
+      </form>
+    </div>
     <div id="avisoErro">
         <div class="notifications-container">
             <div class="error-alert">

@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<EnviarLoteRpsEnvio xmlns="http://www.ginfes.com.br/servico_enviar_lote_rps_v03.xsd" xmlns:ns2="http://www.ginfes.com.br/tipos_v03.xsd">
+
+    <cabecalho xmlns="http://www.ginfes.com.br/cabecalho_v03.xsd" versao="3">
+        <versaoDados>3</versaoDados>
+    </cabecalho>
+  
+   <LoteRps Id="LOTE0001" xmlns="http://www.ginfes.com.br/servico_enviar_lote_rps_v03.xsd">
+      <ns2:NumeroLote>12345</ns2:NumeroLote>
+      <ns2:Cnpj>54067133000104</ns2:Cnpj>
+      <ns2:InscricaoMunicipal>136069</ns2:InscricaoMunicipal>
+      <ns2:QuantidadeRps>1</ns2:QuantidadeRps>
+      <ns2:ListaRps>
+         <ns2:Rps>
+            <ns2:InfRps Id="Rps_5A">
+               <ns2:IdentificacaoRps>
+                  <ns2:Numero>5</ns2:Numero>
+                  <ns2:Serie>A</ns2:Serie>
+                  <ns2:Tipo>1</ns2:Tipo>
+               </ns2:IdentificacaoRps>
+               <ns2:DataEmissao>2025-03-06T09:30:00</ns2:DataEmissao>
+               <ns2:NaturezaOperacao>1</ns2:NaturezaOperacao>
+               <ns2:Servico>
+                  <ns2:Valores>
+                     <ns2:ValorServicos>150.00</ns2:ValorServicos>
+                     <ns2:BaseCalculo>150.00</ns2:BaseCalculo>
+                     <ns2:Aliquota>0.0500</ns2:Aliquota>
+                     <ns2:ValorLiquidoNfse>142.50</ns2:ValorLiquidoNfse>
+                  </ns2:Valores>
+                  <ns2:CodigoMunicipio>3548807</ns2:CodigoMunicipio>
+               </ns2:Servico>
+               <ns2:Prestador>
+                  <ns2:Cnpj>54067133000104</ns2:Cnpj>
+                  <ns2:InscricaoMunicipal>136069</ns2:InscricaoMunicipal>
+               </ns2:Prestador>
+            </ns2:InfRps>
+         </ns2:Rps>
+      </ns2:ListaRps>
+   </LoteRps>
+<Signature xmlns="http://www.w3.org/2000/09/xmldsig#"><SignedInfo><CanonicalizationMethod Algorithm="http://www.w3.org/2001/10/xml-exc-c14n#"/><SignatureMethod Algorithm="http://www.w3.org/2000/09/xmldsig#rsa-sha1"/><Reference URI="#LOTE0001"><Transforms><Transform Algorithm="http://www.w3.org/2001/10/xml-exc-c14n#"/></Transforms><DigestMethod Algorithm="http://www.w3.org/2001/04/xmlenc#sha256"/><DigestValue>UN60a9vId+CRccvB8IZIIejXHKdoH7iyFbjz+Sz0Dt8=</DigestValue></Reference></SignedInfo><SignatureValue>g8CPj2Q67HzRLrbr7N+r41pPJuTp0Kw5BHNdDzDXfDEMhPzOJdCCoy1C++oiPiAdl5uEiTjnfXrYVaNbeOZTbCgmzxwiZxLhSvsuh2rRl9+Jpe8KVKw9p2gJgtzAElaRCh4Tz4Hyn4JD49o8yQ42PtIfkz5RQ31pDkedT2+Lujrgu0w8eFDrgP7Q1L/lvIAU5HYmfud5wObOp9pOmGVZweUcRL7LoL2QCgMFWt7wSRRKZ64lsCkD/2HecAAxKENcIl/1+xfQjX5PGGjCSKOY1ch6J1LJtgXez9zXqxLZEl/Gu6MdPOIasixNiDm8kGWnyJk0cT95nYY9yI8pv3p1Yw==</SignatureValue></Signature></EnviarLoteRpsEnvio>

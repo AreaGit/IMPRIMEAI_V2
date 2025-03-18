@@ -1169,9 +1169,10 @@ app.post('/criar-pedidos', async (req, res) => {
       const nome = usuario.userCad;
       const telefone = usuario.telefoneCad;
       const linkDetalhamento = `https://www.imprimeai.com.br/detalhesPedidosUser?idPedido=${pedido.id}`
-      const mensagemWhatsapp = "Oi " + nome + ", tudo bem? 😊 Quero te agradecer por confiar sua impressão com a Imprimeaí! Nosso time está super feliz por poder te atender. Se precisar de algo mais ou tiver alguma dúvida, por favor nos chame.\n\n" +
-      "Em breve, te trarei mais novidades sobre o pedido " + pedido.id + "\n" +
+      const mensagemWhatsapp = "Oi " + nome + ", tudo bem? 😊\n" + "Queremos te agradecer por confiar sua impressão à Imprimeaí!\n" + "Nosso time está super feliz por poder te atender.\n" + "Se precisar de algo mais ou tiver alguma dúvida, por favor nos chame.\n\n" +
+      "Em breve, te traremos mais novidades sobre o pedido " + pedido.id + "\n" +
       "Se preferir acompanhe também pelo site:" + linkDetalhamento + "\n\n" +
+      "Pri\n\n" +
       "Obrigada!\n\n" +
       "Siga-nos no Insta\n" +
       "https://www.instagram.com/imprimeai.com.br e fique por dentro das novidades, cupons de desconto e assuntos importantes sobre gráfica e comunicação visual!\n\n" +
@@ -1289,9 +1290,10 @@ app.post('/criar-pedidos-empresas', async (req, res) => {
       const nome = usuario.userCad;
       const telefone = usuario.telefoneCad;
       const linkDetalhamento = `https://www.imprimeai.com.br/detalhesPedidosUser?idPedido=${pedido.id}`
-      const mensagemWhatsapp = "Oi " + nome + ", tudo bem? 😊 Quero te agradecer por confiar sua impressão com a Imprimeaí! Nosso time está super feliz por poder te atender. Se precisar de algo mais ou tiver alguma dúvida, por favor nos chame.\n\n" +
-      "Em breve, te trarei mais novidades sobre o pedido " + pedido.id + "\n" +
+      const mensagemWhatsapp = "Oi " + nome + ", tudo bem? 😊\n" + "Queremos te agradecer por confiar sua impressão à Imprimeaí!\n" + "Nosso time está super feliz por poder te atender.\n" + "Se precisar de algo mais ou tiver alguma dúvida, por favor nos chame.\n\n" +
+      "Em breve, te traremos mais novidades sobre o pedido " + pedido.id + "\n" +
       "Se preferir acompanhe também pelo site:" + linkDetalhamento + "\n\n" +
+      "Pri\n\n" +
       "Obrigada!\n\n" +
       "Siga-nos no Insta\n" +
       "https://www.instagram.com/imprimeai.com.br e fique por dentro das novidades, cupons de desconto e assuntos importantes sobre gráfica e comunicação visual!\n\n" +
@@ -2174,6 +2176,8 @@ async function verificarGraficaMaisProximaEAtualizar2(itensPedido, enderecos) {
         linkDownload: item.linkDownload,
         nomeArquivo: item.nomeArquivo,
         imgProd: item.produto.imgProd,
+        tipo: item.tipo,
+        arteEmpresas: item.arteEmpresas,
       }));
   
       // Enviar para o cliente os endereços e itens associados ao pedido

@@ -70,8 +70,16 @@ fetch(`/detalhes-pedidoUser/${idPedido}`)
         // Exibir detalhes dos itens do pedido
         data.itens.forEach(async (item) => {
             let idProduto = item.idProduto
-            const imgUrl = await pegarImagemProduto(idProduto);
-            const div = document.createElement('div');
+            console.log(item.tipo)
+            let imgUrl
+            let div
+            if(!item.tipo) {
+                imgUrl = await pegarImagemProduto(idProduto);
+                div = document.createElement('div');
+            } else {
+                imgUrl = await pegarImagemDoProdutoEmpresas(idProduto);
+                div = document.createElement('div');
+            }
             if(item.nomeArquivo == null) {
                 item.nomeArquivo = ""
             } else if(item.marca == null) {
@@ -82,18 +90,18 @@ fetch(`/detalhes-pedidoUser/${idPedido}`)
             div.id = `divItem`
                 div.innerHTML += `
                 <img src="${imgUrl}">
-                <p><strong>ID do Produto:</strong> ${item.idProduto}</p>
-                <p><strong>Nome do Produto:</strong> ${item.nomeProd}</p>
-                <p><strong>Quantidade:</strong> ${item.quantidade}</p>
-                <p><strong>Valor:</strong> ${item.valorProd}</p>
-                <p><strong>Marca:</strong> ${item.marca}</p>
-                <p><strong>Modelo:</strong> ${item.modelo}</p>
-                <p><strong>Acabamento:</strong> ${item.acabamento}</p>
-            <p><strong>Cor:</strong> ${item.cor}</p>
-            <p><strong>Enobrecimento:</strong> ${item.enobrecimento}</p>
-            <p><strong>Formato:</strong> ${item.formato}</p>
-            <p><strong>Material:</strong> ${item.material}</p>
-            <a href="${item.linkDownload}" download"arte"><strong>Arte do Produto:</strong> ${item.nomeArquivo}</a>
+                <p><strong>ID do Produto:</strong> ${item.idProduto == null ? "Não há" : item.idProduto}</p>
+                <p><strong>Nome do Produto:</strong> ${item.nomeProd == null ? "Não há" : item.nomeProd}</p>
+                <p><strong>Quantidade:</strong> ${item.quantidade == null ? "Não há" : item.quantidade}</p>
+                <p><strong>Valor:</strong> ${item.valorProd == null ? "Não há" : item.valorProd}</p>
+                <p><strong>Marca:</strong> ${item.marca == null ? "Não há" : item.marca}</p>
+                <p><strong>Modelo:</strong> ${item.modelo == null ? "Não há" : item.modelo}</p>
+                <p><strong>Acabamento:</strong> ${item.acabamento == null ? "Não há" : item.acabamento}</p>
+            <p><strong>Cor:</strong> ${item.cor == null ? "Não há" : item.cor}</p>
+            <p><strong>Enobrecimento:</strong> ${item.enobrecimento == null ? "Não há" : item.enobrecimento}</p>
+            <p><strong>Formato:</strong> ${item.formato == null ? "Não há" : item.formato}</p>
+            <p><strong>Material:</strong> ${item.material == null ? "Não há" : item.material}</p>
+            <a href="${!item.linkDownload ? item.arteEmpresas : item.linkDownload}" target="_blank" download"arte"><strong>Arte do Produto:</strong> ${item.nomeArquivo == null ? "Não há" : item.nomeArquivo}</a>
         `;
 
         if (item.linkDownload === 'Enviar Arte Depois') {
@@ -163,3 +171,16 @@ async function pegarImagemProduto(idProduto) {
         return null;
     }
   }
+  async function pegarImagemDoProdutoEmpresas(idDoProduto) {
+    try {
+        const imgResponse = await fetch(`/imagens-empresa/${idDoProduto}`);
+        if (!imgResponse.ok) {
+            throw new Error('Erro ao obter a URL da imagem do produto');
+        }
+        const imgData = await imgResponse.json();
+        return imgData.imgProdUrl;
+    } catch (error) {
+        console.error('Erro ao carregar a imagem:', error);
+        return null;
+    }
+}

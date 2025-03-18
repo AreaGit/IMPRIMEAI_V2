@@ -7,7 +7,7 @@ function getCookie(name) {
     }
   
     return null; // Retorna null caso o cookie não seja encontrado
-}
+}z
   
 // Pega o cookie
 let userId = getCookie("userId");

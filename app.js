@@ -1961,7 +1961,7 @@ app.get('/pagamento-empresas', (req, res) => {
   }
 });
 //Rota get para tela de login de usuários do portal da CPQ
-app.get('/cpq/login', (req, res) => {
+app.get('/cpq/', (req, res) => {
   try {
     const cpqLoginHtmlContent = fs.readFileSync(path.join(__dirname, "html/empresas_cpq_html", "login.html"), "utf-8");
     res.send(cpqLoginHtmlContent);

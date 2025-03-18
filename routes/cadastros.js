@@ -313,13 +313,13 @@ app.post('/enviar-email-redefinir', async(req, res) => {
       port: 465,                 // Porta para SSL (465)
       secure: true,              // Usar conexão segura (SSL)
       auth: {
-        user: 'no-reply@imprimeai.com.br',  // E-mail que você vai usar para enviar
-        pass: 'H0ndur@s',                    // Senha do e-mail
+        user: 'atendimento@imprimeai.com.br',  // E-mail que você vai usar para enviar
+        pass: 'Z1mb@bue',                    // Senha do e-mail
       },
     })
   
     const info = await transporter.sendMail({
-      from: 'no-reply@imprimeai.com.br',
+      from: 'atendimento@imprimeai.com.br',
       to: email,
       subject: "Redefinição de senha",
       text: "Olá vimos que você esqueceu sua senha! acesse esse link para redefini-lá: https://imprimeai.com.br/redefinir-senha",

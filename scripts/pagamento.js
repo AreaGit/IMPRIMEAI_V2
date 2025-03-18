@@ -215,7 +215,7 @@ async function criarPedido(metodoPag) {
             pedidoCriado.style.display = 'block';
             setTimeout(() => {
               pedidoCriado.style.display = 'none';
-              window.location.href = 'pedidosUsuario';
+              window.location.href = 'perfil';
             }, 10000);
           } else {
             // A solicitação não foi bem-sucedida, trate o erro aqui
@@ -265,7 +265,7 @@ async function criarPedidoBoleto(metodoPag, chargeId) {
             criacaoBoleto.style.display = 'block'
             setTimeout(() => {
               criacaoBoleto.style.display = 'none'
-              window.location.href = 'pedidosUsuario';
+              window.location.href = 'perfil';
             }, 15000);
           } else {
             // A solicitação não foi bem-sucedida, trate o erro aqui

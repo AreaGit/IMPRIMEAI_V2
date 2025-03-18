@@ -14,24 +14,20 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter+Tight:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" />
     <link rel="stylesheet" href="../styles/esqueci-senha.css">
-    <link rel="stylesheet" href="../styles/esqueci-senha-resp.css">
 </head>
 <body>
-    <header>
-        <a href="/"><img src="../images/logo-imprimeai.png" alt="..." id="logo"></a>
-        <h1>Esqueci minha Senha</h1>
-        <div id="linhaHr"></div>
-        <h2>Informe seu e-mail e enviaremos para você um link <br> para redefinir sua senha</h2>
-    </header>
-    <form>
-        <div id="conteudo">
-            <label for="emailUser">E-mail</label>
-            <br>
+  <a href="/"><img class="background-image" src="../images/logo-fundo-imprimeai.png" alt="Imagem de fundo"></a>
+  <img class="background-border" src="../images/borda-imprimeai.png" alt="Imagem de borda">
+    <div class="container">
+      <h2>Esqueci a Senha</h2>
+      <p>Informe seu e-mail e enviaremos para você um link para redefinir sua senha</p>
+      <form>
+          <div class="input-group">
             <input type="email" name="emailUser" id="emailUser" placeholder="Digite seu E-mail...">
-            <br>
-        </div>
-        <button id="btnEnviarEmail" type="button">Enviar</button>
-    </form>
+          </div>
+          <button id="btnEnviarEmail" class="btn" type="button">Enviar</button>
+      </form>
+    </div>
     <div id="avisoErro">
         <div class="notifications-container">
             <div class="error-alert">
