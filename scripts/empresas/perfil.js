@@ -73,7 +73,7 @@ btnSairConta.addEventListener('click', async() => {
         if(!response.ok) {
             throw new Error('Erro ao sair da conta');
         }
-        window.location.href = '/cpq/login';
+        window.location.href = '/cpq/';
     } catch(err) {
         console.log(err);
         window.location.reload();

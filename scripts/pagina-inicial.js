@@ -336,12 +336,6 @@ document.addEventListener("DOMContentLoaded", async () => {
     const conviteCad = document.getElementById('conviteCad');
     const userLog = document.getElementById('userLog');
     const nameUserLog = document.getElementById('nameUserLog');
-    let isUnd = false
-        if(username = undefined){
-            conviteCad.style.display = 'block';
-            userLog.style.display = 'none';
-            isUnd = true
-        }
         if (username === undefined) {
             // Mostra o convite para cadastrar e esconde a área logada
             conviteCad.style.display = 'block';
