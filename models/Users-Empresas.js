@@ -43,6 +43,10 @@ const  UserEmpresas = db.define('usersempresas', {
         type : Sequelize.STRING(255),
         allowNull: true,
     },
+    cnpjCad: {
+        type : Sequelize.STRING(255),
+        allowNull: true,
+    },
     telefoneCad: {
         type : Sequelize.STRING(255),
         allowNull: true,

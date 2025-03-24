@@ -2235,7 +2235,7 @@ async function verificarGraficaMaisProximaEAtualizar2(itensPedido, enderecos) {
     "customer": {
         "name": perfilData.nomeCliente,
         "email": perfilData.emailCliente,
-        "type": "individual",
+        "type": perfilData.company = "company" ? "company" : "individual",
         "document": perfilData.cpfCliente,
         "phones": {
             "home_phone": {

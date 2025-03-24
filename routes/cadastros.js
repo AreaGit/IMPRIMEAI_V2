@@ -137,7 +137,7 @@ app.post('/cadastrar-marca', async (req, res) => {
 
 app.post("/cadastrarUser-empresas", async (req, res) => { 
   try {
-      const { userCad, cpfCad, endereçoCad, numCad, compCad, bairroCad, cepCad, cidadeCad, estadoCad, inscricaoEstadualCad, telefoneCad, produtos, empresa, emailCad, passCad } = req.body;
+      const { userCad, cnpjCad, endereçoCad, numCad, compCad, bairroCad, cepCad, cidadeCad, estadoCad, inscricaoEstadualCad, telefoneCad, produtos, empresa, emailCad, passCad } = req.body;
       const hashedPassword = await bcrypt.hash(passCad, 10);
 
   // Verifique se já existe um usuário com o mesmo CPF, email ou senha
@@ -159,7 +159,7 @@ app.post("/cadastrarUser-empresas", async (req, res) => {
 
       const newUser = await UsersEmpresas.create({
           userCad: userCad,
-          cpfCad: cpfCad,
+          cnpjCad: cnpjCad,
           endereçoCad: endereçoCad,
           numCad: numCad,
           compCad: compCad,
@@ -255,6 +255,44 @@ function gerarAbreviacao(empresa) {
     .join('') // Junta as letras para formar a abreviação
     .toLowerCase(); // Converte para minúsculas
 }
+
+app.post("/loginUserCnpj-empresas", async (req, res) => {
+  try {
+    const { cnpjCad, passCad } = req.body;
+    console.log(req.body);
+
+    // Verifique se o usuário e a empresa existem no banco de dados
+    const user = await UsersEmpresas.findOne({
+      where: { cnpjCad: cnpjCad },
+      attributes: ['id', 'passCad', 'userCad', 'empresa'], // Inclui userCad na busca
+    });
+
+    if (!user) {
+      return res.status(401).json({ message: "Credenciais inválidas." });
+    }
+
+    // Verifique se a senha está correta
+    const passwordMatch = await bcrypt.compare(passCad, user.passCad);
+    if (!passwordMatch) {
+      return res.status(401).json({ message: "Credenciais inválidas." });
+    }
+
+    res.cookie("userId", user.id);
+    res.cookie('userCad', user.userCad);
+    const empresa = encodeURIComponent(user.empresa);
+    res.cookie('empresa', empresa, {
+      encode: String, // Evita dupla codificação
+    });
+    // Retorne sucesso e a URL de redirecionamento com a abreviação
+    res.json({
+      success: true,
+      message: "Login bem-sucedido",
+    });
+  } catch (error) {
+    console.error("Erro ao fazer login:", error);
+    res.status(500).json({ message: "Erro ao realizar login." });
+  }
+});
 
 app.post("/loginUser-empresas", async (req, res) => {
   try {

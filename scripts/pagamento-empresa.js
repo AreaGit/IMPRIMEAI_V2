@@ -1,3 +1,4 @@
+let company = 'company'
 fetch('/api/empresa/nome')
   .then(response => response.json())
   .then(data => {
@@ -340,7 +341,7 @@ try {
   const numeroTelefoneCliente = telefoneFormatado.numeroTelefone;
 
 // Remove non-digit characters from CPF and format it
-const cpf = perfilData.cpfCad.replace(/\D/g, ''); // Remove non-digit characters
+const cpf = perfilData.cnpjCad.replace(/\D/g, ''); // Remove non-digit characters
 
 const cpfCliente = cpf;
 
@@ -351,7 +352,7 @@ const cpfCliente = cpf;
   const ruaCliente = perfilData.endereçoCad;
   const numeroResidenciaCliente = perfilData.numCad;
   const bairroCliente = perfilData.bairroCad;
-  const numeroDocumento = perfilData.cpfCad;
+  const numeroDocumento = perfilData.cnpjCad;
   const nomeCliente = perfilData.userCad;
   const paisCliente = "BR";
   const idCliente = perfilData.userId;
@@ -375,6 +376,7 @@ const cpfCliente = cpf;
       numeroTelefoneCliente: numeroTelefoneCliente,
       userId: idCliente,
       totalCompra:  valorAtualGlobal,
+      company: company
   };
 
   // Envie os dados do formulário e do perfil do usuário para o backend
@@ -479,7 +481,7 @@ async function pagamentoBoleto() {
     const numeroTelefoneCliente = telefoneFormatado.numeroTelefone;
   
   // Remove non-digit characters from CPF and format it
-  const cpf = perfilData.cpfCad.replace(/\D/g, ''); // Remove non-digit characters
+  const cpf = perfilData.cnpjCad.replace(/\D/g, ''); // Remove non-digit characters
   
   const cpfCliente = cpf;
   
@@ -490,7 +492,7 @@ async function pagamentoBoleto() {
     const ruaCliente = perfilData.endereçoCad;
     const numeroResidenciaCliente = perfilData.numCad;
     const bairroCliente = perfilData.bairroCad;
-    const numeroDocumento = perfilData.cpfCad;
+    const numeroDocumento = perfilData.cnpjCad;
     const nomeCliente = perfilData.userCad;
     const paisCliente = "BR";
     const idCliente = perfilData.userId;
@@ -516,6 +518,7 @@ async function pagamentoBoleto() {
         numeroTelefoneCliente: numeroTelefoneCliente,
         userId: idCliente,
         totalCompra:  valorAtualGlobal,
+        company: company,
     };
   
     // Envie os dados do formulário e do perfil do usuário para o backend
@@ -636,7 +639,7 @@ btnCartaoCredito.addEventListener('click', async() => {
       const numeroTelefoneCliente = telefoneFormatado.numeroTelefone;
     
     // Remove non-digit characters from CPF and format it
-    const cpf = perfilData.cpfCad.replace(/\D/g, ''); // Remove non-digit characters
+    const cpf = perfilData.cnpjCad.replace(/\D/g, ''); // Remove non-digit characters
     
     const cpfCliente = cpf;
     
@@ -647,7 +650,7 @@ btnCartaoCredito.addEventListener('click', async() => {
       const ruaCliente = perfilData.endereçoCad;
       const numeroResidenciaCliente = perfilData.numCad;
       const bairroCliente = perfilData.bairroCad;
-      const numeroDocumento = perfilData.cpfCad;
+      const numeroDocumento = perfilData.cnpjCad;
       const nomeCliente = perfilData.userCad;
       const paisCliente = "BR";
       const idCliente = perfilData.userId;
@@ -673,6 +676,7 @@ btnCartaoCredito.addEventListener('click', async() => {
           numeroTelefoneCliente: numeroTelefoneCliente,
           userId: idCliente,
           totalCompra:  valorAtualGlobal,
+          company: company,
       };
 
       const formData = {

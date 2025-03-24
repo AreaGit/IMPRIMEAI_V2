@@ -28,8 +28,8 @@ const bairroUser = document.getElementById('bairroUser');
 let validBairroUser = false
 const complementoUser = document.getElementById('complementoUser');
 let validComplementoUser = false;
-const cpfUser = document.getElementById('cpfUser');
-let validCpfUser = false;
+const cnpjUser = document.getElementById('cnpjUser');
+let validCnpjUser = false;
 const telefoneUser = document.getElementById('telefoneUser');
 let validTelefoneUser = false;
 const empresaUser = document.getElementById("empresaUser");
@@ -124,28 +124,28 @@ cepUser.addEventListener('input', () => {
         validCepUser = false
     }
 });
-//Formatando campo de CPF do usuário
-cpfUser.addEventListener('input', () => {
-    let cpfValue = cpfUser.value.replace(/\D/g, ''); // Remove todos os caracteres não numéricos
-    if (cpfValue.length > 11) {
-        cpfValue = cpfValue.slice(0, 11); // Limite o comprimento a 11 caracteres
+//Formatando o Cnpj
+cnpjUser.addEventListener('input', () => {
+    let cnpjValue = cnpjUser.value.replace(/\D/g, ''); // Remove todos os caracteres não numéricos
+    if (cnpjValue.length > 14) {
+        cnpjValue = cnpjValue.slice(0, 14); // Limite o comprimento a 14 caracteres
     }
-    // Formata o CPF com pontos e traço
-    cpfValue = cpfValue.replace(/(\d{3})(\d{3})(\d{3})(\d{2})/, '$1.$2.$3-$4');
+    // Formata o CNPJ com pontos, barra e traço
+    cnpjValue = cnpjValue.replace(/^(\d{2})(\d{3})(\d{3})(\d{4})(\d{2})$/, '$1.$2.$3/$4-$5');
 
-    cpfUser.value = cpfValue; // Define o valor formatado de volta no campo
+    cnpjUser.value = cnpjValue; // Define o valor formatado de volta no campo
 });
 
-cpfUser.addEventListener('keyup', () => {
-    const cpfValue = cpfUser.value.replace(/\D/g, ''); // Remove todos os caracteres não numéricos
-    if (cpfValue.length !== 11) {
-        cpfUser.style.color = 'red';
-        cpfUser.style.borderColor = 'red';
-        validCpfUser = false;
+cnpjUser.addEventListener('keyup', () => {
+    const cnpjValue = cnpjUser.value.replace(/\D/g, ''); // Remove todos os caracteres não numéricos
+    if (cnpjValue.length !== 14) {
+        cnpjUser.style.color = 'red';
+        cnpjUser.style.borderColor = 'red';
+        validCnpjUser = false;
     } else {
-        cpfUser.style.color = 'black';
-        cpfUser.style.borderColor = 'green';
-        validCpfUser = true;
+        cnpjUser.style.color = 'black';
+        cnpjUser.style.borderColor = 'green';
+        validCnpjUser = true;
     }
 });
 //Formatando campo de Telefone do usuário
@@ -229,7 +229,7 @@ btnCad.addEventListener('click', () => {
     const cidadeUser = document.getElementById('cidadeUser').value;
     const bairroUser = document.getElementById('bairroUser').value;
     const complementoUser = document.getElementById('complementoUser').value;
-    const cpfUser = document.getElementById('cpfUser').value;
+    const cnpjUser = document.getElementById('cnpjUser').value;
     const telefoneUser = document.getElementById('telefoneUser').value;
     const empresaUser = document.getElementById("empresaUser").value;
     const emailUser = document.getElementById('emailUser').value;
@@ -280,7 +280,7 @@ btnCad.addEventListener('click', () => {
         setTimeout(() => {
             avisoEmpresaUser.style.display = 'none'
         }, 5000);
-    }else if(validCpfUser === false) {
+    }else if(validCnpjUser === false) {
         avisoCpf.style.display = 'block'
         setTimeout(() => {
             avisoCpf.style.display = 'none'
@@ -300,7 +300,7 @@ btnCad.addEventListener('click', () => {
             bairroCad : bairroUser,
             numCad : numResidenciaUser,
             compCad : complementoUser,
-            cpfCad : cpfUser,
+            cnpjCad : cnpjUser,
             telefoneCad : telefoneUser,
             empresa : empresaUser,
             emailCad : emailUser,

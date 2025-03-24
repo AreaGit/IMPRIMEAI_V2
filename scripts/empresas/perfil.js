@@ -50,8 +50,8 @@ async function carregarInfoUsers() {
 
         const data = await response.json();
         
-        const cpfInput = document.getElementById('cpf');
-        cpfInput.value = data.cpfCad;
+        const cnpjInput = document.getElementById('cnpj');
+        cnpjInput.value = data.cnpjCad;
         const nomeInput = document.getElementById('nomeCompleto');
         nomeInput.value = data.userCad;
         const emailInput = document.getElementById('email');
