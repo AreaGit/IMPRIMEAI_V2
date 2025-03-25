@@ -17,7 +17,7 @@
 </head>
 <body>
     <div id="aviso" class="aviso"></div>
-    <div class="container">
+    <div class="container" id="email">
         <div class="enviarCodigo">
             <h1>Esqueci a Senha</h1>
             <p>Digite o e-mail cadastrado na plataforma para enviarmos o código de verificação</p>
@@ -43,6 +43,35 @@
                 <label for="repetirSenha">Repita a Nova Senha</label>
                 <input type="password" name="repetirSenha" id="repetirSenha" placeholder="Digite sua senha...">
                 <button type="button">Enviar</button>
+            </form>
+        </div>
+    </div>
+    <div class="container" id="cnpj">
+        <div class="enviarCodigo" id="enviarCodigo-cnpj">
+            <h1>Esqueci a Senha</h1>
+            <p>Digite o cnpj cadastrado na plataforma para enviarmos o código de verificação</p>
+            <form>
+                <input type="text" name="input-cnpj" id="input-cnpj" placeholder="Digite seu Cnpj...">
+                <button type="button" id="btnEnviarCodigoCnpj">Enviar</button>
+            </form>
+        </div>
+        <div class="inserirCodigo" id="inserirCodigo-cnpj">
+            <h1>Código de verificação</h1>
+            <p>Digite abaixo o código de verificação enviado para o seu WhatsApp de 4 dígitos e insira ele abaixo para verificarmos sua conta</p>
+            <form>
+                <input type="text" name="codigo-cnpj" id="codigo-cnpj" minlength="1" maxlength="4">
+                <button type="button" id="inserirCodigoCnpj">Enviar</button>
+            </form>
+        </div>
+        <div class="trocarSenha" id="trocarSenha-cnpj">
+            <h1>Trocar Senha</h1>
+            <p>Digite abaixo a nova senha para o cnpj <span id="cnpjUser"></span></p>
+            <form>
+                <label for="novaSenha-cnpj">Digite a Nova Senha</label>
+                <input type="password" name="novaSenha-cnpj" id="novaSenha-cnpj" placeholder="Digite sua senha...">
+                <label for="repetirSenha-cnpj">Repita a Nova Senha</label>
+                <input type="password" name="repetirSenha-cnpj" id="repetirSenha-cnpj" placeholder="Digite sua senha...">
+                <button type="button" id="trocarSenhaCnpj">Enviar</button>
             </form>
         </div>
     </div>

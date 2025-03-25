@@ -144,7 +144,7 @@ app.post("/cadastrarUser-empresas", async (req, res) => {
   const existingUser = await UsersEmpresas.findOne({
     where: {
       [Op.or]: [
-        { emailCad: emailCad },
+        { cnpjCad: cnpjCad },
       ],
     },
   });
@@ -1079,5 +1079,89 @@ request(options, function (error, response, body) {
 
   console.log('Recebedores:', body);
 });*/
+
+// Rota 1 - Enviar código para o whatsapp cadastrado via Cnpj
+app.post("/enviar-codigo-cnpj-cpq", async (req, res) => {
+  const { cnpj } = req.body;
+
+  try {
+    const user = await UsersEmpresas.findOne({ where: { cnpjCad: cnpj } });
+
+    if (!user) {
+      return res.status(404).json({ success: false, message: "Cnpj não encontrado." });
+    }
+
+    const codigo = gerarCodigo();
+    console.log("Código Gerado: ", codigo);
+    user.verificationCode = codigo;
+    await user.save();
+
+    // Enviar whatsapp com o código
+    await enviarNotificacaoWhatsapp(user.telefoneCad, `Seu código de verificação é: ${codigo}`);
+
+    res.cookie("whatsapp", user.telefoneCad, { httpOnly: true });
+    return res.json({ success: true, message: "Código enviado para o whatsapp." });
+  } catch (error) {
+    console.error("Erro ao enviar código:", error);
+    return res.status(500).json({ success: false, message: "Erro ao enviar código." });
+  }
+});
+
+// Rota 2 - Verificar código via Cnpj
+app.post("/verificar-codigo-cnpj-cpq", async (req, res) => {
+  const { codigo } = req.body;
+  const cnpj = req.body.cnpj;
+  console.log(cnpj)
+
+  if (!cnpj) {
+    return res.status(400).json({ success: false, message: "Sessão expirada. Tente novamente." });
+  }
+
+  try {
+    const user = await UsersEmpresas.findOne({ where: {cnpjCad: cnpj, verificationCode: codigo } });
+
+    if (!user) {
+      return res.status(400).json({ success: false, message: "Código incorreto." });
+    }
+
+    return res.json({ success: true, message: "Código validado." });
+  } catch (error) {
+    console.error("Erro ao verificar código:", error);
+    return res.status(500).json({ success: false, message: "Erro interno." });
+  }
+});
+
+// Rota 3 - Trocar senha via Cnpj
+app.post("/trocar-senha-cnpj-cpq", async (req, res) => {
+  const { senha } = req.body;
+  const cnpj = req.body.cnpj;
+  console.log(cnpj)
+
+  if (!cnpj) {
+    return res.status(400).json({ success: false, message: "Sessão expirada. Tente novamente." });
+  }
+
+  try {
+    const user = await UsersEmpresas.findOne({ where: { cnpjCad: cnpj } });
+
+    if (!user) {
+      return res.status(404).json({ success: false, message: "Usuário não encontrado." });
+    }
+
+    // Hash da nova senha
+    const hashedSenha = await bcrypt.hash(senha, 10);
+
+    user.passCad = hashedSenha;
+    user.codigoRecuperacao = null;
+    await user.save();
+
+    res.clearCookie("email");
+
+    return res.json({ success: true, message: "Senha alterada com sucesso!" });
+  } catch (error) {
+    console.error("Erro ao trocar senha:", error);
+    return res.status(500).json({ success: false, message: "Erro ao trocar senha." });
+  }
+});
 
 module.exports = app;

@@ -1386,7 +1386,7 @@ async function verificarGraficaMaisProximaEAtualizar(itensPedido, enderecoPedido
           // Construir mensagem de notificação
           let mensagemStatus = `Novo pedido ID ${itensPedido[0].idPed}.`;
           if (itensPedido[0].statusPed === 'Pedido em Aberto') {
-            mensagemStatus = `Olá ${graficaMaisProxima.userCad}, tudo bem?\n\n` +
+            mensagemStatus = `Olá *Parceiro ${graficaMaisProxima.userCad}*, tudo bem?\n\n` +
             `Estou passando para avisar que o pedido ${itensPedido[0].idPed} está em aberto e aguardando o envio da arte do cliente. Fique atento ao painel de pedidos! \n` +
             `O número do pedido é ${itensPedido[0].idPed} e ele precisa ser processado o quanto antes. \n` +
             `Fique à vontade para nos avisar se houver qualquer dúvida ou necessidade de mais informações para dar sequência.\n\n` +
@@ -1394,9 +1394,11 @@ async function verificarGraficaMaisProximaEAtualizar(itensPedido, enderecoPedido
             `Atenciosamente,\n` +
             `Suporte imprimeai.com.br`;
           } else {
-            mensagemStatus = `Olá ${graficaMaisProxima.userCad}, tudo bem?\n\n` +
+            mensagemStatus = `Olá *Parceiro ${graficaMaisProxima.userCad}*, tudo bem?\n\n` +
             `Estou passando para avisar que temos um pedido aguardando atendimento de vocês. \n` +
             `O número do pedido é ${itensPedido[0].idPed} e ele precisa ser processado o quanto antes. \n` +
+            `Você pode acessa-lo para dar um aceite por aqui: \n`+
+            `https://imprimeai.com.br/login-graficas\n`+
             `Fique à vontade para nos avisar se houver qualquer dúvida ou necessidade de mais informações para dar sequência.\n\n` +
             `Agradecemos a parceria e ficamos no aguardo do retorno. Caso precisem de algo, estamos à disposição!\n\n` +
             `Atenciosamente,\n` +
@@ -1488,15 +1490,17 @@ async function verificarGraficaMaisProximaEAtualizar2(itensPedido, enderecos) {
                     let mensagemStatus = '';
       
                     if (pedidoCadastrado.statusPed === 'Aguardando') {
-                       mensagemStatus = `Olá ${graficaMaisProxima.userCad}, tudo bem?\n\n` +
+                       mensagemStatus = `Olá *Parceiro ${graficaMaisProxima.userCad}*, tudo bem?\n\n` +
                       `Estou passando para avisar que temos um pedido aguardando atendimento de vocês. \n` +
                       `O número do pedido é ${itensPedido[0].idPed} e ele precisa ser processado o quanto antes. \n` +
+                      `Você pode acessa-lo para dar um aceite por aqui: \n`+
+                      `https://imprimeai.com.br/login-graficas\n`+
                       `Fique à vontade para nos avisar se houver qualquer dúvida ou necessidade de mais informações para dar sequência.\n\n` +
                       `Agradecemos a parceria e ficamos no aguardo do retorno. Caso precisem de algo, estamos à disposição!\n\n` +
                       `Atenciosamente,\n` +
                       `Suporte imprimeai.com.br`;
                     } else {
-                       mensagemStatus = `Olá ${graficaMaisProxima.userCad}, tudo bem?\n\n` +
+                       mensagemStatus = `Olá *Parceiro ${graficaMaisProxima.userCad}*, tudo bem?\n\n` +
                       `Estou passando para avisar que temos um pedido em Aberto para ser atendido. Fique atento ao seu Painel de Pedidos! \n` +
                       `O número do pedido é ${itensPedido[0].idPed} e ele precisa ser processado o quanto antes. \n` +
                       `Fique à vontade para nos avisar se houver qualquer dúvida ou necessidade de mais informações para dar sequência.\n\n` +

@@ -141,7 +141,7 @@ document.addEventListener("DOMContentLoaded", function() {
             expires = "; expires=" + date.toUTCString();
         }
         document.cookie = name + "=" + (value || "") + expires + "; path=/";
-    }
+    }z
 
     function getCookie(name) {
         const nameEQ = name + "=";

@@ -119,3 +119,5 @@ button:hover {
 
 .erro { background: #D9534F; }
 .sucesso { background: #5CB85C; }
+#email {display: block;}
+#cnpj {display: none;}
