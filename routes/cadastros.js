@@ -675,6 +675,7 @@ app.post('/cadastrar-produtosexclusivos-planilha', upload.single('file'), async 
         imgProd2,
         imgProd3,
         imgProd4,
+        gabaritoProd,
       } = produto;
 
       // Insere o produto na tabela Produtos
@@ -691,6 +692,7 @@ app.post('/cadastrar-produtosexclusivos-planilha', upload.single('file'), async 
         imgProd2: imgProd2,
         imgProd3: imgProd3,
         imgProd4: imgProd4,
+        gabaritoProd: gabaritoProd,
       });
 
       let modeloJSON

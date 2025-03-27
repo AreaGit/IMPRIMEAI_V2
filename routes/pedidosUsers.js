@@ -2035,7 +2035,7 @@ async function verificarGraficaMaisProximaEAtualizar2(itensPedido, enderecos) {
   app.get('/pedidos-usuario/:userId', async (req, res) => {
     const userId = req.cookies.userId;
   
-    try {
+    try {cate
       // Consulte o banco de dados para buscar os pedidos do usuário com base no userId
       const pedidosDoUsuario = await Pedidos.findAll({
         where: {

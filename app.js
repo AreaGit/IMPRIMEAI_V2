@@ -362,7 +362,7 @@ const getCategoriasPorProdutosUsuario = async (userId) => {
   }
 };
 
-getCategoriasPorProdutosUsuario(1);
+//getCategoriasPorProdutosUsuario(1);
 //Rota get da página de comunicação visual
 app.get('/comunicacao-visual', async(req, res) => {
   try {
