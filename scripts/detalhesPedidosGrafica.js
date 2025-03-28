@@ -4,6 +4,8 @@ let novoStatusPedido
 let idPedMult
 let nomeGrafica;
 let tipo;
+let nomeEmpresa;
+let nomeGerente;
 const btnAceitarPedido = document.getElementById('btnAceitarPedido');
 const btnCancelarPedido = document.getElementById('btnCancelarPedido');
 const formEntrega = document.getElementById('formEntrega');
@@ -36,6 +38,14 @@ document.addEventListener('DOMContentLoaded', async() => {
       // Faz a requisição para o servidor para obter os detalhes do pedido
       const response = await fetch(`/detalhes-pedido/${idPedido}/${idProduto}`);
       const data = await response.json();
+      if(data.usuario.nomeGerente) {
+        nomeGerente = data.usuario.nomeGerente;
+        console.log(nomeGerente)
+      }
+      if(data.usuario.empresa) {
+        nomeEmpresa = data.usuario.empresa;
+        console.log(nomeEmpresa)
+      }
     const detalhesPedido = data.pedido;
     const detalhesUsuario = data.usuario;
     const statusPedido = detalhesPedido.itenspedidos[0].statusPed;
@@ -336,6 +346,8 @@ document.addEventListener('DOMContentLoaded', async() => {
                         const enderecoData = {
                           id: detalhesPedido.id,
                           nomeGrafica: nomeGrafica,
+                          nomeEmpresa: nomeEmpresa,
+                          nomeGerente: nomeGerente,
                           cliente: detalhesUsuario.userCad,
                           endereco: detalhesPedido.enderecos[0].rua,
                           cidade: detalhesPedido.enderecos[0].cidade,

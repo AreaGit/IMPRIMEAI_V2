@@ -699,15 +699,15 @@ async function getCoordinatesFromAddressEnd(enderecoEntregaInfo, apiKey) {
     const page = pdfDoc.getPage(0);
 
     // Ajustar texto para as posições corretas dentro das caixas
-    page.drawText(`${enderecoData.id}`, { x: 158, y: 668, size: 12 }); // ID
-    page.drawText(`${enderecoData.nomeGrafica}`, { x: 260, y: 668, size: 12 }); // LOJA
-    page.drawText(`${enderecoData.cliente}`, { x: 160, y: 634, size: 12 }); // CLIENTE
-    page.drawText(`${enderecoData.endereco}`, { x: 160, y: 597, size: 12 }); // ENDEREÇO
-    page.drawText(`${enderecoData.cidade}`, { x: 134, y: 560, size: 9 }); // CIDADE
-    page.drawText(`${enderecoData.estado}`, { x: 270, y: 560, size: 12 }); // UF
-    page.drawText(`${enderecoData.responsavel}`, { x: 400, y: 560, size: 12 }); // RESPONSÁVEL PELO RECEBIMENTO
-    page.drawText(`${enderecoData.quantidade}`, { x: 145, y: 430, size: 12 }); // QUANTIDADE
-    page.drawText(`${enderecoData.item}`, { x: 280, y: 430, size: 12 }); // NOME DO ITEM
+    page.drawText(`${enderecoData.id}`, { x: 134, y: 638, size: 12 }); // ID
+    page.drawText(`${enderecoData.nomeGrafica}`, { x: 330, y: 638, size: 12 }); // LOJA
+    page.drawText(enderecoData.nomeEmpresa = enderecoData.nomeEmpresa === undefined ? `${enderecoData.cliente}` : `${enderecoData.nomeEmpresa} - ${enderecoData.cliente}`, { x: 134, y: 610, size: 12 }); // CLIENTE
+    page.drawText(`${enderecoData.endereco}`, { x: 134, y: 580, size: 12 }); // ENDEREÇO
+    page.drawText(`${enderecoData.cidade}`, { x: 134, y: 550, size: 9 }); // CIDADE
+    page.drawText(`${enderecoData.estado}`, { x: 322, y: 550, size: 12 }); // UF
+    page.drawText(enderecoData.nomeGerente = enderecoData.nomeGerente === undefined ? `${enderecoData.responsavel}` : `${enderecoData.nomeGerente}`, { x: 440, y: 550, size: 9 }); // RESPONSÁVEL PELO RECEBIMENTO
+    page.drawText(`${enderecoData.quantidade}`, { x: 80, y: 450, size: 12 }); // QUANTIDADE
+    page.drawText(`${enderecoData.item}`, { x: 134, y: 450, size: 12 }); // NOME DO ITEM
 
     // Salvar o PDF editado
     const pdfBytesEdited = await pdfDoc.save();
