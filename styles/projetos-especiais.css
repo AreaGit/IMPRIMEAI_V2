@@ -1,0 +1,86 @@
+:root {
+    --branco:#ffff;
+    --coral:#F37160;
+    --flamingo:#F69896;
+    --concreto:#A7A9AC;
+    --preto:#000000;
+    --vermelho:#EF4126;
+    --font-padrao:'Open Sans';
+    --cor-fundo: #f9f9f9;
+    --cor-primaria: #015524;
+    --cor-secundaria: #ffffff;
+    --cor-texto: #333;
+    --cor-borda: #ddd;
+    --cor-hover: #f0f0f0;
+  }
+  * {
+    margin: 0px;
+    padding: 0px;
+    box-sizing: border-box;
+  }
+  body {
+    font-family: 'Open Sans';
+    color: #333;
+    background-color: #f1f1f1;
+  }
+  header {
+    height: 15vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    /*background: linear-gradient(135deg, #F69896, #F37160);*/
+    box-shadow: 1px 1px 3px #333;
+  }
+  .logo {
+    width: fit-content;
+    display: flex;
+    justify-content: center;
+    cursor: pointer;
+  }
+  .logo > img {
+    width: 70%;
+  }
+  .container {
+    max-width: 500px;
+    background: white;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    text-align: center;
+    position: absolute;
+    left: 50%;
+    transform: translate(-50%);
+    top: 20%;
+}
+.container > h2 {
+    color: #EF4126;
+}
+label {
+    font-weight: bold;
+    margin-top: 10px;
+    display: block;
+    text-align: left;
+}
+select, input, textarea, button {
+    width: 100%;
+    padding: 10px;
+    margin-top: 5px;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+}
+button {
+    width: 100%;
+    padding: 10px;
+    background: #F04D41;
+    border: none;
+    color: #fff;
+    font-size: 18px;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: 0.3s;
+    font-weight: bold;
+}
+button:hover {
+    background: #D93A33;
+    box-shadow: 0px 5px 15px rgba(217, 58, 51, 0.3);
+}

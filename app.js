@@ -45,6 +45,36 @@ client.on('error', (err) => {
 });
 
 client.connect();
+async function enviarEmailNotificacao(destinatario, assunto, corpo) {
+  const transporter = nodemailer.createTransport({
+    host: 'email-ssl.com.br',  // Servidor SMTP da LocalWeb
+    port: 465,                 // Porta para SSL (465)
+    secure: true,              // Usar conexão segura (SSL)
+    auth: {
+      user: 'atendimento@imprimeai.com.br',  // E-mail que você vai usar para enviar
+      pass: 'Z1mb@bue',                    // Senha do e-mail
+    },
+  })
+
+  const info = await transporter.sendMail({
+    from: 'atendimento@imprimeai.com.br',
+    to: destinatario,
+    subject: assunto,
+    text: corpo,
+  });
+
+  console.log('E-mail enviado:', info);
+}
+async function enviarNotificacaoWhatsapp(destinatario, corpo) {
+  try {
+      const response = await sendMessage(destinatario, corpo);
+      console.log(`Mensagem de código de verificação enviada com sucesso para o cliente ${destinatario}:`, response);
+      return response;
+  } catch (error) {
+      console.error(`Erro ao enviar mensagem para o cliente ${destinatario}:`, error);
+      throw error;
+  }
+}
 // Função para obter produtos de comunicação visual com caching
 const getCachedComunicacaoVisualProducts = async (page, limit) => {
   const cacheKey = `comunicacaoVisual:products:${page}:${limit}`;
@@ -2431,6 +2461,55 @@ app.get('/cpq/esqueci-senha', (req, res) => {
   } catch (error) {
     console.error("Erro ao ler o arquivo esqueci-senha.html:", error);
     res.status(500).send("Erro interno do servidor");
+  }
+});
+//Rota GET para projetos especiais
+app.get('/projetos-especiais', (req,res) => {
+  try {
+    const projetosContentHtml = fs.readFileSync(path.join(__dirname, "html", "projetos-especiais.html"), "utf-8");
+    res.send(projetosContentHtml);
+  } catch (error) {
+    console.error("Erro ao let o arquivo projetos-especiais.html:", error);
+    res.status(500).send("Erro interno do servidor");
+  }
+});
+//Rota POST para solicitar orçamento
+app.post("/solicitar-orcamento", upload.single("anexo"), async(req, res) => {
+  try {
+      const { nome, celular, quantidade, largura, altura, impressao, material, acabamento, cobertura, observacoes } = req.body;
+      const anexo = req.file ? req.file.filename : null; // Nome do arquivo salvo
+      console.log("Arquivo recebido:", req.file);
+
+      const corpoHtml = `
+      <h2>📩 Solicitação de Orçamento - Imprimeai</h2>
+      <p>Olá, equipe da Imprimeai!</p>
+      <p>Gostaria de solicitar um orçamento para um serviço de impressão. Seguem abaixo os detalhes do meu pedido:</p>
+      <ul>
+        <li><strong>Nome:</strong> ${nome}</li>
+        <li><strong>Celular:</strong> ${celular}</li>
+        <li><strong>Quantidade:</strong> ${quantidade}</li>
+        <li><strong>Dimensões:</strong> ${largura} x ${altura} cm</li>
+        <li><strong>Tipo de Impressão:</strong> ${impressao}</li>
+        <li><strong>Material:</strong> ${material}</li>
+        <li><strong>Acabamento:</strong> ${acabamento}</li>
+        <li><strong>Cobertura:</strong> ${cobertura}</li>
+        <li><strong>Observações adicionais:</strong> ${observacoes || "Nenhuma"}</li>
+      </ul>
+      ${anexo ? "<p>📎 Além disso, estou anexando um arquivo relacionado ao pedido para referência.</p>" : ""}
+      <p>Aguardo o retorno com o orçamento e prazo estimado para produção. Caso precisem de mais informações, fico à disposição.</p>
+      <p><strong>Atenciosamente,</strong><br>
+      ${nome}<br>
+      ${celular}</p>
+    `;
+
+    await enviarEmailNotificacao('contato@imprimeai.com.br', 'Nova Solicitação de Orçamento', corpoHtml);
+      // Simulação de resposta (substituir por lógica de banco de dados se necessário)
+      return res.json({
+          success: true,
+          message: "Orçamento recebido com sucesso!",
+      });
+  } catch (error) {
+      return res.status(500).json({ success: false, message: "Erro no envio do orçamento", error: error.message });
   }
 });
 
