@@ -1156,7 +1156,7 @@ app.get('/api/produtos', async (req, res) => {
       res.status(500).json({ error: 'Erro ao buscar produtos' });
   }
 });
-app.get('/api/produtos/:id', async (req, res) => {
+app.get('/api/produtos-editar/:id', async (req, res) => {
   const produtoId = req.params.id;
 
   try {
@@ -1169,16 +1169,18 @@ app.get('/api/produtos/:id', async (req, res) => {
       return res.status(404).json({ error: 'Produto não encontrado' });
     }
 
+    console.log(produto)
+
     // Formata o produto para enviar como resposta
     const produtoFormatado = {
       id: produto.id,
       nome: produto.nomeProd,
       descricao: produto.descProd,
       valor: produto.valorProd,
-      imagem: produto.imgProd ? `data:image/jpeg;base64,${produto.imgProd.toString('base64')}` : null,
-      imagem2: produto.imgProd2 ? `data:image/jpeg;base64,${produto.imgProd2.toString('base64')}` : null,
-      imagem3: produto.imgProd3 ? `data:image/jpeg;base64,${produto.imgProd3.toString('base64')}` : null,
-      imagem4: produto.imgProd4 ? `data:image/jpeg;base64,${produto.imgProd4.toString('base64')}` : null,
+      imagem: produto.imgProd,
+      imagem2: produto.imgProd2,
+      imagem3: produto.imgProd3,
+      imagem4: produto.imgProd4,
       categoria: produto.categProd,
       raio: produto.raioProd,
       gabarito: produto.gabaritoProd,
@@ -1202,18 +1204,14 @@ app.get('/login-adm', (req ,res) => {
 });
 //Rota para edição de produtos
 app.post('/editar-produto/:id', upload.fields([
-  { name: 'imagem', maxCount: 1 },
-  { name: 'imagem2', maxCount: 1 },
-  { name: 'imagem3', maxCount: 1 },
-  { name: 'imagem4', maxCount: 1 },
   { name: 'gabarito', maxCount: 1 }
 ]), async (req, res) => {
   try {
-    const { nomeProd, descProd, valorProd, categoriaProd, raioProd } = req.body;
-    const { imagem, imagem2, imagem3, imagem4, gabarito } = req.files;
+    const { nomeProd, descProd, valorProd, categoriaProd, raioProd, imagem, imagem2, imagem3, imagem4 } = req.body;
+    const { gabarito } = req.files;
 
-    console.log('Dados recebidos:', { nomeProd, descProd, valorProd, categoriaProd, raioProd });
-    console.log('Arquivos recebidos:', { imagem, imagem2, imagem3, imagem4, gabarito });
+    console.log('Dados recebidos:', { nomeProd, descProd, valorProd, categoriaProd, raioProd, imagem, imagem2, imagem3, imagem4 });
+    console.log('Arquivos recebidos:', { gabarito });
 
     const produto = await Produtos.findByPk(req.params.id);
 
@@ -1240,16 +1238,16 @@ app.post('/editar-produto/:id', upload.fields([
 
     // Atualiza as imagens apenas se elas forem recebidas
     if (imagem && imagem.length > 0) {
-      produto.igmProd = imagem[0].buffer;
+      produto.imgProd = imagem;
     }
     if (imagem2 && imagem2.length > 0) {
-      produto.imgProd2 = imagem2[0].buffer;
+      produto.imgProd2 = imagem2;
     }
     if (imagem3 && imagem3.length > 0) {
-      produto.imgProd3 = imagem3[0].buffer;
+      produto.imgProd3 = imagem3;
     }
     if (imagem4 && imagem4.length > 0) {
-      produto.imgProd4 = imagem4[0].buffer;
+      produto.imgProd4 = imagem4;
     }
     if (gabarito && gabarito.length > 0) {
       produto.gabaritoProd = gabarito[0].buffer;

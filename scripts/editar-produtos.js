@@ -14,7 +14,7 @@ document.addEventListener('DOMContentLoaded', () => {
     console.log('Produto ID:', produtoId);
 
     if (produtoId) {
-        fetch(`/api/produtos/${produtoId}`)
+        fetch(`/api/produtos-editar/${produtoId}`)
             .then(response => response.json())
             .then(produto => {
                 console.log('Produto:', produto);
