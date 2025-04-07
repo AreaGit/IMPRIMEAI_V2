@@ -35,7 +35,7 @@ const fs = require('fs');
 const ItensPedidos = require('../models/ItensPedido');
 const { Console } = require('console');
 const apiKeyBingMaps = 'Ao6IBGy_Nf0u4t9E88BYDytyK5mK3kObchF4R0NV5h--iZ6YgwXPMJEckhAEaKlH';
-const { PDFDocument } = require('pdf-lib');
+const { PDFDocument, StandardFonts } = require('pdf-lib');
 const {google} = require('googleapis');
 const GOOGLE_API_FOLDER_ID = '1F7sQzOnnbqn0EnUeT4kWrNOzsVFP-bG1';
 const stream = require('stream');
@@ -590,6 +590,41 @@ async function getCoordinatesFromAddressEnd(enderecoEntregaInfo, apiKey) {
     // Selecionar a página onde será feita a edição
     const page = pdfDoc.getPage(0);
 
+    const MAX_WIDTH = 390; // Defina o limite máximo da largura (em pontos) para a linha de texto
+    const lineHeight = 14; // Defina a altura da linha, ou seja, o espaço entre as linhas
+    const font = await pdfDoc.embedFont(StandardFonts.Helvetica);
+  
+    // Função para desenhar o texto com quebras de linha
+    const drawTextWithLineBreaks = (page, text, x, y, size) => {
+      const textWidth = font.widthOfTextAtSize(text, size);
+  
+      if (textWidth > MAX_WIDTH) {
+        const words = text.split(' ');
+        let currentLine = '';
+        let currentY = y;
+  
+        words.forEach(word => {
+          const lineWidth = font.widthOfTextAtSize(currentLine + word, size);
+  
+          if (lineWidth < MAX_WIDTH) {
+            // Se o texto atual não ultrapassar o limite, continue a linha
+            currentLine += word + ' ';
+          } else {
+            // Caso contrário, desenhe a linha atual e reinicie com a palavra
+            page.drawText(currentLine.trim(), { x, y: currentY, size });
+            currentLine = word + ' ';
+            currentY -= lineHeight;
+          }
+        });
+  
+        // Desenhe a última linha
+        page.drawText(currentLine.trim(), { x, y: currentY, size });
+      } else {
+        // Se não precisar quebrar, desenha o texto simples
+        page.drawText(text, { x, y, size });
+      }
+    };
+
     // Ajustar texto para as posições corretas dentro das caixas
     page.drawText(`${enderecoData.id}`, { x: 134, y: 638, size: 12 }); // ID
     page.drawText(`${enderecoData.nomeGrafica}`, { x: 330, y: 638, size: 12 }); // LOJA
@@ -598,8 +633,14 @@ async function getCoordinatesFromAddressEnd(enderecoEntregaInfo, apiKey) {
     page.drawText(`${enderecoData.cidade}`, { x: 134, y: 550, size: 9 }); // CIDADE
     page.drawText(`${enderecoData.estado}`, { x: 322, y: 550, size: 12 }); // UF
     page.drawText(enderecoData.nomeGerente = enderecoData.nomeGerente === undefined ? `${enderecoData.responsavel}` : `${enderecoData.nomeGerente}`, { x: 440, y: 550, size: 9 }); // RESPONSÁVEL PELO RECEBIMENTO
-    page.drawText(`${enderecoData.quantidade}`, { x: 80, y: 450, size: 12 }); // QUANTIDADE
-    page.drawText(`${enderecoData.item}`, { x: 134, y: 450, size: 12 }); // NOME DO ITEM
+    page.drawText(`${enderecoData.quantidade}`, { x: 80, y: 360, size: 12 }); // QUANTIDADE
+    page.drawText(`${enderecoData.item}`, { x: 134, y: 360, size: 12 }); // NOME DO ITEM
+    // Verificar e desenhar as observações, com quebra de linha se necessário
+    if (enderecoData.observacoes) {
+      drawTextWithLineBreaks(page, `${enderecoData.observacoes}`, 90, 490, 9); // OBSERVAÇÕES DA ENTREGA
+    } else {
+      page.drawText(`Não há observações`, { x: 134, y: 490, size: 12 }); // OBSERVAÇÕES DA ENTREGA
+    }
 
     // Salvar o PDF editado
     const pdfBytesEdited = await pdfDoc.save();

@@ -324,6 +324,16 @@ document.addEventListener('DOMContentLoaded', async() => {
                     <p class="endBairro"><strong>Bairro:</strong>Entrega a Retirar na Loja</p>
                     <p class="endCid"><strong>Cidade:</strong>Entrega a Retirar na Loja</p>
                   `).join('<br>');
+                } else if(nomeEmpresa) {
+                  detalhesEntrega.innerHTML = detalhesPedido.enderecos.map(endereco => `
+                    <h2>Dados da Entrega</h2>
+                    <p class="vrEnd"><strong>Endereço:</strong> ${endereco.rua}, ${endereco.cep}, ${endereco.estado}</p>
+                    <p class="endNum"><strong>Número da Residência:</strong> ${endereco.numero}</p>
+                    <p class="endComp"><strong>Complemento:</strong> ${endereco.complemento}</p>
+                    <p class="endBairro"><strong>Bairro:</strong> ${endereco.bairro}</p>
+                    <p class="endCid"><strong>Cidade:</strong> ${endereco.cidade}</p>
+                    <p class="endPart"><strong>Observações da Entrega:</strong> ${detalhesUsuario.particularidades}</p>
+                  `).join('<br>');
                 } else {
                   detalhesEntrega.innerHTML = detalhesPedido.enderecos.map(endereco => `
                     <h2>Dados da Entrega</h2>
@@ -336,6 +346,7 @@ document.addEventListener('DOMContentLoaded', async() => {
                 }
                 if (detalhesPedido.enderecos && detalhesPedido.enderecos.length > 0) {
                   detalhesPedido.enderecos.forEach(endereco => {
+                      let enderecoData
                       const protocoloBtn = document.createElement('a');
                       protocoloBtn.id = 'btnGerarProtocolo';
                       protocoloBtn.href = '#';
@@ -343,7 +354,23 @@ document.addEventListener('DOMContentLoaded', async() => {
                       detalhesEntrega.appendChild(protocoloBtn);
               
                       protocoloBtn.addEventListener('click', async () => {
-                        const enderecoData = {
+                        if(nomeEmpresa) {
+                          enderecoData = {
+                            id: detalhesPedido.id,
+                            nomeGrafica: nomeGrafica,
+                            nomeEmpresa: nomeEmpresa,
+                            nomeGerente: nomeGerente,
+                            cliente: detalhesUsuario.userCad,
+                            endereco: detalhesPedido.enderecos[0].rua,
+                            cidade: detalhesPedido.enderecos[0].cidade,
+                            estado: detalhesPedido.enderecos[0].estado,
+                            responsavel: detalhesUsuario.userCad,
+                            quantidade: detalhesPedido.itenspedidos[0].quantidade,
+                            item: detalhesPedido.itenspedidos[0].nomeProd,
+                            observacoes: detalhesUsuario.particularidades
+                          }
+                        } else {
+                        enderecoData = {
                           id: detalhesPedido.id,
                           nomeGrafica: nomeGrafica,
                           nomeEmpresa: nomeEmpresa,
@@ -354,8 +381,9 @@ document.addEventListener('DOMContentLoaded', async() => {
                           estado: detalhesPedido.enderecos[0].estado,
                           responsavel: detalhesUsuario.userCad,
                           quantidade: detalhesPedido.itenspedidos[0].quantidade,
-                          item: detalhesPedido.itenspedidos[0].nomeProd
+                          item: detalhesPedido.itenspedidos[0].nomeProd,
                         }
+                      }
                         try {
                           // Mudando o método de GET para POST e serializando os dados
                           const response = await fetch('/gerarProtocoloEntrega', {

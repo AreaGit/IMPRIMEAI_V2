@@ -549,11 +549,13 @@ document.addEventListener('DOMContentLoaded', () => {
   const toggleMenu = document.getElementById('toggleMenu');
   const categs = document.getElementById('categs');
   const parentCategs = document.querySelectorAll('.parentCateg');
+  const mainContentHeader = document.getElementById('mainContentHeader');
 
   // Exibir ou ocultar o menu de categorias principais
   toggleMenu.addEventListener('click', (e) => {
       e.preventDefault();
       categs.style.display = categs.style.display === 'block' ? 'none' : 'block';
+      mainContentHeader.style.zIndex = categs.style.display === 'none' ? '-1' : '1';
   });
 
   // Função para fechar todas as subcategorias
