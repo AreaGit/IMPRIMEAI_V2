@@ -1386,23 +1386,25 @@ async function verificarGraficaMaisProximaEAtualizar(itensPedido, enderecoPedido
           // Construir mensagem de notificação
           let mensagemStatus = `Novo pedido ID ${itensPedido[0].idPed}.`;
           if (itensPedido[0].statusPed === 'Pedido em Aberto') {
-            mensagemStatus = `Olá *Parceiro ${graficaMaisProxima.userCad}*, tudo bem?\n\n` +
-            `Estou passando para avisar que o pedido ${itensPedido[0].idPed} está em aberto e aguardando o envio da arte do cliente. Fique atento ao painel de pedidos! \n` +
-            `O número do pedido é ${itensPedido[0].idPed} e ele precisa ser processado o quanto antes. \n` +
-            `Fique à vontade para nos avisar se houver qualquer dúvida ou necessidade de mais informações para dar sequência.\n\n` +
-            `Agradecemos a parceria e ficamos no aguardo do retorno. Caso precisem de algo, estamos à disposição!\n\n` +
-            `Atenciosamente,\n` +
-            `Suporte imprimeai.com.br`;
+            mensagemStatus = `Olá, *Equipe da Gráfica ${graficaMaisProxima.userCad}*, tudo bem com vocês?\n\n` +
+            `Passando para avisar que temos um pedido está em aberto por aí -- é o número ${itensPedido[0].idPed} e aguardando o envio da arte do cliente. Fique atento ao painel de pedidos! \n` +
+            `Vocês conseguem dar uma olhadinha e fazer o aceite por esse link? \n` +
+            `👉 https://imprimeai.com.br/login-graficas \n`+
+            `Se precisarem de qualquer informação adicional ou tiverem alguma dúvida, fiquem super à vontade pra nos chamar. A gente tá por aqui e pronto pra ajudar no que for preciso!\n`+
+            `Agradecemos muito a parceria de sempre e ficamos no aguardo do retorno. 😊\n\n` +
+            `Um abraço!\n\n` +
+            `Equipe de Suporte\n` +
+            `imprimeai.com.br`;
           } else {
-            mensagemStatus = `Olá *Parceiro ${graficaMaisProxima.userCad}*, tudo bem?\n\n` +
-            `Estou passando para avisar que temos um pedido aguardando atendimento de vocês. \n` +
-            `O número do pedido é ${itensPedido[0].idPed} e ele precisa ser processado o quanto antes. \n` +
-            `Você pode acessa-lo para dar um aceite por aqui: \n`+
-            `https://imprimeai.com.br/login-graficas\n`+
-            `Fique à vontade para nos avisar se houver qualquer dúvida ou necessidade de mais informações para dar sequência.\n\n` +
-            `Agradecemos a parceria e ficamos no aguardo do retorno. Caso precisem de algo, estamos à disposição!\n\n` +
-            `Atenciosamente,\n` +
-            `Suporte imprimeai.com.br`;
+            mensagemStatus = `Olá, *Equipe da Gráfica ${graficaMaisProxima.userCad}*, tudo bem com vocês?\n\n` +
+            `Passando para avisar que temos um pedido pendente de atendimento por aí -- é o número ${itensPedido[0].idPed}, e ele precisa ser processado o quanto antes. \n` +
+            `Vocês conseguem dar uma olhadinha e fazer o aceite por esse link? \n` +
+            `👉 https://imprimeai.com.br/login-graficas \n`+
+            `Se precisarem de qualquer informação adicional ou tiverem alguma dúvida, fiquem super à vontade pra nos chamar. A gente tá por aqui e pronto pra ajudar no que for preciso!\n`+
+            `Agradecemos muito a parceria de sempre e ficamos no aguardo do retorno. 😊\n\n` +
+            `Um abraço!\n\n` +
+            `Equipe de Suporte\n` +
+            `imprimeai.com.br`;
           }
 
           // Enviar notificação por e-mail para a gráfica

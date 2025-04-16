@@ -19,7 +19,7 @@ body {
 header {
     height: 42px;
     width: 714px;
-    position: fixed;
+    position: absolute;
     left: 50%;
     transform: translate(-50%);
     top: 1%;
@@ -280,10 +280,10 @@ main > h2 {
 }
 .container {
     display: flex;
-    position: absolute;
+    align-items: center;
+    justify-content: center;
+    position: relative;
     top: 330px;
-    left: 50%;
-    transform: translate(-50%);
 }
 .statusPedidos {
     width: 250px;
