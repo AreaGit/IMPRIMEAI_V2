@@ -159,7 +159,7 @@ document.addEventListener('DOMContentLoaded', () => {
         };
 
         try {
-            const response = await fetch('/salvar-endereco-no-carrinho', {
+            const response = await fetch('/in', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ enderecoData }),

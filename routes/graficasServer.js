@@ -113,28 +113,20 @@ async function getCoordinatesFromAddressEnd(enderecoEntregaInfo, apiKey) {
   async function getCoordinatesFromAddress(addressInfo, apiKey) {
     const { endereco, cep, cidade, estado } = addressInfo;
     const formattedAddress = `${endereco}, ${cep}, ${cidade}, ${estado}`;
-    const geocodingUrl = `https://dev.virtualearth.net/REST/v1/Locations/${encodeURIComponent(formattedAddress)}?o=json&key=${apiKey}`;
-  
-    try {
-      const response = await fetch(geocodingUrl);
-  
-      if (!response.ok) {
-        throw new Error(`Erro na resposta da API: ${response.status} ${response.statusText}`);
-      }
-  
-      const data = await response.json();
-  
-      if (data.resourceSets.length > 0 && data.resourceSets[0].resources.length > 0) {
-        const coordinates = data.resourceSets[0].resources[0].point.coordinates;
-        return { latitude: coordinates[0], longitude: coordinates[1] };
-      } else {
-        console.error('Nenhum resultado de geocodificação encontrado para o endereço:', formattedAddress);
-        return { latitude: null, longitude: null };
-      }
-    } catch (error) {
-      console.error('Erro ao obter coordenadas de geocodificação:', error.message);
-      return { latitude: null, longitude: null, errorMessage: error.message };
+    const url = `https://api.opencagedata.com/geocode/v1/json?q=${encodeURIComponent(formattedAddress)}&key=${`57ae2ecb054049b9aba4dc7eada833a3`}&language=pt&pretty=1`;
+
+  try {
+    const response = await axios.get(url, { timeout: 10000 });
+
+    if (response.data.results.length > 0) {
+      const { lat, lng } = response.data.results[0].geometry;
+      return { latitude: lat, longitude: lng };
+    } else {
+      return { latitude: null, longitude: null, errorMessage: 'Nenhum resultado encontrado' };
     }
+  } catch (error) {
+    return { latitude: null, longitude: null, errorMessage: error.message };
+  }
   }
   
   // Função para calcular a distância haversine entre duas coordenadas geográficas

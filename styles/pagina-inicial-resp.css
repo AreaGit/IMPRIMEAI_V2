@@ -789,25 +789,25 @@
     }
     div#banners {
         height: 270px;
-        position: relative;
-        top: 235px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
         width: 846px;
-        left: 50%;
         cursor: pointer;
-        transform: translate(-50%);
     }
     .banner.active > img {
-        width: 100%;
+        width: 900px;
     }
     #banners > #prevBtn1 {
-        left: -56px;
+        left: -215px;
     }
     #banners > #nextBtn1 {
-        right: -56px;
+        right: -215px;
     }
     #progress {
         display: flex;
-        justify-content: center;
+        position: absolute;
+        top: 105%;
     }
     .linhaAbInp {
         border: 1px solid #e0e0e0;
@@ -832,6 +832,23 @@
         height: 100%;
         padding: 15pc;
         padding-top: 70px;
+    }
+    .contentImagesNovidades {
+        width: 1300px;
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+        align-items: center;
+    }
+    .box {
+        display: inline-flex;
+        box-shadow: -1px -1px 8px #434344;
+        border-radius: 11px;
+        width: 350px;
+        height: 456px;
+        transition: transform 0.8s;
+        margin: 25px;
+        cursor: pointer;
     }
     footer.modern-footer {
         background: none;

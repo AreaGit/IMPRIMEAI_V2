@@ -14,7 +14,7 @@ const multer = require('multer');
 const nodemailer = require('nodemailer');
 const storage = multer.memoryStorage();
 const upload = multer({ storage: storage });
-const pagarmeKeyProd = "sk_e74e3fe1ccbe4ae080f70d85d94e2c68";
+const pagarmeKeyProd = "sk_KVlgJBsKOTQagkmR";
 const pagarmeKeyTest = "sk_test_05ddc95c6ce442a796c7ebbe2376185d";
 const axios = require('axios');
 const request = require('request-promise');
@@ -841,7 +841,7 @@ app.post("/cadastro-graficas", async (req, res) => {
       headers: {
         accept: 'application/json',
         'content-type': 'application/json',
-        Authorization: 'Basic ' + Buffer.from(`${pagarmeKeyProd}:`).toString('base64')
+        Authorization: 'Basic ' + Buffer.from(`sk_KVlgJBsKOTQagkmR:`).toString('base64')
       },
       body: {
         register_information: {

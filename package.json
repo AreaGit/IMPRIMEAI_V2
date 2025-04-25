@@ -9,6 +9,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "abort-controller": "^3.0.0",
     "autocannon": "^7.15.0",
     "axios": "^1.7.9",
     "bcrypt": "^5.1.1",

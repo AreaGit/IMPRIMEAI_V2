@@ -639,8 +639,6 @@ function haversineDistance(lat1, lon1, lat2, lon2) {
 
 async function encontrarGraficaMaisProxima(endereco) {
   try {
-    const apiKey = 'Ao6IBGy_Nf0u4t9E88BYDytyK5mK3kObchF4R0NV5h--iZ6YgwXPMJEckhAEaKlH';
-
     const enderecoDoFrete = {
       rua: endereco.rua,
       bairro: endereco.bairro,
@@ -649,7 +647,28 @@ async function encontrarGraficaMaisProxima(endereco) {
       estado: endereco.estado,
     };
 
-    const coordinatesEnd = await getCoordinatesFromAddress(enderecoDoFrete, apiKey);
+    const formattedAddress = `${enderecoDoFrete.rua}, ${enderecoDoFrete.cep}, ${enderecoDoFrete.cidade}, ${enderecoDoFrete.estado}`;
+    const nominatimUrl = `https://nominatim.openstreetmap.org/search?q=${encodeURIComponent(formattedAddress)}&format=json&limit=1`;
+
+    const response = await axios.get(nominatimUrl, {
+      headers: {
+        'User-Agent': 'imprimeai-backend/1.0'
+      },
+      timeout: 15000
+    });
+
+    let coordinatesEnd = { latitude: null, longitude: null };
+
+    if (response.data.length > 0) {
+      coordinatesEnd = {
+        latitude: parseFloat(response.data[0].lat),
+        longitude: parseFloat(response.data[0].lon)
+      };
+    } else {
+      console.error('Nenhum resultado de geocodificação encontrado para o endereço:', formattedAddress);
+      return { latitude: null, longitude: null, errorMessage: 'Nenhum resultado encontrado' };
+    }
+
     if (coordinatesEnd.latitude !== null && coordinatesEnd.longitude !== null) {
       console.log(`Latitude do Endereço de Entrega:`, coordinatesEnd.latitude);
       console.log(`Longitude do Endereço de Entrega:`, coordinatesEnd.longitude);
@@ -660,14 +679,29 @@ async function encontrarGraficaMaisProxima(endereco) {
       let graficaMaisProxima = null;
 
       for (let graficaAtual of graficas) {
-        const graficaCoordinates = await getCoordinatesFromAddress({
-          endereco: graficaAtual.enderecoCad,
-          cep: graficaAtual.cepCad,
-          cidade: graficaAtual.cidadeCad,
-          estado: graficaAtual.estadoCad,
-        }, apiKey);
+        const graficaAddress = `${graficaAtual.enderecoCad}, ${graficaAtual.cepCad}, ${graficaAtual.cidadeCad}, ${graficaAtual.estadoCad}`;
+        const graficaUrl = `https://nominatim.openstreetmap.org/search?q=${encodeURIComponent(graficaAddress)}&format=json&limit=1`;
 
-        const distanceToGrafica = haversineDistance(graficaCoordinates.latitude, graficaCoordinates.longitude, coordinatesEnd.latitude, coordinatesEnd.longitude);
+        const graficaResp = await axios.get(graficaUrl, {
+          headers: {
+            'User-Agent': 'imprimeai-backend/1.0'
+          },
+          timeout: 15000
+        });
+
+        if (graficaResp.data.length === 0) continue;
+
+        const graficaCoordinates = {
+          latitude: parseFloat(graficaResp.data[0].lat),
+          longitude: parseFloat(graficaResp.data[0].lon)
+        };
+
+        const distanceToGrafica = haversineDistance(
+          graficaCoordinates.latitude,
+          graficaCoordinates.longitude,
+          coordinatesEnd.latitude,
+          coordinatesEnd.longitude
+        );
 
         if (distanceToGrafica < distanciaMinima) {
           distanciaMinima = distanceToGrafica;
@@ -675,10 +709,6 @@ async function encontrarGraficaMaisProxima(endereco) {
         }
       }
 
-      console.log('Gráfica mais próxima:', graficaMaisProxima);
-      console.log('Distância mínima:', distanciaMinima);
-      
-      // Lógica de escalonagem de frete por km
       let custoPorKm;
       let custoDoFrete;
       if (distanciaMinima <= 2) {
@@ -690,12 +720,13 @@ async function encontrarGraficaMaisProxima(endereco) {
       } else {
         custoPorKm = 2.15;
       }
-      
-      if(distanciaMinima * custoPorKm > 45) {
+
+      if (distanciaMinima * custoPorKm > 45) {
         custoDoFrete = 45.00;
       } else {
         custoDoFrete = parseFloat((distanciaMinima * custoPorKm).toFixed(2));
       }
+
       return {
         graficaMaisProxima,
         distanciaMinima,
@@ -703,7 +734,7 @@ async function encontrarGraficaMaisProxima(endereco) {
       };
     }
   } catch (err) {
-    console.error('Erro ao encontrar a gráfica mais próxima:', err);
+    console.error('Erro ao encontrar a gráfica mais próxima:', err.message);
   }
 }
 async function encontrarGraficaMaisProxima2(enderecosSalvos) {
