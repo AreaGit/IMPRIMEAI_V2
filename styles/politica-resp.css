@@ -146,66 +146,7 @@
         width: 60vw;
     }    
 }
-@media screen and (min-width:1024px) and (max-width:1440px){
-    #nav-bar {
-        position: relative;
-        left: 50%;
-        top: 8px;
-        width: 700px;
-        transform: translate(-50%);
-    }
-    #logo {
-        position: absolute;
-        left: -14%;
-        top: -2px;
-        width: 107px;
-    }
-    #icone-pesquisa {
-        width: 22px;
-        height: 24px;
-        position: absolute;
-        left: 112%;
-        transform: translate(-112%);
-        top: 1px;
-    }
-}
-@media screen and (min-width:1441px) and (max-width:1770px) {
-    #nav-bar {
-        position: relative;
-        left: 50%;
-        top: 8px;
-        width: 1050px;
-        transform: translate(-50%);
-    }
-    #logo {
-        position: absolute;
-        left: -2%;
-        top: -7px;
-        width: 107px;
-    }
-    #icone-pesquisa {
-        width: 22px;
-        height: 24px;
-        position: absolute;
-        left: 112%;
-        transform: translate(-112%);
-        top: 1px;
-    }
-}
 @media screen and (min-width:2560px) {
-    #nav-bar {
-        position: relative;
-        left: 50%;
-        top: 8px;
-        width: 1050px;
-        transform: translate(-50%);
-    }
-    #logo {
-        position: absolute;
-        left: -2%;
-        top: -7px;
-        width: 107px;
-    }
     section#infoPol {
         position: absolute;
         top: 40%;

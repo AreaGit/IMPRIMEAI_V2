@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Painel Administrativo</title>
+    <link rel="shortcut icon" href="../images/favicon-imprimeai.png" type="image/x-icon">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,300;1,400;1,500;1,600;1,700;1,800&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter+Tight:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <link rel="stylesheet" href="../styles/administrativo.css">
+</head>
+<body>
+    <aside class="sidebar">
+        <div class="logo">
+            <img src="../images/favicon-imprimeai.png" alt="">
+            <span>Painel Administrativo</span>
+        </div>
+        <nav>
+          <ul>
+            <li><a href="#" data-section="pedidos"><i class="fa-solid fa-box"></i> <span>Pedidos</span></a></li>
+            <li><a href="#" data-section="usuarios"><i class="fa-solid fa-user"></i> <span>Usuários</span></a></li>
+            <li><a href="#" data-section="graficas"><i class="fa-solid fa-building"></i> <span>Gráficas</span></a></li>
+            <li><a href="#" data-section="produtos"><i class="fa-solid fa-tags"></i> <span>Produtos</span></a></li>
+          </ul>
+        </nav>
+      </aside>
+    
+      <main class="content">
+        <section id="pedidos" class="card section active">
+          <h3>Pedidos</h3>
+          <table>
+            <thead>
+              <tr>
+                <th>ID Pedido</th>
+                <th>Produto</th>
+                <th>Quantidade</th>
+                <th>Status</th>
+                <th>Data</th>
+              </tr>
+            </thead>
+            <tbody id="pedidos-body"></tbody>
+          </table>
+        </section>
+    
+        <section id="usuarios" class="card section">
+            <h3>Usuários</h3>
+            <table>
+              <thead>
+                <tr>
+                  <th>ID</th>
+                  <th>Nome</th>
+                  <th>Email</th>
+                  <th>Telefone</th>
+                  <th>Saldo em Carteira</th>
+                </tr>
+              </thead>
+              <tbody id="usuarios-body">
+                <!-- Conteúdo dinâmico -->
+              </tbody>
+            </table>
+        </section>
+    
+        <section id="graficas" class="card section">
+          <h3>Gráficas</h3>
+          <table>
+            <thead>
+              <tr>
+                <th>Nome</th>
+                <th>Cidade</th>
+                <th>Email</th>
+                <th>Telefone</th>
+              </tr>
+            </thead>
+            <tbody id="graficas-body"></tbody>
+          </table>
+        </section>
+    
+        <section id="produtos" class="card section">
+          <h3>Produtos</h3>
+          <table>
+            <thead>
+              <tr>
+                <th>Imagem</th>
+                <th>Nome</th>
+                <th>Categoria</th>
+                <th>Valor</th>
+              </tr>
+            </thead>
+            <tbody id="produtos-body"></tbody>
+          </table>
+        </section>
+      </main>
+      <script src="../scripts/administrativo.js"></script>
+</body>
+</html>

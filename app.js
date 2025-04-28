@@ -35,6 +35,8 @@ const Sequelize = require('sequelize');
 const UserEmpresas = require('./models/Users-Empresas');
 const EnderecosEmpresas = require('./models/Enderecos-Empresas');
 const CarteiraEmpresas = require('./models/CarteiraEmpresas');
+const User = require('./models/User');
+const Carteira = require('./models/Carteira');
 const client = redis.createClient({
   host: '127.0.0.1', // Substitua pelo endereço IP do seu servidor Redis
   port: 6379,         // Porta onde o Redis está escutando
@@ -1133,9 +1135,7 @@ app.get('/sobre', (req, res) => {
 });
 async function getProducts() {
   const produtos = await Produtos.findAll({
-      attributes: ['id', 'nomeProd', 'imgProd',
-         
-      ]
+      attributes: ['id', 'nomeProd', 'imgProd', 'categProd', 'valorProd']
   });
   return produtos.map(produto => produto.dataValues);
 }
@@ -2382,7 +2382,26 @@ app.get('/cpq/painel-administrativo', (req,res) => {
     res.status(500).send("Erro interno do servidor");
   }
 });
+app.get('/allusers', async(req, res) => {
+  try {
+    const users = await User.findAll({ attributes: ['id', 'userCad', 'emailCad', 'telefoneCad'] })
+    const usersWithBalance = await Promise.all(users.map(async user => {
+      const carteira = await Carteira.findOne({ where: { userId: user.id } }); // findPkId (Find by Primary Key)
+      return {
+          id: user.id,
+          name: user.userCad,
+          email: user.emailCad,
+          telefoneCad: user.telefoneCad,
+          balance: carteira ? carteira.saldo : 0
+      };
+  }));
 
+  res.json(usersWithBalance);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: 'Erro ao buscar usuários e saldos' });
+  }
+});
 app.get('/saldo-allusers', async (req, res) => {
   try {
       const users = await UsersEmpresas.findAll({ attributes: ['id', 'userCad', 'emailCad'] });
@@ -2510,7 +2529,15 @@ app.post("/solicitar-orcamento", upload.single("anexo"), async(req, res) => {
       return res.status(500).json({ success: false, message: "Erro no envio do orçamento", error: error.message });
   }
 });
-
+app.get('/administradores/painel', (req, res) => {
+  try {
+    const painelAdmContentHtml = fs.readFileSync(path.join(__dirname, "html", "administrativo.html"), "utf-8");
+    res.send(painelAdmContentHtml)
+  } catch (error) {
+    console.error("Erro ao ler o arquivo administrativo.html:", error);
+    res.status(500).send("Erro interno do servidor");
+  }
+});
 app.listen(PORT, () => {
   console.log(`Servidor rodando na porta ${PORT} https://localhost:${PORT}`);
 });

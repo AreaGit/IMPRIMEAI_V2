@@ -17,39 +17,20 @@
     background-color: #F5F5F7;
   }
   header {
-    height: 42px;
-    position: fixed;
-    left: 50%;
-    transform: translate(-50%);
-    top: 1%;
-    background-color: transparent;
-    transition: 2s;
-    width: 100%;
+    height: 15vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    /*background: linear-gradient(135deg, #F69896, #F37160);*/
   }
-  header.scrolled {
-    position: fixed;
-    top: 0%;
-    transition: 2s;
-    color: black;
-    width: 100%;
-    z-index: 1000;
-    background-color: white;
-    height: 40px;
+  .logo {
+    width: fit-content;
+    display: flex;
+    justify-content: center;
+    cursor: pointer;
   }
-  header.scrolled > #nav-bar > li > a {
-    color: #6E6E73;
-  }
-  header.scrolled > #nav-bar > li > a:hover {
-    color: #020202;
-  }
-  #logo2 {
-    display: none;
-  }
-  #logo {
-    position: absolute;
-    left: -3%;
-    width: 12%;
-    top: -11px;
+  .logo > img {
+    width: 70%;
   }
   li {
     list-style: none;
@@ -108,13 +89,13 @@
       font-size: 24px;
       position: absolute;
       left: 15%;
-      top: 80px;
+      top: 120px;
   }
   #linhaHr {
       border: 1px solid black;
       width: 90vw;
       position: absolute;
-      top: 125px;
+      top: 170px;
       left: 50%;
       transform: translate(-50%);
   }
@@ -123,7 +104,7 @@
       font-size: 40px;
       line-height: 61px;
       position: absolute;
-      top: 150px;
+      top: 220px;
       left: 20%;
       transform: translate(-20%);
   }
@@ -223,7 +204,7 @@
 }
 section#infoPol {
     position: absolute;
-    top: 40%;
+    top: 55%;
     left: 40%;
     transform: translate(-40%);
     width: 60vw;

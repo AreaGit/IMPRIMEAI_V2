@@ -1,0 +1,126 @@
+:root {
+    --branco: #ffffff;
+    --salmão-forte: #F37160;
+    --salmão-claro: #F69896;
+    --cinza: #A7A9AC;
+    --preto: #000000;
+    --vermelho-vibrante: #EF4126;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Arial', sans-serif;
+    display: flex;
+    min-height: 100vh;
+  }
+  
+  .sidebar {
+    width: 260px;
+    background-color: var(--vermelho-vibrante);
+    color: var(--branco);
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    border-top-right-radius: 20px;
+    border-bottom-right-radius: 20px;
+    box-shadow: 2px 0 8px rgba(0, 0, 0, 0.2);
+    position: relative;
+}
+
+.logo {
+    font-size: 24px;
+    font-weight: bold;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 40px;
+    justify-content: center;
+}
+
+.sidebar nav ul {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+    
+.sidebar nav ul li a {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    font-size: 18px;
+    padding: 12px 20px;
+    color: var(--branco);
+    text-decoration: none;
+    border-radius: 12px;
+    transition: background 0.3s, transform 0.3s;
+}
+    
+.sidebar nav ul li a:hover {
+    background-color: var(--salmão-forte);
+    transform: translateX(5px);
+}
+    
+.content {
+    flex: 1;
+    padding: 40px;
+    overflow-y: auto;
+    background-color: var(--branco);
+}
+    
+.card {
+    background-color: var(--branco);
+    padding: 20px;
+    border-radius: 12px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    margin-bottom: 30px;
+    border: 1px solid var(--salmão-claro);
+}
+  
+.card h3 {
+    margin-bottom: 20px;
+    color: var(--vermelho-vibrante);
+}
+    
+table {
+    width: 100%;
+    border-collapse: collapse;
+}
+    
+thead {
+    background-color: var(--salmão-forte);
+    color: var(--branco);
+}
+    
+th, td {
+    padding: 12px 15px;
+    text-align: center;
+    border-bottom: 1px solid #ddd;
+}
+    
+tbody tr:hover {
+    background-color: var(--salmão-claro);
+}
+    
+.section {
+    display: none;
+}
+    
+.section.active {
+    display: block;
+}
+    
+@media (max-width: 768px) {
+    .sidebar {
+        display: none;
+    }
+        
+    .content {
+        padding: 20px;
+    }
+}  
