@@ -2,249 +2,235 @@
 <html lang="pt-BR">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Painel Administrativo</title>
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <title>Editar Usuário</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <style>
-    :root {
-  --branco: #ffffff;
-  --salmão-forte: #F37160;
-  --salmão-claro: #F69896;
-  --cinza: #A7A9AC;
-  --preto: #000000;
-  --vermelho-vibrante: #EF4126;
-}
-
-* {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-}
-
-body {
-  font-family: 'Arial', sans-serif;
-  display: flex;
-  min-height: 100vh;
-}
-
-.sidebar {
-  width: 260px;
-  background-color: var(--vermelho-vibrante);
-  color: var(--branco);
-  padding: 20px;
-  display: flex;
-  flex-direction: column;
-  border-top-right-radius: 20px;
-  border-bottom-right-radius: 20px;
-  box-shadow: 2px 0 8px rgba(0, 0, 0, 0.2);
-  position: relative;
-}
-
-.logo {
-  font-size: 24px;
-  font-weight: bold;
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  margin-bottom: 40px;
-  justify-content: center;
-}
-
-.sidebar nav ul {
-  list-style: none;
-  display: flex;
-  flex-direction: column;
-  gap: 20px;
-}
-
-.sidebar nav ul li a {
-  display: flex;
-  align-items: center;
-  gap: 15px;
-  font-size: 18px;
-  padding: 12px 20px;
-  color: var(--branco);
-  text-decoration: none;
-  border-radius: 12px;
-  transition: background 0.3s, transform 0.3s;
-}
-
-.sidebar nav ul li a:hover {
-  background-color: var(--salmão-forte);
-  transform: translateX(5px);
-}
-
-.content {
-  flex: 1;
-  padding: 40px;
-  overflow-y: auto;
-  background-color: var(--branco);
-}
-
-.card {
-  background-color: var(--branco);
-  padding: 20px;
-  border-radius: 12px;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-  margin-bottom: 30px;
-  border: 1px solid var(--salmão-claro);
-}
-
-.card h3 {
-  margin-bottom: 20px;
-  color: var(--vermelho-vibrante);
-}
-
-table {
-  width: 100%;
-  border-collapse: collapse;
-}
-
-thead {
-  background-color: var(--salmão-forte);
-  color: var(--branco);
-}
-
-th, td {
-  padding: 12px 15px;
-  text-align: left;
-  border-bottom: 1px solid #ddd;
-}
-
-tbody tr:hover {
-  background-color: var(--salmão-claro);
-}
-
-.section {
-  display: none;
-}
-
-.section.active {
-  display: block;
-}
-
-@media (max-width: 768px) {
-  .sidebar {
-    display: none;
+      * {
+    margin: 0px;
+    padding: 0px;
+    box-sizing: border-box;
   }
-
-  .content {
-    padding: 20px;
+  body {
+    font-family: 'Arial';
+    color: #333;
   }
+  .background-image {
+  position: absolute;
+  top: -3%;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 30vw;
+  max-width: 430px;
+  min-width: 300px;
+  opacity: 1;
+  cursor: pointer;
 }
+.background-border {
+  position: fixed;
+  top: 0%;
+  left: 100%;
+  transform: translateX(-100%);
+  height: 100vh;
+  width: 70%;
+  min-width: 900px;
+  opacity: 0.8;
+  cursor: pointer;
+  z-index: -1;
+  object-fit: cover; /* Garante que a imagem cubra toda a área sem distorcer */
+}
+    .container {
+      max-width: 700px;
+      margin: auto;
+      padding: 30px;
+      background: #fff;
+      border: 1px solid #A7A9AC;
+      border-radius: 12px;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.05);
+      position: relative;
+      top: 200px;
+    }
 
+    h2 {
+      text-align: center;
+      color: #F37160;
+      font-size: 2em;
+      margin-bottom: 20px;
+    }
+
+    form {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 20px;
+    }
+
+    .full {
+      grid-column: 1 / -1;
+    }
+
+    label {
+      font-weight: bold;
+      display: block;
+      margin-bottom: 5px;
+    }
+
+    input {
+      width: 100%;
+      padding: 10px 12px;
+      border: 1px solid #A7A9AC;
+      border-radius: 8px;
+      font-size: 16px;
+    }
+
+    button {
+      background-color: #F37160;
+      border: none;
+      padding: 14px;
+      border-radius: 8px;
+      color: #fff;
+      font-weight: bold;
+      font-size: 16px;
+      cursor: pointer;
+      transition: background-color 0.2s ease-in-out;
+    }
+
+    button:hover {
+      background-color: #F69896;
+    }
+
+    .message {
+      grid-column: 1 / -1;
+      text-align: center;
+      margin-top: 10px;
+      font-size: 14px;
+      color: #EF4126;
+    }
   </style>
 </head>
 <body>
-  <aside class="sidebar">
-    <div class="logo">
-      <img src="images/favicon-imprimeai.png" alt="">
-      <span>Painel Administrativo</span>
-    </div>
-    <nav>
-      <ul>
-        <li><a href="#" data-section="pedidos"><i class="fa-solid fa-box"></i> <span>Pedidos</span></a></li>
-        <li><a href="#" data-section="usuarios"><i class="fa-solid fa-user"></i> <span>Usuários</span></a></li>
-        <li><a href="#" data-section="graficas"><i class="fa-solid fa-building"></i> <span>Gráficas</span></a></li>
-        <li><a href="#" data-section="produtos"><i class="fa-solid fa-tags"></i> <span>Produtos</span></a></li>
-      </ul>
-    </nav>
-  </aside>
+  <a href="/"><img class="background-image" src="../images/logo-fundo-imprimeai.png" alt="Imagem de fundo"></a>
+  <img class="background-border" src="../images/borda-imprimeai.png" alt="Imagem de borda">
+  <div class="container">
+    <h2>Editar Usuário</h2>
+    <form id="editUserForm">
+      <div class="full">
+        <label for="nome">Nome</label>
+        <input type="text" id="nome" name="nome" required />
+      </div>
 
-  <main class="content">
-    <section id="pedidos" class="card section active">
-      <h3>Pedidos</h3>
-      <table>
-        <thead>
-          <tr>
-            <th>ID</th>
-            <th>Cliente</th>
-            <th>Produtos</th>
-            <th>Endereço</th>
-            <th>Status</th>
-            <th>Data</th>
-          </tr>
-        </thead>
-        <tbody id="pedidos-body">
-          <!-- Conteúdo dinâmico -->
-        </tbody>
-      </table>
-    </section>
+      <div>
+        <label for="rua">Rua</label>
+        <input type="text" id="rua" name="rua" />
+      </div>
 
-    <section id="usuarios" class="card section">
-      <h3>Usuários</h3>
-      <table>
-        <thead>
-          <tr>
-            <th>ID</th>
-            <th>Nome</th>
-            <th>Email</th>
-            <th>Telefone</th>
-            <th>Saldo em Carteira</th>
-          </tr>
-        </thead>
-        <tbody id="usuarios-body">
-          <!-- Conteúdo dinâmico -->
-        </tbody>
-      </table>
-    </section>
+      <div>
+        <label for="numero">Número</label>
+        <input type="text" id="numero" name="numero" />
+      </div>
 
-    <section id="graficas" class="card section">
-      <h3>Gráficas</h3>
-      <table>
-        <thead>
-          <tr>
-            <th>ID</th>
-            <th>Nome</th>
-            <th>Localização</th>
-            <th>Status</th>
-          </tr>
-        </thead>
-        <tbody id="graficas-body">
-          <!-- Conteúdo dinâmico -->
-        </tbody>
-      </table>
-    </section>
+      <div class="full">
+        <label for="complemento">Complemento</label>
+        <input type="text" id="complemento" name="complemento" />
+      </div>
 
-    <section id="produtos" class="card section">
-      <h3>Produtos</h3>
-      <table>
-        <thead>
-          <tr>
-            <th>ID</th>
-            <th>Nome</th>
-            <th>Categoria</th>
-            <th>Preço</th>
-          </tr>
-        </thead>
-        <tbody id="produtos-body">
-          <!-- Conteúdo dinâmico -->
-        </tbody>
-      </table>
-    </section>
-  </main>
+      <div>
+        <label for="estado">Estado</label>
+        <input type="text" id="estado" name="estado" />
+      </div>
+
+      <div>
+        <label for="cidade">Cidade</label>
+        <input type="text" id="cidade" name="cidade" />
+      </div>
+
+      <div>
+        <label for="bairro">Bairro</label>
+        <input type="text" id="bairro" name="bairro" />
+      </div>
+
+      <div>
+        <label for="cpf">CPF</label>
+        <input type="text" id="cpf" name="cpf" />
+      </div>
+
+      <div>
+        <label for="telefone">Telefone</label>
+        <input type="text" id="telefone" name="telefone" />
+      </div>
+
+      <div>
+        <label for="email">E-mail</label>
+        <input type="email" id="email" name="email" required />
+      </div>
+
+      <div class="full">
+        <label for="senha">Senha</label>
+        <input type="password" id="senha" name="senha" />
+      </div>
+
+      <div class="full">
+        <button type="submit">Salvar Alterações</button>
+      </div>
+
+      <div class="message" id="message"></div>
+    </form>
+  </div>
 
   <script>
-    const menuLinks = document.querySelectorAll('.sidebar nav ul li a');
-const sections = document.querySelectorAll('.section');
+    const userId = 1; // Defina dinamicamente
 
-menuLinks.forEach(link => {
-  link.addEventListener('click', (e) => {
-    e.preventDefault();
-    
-    const target = link.getAttribute('data-section');
+    async function carregarDadosUsuario() {
+      const res = await fetch(`/users/${userId}`);
+      const data = await res.json();
 
-    sections.forEach(section => {
-      section.classList.remove('active');
-    });
-
-    const activeSection = document.getElementById(target);
-    if (activeSection) {
-      activeSection.classList.add('active');
+      document.getElementById('nome').value = data.name || '';
+      document.getElementById('rua').value = data.rua || '';
+      document.getElementById('numero').value = data.numero || '';
+      document.getElementById('complemento').value = data.complemento || '';
+      document.getElementById('estado').value = data.estado || '';
+      document.getElementById('cidade').value = data.cidade || '';
+      document.getElementById('bairro').value = data.bairro || '';
+      document.getElementById('cpf').value = data.cpf || '';
+      document.getElementById('telefone').value = data.telefone || '';
+      document.getElementById('email').value = data.email || '';
+      document.getElementById('senha').value = ''; // nunca exibe senha
     }
-  });
-});
 
+    carregarDadosUsuario();
+
+    document.getElementById('editUserForm').addEventListener('submit', async (e) => {
+      e.preventDefault();
+
+      const payload = {
+        nome: document.getElementById('nome').value,
+        rua: document.getElementById('rua').value,
+        numero: document.getElementById('numero').value,
+        complemento: document.getElementById('complemento').value,
+        estado: document.getElementById('estado').value,
+        cidade: document.getElementById('cidade').value,
+        bairro: document.getElementById('bairro').value,
+        cpf: document.getElementById('cpf').value,
+        telefone: document.getElementById('telefone').value,
+        email: document.getElementById('email').value,
+        senha: document.getElementById('senha').value
+      };
+
+      const res = await fetch(`/users/${userId}`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload)
+      });
+
+      const message = document.getElementById('message');
+      const result = await res.json();
+
+      if (res.ok) {
+        message.style.color = '#015524';
+        message.textContent = 'Usuário atualizado com sucesso!';
+      } else {
+        message.style.color = '#EF4126';
+        message.textContent = result.message || 'Erro ao atualizar usuário.';
+      }
+    });
   </script>
 </body>
 </html>

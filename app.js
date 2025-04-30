@@ -2382,24 +2382,45 @@ app.get('/cpq/painel-administrativo', (req,res) => {
     res.status(500).send("Erro interno do servidor");
   }
 });
-app.get('/allusers', async(req, res) => {
+app.get('/allusers', async (req, res) => {
   try {
-    const users = await User.findAll({ attributes: ['id', 'userCad', 'emailCad', 'telefoneCad'] })
-    const usersWithBalance = await Promise.all(users.map(async user => {
-      const carteira = await Carteira.findOne({ where: { userId: user.id } }); // findPkId (Find by Primary Key)
-      return {
-          id: user.id,
-          name: user.userCad,
-          email: user.emailCad,
-          telefoneCad: user.telefoneCad,
-          balance: carteira ? carteira.saldo : 0
-      };
-  }));
+    const users = await User.findAll({
+      attributes: ['id', 'userCad', 'emailCad', 'telefoneCad']
+    });
 
-  res.json(usersWithBalance);
+    const usersWithBalance = await Promise.all(users.map(async user => {
+      const userId = user.id;
+
+      const saldoDepositosPagos = await Carteira.sum('saldo', {
+        where: {
+          userId: userId,
+          statusPag: 'PAGO'
+        }
+      }) || 0;
+
+      const saldoSaidas = await Carteira.sum('saldo', {
+        where: {
+          userId: userId,
+          statusPag: 'SAIDA'
+        }
+      }) || 0;
+
+      const saldoFinal = saldoDepositosPagos - saldoSaidas;
+
+      return {
+        id: user.id,
+        name: user.userCad,
+        email: user.emailCad,
+        telefoneCad: user.telefoneCad,
+        balance: saldoFinal
+      };
+    }));
+
+    res.json(usersWithBalance);
+
   } catch (error) {
-    console.error(error);
-    res.status(500).json({ error: 'Erro ao buscar usuários e saldos' });
+    console.error("Erro ao buscar usuários:", error);
+    res.status(500).json({ message: "Erro ao buscar usuários" });
   }
 });
 app.get('/saldo-allusers', async (req, res) => {
@@ -2529,6 +2550,7 @@ app.post("/solicitar-orcamento", upload.single("anexo"), async(req, res) => {
       return res.status(500).json({ success: false, message: "Erro no envio do orçamento", error: error.message });
   }
 });
+//Rota GET para o painel administrativo
 app.get('/administradores/painel', (req, res) => {
   try {
     const painelAdmContentHtml = fs.readFileSync(path.join(__dirname, "html", "administrativo.html"), "utf-8");
@@ -2537,6 +2559,16 @@ app.get('/administradores/painel', (req, res) => {
     console.error("Erro ao ler o arquivo administrativo.html:", error);
     res.status(500).send("Erro interno do servidor");
   }
+});
+//Rota GET para página de edição de informações do usuários
+app.get('/administradores/editar-usuario', (req, res) => {
+try {
+  const editarUsuariosContentHtml = fs.readFileSync(path.join(__dirname, "html", "editar-user.html"), "utf-8");
+  res.send(editarUsuariosContentHtml);
+} catch (error) {
+  console.error("Erro ao ler o arquivo editar-user.html:", error);
+  res.status(500).send("Erro interno do servidor");
+}
 });
 app.listen(PORT, () => {
   console.log(`Servidor rodando na porta ${PORT} https://localhost:${PORT}`);

@@ -73,7 +73,7 @@ fetch(`/detalhes-pedidoUser/${idPedido}`)
             console.log(item.tipo)
             let imgUrl
             let div
-            if(!item.tipo) {
+            if(item.tipo == 'Normal') {
                 imgUrl = await pegarImagemProduto(idProduto);
                 div = document.createElement('div');
             } else {

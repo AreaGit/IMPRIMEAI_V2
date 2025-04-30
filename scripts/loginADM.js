@@ -16,13 +16,13 @@ const btnCad = document.getElementById('btnCad');
 const usersPermitidos = {
     'Gabriel': {
         id: 1,
-        username: 'Gabriel ADM',
+        username: 'Gabriel',
         email: 'gabrieladm@imprimeai.com.br',
         senha: 'Z1mb@bue1'
     },
     'Telmo': {
         id: 2,
-        username: 'Telmo ADM',
+        username: 'Telmo',
         email: 'telmoadm@imprimeai.com.br',
         senha: 'Z1mb@bue1'
     },
@@ -53,11 +53,11 @@ btnCad.addEventListener('click', () => {
         avisoErro.style.display = 'none';
 
         // Salva o nome do usuário nos cookies
-        document.cookie = `username=${userName}; path=/;`;
+        document.cookie = `usernameAdm=${userName}; path=/;`;
 
         // Redireciona para a página desejada
         setTimeout(() => {
-            window.location.href = '/painel-administrativo';
+            window.location.href = '/administradores/painel';
         }, 5000);
     }  else {
         avisoSucesso.style.display = 'none';

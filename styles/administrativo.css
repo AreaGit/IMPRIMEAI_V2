@@ -42,6 +42,8 @@ body {
     justify-content: center;
 }
 
+#inicio {cursor: pointer;}
+
 .sidebar nav ul {
     list-style: none;
     display: flex;

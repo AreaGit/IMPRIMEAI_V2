@@ -39,6 +39,7 @@ const path = require('path');
 const { Client, LocalAuth } = require('whatsapp-web.js');
 const qrcode = require('qrcode-terminal');
 const { client, sendMessage } = require('./api/whatsapp-web');
+const bcrypt = require('bcrypt');
 
 // Use o cliente conforme necessário
 client.on('ready', () => {
@@ -500,6 +501,104 @@ app.get("/perfil/dados", async (req, res) => {
     });
   } catch (error) {
     console.error("Erro ao buscar os dados do usuário:", error);
+    res.status(500).json({ message: "Erro interno do servidor" });
+  }
+});
+
+app.get("/perfil/dados-adm", async (req, res) => {
+  try {
+    const userId = req.query.id;
+    // Buscar o usuário
+    const user = await User.findByPk(userId);
+
+    if (!user) {
+      return res.status(404).json({ message: "Usuário não encontrado" });
+    }
+
+    // Buscar saldo da carteira
+    const saldoDepositosPagos = await Carteira.sum('saldo', {
+      where: {
+        userId: userId,
+        statusPag: 'PAGO' // Apenas transações com status "PAGO"
+      }
+    });
+
+    // Consulte o banco de dados para obter a soma de todos os depósitos de saída associados ao usuário
+    const saldoSaidas = await Carteira.sum('saldo', {
+      where: {
+        userId: userId,
+        statusPag: 'SAIDA' // Apenas transações com status "SAÍDA"
+      }
+    });
+
+    // Calcule o saldo final subtraindo o valor total das saídas do valor total dos depósitos pagos
+    const saldoFinal = saldoDepositosPagos - saldoSaidas;
+
+    // Retornar os dados do usuário com saldo
+    res.json({
+      emailCad: user.emailCad,
+      cepCad: user.cepCad,
+      cidadeCad: user.cidadeCad,
+      estadoCad: user.estadoCad,
+      endereçoCad: user.endereçoCad,
+      telefoneCad: user.telefoneCad,
+      numCad: user.numCad,
+      compCad: user.compCad,
+      bairroCad: user.bairroCad,
+      cpfCad: user.cpfCad,
+      userCad: user.userCad,
+      userId: user.id,
+      saldoCarteira: saldoFinal
+    });
+  } catch (error) {
+    console.error("Erro ao buscar os dados do usuário:", error);
+    res.status(500).json({ message: "Erro interno do servidor" });
+  }
+});
+
+app.put("/usuarios/:id", async (req, res) => {
+  try {
+    const { id } = req.params;
+    const {
+      nome, rua, numero, complemento, estado, cidade, bairro,
+      cpf, telefone, email, senha, saldo
+    } = req.body;
+
+    const user = await User.findByPk(id);
+    if (!user) return res.status(404).json({ message: "Usuário não encontrado" });
+
+    const dadosAtualizados = {
+      userCad: nome,
+      endereçoCad: rua,
+      numCad: numero,
+      compCad: complemento,
+      estadoCad: estado,
+      cidadeCad: cidade,
+      bairroCad: bairro,
+      cpfCad: cpf,
+      telefoneCad: telefone,
+      emailCad: email
+    };
+
+    if (senha && senha.trim() !== "") {
+      const hashedPassword = await bcrypt.hash(senha, 10);
+      dadosAtualizados.senha = hashedPassword;
+    }
+
+    await user.update(dadosAtualizados);
+
+    let carteira = await Carteira.findOne({ where: { userId: id } });
+
+    if (carteira) {
+      await carteira.update({ saldo });
+    } else {
+      await Carteira.create({ userId: id, saldo });
+    }
+
+    res.json({ message: "Usuário e saldo atualizados com sucesso!" });
+
+  } catch (error) {
+    console.error("Erro ao atualizar usuário:", error);
     res.status(500).json({ message: "Erro interno do servidor" });
   }
 });

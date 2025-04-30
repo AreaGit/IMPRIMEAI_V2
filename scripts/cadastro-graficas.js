@@ -139,7 +139,7 @@ cepUser.addEventListener('input', () => {
                             bancoUser.classList.remove('invalid');
                             bancoUser.classList.add('valid');
                             validBancoUser = true;
-                            codBanco = banco.code
+                            codBanco = banco.code.toString().padStart(3, '0');
                         } else {
                             bancoUser.classList.remove('valid');
                             bancoUser.classList.add('invalid');
