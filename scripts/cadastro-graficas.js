@@ -313,7 +313,7 @@ btnCad.addEventListener('click', async() => {
     const emailUser = document.getElementById('emailUser').value;
     const senhaUser = document.getElementById('senhaUser').value;        
     const checkboxElements = document.querySelectorAll('#checkboxProdutos input[type="checkbox"]:checked');
-    const produtosMarcados = Array.from(checkboxElements).map(checkbox => checkbox.id.replace('check', ''));
+    const produtosMarcados = Array.from(checkboxElements).map(checkbox => checkbox.id.replace('check', '').trim());
 
     const jsonData = {
         produtos: produtosMarcados.reduce((acc, produto) => {
@@ -561,10 +561,11 @@ document.addEventListener('DOMContentLoaded', async () => {
         const checkboxContainer = document.getElementById('checkboxProdutos');
 
         produtos.forEach(produto => {
+            const nomeFormatado = produto.nomeProd.trim().replace(/\s+/g, ' '); // Remove espaços nas bordas e normaliza múltiplos espaços internos
             const checkbox = document.createElement('input');
             checkbox.type = 'checkbox';
-            checkbox.name = `check${produto.nomeProd.replace(/\s+/g, ' ')}`;
-            checkbox.id = `check ${produto.nomeProd.replace(/\s+/g, ' ')}`;
+            checkbox.name = `check${nomeFormatado}`;
+            checkbox.id = `check${nomeFormatado}`;
 
             const label = document.createElement('label');
             label.htmlFor = checkbox.id;
