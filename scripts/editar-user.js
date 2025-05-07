@@ -15,6 +15,7 @@ async function carregarDadosUsuario() {
     document.getElementById('bairro').value = data.bairroCad || '';
     document.getElementById('cpf').value = data.cpfCad || '';
     document.getElementById('telefone').value = data.telefoneCad || '';
+    document.getElementById('tipo').value = data.tipo || '';
     document.getElementById('email').value = data.emailCad || '';
     document.getElementById('saldo').value = data.saldoCarteira || '0.00';
     document.getElementById('senha').value = ''; // nunca exibe senha
@@ -35,6 +36,7 @@ document.getElementById('editUserForm').addEventListener('submit', async (e) => 
         bairro: document.getElementById('bairro').value,
         cpf: document.getElementById('cpf').value,
         telefone: document.getElementById('telefone').value,
+        tipo: document.getElementById('tipo').value,
         email: document.getElementById('email').value,
         senha: document.getElementById('senha').value,
         saldo: parseFloat(document.getElementById('saldo').value)
@@ -65,4 +67,50 @@ document.getElementById('editUserForm').addEventListener('submit', async (e) => 
             window.location.reaload();
         }, 5000);
     }
+});
+
+document.getElementById('abrirAcoes').addEventListener('click', () => {
+  document.getElementById('acoesUser').style.display = 'block';
+});
+
+document.getElementById('fecharAcoes').addEventListener('click', () => {
+  document.getElementById('acoesUser').style.display = 'none';
+});
+
+async function deleteUser() {
+    const params = new URLSearchParams(window.location.search);
+    const userId = params.get("id");
+    if (!userId) return;
+    
+    if (confirm('Tem certeza que deseja excluir este usuário? Esta ação é irreversível.')) {
+      try {
+        const res = await fetch(`/users/${userId}`, {
+          method: 'DELETE'
+        });
+  
+        const data = await res.json();
+        if (res.ok) {
+          alert('Usuário excluído com sucesso.');
+          // Atualize a listagem de usuários
+          window.location.href = `/administradores/painel`;
+        } else {
+          alert(data.message || 'Erro ao excluir usuário.');
+        }
+      } catch (error) {
+        alert('Erro ao excluir usuário.');
+        console.error(error);
+      }
+    }
+  }
+  
+
+document.getElementById('btnExcluirUser').addEventListener('click', () => {
+    deleteUser();
+});
+
+document.getElementById('btnPedidosUser').addEventListener('click', () => {
+  const params = new URLSearchParams(window.location.search);
+  const userId = params.get("id");
+  if (!userId) return;
+  window.location.href = `/administradores/historico-pedidos?id=${userId}`
 });

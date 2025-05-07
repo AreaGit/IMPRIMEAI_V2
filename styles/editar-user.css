@@ -102,3 +102,38 @@ button:hover {
     font-size: 14px;
     color: #EF4126;
 }
+#acoesUser {
+    display: none;
+    position: absolute;
+    left: 50%;
+    transform: translate(-50%);
+    top: 25%;
+    width: 35vw;
+    height: 50vh;
+    border-radius: 20px;
+    background-color: white;
+    box-shadow: -1px 1px 3px black;
+    padding: 15px;
+}
+#acoesUser > ul {
+    padding: 25px;
+}
+#acoesUser > ul > li {
+    padding-top: 10px;
+}
+#fecharAcoes {
+    position: relative;
+    left: 95%;
+    color: black;
+    font-size: 1.2em;
+}
+.acoes {
+    color: #EF4126;
+}
+#btnExcluirUser {
+    color: red;
+}
+
+#abrirAcoes {
+    color: #EF4126;
+}

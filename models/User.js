@@ -1,5 +1,6 @@
 const Sequelize = require('sequelize')
 const db = require('./db')
+const { type } = require('os')
 
 const  User = db.define('users', {
     id: {
@@ -46,6 +47,10 @@ const  User = db.define('users', {
     telefoneCad: {
         type : Sequelize.STRING(255),
         allowNull: true,
+    },
+    tipo: {
+        type : Sequelize.STRING(255),
+        defaultValue: 'operacional'
     },
     emailCad: {
         type: Sequelize.STRING(255),

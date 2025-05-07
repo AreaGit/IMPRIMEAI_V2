@@ -126,3 +126,55 @@ tbody tr:hover {
         padding: 20px;
     }
 }  
+.filtros-pedidos {
+    margin-bottom: 1rem; 
+    display: flex; 
+    gap: 1rem; flex-wrap: wrap;
+}
+#btnFiltroPedidos {
+    background-color: #EF4126; 
+    color: white; 
+    border: none; 
+    padding: 0.5rem 1rem; 
+    cursor: pointer; border-radius: 5px; 
+    font-weight: bold;
+}
+select.status-select {
+    border: none;
+    font-size: 16px;
+    text-align: center;
+}
+.btnExport {
+    background-color: #EF4126; 
+    color: white; 
+    border: none; 
+    padding: 0.5rem 1rem; 
+    cursor: pointer; border-radius: 5px; 
+    font-weight: bold;
+}
+.resumo-geral {
+    text-align: center;
+    margin-top: 70px;
+}
+.resumo-geral > h2 {
+    margin-bottom: 35px;
+    color: #EF4126;
+    font-size: 28px;
+}
+.estatistica {
+    height: 15vh;
+    display: inline-grid;
+    width: 30%;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+}
+.estatistica:hover {
+    transition: 0.8s;
+    transform: translateY(-10px);
+    box-shadow: 0px 2px 0px #EF4126;
+}
+.dashboards {
+    margin-bottom: 30px;
+    margin-top: 30px;
+}

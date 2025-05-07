@@ -1,0 +1,60 @@
+:root {
+    --branco: #ffffff;
+    --coral: #F37160;
+    --flamingo: #F69896;
+    --concreto: #A7A9AC;
+    --preto: #000000;
+    --vermelho: #EF4126;
+    --font-padrao: 'Open Sans', sans-serif;
+  }
+  
+  body {
+    font-family: var(--font-padrao);
+    background-color: var(--branco);
+    color: var(--preto);
+    margin: 0;
+    padding: 0;
+  }
+  
+  #voltar-painel {
+    margin: 20px;
+    position: relative;
+    top: 20px;
+    color: #F37160;
+    font-weight: bold;
+}
+
+  .container {
+    max-width: 800px;
+    margin: 30px auto;
+    background: var(--branco);
+    padding: 20px;
+    border-radius: 16px;
+    box-shadow: 0 0 10px rgba(0,0,0,0.1);
+  }
+  
+  h1 {
+    text-align: center;
+    color: var(--vermelho);
+  }
+  
+  .pedido {
+    border: 1px solid var(--coral);
+    padding: 15px;
+    margin-bottom: 20px;
+    border-radius: 12px;
+    background-color: var(--branco);
+  }
+  
+  .pedido h2 {
+    margin-top: 0;
+    color: var(--coral);
+  }
+  
+  ul {
+    padding-left: 20px;
+  }
+  
+  ul li {
+    margin-bottom: 5px;
+  }  

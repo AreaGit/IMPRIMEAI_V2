@@ -37,6 +37,9 @@ const EnderecosEmpresas = require('./models/Enderecos-Empresas');
 const CarteiraEmpresas = require('./models/CarteiraEmpresas');
 const User = require('./models/User');
 const Carteira = require('./models/Carteira');
+const { Parser } = require('json2csv');
+const PDFDocument = require('pdfkit');
+const TransacoesCarteira = require('./models/TransacoesCarteira');
 const client = redis.createClient({
   host: '127.0.0.1', // Substitua pelo endereço IP do seu servidor Redis
   port: 6379,         // Porta onde o Redis está escutando
@@ -2569,6 +2572,323 @@ try {
   console.error("Erro ao ler o arquivo editar-user.html:", error);
   res.status(500).send("Erro interno do servidor");
 }
+});
+// Rota DElETE para deletar usuários
+app.delete('/users/:id', async(req, res) => {
+  try {
+    const { id } = req.params;
+
+    const user = await User.findByPk(id);
+    if (!user) return res.status(404).json({ message: 'Usuário não encontrado' });
+
+    // Excluir dados vinculados (pedidos, carteira, etc.)
+    await Pedidos.destroy({ where: { idUserPed: id } });
+    await ItensPedido.destroy({ where: { idUserPed: id } });
+    await Carteira.destroy({ where: { userId: id } });
+
+    // Excluir o próprio usuário
+    await user.destroy();
+
+    res.json({ message: 'Usuário e dados relacionados excluídos com sucesso' });
+  } catch (error) {
+    console.error('Erro ao excluir usuário:', error);
+    res.status(500).json({ message: 'Erro interno ao excluir usuário' });
+  }
+});
+// Rota GET para buscar pedidos por usuário
+app.get('/pedidos/usuario/:userId', async(req, res) => {
+  try {
+    const { userId } = req.params;
+
+    const pedidos = await Pedidos.findAll({
+      where: { idUserPed: userId },
+      order: [['createdAt', 'DESC']],
+      include: [
+        {
+          model: ItensPedido,
+          where: { idUserPed: userId },
+          required: false
+        },
+        {
+          model: Enderecos,
+          required: false
+        }
+      ]
+    });
+
+    res.json(pedidos);
+  } catch (error) {
+    console.error('Erro ao buscar pedidos:', error);
+    res.status(500).json({ message: 'Erro ao buscar pedidos do usuário' });
+  }
+});
+// Rota GET para a página de histórico de pedidos
+app.get('/administradores/historico-pedidos', async(req, res) => {
+  try {
+    const historicoPedidosContentHtml = fs.readFileSync(path.join(__dirname, "html", "historico-pedidos.html"), "utf-8");
+    res.send(historicoPedidosContentHtml);
+  } catch (error) {
+    console.error("Erro ao ler o arquivo historico-pedidos.html:", error);
+    res.status(500).send("Erro interno do servidor");
+  }
+});
+// Rota GET para o filtro de pedidos por data, status e usuário
+app.get('/api/pedidos', async(req, res) => {
+  try {
+  const { dataInicio, dataFim, status, usuarioId } = req.query;
+    const where = {};
+
+    if (status) {
+      where.statusPed = status;
+    }
+
+    if (usuarioId) {
+      where.idUserPed = usuarioId;
+    }
+
+    if (dataInicio && dataFim) {
+      where.createdAt = {
+        [Op.between]: [new Date(dataInicio), new Date(dataFim)]
+      };
+    }
+
+    const pedidos = await Pedidos.findAll({
+      where,
+      include: [ItensPedido, Enderecos]
+    });
+
+    res.json(pedidos);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: 'Erro ao buscar pedidos' });
+  }
+});
+// Rota PUT para atualizar status do pedido
+app.put('/atualizar-status/:id', async (req, res) => {
+  try {
+    const { status } = req.body;
+    const pedidoId = req.params.id;
+
+    const pedido = await Pedidos.findByPk(pedidoId, {
+      include: [{ model: ItensPedido, as: 'itenspedidos' }]
+    });
+
+    if (!pedido) {
+      return res.status(404).json({ error: 'Pedido não encontrado' });
+    }
+
+    // Atualiza o status do pedido
+    pedido.statusPed = status;
+    await pedido.save();
+
+    // Atualiza o status de cada item do pedido
+    for (const item of pedido.itenspedidos) {
+      item.statusPed = status;
+      await item.save();
+    }
+
+    res.json({ success: true, pedido });
+  } catch (error) {
+    console.error('Erro ao atualizar status:', error);
+    res.status(500).json({ error: 'Erro interno do servidor' });
+  }
+});
+// Rota GET para exportar pedidos em CSV
+app.get('/exportar-pedidos/csv', async (req, res) => {
+  try {
+    const pedidos = await Pedidos.findAll({
+      include: [{ model: ItensPedido, as: 'itenspedidos' }],
+      order: [['createdAt', 'DESC']]
+    });
+
+    const dados = pedidos.map(ped => {
+      const item = ped.itenspedidos?.[0] || {};
+      return {
+        ID: ped.id,
+        Produto: item.nomeProd || '-',
+        Quantidade: item.quantidade || '-',
+        Status: item.statusPed || ped.statusPed,
+        Data: new Date(ped.createdAt).toLocaleDateString('pt-BR')
+      };
+    });
+
+    const json2csv = new Parser();
+    const csv = json2csv.parse(dados);
+
+    res.header('Content-Type', 'text/csv');
+    res.attachment('pedidos.csv');
+    return res.send(csv);
+  } catch (err) {
+    console.error('Erro ao exportar CSV:', err);
+    res.status(500).json({ error: 'Erro ao gerar CSV' });
+  }
+});
+// Rota GET para exportar pedidos em PDF
+app.get('/exportar-pedidos/pdf', async (req, res) => {
+  try {
+    const pedidos = await Pedidos.findAll({
+      include: [{ model: ItensPedido, as: 'itenspedidos' }],
+      order: [['createdAt', 'DESC']]
+    });
+
+    const doc = new PDFDocument({ margin: 30, size: 'A4' });
+
+    res.setHeader('Content-Type', 'application/pdf');
+    res.setHeader('Content-Disposition', 'attachment; filename=pedidos.pdf');
+
+    doc.fontSize(18).text('Relatório de Pedidos', { align: 'center' });
+    doc.moveDown();
+
+    pedidos.forEach(ped => {
+      const item = ped.itenspedidos?.[0] || {};
+      doc.fontSize(12).text(`ID: #${ped.id}`);
+      doc.text(`Produto: ${item.nomeProd || '-'}`);
+      doc.text(`Quantidade: ${item.quantidade || '-'}`);
+      doc.text(`Status: ${item.statusPed || ped.statusPed}`);
+      doc.text(`Data: ${new Date(ped.createdAt).toLocaleDateString('pt-BR')}`);
+      doc.moveDown();
+    });
+
+    doc.pipe(res);
+    doc.end();
+  } catch (err) {
+    console.error('Erro ao exportar PDF:', err);
+    res.status(500).json({ error: 'Erro ao gerar PDF' });
+  }
+});
+// Rota GET das informações gerais do painel
+app.get('/dashboard/resumo-geral', async (req, res) => {
+  try {
+    const totalUsuarios = await User.count();
+
+    const totalPedidos = await Pedidos.count();
+
+    const resultadoCarteira = await Carteira.findAll({
+      attributes: [
+        [Sequelize.fn('SUM', Sequelize.col('saldo')), 'totalSaldo']
+      ],
+      raw: true
+    });
+
+    const totalSaldoCarteiras = parseFloat(resultadoCarteira[0].totalSaldo || 0).toFixed(2);
+
+    res.json({
+      totalUsuarios,
+      totalPedidos,
+      totalSaldoCarteiras
+    });
+  } catch (error) {
+    console.error('Erro ao buscar resumo geral:', error);
+    res.status(500).json({ error: 'Erro ao buscar resumo geral' });
+  }
+});
+// Rota GET para pedidos mensais
+app.get('/dashboard/pedidos-mensais', async (req, res) => {
+  try {
+    const resultados = await Pedidos.findAll({
+      attributes: [
+        [Sequelize.fn('DATE_FORMAT', Sequelize.col('createdAt'), '%Y-%m'), 'mes'],
+        [Sequelize.fn('COUNT', Sequelize.col('id')), 'quantidade']
+      ],
+      group: [Sequelize.fn('DATE_FORMAT', Sequelize.col('createdAt'), '%Y-%m')],
+      order: [[Sequelize.fn('DATE_FORMAT', Sequelize.col('createdAt'), '%Y-%m'), 'ASC']]
+    });
+
+    const dados = resultados.map(r => ({
+      mes: r.get('mes'),
+      quantidade: r.get('quantidade')
+    }));
+
+    res.json(dados);
+  } catch (err) {
+    console.error('Erro ao buscar pedidos mensais:', err);
+    res.status(500).json({ erro: 'Erro interno ao buscar dados' });
+  }
+});
+// Rota GET para os usuarios mensais
+app.get("/dashboard/usuarios-mensais", async (req, res) => {
+  try {
+    const usuarios = await User.findAll({
+      attributes: [
+        [Sequelize.fn('MONTH', Sequelize.col('createdAt')), 'mes'],
+        [Sequelize.fn('COUNT', Sequelize.col('id')), 'quantidade']
+      ],
+      group: [Sequelize.fn('MONTH', Sequelize.col('createdAt'))],
+      order: [[Sequelize.fn('MONTH', Sequelize.col('createdAt')), 'ASC']]
+    });
+
+    const meses = [
+      "Janeiro", "Fevereiro", "Março", "Abril", "Maio", "Junho",
+      "Julho", "Agosto", "Setembro", "Outubro", "Novembro", "Dezembro"
+    ];
+
+    const dados = usuarios.map(u => ({
+      mes: meses[u.dataValues.mes - 1],
+      quantidade: u.dataValues.quantidade
+    }));
+
+    res.json(dados);
+  } catch (error) {
+    console.error("Erro ao obter dados de usuários mensais:", error);
+    res.status(500).json({ error: "Erro interno do servidor" });
+  }
+});
+// Rota GET para movimentações da carteira
+app.get("/dashboard/movimentacoes-carteira", async (req, res) => {
+  try {
+    const movimentacoes = await TransacoesCarteira.findAll({
+      attributes: [
+        [Sequelize.fn('MONTH', Sequelize.col('createdAt')), 'mes'],
+        [Sequelize.fn('SUM', Sequelize.col('valor')), 'total']
+      ],
+      group: [Sequelize.fn('MONTH', Sequelize.col('createdAt'))],
+      order: [[Sequelize.fn('MONTH', Sequelize.col('createdAt')), 'ASC']]
+    });
+
+    const meses = [
+      "Janeiro", "Fevereiro", "Março", "Abril", "Maio", "Junho",
+      "Julho", "Agosto", "Setembro", "Outubro", "Novembro", "Dezembro"
+    ];
+
+    const dados = movimentacoes.map(m => ({
+      mes: meses[m.dataValues.mes - 1],
+      total: parseFloat(m.dataValues.total)
+    }));
+
+    res.json(dados);
+  } catch (error) {
+    console.error("Erro ao obter dados de movimentações:", error);
+    res.status(500).json({ error: "Erro interno do servidor" });
+  }
+});
+// Rota GET para listar todos os admins
+app.get("/admin/admins", async (req, res) => {
+  const admins = await User.findAll({ where: { tipo: "admin" } });
+  res.json(admins);
+});
+//Rota POST para cadastrar administrador
+app.post("/admins", async (req, res) => {
+  const { nome, email, senha } = req.body;
+
+  const hashedPassword = await bcrypt.hash(senha, 10);
+  const novoAdmin = await User.create({
+    userCad: nome,
+    emailCad: email,
+    senha: hashedPassword,
+    tipo: "admin"
+  });
+
+  res.json({ message: "Administrador criado com sucesso!", admin: novoAdmin });
+});
+// Rota DELETE para deletar administrador
+app.delete("/admins/:id", async (req, res) => {
+  const { id } = req.params;
+
+  const admin = await User.findOne({ where: { id, tipo: "admin" } });
+  if (!admin) return res.status(404).json({ message: "Administrador não encontrado" });
+
+  await admin.destroy();
+  res.json({ message: "Administrador excluído com sucesso!" });
 });
 app.listen(PORT, () => {
   console.log(`Servidor rodando na porta ${PORT} https://localhost:${PORT}`);

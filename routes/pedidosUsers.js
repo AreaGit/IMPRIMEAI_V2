@@ -40,6 +40,8 @@ const { Client, LocalAuth } = require('whatsapp-web.js');
 const qrcode = require('qrcode-terminal');
 const { client, sendMessage } = require('./api/whatsapp-web');
 const bcrypt = require('bcrypt');
+const TransacoesCarteira = require('../models/TransacoesCarteira');
+const PDFDocument = require('pdfkit');
 
 // Use o cliente conforme necessário
 client.on('ready', () => {
@@ -548,20 +550,70 @@ app.get("/perfil/dados-adm", async (req, res) => {
       cpfCad: user.cpfCad,
       userCad: user.userCad,
       userId: user.id,
-      saldoCarteira: saldoFinal
+      tipo: user.tipo,
+      saldoCarteira: saldoFinal.toFixed(2)
     });
   } catch (error) {
     console.error("Erro ao buscar os dados do usuário:", error);
     res.status(500).json({ message: "Erro interno do servidor" });
   }
 });
+// Função para Gerar Comprovante PDF de Carteira
+async function gerarComprovante(user, valor, saldoAntes, saldoDepois, tipo) {
+  const usuario = await User.findByPk(user);
+  if (!user) return res.status(404).json({ message: "Usuário não encontrado" });
+  return new Promise((resolve, reject) => {
+    try {
+      const timestamp = Date.now();
+      const nomeArquivo = `comprovante-${usuario.id}-${timestamp}.pdf`;
+      const caminhoArquivo = path.join(__dirname, '../comprovantes', nomeArquivo);
 
+      const doc = new PDFDocument();
+      const stream = fs.createWriteStream(caminhoArquivo);
+      doc.pipe(stream);
+
+      doc.fontSize(18).text('Comprovante de Transação', { align: 'center' });
+      doc.moveDown();
+
+      doc.fontSize(12).text(`Nome: ${usuario.userCad}`);
+      doc.text(`E-mail: ${usuario.emailCad}`);
+      doc.text(`Telefone: ${usuario.telefoneCad || '-'}`);
+      doc.text(`Data da Transação: ${new Date().toLocaleString('pt-BR')}`);
+      doc.text(`Tipo de Operação: ${tipo === 'crédito' ? 'Crédito' : 'Débito'}`);
+      doc.text(`Valor: R$ ${parseFloat(valor).toFixed(2)}`);
+      doc.text(`Saldo Antes: R$ ${parseFloat(saldoAntes).toFixed(2)}`);
+      doc.text(`Saldo Depois: R$ ${parseFloat(saldoDepois).toFixed(2)}`);
+
+      doc.moveDown();
+      doc.text('Imprimeai Serviços de Impressão LTDA');
+      doc.text('CNPJ: 54.067.133/0001-04');
+      doc.text('https://imprimeai.com.br');
+
+      doc.end();
+
+      stream.on('finish', () => {
+        resolve(nomeArquivo); // nome do arquivo pode ser salvo no banco ou retornado
+      });
+
+      const telefone = usuario.telefoneCad;
+      const mensagemWhatsapp = "Olá " + usuario.userCad + ", tudo bem? 😊\n" + "Queremos te avisar que seu saldo foi atualizado!\n" + "Verifique a mudança em seu perfil.\n" + "Se precisar de algo mais ou tiver alguma dúvida, por favor nos chame.\n\n" +
+      "Obrigado!\n\n" +
+      "Siga-nos no Insta\n" +
+      "https://www.instagram.com/imprimeai.com.br e fique por dentro das novidades, cupons de desconto e assuntos importantes sobre gráfica e comunicação visual!\n\n" +
+      "*Tá com pressa? Imprimeaí!*";
+
+      enviarNotificacaoWhatsapp(telefone, mensagemWhatsapp)
+    } catch (err) {
+      reject(err);
+    }
+  });
+};
 app.put("/usuarios/:id", async (req, res) => {
   try {
     const { id } = req.params;
     const {
       nome, rua, numero, complemento, estado, cidade, bairro,
-      cpf, telefone, email, senha, saldo
+      cpf, telefone, tipo, email, senha, saldo
     } = req.body;
 
     const user = await User.findByPk(id);
@@ -577,6 +629,7 @@ app.put("/usuarios/:id", async (req, res) => {
       bairroCad: bairro,
       cpfCad: cpf,
       telefoneCad: telefone,
+      tipo: tipo,
       emailCad: email
     };
 
@@ -587,12 +640,52 @@ app.put("/usuarios/:id", async (req, res) => {
 
     await user.update(dadosAtualizados);
 
-    let carteira = await Carteira.findOne({ where: { userId: id } });
+    // 🧮 Recalcular saldo baseado nos registros de entrada e saída
+    const saldoDepositosPagos = await Carteira.sum('saldo', {
+      where: {
+        userId: id,
+        statusPag: 'PAGO'
+      }
+    });
 
-    if (carteira) {
-      await carteira.update({ saldo });
+    const saldoSaidas = await Carteira.sum('saldo', {
+      where: {
+        userId: id,
+        statusPag: 'SAIDA'
+      }
+    });
+
+    const novoSaldo = saldo;
+
+    // 🔍 Buscar carteira principal (saldo atual)
+    const carteira = saldoDepositosPagos - saldoSaidas;
+
+    let saldoAnterior = carteira;
+    const diferenca = Math.abs(novoSaldo - saldoAnterior);
+
+    if (diferenca < 0.01) {
+      console.log("✅ Saldo não foi alterado. Nenhuma ação realizada na carteira.");
     } else {
-      await Carteira.create({ userId: id, saldo });
+      console.log("🔁 Saldo alterado. Atualizando carteira e gerando comprovante...");
+
+      const tipoTransacao = novoSaldo > saldoAnterior ? 'crédito' : 'débito';
+
+      if (carteira) {
+        await carteira.update({ saldo: novoSaldo });
+      } else {
+        await Carteira.create({ userId: id, saldo: novoSaldo, statusPag: 'PAGO' });
+      }
+
+      await TransacoesCarteira.create({
+        userId: id,
+        valor: diferenca,
+        tipo: tipoTransacao,
+        descricao: 'Saldo ajustado manualmente após atualização de usuário',
+        saldoAnterior,
+        saldoAtual: novoSaldo
+      });
+
+      await gerarComprovante(id, diferenca, saldoAnterior, novoSaldo, tipoTransacao);
     }
 
     res.json({ message: "Usuário e saldo atualizados com sucesso!" });

@@ -73,6 +73,11 @@
       </div>
 
       <div class="full">
+        <label for="tipo">Tipo do Usuário</label>
+        <input type="text" id="tipo" name="tipo" required />
+      </div>
+
+      <div class="full">
         <label for="email">E-mail</label>
         <input type="email" id="email" name="email" required />
       </div>
@@ -86,8 +91,22 @@
         <button type="submit">Salvar Alterações</button>
       </div>
 
+      <a href="#" id="abrirAcoes">Outras Ações</a>
+
       <div class="message" id="message"></div>
     </form>
+  </div>
+  <div id="acoesUser">
+    <a href="#" id="fecharAcoes">✖</a>
+    <h2>Outras Ações do Usuário</h2>
+    <ul>
+      <li>
+        <a href="#" id="btnExcluirUser" class="acoes">❌ Excluir Usuário</a>
+      </li>
+      <li>
+        <a href="#" id="btnPedidosUser" class="acoes">📋 Pedidos do Usuário</a>
+      </li>
+    </ul>
   </div>
 
   <script src="../scripts/editar-user.js"></script>
