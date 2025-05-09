@@ -658,9 +658,42 @@ app.get('/api/produtos/sacolas', async (req, res) => {
 app.get('/api/produtos/:categoria', async (req, res) => {
   const { page = 1, limit = 1000 } = req.query;
   const categoria = req.params.categoria;
+  const cacheKey = `${categoria}:products:${page}:${limit}`;
+
+  console.log("📥 Requisição recebida para categoria:", categoria);
+  console.log("🔑 Cache key:", cacheKey);
 
   try {
-    const produtos = await getCachedProductsByCategory(categoria, page, limit);
+    // 🔥 Invalida o cache
+    const cacheDeleted = await client.del(cacheKey);
+    console.log(cacheDeleted ? "🧹 Cache anterior removido com sucesso" : "ℹ️ Nenhum cache anterior para remover");
+
+    // 🔎 Consulta ao banco de dados
+    console.log("🏦 Consultando banco de dados...");
+    const produtos = await Produtos.findAndCountAll({
+      where: {
+        [Op.and]: [
+          {
+            [Op.or]: [
+              Sequelize.where(Sequelize.fn('LOWER', Sequelize.col('categProd')), 'LIKE', categoria.toLowerCase()),
+              Sequelize.where(Sequelize.fn('LOWER', Sequelize.col('categProd2')), 'LIKE', categoria.toLowerCase()),
+              Sequelize.where(Sequelize.fn('LOWER', Sequelize.col('categProd3')), 'LIKE', categoria.toLowerCase())
+            ]
+          },
+          Sequelize.where(Sequelize.fn('LOWER', Sequelize.col('status')), 'LIKE', 'ativo') // Status "Ativo" case-insensitive
+        ]
+      },
+      offset: (page - 1) * limit,
+      limit: parseInt(limit),
+      order: [['nomeProd', 'ASC']]
+    });
+
+    console.log(`✅ ${produtos.count} produtos encontrados na categoria "${categoria}"`);
+
+    // ♻️ Atualiza cache
+    await client.set(cacheKey, JSON.stringify(produtos), { EX: 3600 });
+    console.log("📦 Cache atualizado com os novos dados da categoria");
+
     res.json({
       totalItems: produtos.count,
       totalPages: Math.ceil(produtos.count / limit),
@@ -668,10 +701,34 @@ app.get('/api/produtos/:categoria', async (req, res) => {
       produtos: produtos.rows
     });
   } catch (error) {
-    res.status(500).json({ error: error.message });
+    console.error("❌ Erro ao buscar produtos:", error);
+    res.status(500).json({ error: 'Erro interno do servidor' });
   }
 });
+app.post('/api/produtos/status', async (req, res) => {
+  try {
+    const { ids } = req.body;
 
+    if (!Array.isArray(ids) || ids.length === 0) {
+      return res.status(400).json({ error: 'IDs inválidos ou ausentes' });
+    }
+
+    const produtos = await Produtos.findAll({
+      where: { id: ids },
+      attributes: ['id', 'status']
+    });
+
+    const statusMap = {};
+    produtos.forEach(prod => {
+      statusMap[prod.id] = prod.status;
+    });
+
+    res.json({ status: statusMap });
+  } catch (error) {
+    console.error('Erro ao buscar status dos produtos:', error);
+    res.status(500).json({ error: 'Erro ao buscar status dos produtos' });
+  }
+});
 // Função para obter produtos de uma categoria específica com caching
 const getCachedProductsByCategory = async (categoria, page, limit) => {
   //categoria = "Folhetos"
@@ -1138,20 +1195,16 @@ app.get('/sobre', (req, res) => {
 });
 async function getProducts() {
   const produtos = await Produtos.findAll({
-      attributes: ['id', 'nomeProd', 'imgProd', 'categProd', 'valorProd']
+      attributes: ['id', 'nomeProd', 'imgProd', 'categProd', 'valorProd', 'status']
   });
   return produtos.map(produto => produto.dataValues);
 }
 
 app.get('/api/produtos', async (req, res) => {
   try {
-      const cacheKey = 'produtos-todos';
-      let produtos = productCache.get(cacheKey);
-
-      if (!produtos) {
-          produtos = await getProducts();
-          productCache.set(cacheKey, produtos);
-      }
+    const produtos = await Produtos.findAll({
+      attributes: ['id', 'nomeProd', 'imgProd', 'categProd', 'valorProd', 'status']
+    });
 
       res.json(produtos);
   } catch (error) {
@@ -1165,7 +1218,7 @@ app.get('/api/produtos-editar/:id', async (req, res) => {
   try {
     // Encontra o produto pelo ID
     const produto = await Produtos.findByPk(produtoId, {
-      attributes: ['id', 'nomeProd', 'imgProd', 'imgProd2', 'imgProd3', 'imgProd4', 'descProd', 'valorProd', 'categProd', 'raioProd', 'gabaritoProd']
+      attributes: ['id', 'nomeProd', 'imgProd', 'imgProd2', 'imgProd3', 'imgProd4', 'descProd', 'valorProd', 'categProd', 'raioProd', 'gabaritoProd', 'status']
     });
 
     if (!produto) {
@@ -1187,6 +1240,7 @@ app.get('/api/produtos-editar/:id', async (req, res) => {
       categoria: produto.categProd,
       raio: produto.raioProd,
       gabarito: produto.gabaritoProd,
+      status: produto.status
     };
 
     res.json(produtoFormatado);
@@ -1210,10 +1264,10 @@ app.post('/editar-produto/:id', upload.fields([
   { name: 'gabarito', maxCount: 1 }
 ]), async (req, res) => {
   try {
-    const { nomeProd, descProd, valorProd, categoriaProd, raioProd, imagem, imagem2, imagem3, imagem4 } = req.body;
+    const { nomeProd, descProd, valorProd, categoriaProd, raioProd, status, imagem, imagem2, imagem3, imagem4 } = req.body;
     const { gabarito } = req.files;
 
-    console.log('Dados recebidos:', { nomeProd, descProd, valorProd, categoriaProd, raioProd, imagem, imagem2, imagem3, imagem4 });
+    console.log('Dados recebidos:', { nomeProd, descProd, valorProd, categoriaProd, raioProd, status, imagem, imagem2, imagem3, imagem4 });
     console.log('Arquivos recebidos:', { gabarito });
 
     const produto = await Produtos.findByPk(req.params.id);
@@ -1237,6 +1291,9 @@ app.post('/editar-produto/:id', upload.fields([
     }
     if (raioProd !== undefined) {
       produto.raioProd = raioProd;
+    }
+    if(status !== undefined) {
+      produto.status = status;
     }
 
     // Atualiza as imagens apenas se elas forem recebidas

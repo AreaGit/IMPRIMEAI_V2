@@ -17,7 +17,7 @@
 </head>
 <body>
     <header>
-        <a href="/painel-administrativo"><img src="../images/logo-imprimeai.png" alt="..." id="logo"></a>
+        <a href="/administradores/painel"><img src="../images/logo-imprimeai.png" alt="..." id="logo"></a>
         <h1>Edição de Produtos</h1>
         <div id="linhaHr"></div>
         <h2>Edite as propriedades do produto abaixo</h2>
@@ -80,6 +80,14 @@
                     <br>
                     <input type="file" id="gabarito" name="gabarito" accept="application/pdf">
                     <br>
+                </div>
+                <div>
+                  <label for="status">Status do Produto:</label>
+                  <br>
+                  <select name="status" id="status">
+                    <option value="Ativo">Ativo</option>
+                    <option value="Inativo">Inativo</option>
+                  </select>
                 </div>
                 <button type="button" id="btnSalvarProd">Salvar Alterações</button>
             </form>

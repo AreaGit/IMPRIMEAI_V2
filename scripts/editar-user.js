@@ -58,7 +58,7 @@ document.getElementById('editUserForm').addEventListener('submit', async (e) => 
         message.style.color = '#015524';
         message.textContent = 'Usuário atualizado com sucesso!';
         setTimeout(() => {
-            window.location.reload();
+            window.location.href = '/administradores/painel';
         }, 5000);
     } else {
         message.style.color = '#EF4126';

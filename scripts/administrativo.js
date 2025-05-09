@@ -74,6 +74,7 @@ async function loadProdutos() {
       <td>${produto.nomeProd}</td>
       <td>${produto.categProd}</td>
       <td>R$ ${Number(produto.valorProd).toFixed(2)}</td>
+      <td style="color: ${produto.status === 'Ativo' ? 'green' : 'red'}">${produto.status}</td>
     `;
     tr.addEventListener('click', () => {
         window.location.href = `/editar-produtos?id=${produto.id}`

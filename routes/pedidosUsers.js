@@ -670,11 +670,7 @@ app.put("/usuarios/:id", async (req, res) => {
 
       const tipoTransacao = novoSaldo > saldoAnterior ? 'crédito' : 'débito';
 
-      if (carteira) {
-        await carteira.update({ saldo: novoSaldo });
-      } else {
-        await Carteira.create({ userId: id, saldo: novoSaldo, statusPag: 'PAGO' });
-      }
+      await Carteira.create({ userId: id, saldo: novoSaldo, statusPag: 'PAGO' });
 
       await TransacoesCarteira.create({
         userId: id,

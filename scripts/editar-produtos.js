@@ -24,6 +24,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 form.valorProd.value = produto.valor || '';
                 form.categoriaProd.value = produto.categoria || '';
                 form.raioProd.value = produto.raio || '';
+                form.status.value = produto.status || '';
 
                 if (produto.imagem) {
                     document.getElementById('imagem1').src = produto.imagem;
@@ -71,7 +72,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 carregamento.style.display = 'none';
                 avisoGeral.style.display = 'block';
                 setTimeout(() => {
-                    window.location.reload();
+                    window.location.href = '/administradores/painel';
                     avisoGeral.style.display = 'none';
                 },3000);
             }

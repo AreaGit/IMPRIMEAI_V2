@@ -195,32 +195,48 @@ document.addEventListener("DOMContentLoaded", function() {
 
         // Função para carregar produtos com base na categoria
         function carregarProdutos() {
-            let categoria = getParametroUrl('categoria') || 'Nenhum'; // Valor padrão
-            if(categoria == "folhetos") {
-                categoria = "Folhetos"
-            }
-            // Faz a requisição para obter produtos da categoria selecionada
+            let categoria = getParametroUrl('categoria') || 'Nenhum';
+
+            if (categoria === "folhetos") categoria = "Folders e Panfletos";
+            if (categoria === "cartoes") categoria = "Cartões de Visita";
+            if (categoria === "imas") categoria = "Imãs";
+            if (categoria === "brindes") categoria = "Brindes";
+            if (categoria === "pastas") categoria = "Pastas";
+            if (categoria === "sacolas") categoria = "Sacolas";
+
             fetch(`/api/produtos/${categoria}`)
                 .then(response => response.json())
                 .then(data => {
                     const produtosSection = document.getElementById('produtos');
-                    produtosSection.innerHTML = ''; // Limpa os produtos anteriores
+                    produtosSection.innerHTML = '';
 
-                    // Renderiza os produtos
-                    data.produtos.forEach(produto => {
-                        const produtoDiv = document.createElement('div');
-                        produtoDiv.classList.add('cxProd');
-                        produtoDiv.addEventListener("click", () => {
-                            window.location.href = `/detalhes-produtos?id=${produto.id}`;
-                        })
-                        produto.nomeProd = produto.nomeProd.substring(0, 40)
-                        produtoDiv.innerHTML = `
-                            <h2>${produto.nomeProd}</h2>
-                            <img src="${produto.imgProd}" alt="${produto.nomeProd}">
-                            <p>A partir de <br> R$ ${produto.valorProd.toFixed(2)}</p>
-                            <a href="detalhes-produtos?id=${produto.id}">Comprar</a>
-                        `;
-                        produtosSection.appendChild(produtoDiv);
+                    const ids = data.produtos.map(p => p.id);
+
+                    // Requisição para checar o status atual dos produtos
+                    fetch('/api/produtos/status', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ ids })
+                    })
+                    .then(res => res.json())
+                    .then(statusData => {
+                        const produtosAtivos = data.produtos.filter(p => statusData.status[p.id] === 'Ativo');
+
+                        produtosAtivos.forEach(produto => {
+                            const produtoDiv = document.createElement('div');
+                            produtoDiv.classList.add('cxProd');
+                            produtoDiv.addEventListener("click", () => {
+                                window.location.href = `/detalhes-produtos?id=${produto.id}`;
+                            });
+                            produto.nomeProd = produto.nomeProd.substring(0, 40);
+                            produtoDiv.innerHTML = `
+                                <h2>${produto.nomeProd}</h2>
+                                <img src="${produto.imgProd}" alt="${produto.nomeProd}">
+                                <p>A partir de <br> R$ ${produto.valorProd.toFixed(2)}</p>
+                                <a href="detalhes-produtos?id=${produto.id}">Comprar</a>
+                            `;
+                            produtosSection.appendChild(produtoDiv);
+                        });
                     });
                 })
                 .catch(error => console.error('Erro ao carregar os produtos:', error));

@@ -49,6 +49,11 @@ const Produtos = db.define('produtos', {
     type: Sequelize.BLOB('long'),
     allowNull: true,
   },
+  status: {
+    type: Sequelize.ENUM('Ativo', 'Inativo'),
+    defaultValue: 'Ativo',
+    allowNull: false
+  },
 },  {
   indexes: [
     {
