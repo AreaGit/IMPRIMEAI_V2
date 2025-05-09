@@ -2947,6 +2947,16 @@ app.delete("/admins/:id", async (req, res) => {
   await admin.destroy();
   res.json({ message: "Administrador excluído com sucesso!" });
 });
+// Rota GET para a página de termos de uso
+app.get('/termos-de-uso', async (req, res) => {
+  try {
+    const termosContentHtml = fs.readFileSync(path.join(__dirname, "html", "termos.html"), "utf-8");
+    res.send(termosContentHtml);
+  } catch (error) {
+    console.error("Erro ao ler o arquivo termos.html:", error);
+    res.status(500).send("Erro interno do servidor");
+  }
+});
 app.listen(PORT, () => {
   console.log(`Servidor rodando na porta ${PORT} https://localhost:${PORT}`);
 });
