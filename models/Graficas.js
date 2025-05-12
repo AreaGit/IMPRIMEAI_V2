@@ -68,6 +68,11 @@ const Graficas = db.define('graficas', {
         type : Sequelize.STRING(255),
         allowNull: false,
     },
+    status: {
+        type: Sequelize.ENUM('Em análise', 'Aprovada', 'Ativa', 'Inativa', 'Cancelada'),
+        defaultValue: 'Em análise',
+        allowNull: true
+    },
     emailCad: {
         type: Sequelize.STRING(255),
         allowNull: true

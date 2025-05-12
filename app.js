@@ -2957,6 +2957,26 @@ app.get('/termos-de-uso', async (req, res) => {
     res.status(500).send("Erro interno do servidor");
   }
 });
+// Rota PUT para atualizar status da gráfica
+app.put('/api/graficas/:id/status', async (req, res) => {
+  const { id } = req.params;
+  const { status } = req.body;
+
+  try {
+    const grafica = await Graficas.findByPk(id);
+    if (!grafica) {
+      return res.status(404).json({ error: 'Gráfica não encontrada' });
+    }
+
+    grafica.status = status;
+    await grafica.save();
+
+    res.json({ success: true });
+  } catch (error) {
+    console.error('Erro ao atualizar status da gráfica:', error);
+    res.status(500).json({ error: 'Erro interno ao atualizar status' });
+  }
+});
 app.listen(PORT, () => {
   console.log(`Servidor rodando na porta ${PORT} https://localhost:${PORT}`);
 });

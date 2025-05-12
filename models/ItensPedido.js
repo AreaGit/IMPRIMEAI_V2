@@ -1,6 +1,7 @@
 const Sequelize = require('sequelize')
 const db = require('./db')
 const Produtos = require('./Produtos');
+const Graficas = require('./Graficas');
 
 const ItensPedidos = db.define('itenspedidos', {
     id: {
@@ -125,6 +126,7 @@ const ItensPedidos = db.define('itenspedidos', {
     ]
 });
 
+ItensPedidos.belongsTo(Graficas, { foreignKey: 'graficaAtend', as: 'grafica' });
 ItensPedidos.belongsTo(Produtos, { foreignKey: 'idProduto' });
 //ItensPedidos.sync({force:true})
 ItensPedidos.sync()

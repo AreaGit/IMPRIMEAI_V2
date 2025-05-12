@@ -97,11 +97,36 @@ async function loadGraficas() {
       <td>${grafica.cidadeCad} - ${grafica.estadoCad}</td>
       <td>${grafica.emailCad}</td>
       <td>${grafica.telefoneCad}</td>
+      <td>
+        <select data-id="${grafica.id}" class="status-select">
+          <option value="Em análise" ${grafica.status === 'Em análise' ? 'selected' : ''}>Em análise</option>
+          <option value="Aprovada" ${grafica.status === 'Aprovada' ? 'selected' : ''}>Aprovada</option>
+          <option value="Ativa" ${grafica.status === 'Ativa' ? 'selected' : ''}>Ativa</option>
+          <option value="Inativa" ${grafica.status === 'Inativa' ? 'selected' : ''}>Inativa</option>
+          <option value="Cancelada" ${grafica.status === 'Cancelada' ? 'selected' : ''}>Cancelada</option>
+        </select>
+      </td>
     `;
-    tr.addEventListener('click', () => {
-      window.location.href = `/editar-graficas?id=${grafica.id}`
-    });
     tbody.appendChild(tr);
+  });
+
+  document.querySelectorAll('.status-select').forEach(select => {
+    select.addEventListener('change', async (e) => {
+      const id = e.target.dataset.id;
+      const novoStatus = e.target.value;
+
+      const res = await fetch(`/api/graficas/${id}/status`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ status: novoStatus })
+      });
+      if(res.ok == true) {
+        window.location.reload();
+      }
+      if (!res.ok) {
+        alert('Erro ao atualizar o status!');
+      }
+    });
   });
 }
 

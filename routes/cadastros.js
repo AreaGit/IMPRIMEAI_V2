@@ -933,6 +933,7 @@ app.post("/cadastro-graficas", async (req, res) => {
       contaCorrenteCad,
       produtos,
       recipientId: pagarmeResponse.id,
+      status: "Em análise",
       emailCad,
       passCad: hashedPassword
     });

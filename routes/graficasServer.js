@@ -166,7 +166,9 @@ async function getCoordinatesFromAddressEnd(enderecoEntregaInfo, apiKey) {
         },
       });
   
-      const graficas = await Graficas.findAll();
+      const graficas = await Graficas.findAll({
+        where: { status: 'Ativa' } // filtra apenas gráficas ativas para cálculo de distância
+      });
   
       const pedidosProximos = await Promise.all(pedidosCadastrados.map(async (pedido) => {
         const enderecosPedido = await Enderecos.findAll({
