@@ -192,6 +192,20 @@ document.addEventListener("DOMContentLoaded", function() {
             const categoriaFormatada = categoria.replace('-', ' '); // Formatação
             document.title = categoriaFormatada[0].toUpperCase() + categoriaFormatada.substring(1); // Altera o title da página
         }
+        document.addEventListener('DOMContentLoaded', () => {
+            const categoriaParam = new URLSearchParams(window.location.search).get("categoria");
+
+            let categoriaNome = categoriaParam;
+            let bannerSrc = "https://placehold.co/1180x207"; // default
+
+            if (categoriaParam === "folders") {
+                categoriaNome = "Folders e Panfletos";
+                bannerSrc = "https://i.imgur.com/z5OYAIo.png";
+            }
+            const banner = document.getElementById("banner-categ");
+            if (banner) banner.src = bannerSrc;
+        });
+
 
         // Função para carregar produtos com base na categoria
         function carregarProdutos() {

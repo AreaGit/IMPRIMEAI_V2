@@ -2977,6 +2977,16 @@ app.put('/api/graficas/:id/status', async (req, res) => {
     res.status(500).json({ error: 'Erro interno ao atualizar status' });
   }
 });
+//Rota get para formulário para convite de novos parceiros
+app.get('/seja-parceiro', (req, res) => {
+  try {
+    const formParceiroContentHtml = fs.readFileSync(path.join(__dirname, "html", "seja-parceiro.html"), "utf-8");
+    res.send(formParceiroContentHtml)
+  } catch (err) {
+    console.log("Erro ao ler o arquivo seja-parceiro.html", err);
+    res.status(500).send("Erro interno do servidor", err);
+  }
+});
 app.listen(PORT, () => {
   console.log(`Servidor rodando na porta ${PORT} https://localhost:${PORT}`);
 });

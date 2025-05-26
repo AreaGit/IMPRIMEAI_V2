@@ -1,0 +1,233 @@
+:root {
+    --branco:#ffff;
+    --coral:#F37160;
+    --flamingo:#F69896;
+    --concreto:#A7A9AC;
+    --preto:#000000;
+    --vermelho:#EF4126;
+    --font-padrao:'Open Sans';
+}
+* {
+    margin: 0px;
+    padding: 0px;
+    box-sizing: border-box;
+  }
+body {
+    font-family: var(--font-padrao);
+    background-color: #FFFF;
+    color: #333;
+}
+li {
+    list-style: none;
+}
+a {
+    text-decoration: none;
+}
+header {
+    display: flex;
+    box-shadow: 1px 0px 3px black;
+    padding: 3px;
+}
+.logo {
+    width: fit-content;
+    position: relative;
+    left: 10px;
+}
+.logo > a > img {
+    width: 15vw;
+}
+.nav-bar {
+    height: fit-content;
+    margin: auto;
+}
+.nav-bar > ul > li {
+    display: inline;
+    padding: 35px;
+    font-size: 1.1em;
+    font-weight: bold;
+    cursor: pointer;
+}
+#souParceiro {
+    background-color: #F37160;
+    color: white;
+    border-radius: 25px;
+    border: none;
+    height: fit-content;
+    padding: 15px;
+    position: relative;
+    left: -10px;
+    top: 10px;
+    cursor: pointer;
+    font-weight: bold;
+}
+#souParceiro:hover {
+    background-color: #EF4126;
+}
+main {
+    padding: 40px 20px;
+    max-width: 1300px;
+    margin: 0 auto;
+}
+
+h1, h2, h3 {
+    margin-bottom: 10px;
+}
+
+p {
+    font-size: 1rem;
+    margin-bottom: 20px;
+}
+
+section > div > a {
+    display: inline-block;
+    background-color: var(--coral);
+    color: var(--branco);
+    padding: 12px 24px;
+    border-radius: 4px;
+    text-decoration: none;
+    font-weight: bold;
+    transition: background 0.3s;
+    height: fit-content;
+}
+
+section > div > a:hover {
+    background-color: var(--vermelho);
+}
+
+/* Apresentação */
+#apresentacao {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-bottom: 60px;
+    text-align: center;
+}
+
+#frase-inicio {
+    max-width: 800px;
+}
+
+#frase-inicio img {
+    width: 100%;
+    max-width: 600px;
+    margin-top: 20px;
+    border-radius: 8px;
+}
+
+/* Vantagens */
+.vantagens {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 30px;
+    margin-top: 40px;
+}
+
+.vantagem {
+    border-radius: 8px;
+    padding: 20px;
+    max-width: 260px;
+    text-align: center;
+}
+
+.vantagem img {
+    width: 60px;
+    height: 60px;
+    margin-bottom: 10px;
+}
+
+/* Como funciona */
+#comoFunciona {
+    background-color: var(--concreto);
+    padding: 60px 20px;
+    text-align: center;
+    margin-bottom: 60px;
+}
+
+#conteudoFuncionamento {
+    max-width: 800px;
+    margin: 0 auto;
+}
+
+#conteudoFuncionamento img {
+    width: 100%;
+    max-width: 400px;
+    margin-bottom: 20px;
+}
+
+/* Passo a Passo */
+#passoAPasso {
+    padding: 60px 0;
+    margin-bottom: 60px;
+}
+
+.passos {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 30px;
+}
+
+.passo {
+    border-radius: 8px;
+    padding: 20px;
+    max-width: 280px;
+    text-align: center;
+}
+
+.passo img {
+    width: 60px;
+    height: 60px;
+    margin-bottom: 10px;
+}
+
+/* Pré-requisitos */
+#pre-requisitos {
+    background-color: var(--concreto);
+    padding: 60px 0;
+    text-align: center;
+}
+
+.requisitos {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 35px;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.requisito {
+    background-color: var(--flamingo);
+    border-radius: 8px;
+    padding: 20px;
+    max-width: 300px;
+}
+
+.requisito img {
+    width: 60px;
+    height: 60px;
+    margin-bottom: 10px;
+}
+
+.requisitos a {
+    margin-top: 40px;
+}
+
+/* Responsivo */
+@media (max-width: 768px) {
+    .vantagens,
+    .passos,
+    .requisitos {
+        flex-direction: column;
+        align-items: center;
+    }
+
+    #frase-inicio h1 {
+        font-size: 1.5rem;
+    }
+
+    #conteudoFuncionamento h2 {
+        font-size: 1.6rem;
+    }
+}
