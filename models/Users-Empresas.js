@@ -67,6 +67,10 @@ const  UserEmpresas = db.define('usersempresas', {
         type: Sequelize.STRING(255),
         allowNull: true
     },
+    email_fiscal: {
+        type: Sequelize.STRING(100),
+        allowNull: true,
+    },
     passCad: {
         type: Sequelize.STRING(255),
         allowNull: true

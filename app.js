@@ -2317,6 +2317,7 @@ app.get("/perfil/dados-empresa", async (req, res) => {
     // Retorna os dados do usuário como JSON
     res.json({
       emailCad: user.emailCad,
+      email_fiscal: user.email_fiscal,
       cepCad: user.cepCad,
       cidadeCad: user.cidadeCad,
       estadoCad: user.estadoCad,

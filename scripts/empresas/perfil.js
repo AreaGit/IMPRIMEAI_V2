@@ -339,10 +339,11 @@ abrirMetodosBtn.addEventListener('click', () => {
             const dddCliente = telefoneFormatado.ddd;
             const numeroTelefoneCliente = telefoneFormatado.numeroTelefone;
             
-            const cpf = perfilData.cpfCad.replace(/\D/g, '');
+            const cpf = perfilData.cnpjCad.replace(/\D/g, '');
             const cpfCliente = cpf;
             
             const emailCliente = perfilData.emailCad;
+            const emailFiscalCliente = perfilData.email_fiscal;
             const cepCliente = perfilData.cepCad;
             const cidadeCliente = perfilData.cidadeCad;
             const ruaCliente = perfilData.endereçoCad;
@@ -356,6 +357,7 @@ abrirMetodosBtn.addEventListener('click', () => {
             
             const perfilUsuario = {
                 emailCliente: emailCliente,
+                emailFiscalCliente: emailFiscalCliente,
                 cpfCliente: cpfCliente,
                 cepCliente: cepCliente,
                 cidadeCliente: cidadeCliente,
@@ -373,6 +375,7 @@ abrirMetodosBtn.addEventListener('click', () => {
                 totalCompra: valorSelecionado, // Certifique-se de que valorSelecionado está definido
             };
             console.log(valorSelecionado)
+            console.log(perfilUsuario)
             return perfilUsuario;
         })
         .catch(err => {
@@ -433,14 +436,16 @@ document.getElementById('pix').addEventListener('click', async () => {
 
 // Gerenciar recarga por Boleto
 document.getElementById('boleto').addEventListener('click', async () => {
+    console.log(perfilCarteira)
     try {
-        const response = await fetch('/processarPagamento-boleto-carteira', {
+        const response = await fetch('/processarPagamento-boleto-carteira-cpq', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ valor: valorSelecionado }),
+            body: JSON.stringify({ valor: valorSelecionado, perfilData: perfilCarteira }),
         });
         if (!response.ok) throw new Error('Erro ao processar pagamento via Boleto');
         const { boleto_url, charge_id } = await response.json();
+        console.log(boleto_url, charge_id);
         boletoContainer.innerHTML = `<a href="${boleto_url}" target="_blank">Abrir Boleto</a>`;
         boletoContainer.style.display = 'block';
         verificarStatusTransacao(charge_id);

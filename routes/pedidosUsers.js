@@ -42,6 +42,7 @@ const { client, sendMessage } = require('./api/whatsapp-web');
 const bcrypt = require('bcrypt');
 const TransacoesCarteira = require('../models/TransacoesCarteira');
 const PDFDocument = require('pdfkit');
+const dayjs = require('dayjs');
 
 // Use o cliente conforme necessário
 client.on('ready', () => {
@@ -1846,7 +1847,51 @@ async function verificarGraficaMaisProximaEAtualizar2(itensPedido, enderecos) {
     verificarPagamentosPendentesCarteira();
     console.log('Verificação de pagamentos Carteira concluída.');
   })
+
+  cron.schedule('0 * * * *', async () => {
+    console.log('Verificação de pagamentos Carteira Empresas...');
+    verificarPagamentosPendentesCarteiraEmpresas();
+    console.log('Verificação de pagamentos Carteira Empresas concluída.');
+  });
   
+    async function verificarPagamentosPendentesCarteiraEmpresas() {
+    try {
+    const transacoesPendentes = await CarteiraEmpresas.findAll({ where: { statusPag: 'ESPERANDO PAGAMENTO' } });
+    console.log('Transações pendentes:', transacoesPendentes); 
+    
+    // Iterar sobre as transações pendentes encontradas
+    for (const transacao of transacoesPendentes) {
+      // Verificar o status do pagamento no Pagarme usando o ID da transação
+      const transactionId = transacao.idTransacao;
+      console.log('Transaction ID:', transactionId); // Check if transactionId is defined
+      try {
+        const response = await axios.get(`https://api.pagar.me/core/v5/charges/${transactionId}`, {
+        headers: {
+          'Authorization': `Basic ${Buffer.from(`${pagarmeKeyProd}:`).toString('base64')}`
+          }
+        });
+        //console.log('Transaction found:', response); // Check if transaction is defined
+        const charge = response.data;
+        // Verificar se a transação está paga
+        if (charge.status === 'paid') {
+          // Atualizar o status da transação para 'PAGO'
+          transacao.statusPag = 'PAGO';
+          await transacao.save();
+        }
+      } catch (error) {
+          // Verificar se o erro é de transação não encontrada
+          if (error.response && error.response.status === 404) {
+            console.error(`Transação não encontrada para a transação ${transacao.id}:`, error);
+          } else {
+              throw error; // Rejeitar erro para tratamento superior
+          }
+      }
+    }
+    } catch(error) {
+      console.error('Erro ao verificar pagamentos pendentes:', error);
+    }
+  }
+
   async function verificarPagamentosPendentesCarteira() {
     try {
     const transacoesPendentes = await Carteira.findAll({ where: { statusPag: 'ESPERANDO PAGAMENTO' } });
@@ -2892,20 +2937,99 @@ app.post('/processarPagamento-boleto-carteira', (req, res) => {
     json: true
   };
 
-  rp(options)
+rp(options)
   .then(response => {
-    console.log(response.charges);
-    res.status(200).send(response.charges);
+    console.log(response.charges[0])
+    const charge = response.charges[0];
+    const boletoUrl = charge.last_transaction.url;
+    const chargeId = charge.id;
+
+    res.status(200).json({ boleto_url: boletoUrl, charge_id: chargeId });
   })
   .catch(error => {
-      // Handle error response
-      console.error('Error:', error.message);
-      if (error.response) {
-        console.error('Request failed with status code', error.response.statusCode);
-        console.error('Response body:', error.response.body);
+    console.error('Error:', error.message);
+    if (error.response) {
+      console.error('Request failed with status code', error.response.statusCode);
+      console.error('Response body:', error.response.body);
+    }
+    res.status(500).send("Transação falhada!");
+  });
+});
+
+app.post('/processarPagamento-boleto-carteira-cpq', (req, res) => {
+  const perfilData = req.body.perfilData;
+  const totalCompra = req.body.valor
+  const carrinho = req.session.carrinho;
+
+  const dueDate = dayjs().add(11, 'day').format('YYYY-MM-DD');
+
+  // Define the request payload
+  console.log(perfilData)
+  console.log(totalCompra)
+  const body = {
+    "items": [
+      {
+          "amount": Math.max(Math.round(parseFloat(req.body.valor) * 100), 1), //Math.max(Math.round(parseFloat(perfilData.totalCompra) * 100), 1),
+          "description": "CARTEIRA",
+          "quantity": 1,
+          "code": "123"
       }
-      res.status(500).send("Transação falhada!");
-    });
+    ],
+    "customer": {
+      "name": perfilData.nomeCliente,
+      "email": perfilData.emailFiscalCliente,
+      "document_type": "CPF",
+      "document": perfilData.cpfCliente,
+      "type": "individual",
+      "address": {
+          "line_1": perfilData.ruaCliente,
+          "line_2": perfilData.complementoCliente,
+          "zip_code": perfilData.cepCliente,
+          "city": perfilData.cidadeCliente,
+          "state": perfilData.estadoCliente,
+          "country": "BR",
+      },
+    },
+    "payments": [
+        {
+            "payment_method": "boleto",
+            "boleto" : {
+              "instructions": "Pagar até o vencimento",
+              "document_number": "123",
+              "type": "DM",
+              "due_at": dueDate
+            }
+        }
+    ]
+  };
+  const options = {
+    method: 'POST',
+    uri: 'https://api.pagar.me/core/v5/orders',
+    headers: {
+      'Authorization': 'Basic ' + Buffer.from(`${pagarmeKeyProd}:`).toString('base64'),
+      'Content-Type': 'application/json'
+    },
+    body: body,
+    json: true
+  };
+
+rp(options)
+  .then(response => {
+    console.log(response.charges[0])
+    const charge = response.charges[0];
+    const boletoUrl = charge.last_transaction.url;
+    const chargeId = charge.id;
+
+    res.status(200).json({ boleto_url: boletoUrl, charge_id: chargeId });
+  })
+  .catch(error => {
+    console.error('Error:', error.message);
+    if (error.response) {
+      console.error('Request failed with status code', error.response.statusCode);
+      console.error('Response body:', error.response.body);
+    }
+    res.status(500).send("Transação falhada!");
+  });
 });
 
 app.post('/processarPagamento-cartao-carteira', (req ,res) => {
