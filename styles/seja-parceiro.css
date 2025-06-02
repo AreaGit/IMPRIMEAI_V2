@@ -1,233 +1,237 @@
 :root {
-    --branco:#ffff;
-    --coral:#F37160;
-    --flamingo:#F69896;
-    --concreto:#A7A9AC;
-    --preto:#000000;
-    --vermelho:#EF4126;
-    --font-padrao:'Open Sans';
+  --branco: #ffffff;
+  --coral: #F37160;
+  --flamingo: #F69896;
+  --concreto: #A7A9AC;
+  --preto: #000000;
+  --vermelho: #EF4126;
+  --font-padrao: 'Open Sans', sans-serif;
 }
+
 * {
-    margin: 0px;
-    padding: 0px;
-    box-sizing: border-box;
-  }
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
 body {
-    font-family: var(--font-padrao);
-    background-color: #FFFF;
-    color: #333;
+  font-family: var(--font-padrao);
+  background-color: var(--branco);
+  color: #333;
+  line-height: 1.6;
 }
-li {
-    list-style: none;
-}
+
 a {
-    text-decoration: none;
+  text-decoration: none;
 }
+
 header {
-    display: flex;
-    box-shadow: 1px 0px 3px black;
-    padding: 3px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 16px 32px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+  background-color: var(--branco);
 }
-.logo {
-    width: fit-content;
-    position: relative;
-    left: 10px;
+
+.logo img {
+  width: 160px;
 }
-.logo > a > img {
-    width: 15vw;
+
+.nav-bar ul {
+  display: flex;
+  gap: 24px;
+  list-style: none;
 }
-.nav-bar {
-    height: fit-content;
-    margin: auto;
+
+.nav-bar a {
+  text-decoration: none;
+  color: var(--preto);
+  font-weight: 600;
 }
-.nav-bar > ul > li {
-    display: inline;
-    padding: 35px;
-    font-size: 1.1em;
-    font-weight: bold;
-    cursor: pointer;
-}
+
 #souParceiro {
-    background-color: #F37160;
-    color: white;
-    border-radius: 25px;
-    border: none;
-    height: fit-content;
-    padding: 15px;
-    position: relative;
-    left: -10px;
-    top: 10px;
-    cursor: pointer;
-    font-weight: bold;
-}
-#souParceiro:hover {
-    background-color: #EF4126;
-}
-main {
-    padding: 40px 20px;
-    max-width: 1300px;
-    margin: 0 auto;
+  background-color: var(--vermelho);
+  color: var(--branco);
+  padding: 10px 18px;
+  border: none;
+  border-radius: 6px;
+  font-weight: 600;
+  cursor: pointer;
 }
 
-h1, h2, h3 {
-    margin-bottom: 10px;
-}
-
-p {
-    font-size: 1rem;
-    margin-bottom: 20px;
-}
-
-section > div > a {
-    display: inline-block;
-    background-color: var(--coral);
-    color: var(--branco);
-    padding: 12px 24px;
-    border-radius: 4px;
-    text-decoration: none;
-    font-weight: bold;
-    transition: background 0.3s;
-    height: fit-content;
-}
-
-section > div > a:hover {
-    background-color: var(--vermelho);
-}
-
-/* Apresentação */
-#apresentacao {
+@media (max-width: 768px) {
+  .menu-toggle {
     display: flex;
+  }
+
+  .nav-bar {
+    display: none;
+    width: 100%;
+  }
+
+  .nav-bar.active {
+    display: block;
+    margin-top: 10px;
+  }
+
+  .nav-bar ul {
     flex-direction: column;
-    align-items: center;
-    margin-bottom: 60px;
-    text-align: center;
-}
+    gap: 16px;
+  }
 
-#frase-inicio {
-    max-width: 800px;
-}
-
-#frase-inicio img {
+  #souParceiro {
+    margin-top: 10px;
     width: 100%;
-    max-width: 600px;
-    margin-top: 20px;
-    border-radius: 8px;
+  }
+
+  .header-container {
+    flex-direction: column;
+    align-items: flex-start;
+  }
 }
 
-/* Vantagens */
-.vantagens {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: center;
-    gap: 30px;
-    margin-top: 40px;
+main {
+  padding: 40px 20px;
 }
 
-.vantagem {
-    border-radius: 8px;
-    padding: 20px;
-    max-width: 260px;
-    text-align: center;
+.intro p,
+#comoFunciona p,
+.passo p,
+.requisito p,
+.vantagem p {
+  text-align: center;
 }
 
-.vantagem img {
-    width: 60px;
-    height: 60px;
-    margin-bottom: 10px;
+.intro {
+  text-align: center;
+  margin-bottom: 48px;
 }
 
-/* Como funciona */
-#comoFunciona {
-    background-color: var(--concreto);
-    padding: 60px 20px;
-    text-align: center;
-    margin-bottom: 60px;
+.intro img {
+  max-width: 40%; /* ou o tamanho desejado, ex: 250px */
+  height: auto;
+  display: block;
+  margin: 0 auto 20px auto; /* centraliza a imagem acima do texto */
 }
 
-#conteudoFuncionamento {
-    max-width: 800px;
-    margin: 0 auto;
+.intro a {
+  display: inline-block;
+  margin-top: 16px;
+  padding: 12px 24px;
+  background-color: var(--vermelho);
+  color: var(--branco);
+  border-radius: 6px;
+  font-weight: 600;
 }
 
-#conteudoFuncionamento img {
-    width: 100%;
-    max-width: 400px;
-    margin-bottom: 20px;
+.titulo-secao {
+  text-align: center;
+  margin: 48px 0 24px;
+  font-size: 28px;
 }
 
-/* Passo a Passo */
-#passoAPasso {
-    padding: 60px 0;
-    margin-bottom: 60px;
+.vantagens,
+.passos,
+.requisitos {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 32px;
+  padding: 0 20px;
 }
 
-.passos {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: center;
-    gap: 30px;
+.vantagem,
+.passo,
+.requisito {
+  text-align: center;
+  padding: 16px;
+  border: 1px solid #eee;
+  border-radius: 8px;
 }
 
-.passo {
-    border-radius: 8px;
-    padding: 20px;
-    max-width: 280px;
-    text-align: center;
-}
-
+.vantagem img,
 .passo img {
-    width: 60px;
-    height: 60px;
-    margin-bottom: 10px;
+  width: 80px;
+  margin-bottom: 16px;
 }
 
-/* Pré-requisitos */
-#pre-requisitos {
-    background-color: var(--concreto);
-    padding: 60px 0;
-    text-align: center;
+#comoFunciona .conteudo {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: 32px;
+  padding: 20px;
+}
+
+#comoFunciona img {
+  width: 320px;
+  max-width: 100%;
+  border-radius: 12px;
+}
+
+#comoFunciona h2 {
+  margin-bottom: 16px;
+}
+
+.btn-cadastro {
+  display: block;
+  margin: 40px auto 0;
+  width: fit-content;
+  padding: 12px 28px;
+  background-color: var(--vermelho);
+  color: var(--branco);
+  font-weight: 600;
+  border-radius: 6px;
+  text-align: center;
 }
 
 .requisitos {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: center;
-    gap: 35px;
-    max-width: 1200px;
-    margin: 0 auto;
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 50px;
+  padding: 0 20px;
 }
 
 .requisito {
-    background-color: var(--flamingo);
-    border-radius: 8px;
-    padding: 20px;
-    max-width: 300px;
+    text-align: center;
 }
 
-.requisito img {
-    width: 60px;
-    height: 60px;
-    margin-bottom: 10px;
-}
-
-.requisitos a {
-    margin-top: 40px;
-}
-
-/* Responsivo */
 @media (max-width: 768px) {
-    .vantagens,
-    .passos,
-    .requisitos {
-        flex-direction: column;
-        align-items: center;
-    }
+  .requisitos {
+    grid-template-columns: 1fr;
+  }
+}
 
-    #frase-inicio h1 {
-        font-size: 1.5rem;
-    }
+.lista-requisitos {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: grid;
+  gap: 32px;
+}
 
-    #conteudoFuncionamento h2 {
-        font-size: 1.6rem;
-    }
+.imagem-requisitos img {
+  max-width: 100%;
+  height: auto;
+  border-radius: 12px;
+  object-fit: cover;
+}
+
+.lista-requisitos li {
+  padding: 24px;
+  border-radius: 12px;
+  border: 1px solid #eee;
+  text-align: center;
+}
+
+.lista-requisitos h3 {
+  margin: 0 0 8px;
+  font-size: 18px;
+}
+
+.lista-requisitos p {
+  margin: 0;
+  font-size: 15px;
+  text-align: center;
 }
