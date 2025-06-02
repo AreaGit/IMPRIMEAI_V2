@@ -438,7 +438,7 @@ document.getElementById('pix').addEventListener('click', async () => {
 document.getElementById('boleto').addEventListener('click', async () => {
     console.log(perfilCarteira)
     try {
-        const response = await fetch('/processarPagamento-boleto-carteira-cpq', {
+        const response = await fetch('/processarPagamento-boleto-carteira', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ valor: valorSelecionado, perfilData: perfilCarteira }),

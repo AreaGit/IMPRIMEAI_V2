@@ -1930,34 +1930,36 @@ async function verificarGraficaMaisProximaEAtualizar2(itensPedido, enderecos) {
     }
   }
 
-  app.post('/registrarPagamento', async (req, res) => {
-    const { userId, valor, metodoPagamento, status, idTransacao } = req.body;
-    console.log("REGISTRANDO NA CARTEIRA", userId, valor, metodoPagamento, status)
-    try {
-      // Encontre a carteira do usuário pelo userId
-      let carteira = await Carteira.findOne({ where: { userId } });
+app.post('/registrarPagamento', async (req, res) => {
+  let { userId, valor, metodoPagamento, status, idTransacao } = req.body;
+  console.log("REGISTRANDO NA CARTEIRA", userId, valor, metodoPagamento, status);
   
-      // Se a carteira não existir, crie uma nova
-      if (!carteira) {
-        //carteira = await Carteira.create({ userId, saldo: 0 }); // Saldo inicial 0
-      }
-  
-      // Crie uma entrada na tabela Carteira para registrar o pagamento
-      const pagamento = await Carteira.create({
-        saldo: valor,
-        statusPag: status,
-        userId: userId,
-        idTransacao: idTransacao
-      });
-  
-      console.log('Pagamento registrado com sucesso:', { userId, valor, metodoPagamento, status });
-  
-      res.status(200).send('Pagamento registrado com sucesso!');
-    } catch (error) {
-      console.error('Erro ao registrar o pagamento:', error);
-      res.status(500).send('Erro ao registrar o pagamento');
+  try {
+    if (typeof valor === 'string') {
+      valor = parseFloat(valor.replace(',', '.'));
     }
-  });
+
+    let carteira = await Carteira.findOne({ where: { userId } });
+
+    // Se a carteira não existir, você pode decidir se vai criar ou não
+    // if (!carteira) {
+    //   carteira = await Carteira.create({ userId, saldo: 0 });
+    // }
+
+    const pagamento = await Carteira.create({
+      saldo: valor,
+      statusPag: status,
+      userId,
+      idTransacao
+    });
+
+    console.log('Pagamento registrado com sucesso:', { userId, valor, metodoPagamento, status });
+    res.status(200).send('Pagamento registrado com sucesso!');
+  } catch (error) {
+    console.error('Erro ao registrar o pagamento:', error);
+    res.status(500).send('Erro ao registrar o pagamento');
+  }
+});
   
   // Rota para buscar o saldo do usuário e exibi-lo na página HTML
   // Rota para buscar o saldo do usuário
@@ -2471,37 +2473,36 @@ async function verificarGraficaMaisProximaEAtualizar2(itensPedido, enderecos) {
       if (item.endereco.tipoEntrega === "Único Endereço") {
         itemSubtotal = (item.valorUnitario * item.quantidade) + item.endereco.frete;
       } else if (item.endereco.tipoEntrega === "Entrega a Retirar na Loja") {
-        itemSubtotal = item.valorUnitario * item.quantidade; // Sem adicionar frete
+        itemSubtotal = item.valorUnitario * item.quantidade;
       } else {
         itemSubtotal = (item.valorUnitario * item.quantidade) + item.endereco.frete;
       }
-  
-      return total + itemSubtotal * 100; // Convertendo para centavos
+      
+      return total + itemSubtotal * 100; // já está convertendo para centavos corretamente
     }, 0);
   
     console.log('Total Amount (cents):', totalAmount);
   
     // Define o payload da requisição
     const body = {
-      "items": carrinho.map(item => {
-        let amount;
-  
-        if (item.endereco.tipoEntrega === "Único Endereço") {
-          amount = Math.round(item.valorUnitario * 100);
-        } else if (item.endereco.tipoEntrega === "Entrega a Retirar na Loja") {
-          amount = Math.round(item.valorUnitario * 100);
-        } else {
-          amount = Math.round(item.valorUnitario * 100);
-        }
-  
-        return {
-          "id": item.produtoId,
-          "amount": totalAmount,
-          "description": item.nomeProd,
-          "quantity": item.quantidade,
-          "code": item.produtoId
-        };
-      }),
+  "items": carrinho.map(item => {
+    let valorProduto = item.valorUnitario * item.quantidade; // Total do produto
+    let frete = 0;
+
+    if (item.endereco.tipoEntrega !== "Entrega a Retirar na Loja") {
+      frete = item.endereco.frete; // Adiciona frete se for aplicável
+    }
+
+    const amount = Math.round((valorProduto + frete) * 100); // Total em centavos
+
+    return {
+      id: item.produtoId,
+      amount: amount,
+      description: item.nomeProd,
+      quantity: 1, // Aqui representa o "pacote total", pois o amount já está multiplicado
+      code: item.produtoId
+    };
+  }),
     "customer": {
         "name": perfilData.nomeCliente,
         "email": perfilData.emailCliente,
@@ -2610,26 +2611,25 @@ app.post('/processarPagamento-boleto', (req, res) => {
   console.log('Total Amount (cents):', totalAmount);
 
   // Define o payload da requisição
-  const body = {
-    "items": carrinho.map(item => {
-      let amount;
+const body = {
+  "items": carrinho.map(item => {
+    let valorProduto = item.valorUnitario * item.quantidade; // Total do produto
+    let frete = 0;
 
-      if (item.endereco.tipoEntrega === "Único Endereço") {
-        amount = Math.round(item.valorUnitario * 100);
-      } else if (item.endereco.tipoEntrega === "Entrega a Retirar na Loja") {
-        amount = Math.round(item.valorUnitario * 100);
-      } else {
-        amount = Math.round(item.valorUnitario * 100);
-      }
+    if (item.endereco.tipoEntrega !== "Entrega a Retirar na Loja") {
+      frete = item.endereco.frete; // Adiciona frete se for aplicável
+    }
 
-      return {
-        "id": item.produtoId,
-        "amount": totalAmount,
-        "description": item.nomeProd,
-        "quantity": item.quantidade,
-        "code": item.produtoId
-      };
-    }),
+    const amount = Math.round((valorProduto + frete) * 100); // Total em centavos
+
+    return {
+      id: item.produtoId,
+      amount: amount,
+      description: item.nomeProd,
+      quantity: 1, // Aqui representa o "pacote total", pois o amount já está multiplicado
+      code: item.produtoId
+    };
+  }),
     "customer": {
       "name": perfilData.nomeCliente,
       "email": perfilData.emailCliente,
@@ -2705,26 +2705,25 @@ app.post('/processarPagamento-cartao', (req ,res) => {
   console.log('Total Amount (cents):', totalAmount);
 
   // Define o payload da requisição
-  const body = {
-    "items": carrinho.map(item => {
-      let amount;
+const body = {
+  "items": carrinho.map(item => {
+    let valorProduto = item.valorUnitario * item.quantidade; // Total do produto
+    let frete = 0;
 
-      if (item.endereco.tipoEntrega === "Único Endereço") {
-        amount = Math.round(item.valorUnitario * 100);
-      } else if (item.endereco.tipoEntrega === "Entrega a Retirar na Loja") {
-        amount = Math.round(item.valorUnitario * 100);
-      } else {
-        amount = Math.round(item.valorUnitario * 100);
-      }
+    if (item.endereco.tipoEntrega !== "Entrega a Retirar na Loja") {
+      frete = item.endereco.frete; // Adiciona frete se for aplicável
+    }
 
-      return {
-        "id": item.produtoId,
-        "amount": totalAmount,
-        "description": item.nomeProd,
-        "quantity": item.quantidade,
-        "code": item.produtoId
-      };
-    }),
+    const amount = Math.round((valorProduto + frete) * 100); // Total em centavos
+
+    return {
+      id: item.produtoId,
+      amount: amount,
+      description: item.nomeProd,
+      quantity: 1, // Aqui representa o "pacote total", pois o amount já está multiplicado
+      code: item.produtoId
+    };
+  }),
       "customer": {
         "name": perfilData.nomeCliente,
         "email": perfilData.emailCliente,

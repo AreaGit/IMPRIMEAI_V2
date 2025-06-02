@@ -378,6 +378,14 @@ async function registrarPagamento(detalhesPagamento) {
     }
 }
 
+let detalhesPagamento = {
+    userId: userId,
+    valor: 0.01,
+    metodoPagamento: "PIX",
+    status: "PAGO",
+    idTransacao: 123
+}
+
 // Gerenciar recarga por Pix
 document.getElementById('pix').addEventListener('click', async () => {
     try {
@@ -390,7 +398,7 @@ document.getElementById('pix').addEventListener('click', async () => {
         console.log('ESSE É O RESPONSE', response)
         const { qr_code_url, charge_id, qr_code } = await response.json();
         console.log('AQUI: ', qr_code)
-        qrCodeContainer.innerHTML = `<img src="${qr_code_url}"><button id="copiarCodigo">Copiar QR Code</button>`;
+        qrCodeContainer.innerHTML = `<img src="${qr_code_url}"><br><button id="copiarCodigo">Copiar QR Code</button>`;
         qrCodeContainer.style.display = 'block';
 
         document.getElementById('copiarCodigo').addEventListener('click', async () => {
@@ -398,7 +406,7 @@ document.getElementById('pix').addEventListener('click', async () => {
             alert('Código copiado!');
         });
 
-        verificarStatusTransacao(charge_id);
+        verificarStatusTransacao(charge_id, "PIX");
     } catch (error) {
         console.error('Erro no Pix:', error);
     }
@@ -420,7 +428,7 @@ document.getElementById('boleto').addEventListener('click', async () => {
         console.log(dados)
         boletoContainer.innerHTML = `<a href="${url}" target="_blank">Abrir Boleto</a>`;
         boletoContainer.style.display = 'block';
-        verificarStatusTransacao(charge_id);
+        verificarStatusTransacao(charge_id, "BOLETO");
     } catch (error) {
         console.error('Erro no Boleto:', error);
     }
@@ -456,14 +464,14 @@ btnCartaoCredito.addEventListener('click', async () => {
         const dados = await response.json();
         console.log(dados)
         const charge_id = dados[0].id
-        verificarStatusTransacao(charge_id);
+        verificarStatusTransacao(charge_id, "CARTÃO");
     } catch (error) {
         console.error('Erro no Cartão de Crédito:', error);
     }
 });
 
 // Verificar status da transação
-async function verificarStatusTransacao(charge_id) {
+async function verificarStatusTransacao(charge_id, metod) {
     try {
         const response = await fetch(`/charges/${charge_id}`);
         if (!response.ok) throw new Error('Erro ao verificar status da transação');
@@ -471,7 +479,13 @@ async function verificarStatusTransacao(charge_id) {
 
         if (status === 'paid') {
             alert('Pagamento realizado com sucesso!');
-            registrarPagamento({ valor: valorSelecionado, status });
+            registrarPagamento({ 
+                userId: userId,
+                valor: valorSelecionado,
+                metodoPagamento: metod,
+                status: "PAGO",
+                idTransacao: charge_id
+            });
         } else if (status === 'pending') {
             setTimeout(() => verificarStatusTransacao(charge_id), 5000);
         } else {

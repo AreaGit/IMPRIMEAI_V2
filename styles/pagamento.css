@@ -685,7 +685,7 @@ span#totalItens {
   position: absolute;
   left: -40%;
   transform: translate(-50%);
-  top: -250px;
+  top: -20%;
 }
 #qrCodeContainer > img {
   position: absolute;

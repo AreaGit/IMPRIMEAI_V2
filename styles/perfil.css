@@ -407,3 +407,12 @@ input[readonly] {
   border-radius: 8px;
   text-align: center;
 }
+
+button#copiarCodigo {
+  background-color: #EF4126;
+  padding: 12px 16px 12px 16px;
+  border: none;
+  border-radius: 12px;
+  font-weight: bold;
+  color: white;
+}

@@ -954,7 +954,7 @@ transform: scale(1.1);
   width: 5vw;
 }
 #linksRapidos {
-  display: flex;
+  display: none;
   flex-direction: column; /* Alinha o título e os links em coluna */
   align-items: center; /* Centraliza horizontalmente */
   padding: 15px;

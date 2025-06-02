@@ -106,7 +106,7 @@ btnRetirada.addEventListener("click", async () => {
                     } else{
                         window.location.href = '/pagamento'
                     }
-                }, 5000);
+                }, 1000);
             } else {
                 erroEndereco.style.display = 'block';
                 window.setTimeout(() => {
@@ -179,7 +179,7 @@ btnRetirada.addEventListener("click", async () => {
                     } else{
                         window.location.href = '/pagamento'
                     }
-                }, 5000);
+                }, 1000);
             } else {
                 erroEndereco.style.display = 'block';
                 window.setTimeout(() => {

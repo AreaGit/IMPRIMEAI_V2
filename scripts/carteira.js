@@ -96,7 +96,7 @@ function getCookie(name) {
     const parts = value.split(`; ${name}=`);
     if (parts.length === 2) return parts.pop().split(';').shift();
  };
- let userId = getCookie('userId');
+const userId = getCookie('userId');
 
 document.addEventListener('DOMContentLoaded', async () => {
     try {

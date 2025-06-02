@@ -22,6 +22,12 @@ document.addEventListener('DOMContentLoaded', function() {
         // Verifique se há produtos no carrinho
         if (produtos.length === 0) {
         } else {
+          const todosComArte = produtos.every(produto => !!produto.downloadLink);
+          
+          if (todosComArte) {
+            window.location.href = '/formato-entrega';
+            return; // Interrompe a execução
+          } 
           // Caso contrário, exiba os produtos do carrinho
           for (const produto of produtos) {
             if (!produto.downloadLink) {
