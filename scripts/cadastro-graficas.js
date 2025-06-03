@@ -425,157 +425,50 @@ btnCad.addEventListener('click', async() => {
         });
     }
 });
-document.getElementById('btnCad2').addEventListener('click', async() => {
-    const nomeUser = document.getElementById('nomeUser').value;
-    const cepUser = document.getElementById('cepUser').value;
-    const ruaUser = document.getElementById('ruaUser').value;
-    const numResidenciaUser = document.getElementById('numResidenciaUser').value;
-    const estadoUser = document.getElementById('estadoUser').value;
-    const cidadeUser = document.getElementById('cidadeUser').value;
-    const bairroUser = document.getElementById('bairroUser').value;
-    const bancoUser = document.getElementById('bancoUser').value;
-    const contaUser = document.getElementById('contaUser').value;
-    const agenciaUser = document.getElementById('agenciaUser').value;
-    const complementoUser = document.getElementById('complementoUser').value;
-    const cnpjUser = document.getElementById('cnpjUser').value;
-    const telefoneUser = document.getElementById('telefoneUser').value;
-    const emailUser = document.getElementById('emailUser').value;
-    const senhaUser = document.getElementById('senhaUser').value;        
-    const checkboxElements = document.querySelectorAll('#checkboxProdutos input[type="checkbox"]:checked');
-    const produtosMarcados = Array.from(checkboxElements).map(checkbox => checkbox.id.replace('check', ''));
-
-    const jsonData = {
-        produtos: produtosMarcados.reduce((acc, produto) => {
-            acc[produto] = true;
-            return acc;
-        }, {}),
-    };
-
-    if(validNomeUser === false) {
-        avisoUser.style.display = 'block'
-        setTimeout(() => {
-            avisoUser.style.display = 'none'
-        }, 5000);
-    } else if(cepUser.length <= 8) {
-        avisoCep.style.display = 'block'
-        setTimeout(() => {
-            avisoCep.style.display = 'none'
-        }, 5000);
-    } else if(validEmailUser === false) {
-        avisoEmail.style.display = 'block'
-        setTimeout(() => {
-            avisoEmail.style.display = 'none'
-        }, 5000);
-    } else if(validSenhaUser === false) {
-        avisoSenha.style.display = 'block'
-        setTimeout(() => {
-            avisoSenha.style.display = 'none'
-        }, 5000);
-    } else if(validTelefoneUser === false) {
-        avisoTelefone.style.display = 'block'
-        setTimeout(() => {
-            avisoTelefone.style.display = 'none'
-        }, 5000);
-    }else if(validCnpjUser === false) {
-        avisoCpf.style.display = 'block'
-        setTimeout(() => {
-            avisoCpf.style.display = 'none'
-        }, 5000);
-    }else if(validAgenciaUser === false) {
-        avisoAgencia.style.display = 'block'
-        setTimeout(() =>  {
-            avisoAgencia.style.display = 'none'
-        }, 5000);
-    }else if(validBancoUser === false) {
-        avisoBanco.style.display = 'block'
-        setTimeout(() => {
-            avisoBanco.style.display = 'none'
-        }, 5000);
-    }else if(validContaUser === false) {
-        avisoConta.style.display = 'block'
-        setTimeout(() => {
-            avisoConta.style.display = 'none'
-        }, 5000)
-    }else {
-        const graficaData = {
-            userCad : nomeUser,
-            endereçoCad : ruaUser,
-            cepCad : cepUser,
-            estadoCad : estadoUser,
-            cidadeCad : cidadeUser,
-            bairroCad : bairroUser,
-            numCad : numResidenciaUser,
-            compCad : complementoUser,
-            cnpjCad : cnpjUser,
-            agenciaCad: agenciaUser,
-            bancoCad: bancoUser,
-            contaCorrenteCad: contaUser,
-            digitoConta: digitoConta,
-            codBanco: codBanco,
-            telefoneCad : telefoneUser,
-            emailCad : emailUser,
-            passCad : senhaUser,
-        }
-
-        fetch('/cadastro-graficas', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({ ...graficaData, ...jsonData }),
-        })
-        .then(response => response.json())
-        .then(data => {
-            if (data.message === 'Gráfica cadastrada com sucesso!') {
-                avisoGeral.style.display = 'block'
-                setTimeout(() => {
-                    avisoGeral.style.display = 'none'
-                    window.location.href = "/painel-administrativo"
-                }, 5000);
-            }else if (data.message === 'Já existe uma Gráfica com este e-mail cadastrado') {
-                emailCadastrado.style.display = 'block'
-                setTimeout(() => {
-                    emailCadastrado.style.display = 'none'
-                }, 5000);
-            } else {
-            // Erro no cadastro
-            erroUsuario.style.display = 'block'
-            setTimeout(() => {
-                erroUsuario.style.display = 'none'
-            }, 5000);
-            }
-        })
-        .catch(error => {
-            erroUsuario.style.display = 'block'
-            setTimeout(() => {
-                erroUsuario.style.display = 'none'
-            }, 5000);
-
-        });
-    }
-});
 document.addEventListener('DOMContentLoaded', async () => {
-    try {
-        const response = await fetch('/api-graf/produtos');
-        const produtos = await response.json();
-        const checkboxContainer = document.getElementById('checkboxProdutos');
+  try {
+    const response = await fetch('/api-graf/produtos');
+    const categorias = await response.json();
+    const container = document.getElementById('accordionCategorias');
 
-        produtos.forEach(produto => {
-            const nomeFormatado = produto.nomeProd.trim().replace(/\s+/g, ' '); // Remove espaços nas bordas e normaliza múltiplos espaços internos
-            const checkbox = document.createElement('input');
-            checkbox.type = 'checkbox';
-            checkbox.name = `check${nomeFormatado}`;
-            checkbox.id = `check${nomeFormatado}`;
+    categorias.forEach(({ categoria, produtos }) => {
+      const section = document.createElement('div');
+      section.classList.add('categoria-section');
 
-            const label = document.createElement('label');
-            label.htmlFor = checkbox.id;
-            label.textContent = produto.nomeProd;
+      const header = document.createElement('button');
+      header.type = 'button'
+      header.className = 'categoria-header';
+      header.textContent = categoria;
+      header.addEventListener('click', () => {
+        content.classList.toggle('show');
+      });
 
-            checkboxContainer.appendChild(checkbox);
-            checkboxContainer.appendChild(label);
-            checkboxContainer.appendChild(document.createElement('br'));
-        });
-    } catch (error) {
-        console.error("Erro ao carregar produtos:", error);
-    }
+      const content = document.createElement('div');
+      content.className = 'categoria-content';
+
+      produtos.forEach(produto => {
+        const item = document.createElement('div');
+        item.className = 'checkbox-item';
+
+        const checkbox = document.createElement('input');
+        checkbox.type = 'checkbox';
+        checkbox.id = `produto-${produto.id}`;
+        checkbox.name = `produto-${produto.id}`;
+
+        const label = document.createElement('label');
+        label.htmlFor = checkbox.id;
+        label.textContent = produto.nomeProd;
+
+        item.appendChild(checkbox);
+        item.appendChild(label);
+        content.appendChild(item);
+      });
+
+      section.appendChild(header);
+      section.appendChild(content);
+      container.appendChild(section);
+    });
+  } catch (error) {
+    console.error("Erro ao carregar produtos:", error);
+  }
 });

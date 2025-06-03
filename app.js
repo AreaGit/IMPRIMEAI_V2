@@ -847,9 +847,32 @@ app.get('/api/quantidades/:produtoId', async (req, res) => {
 app.get('/api-graf/produtos', async (req, res) => {
   try {
     const produtos = await Produtos.findAll({
-      attributes: ['nomeProd'] // Retorna apenas o campo nome
+      attributes: ['id', 'nomeProd', 'categProd'],
+      where: {
+        status: 'Ativo'
+      },
+      order: [['categProd', 'ASC'], ['nomeProd', 'ASC']]
     });
-    res.json(produtos);
+
+    const agrupadosPorCategoria = {};
+
+    produtos.forEach(produto => {
+      const categoria = produto.categProd || 'Sem Categoria';
+      if (!agrupadosPorCategoria[categoria]) {
+        agrupadosPorCategoria[categoria] = [];
+      }
+      agrupadosPorCategoria[categoria].push({
+        id: produto.id,
+        nomeProd: produto.nomeProd
+      });
+    });
+
+    const resultado = Object.keys(agrupadosPorCategoria).map(categoria => ({
+      categoria,
+      produtos: agrupadosPorCategoria[categoria]
+    }));
+
+    res.json(resultado);
   } catch (error) {
     console.error("Erro ao buscar produtos:", error);
     res.status(500).json({ error: "Erro ao buscar produtos" });
