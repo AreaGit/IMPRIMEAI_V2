@@ -50,14 +50,14 @@
           <div id="carrinho-vazio">
               <h1 id="tlt-vazio">Seu carrinho está vazio.</h1>
               <p id="pr-vazio">Adicione produtos ao seu carrinho para continuar comprando.</p>
-              <button id="continuarComprando">Continue comprando</button>
+              <button onclick="document.addEventListener('click', () => {window.location.href = '/cpq/inicio'})" id="continuarComprando">Continue comprando</button>
           </div>
           <div id="carrinhoProdutos">
               <!-- Os produtos do carrinho serão listados aqui -->
           </div>
           <div id="totalCarrinho">
               <h1>O total de seu carrinho é R$ <span id="total"></span></h1>
-              <a href="#" id="voltar">Voltar ao Início</a>
+              <a href="/cpq/inicio" id="voltar">Voltar ao Início</a>
           </div>
           <div id="resumo-compra">
               <p class="prResumo">Total de desconto</p>

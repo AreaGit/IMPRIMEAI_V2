@@ -6,7 +6,40 @@
     --preto:#000000;
     --vermelho:#EF4126;
     --font-padrao:'Open Sans';
-  }
+
+      /* Cores principais */
+  --cpq-yellow: #f9c846;      /* Amarelo Queijo - destaque principal */
+  --cpq-brown: #5c3b28;       /* Marrom Forno - texto, títulos */
+  --cpq-beige: #f8f3e7;       /* Bege Farinha - fundo principal */
+  --cpq-orange: #e07a2d;      /* Laranja Fornalha - hover, destaques */
+  --cpq-green: #4d774e;       /* Verde Folha - elementos sutis, links */
+  --cpq-gray: #e0d8cc;        /* Cinza Pão - bordas, containers leves */
+
+  /* Cores de texto */
+  --cpq-text-dark: #3e2b1f;   /* Texto escuro principal */
+  --cpq-text-light: #fffaf0;  /* Texto claro sobre fundo escuro */
+
+  /* Backgrounds */
+  --cpq-bg-main: var(--cpq-beige);
+  --cpq-bg-card: var(--cpq-gray);
+  --cpq-bg-dark: var(--cpq-brown);
+
+  /* Botões */
+  --cpq-btn-primary: var(--cpq-yellow);
+  --cpq-btn-primary-hover: var(--cpq-orange);
+  --cpq-btn-secondary: var(--cpq-green);
+  --cpq-btn-secondary-hover: #3c5e3d;
+
+  /* Bordas e sombras */
+  --cpq-border: #d1c7ba;
+  --cpq-shadow-light: 0 2px 4px rgba(0, 0, 0, 0.05);
+  --cpq-shadow-medium: 0 4px 8px rgba(0, 0, 0, 0.1);
+
+  /* Estados */
+  --cpq-success: #4caf50;
+  --cpq-warning: #ff9800;
+  --cpq-error: #f44336;
+}
 * {
     margin: 0px;
     padding: 0px;
@@ -488,18 +521,22 @@ a{text-decoration: none; color: black;}
 }
 #btnVoltar {
   margin: 25px;
-  padding: 12px 28px;
-  color: #BB9900;
-  background-color: transparent;
+  background-color: var(--cpq-btn-secondary);
+  color: white;
+  border: 2px solid var(--cpq-border);
+  padding: 10px 20px;
   font-size: 16px;
-  font-weight: bold;
-  border: none;
+  border-radius: 30px;
   cursor: pointer;
-  text-decoration: underline;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  position: relative;
 }
 #btnVoltar:hover {
-  transition: 0.8s;
-  transform: translateY(-10px);
+  background-color: var(--cpq-btn-secondary-hover);
+  color: white;
+  box-shadow: 0 6px 10px rgba(0, 0, 0, 0.15);
+  transform: translateY(-2px);
 }
 .produtos {
     display: grid;
@@ -521,6 +558,7 @@ a{text-decoration: none; color: black;}
     position: relative;
     cursor: pointer;
     height: 100%;
+    min-height: 600px;
 }
 
 .cxProd:hover {
