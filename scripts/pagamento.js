@@ -387,6 +387,7 @@ const cpfCliente = cpf;
   carregamento.style.display = 'none'
   qrCodeContainer.style.display = 'block'
   qrCodeContainer.innerHTML = `
+    <span class="material-symbols-outlined" id="fecharFormaPagamento1" onclick="recarregarPagina()">close</span>
     <img src="${qrPix}">
     <button id="copiarCodigo">Copiar código</button>
     <p>Expira em ${formattedExpiracao}</p>
@@ -526,6 +527,7 @@ async function pagamentoBoleto() {
     carregamento.style.display = 'none'
     divBoletoContainer.style.display = 'block';
     divBoletoContainer.innerHTML = `
+    <span class="material-symbols-outlined" id="fecharFormaPagamento2" onclick="recarregarPagina()">close</span>
       <img src="${qrCodeBoleto}">
       <a href="${pdfBoleto}" target="_blank">Acesse o pdf</a>
       <p>O boleto expira em 1 dia</p>
@@ -804,6 +806,11 @@ async function pagamentoCarteira() {
   };
   xhr.send();
 }
+
+function recarregarPagina() {
+  window.location.reload();
+}
+
 async function obterQuantidadeCarrinho() {
   try {
       // Fazer uma requisição para a rota /api/carrinho

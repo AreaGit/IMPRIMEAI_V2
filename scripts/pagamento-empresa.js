@@ -808,7 +808,7 @@ async function pagamentoCarteira() {
       } else {
         // Saldo insuficiente, redirecione o usuário para recarregar a carteira
         alert('Saldo insuficiente. Por favor, recarregue sua carteira.');
-        window.location.href = '/carteira';
+        window.location.href = '/cpq/perfil';
       }
     } else {
       console.error('Erro ao verificar o saldo da carteira:', xhr.statusText);

@@ -33,6 +33,7 @@ const rp = require('request-promise');
 const Sequelize = require('sequelize');
 const fs = require('fs');
 const ItensPedidos = require('../models/ItensPedido');
+const ProdutosExc = require('../models/ProdutosExc');
 const { Console } = require('console');
 const apiKeyBingMaps = 'Ao6IBGy_Nf0u4t9E88BYDytyK5mK3kObchF4R0NV5h--iZ6YgwXPMJEckhAEaKlH';
 const { PDFDocument, StandardFonts } = require('pdf-lib');
@@ -144,126 +145,155 @@ async function getCoordinatesFromAddressEnd(enderecoEntregaInfo, apiKey) {
     return distance;
   }
   
-  app.get('/pedidos-cadastrados', async (req, res) => {
-    try {
-      const graficaId = req.cookies.graficaId;
-      if (!graficaId) {
-        return res.status(401).json({ message: "Usuário não autenticado" });
-      }
-  
-      const grafica = await Graficas.findByPk(graficaId);
-  
-      if (!grafica) {
-        return res.status(404).json({ message: "Usuário não encontrado" });
-      }
-  
-      const apiKey = 'Ao6IBGy_Nf0u4t9E88BYDytyK5mK3kObchF4R0NV5h--iZ6YgwXPMJEckhAEaKlH';
-  
-      const pedidosCadastrados = await ItensPedido.findAll({
-        where: {
-          statusPed: ['Aguardando', 'Pedido Aceito Pela Gráfica', 'Finalizado', 'Pedido Enviado pela Gráfica', 'Pedido Entregue pela Gráfica'],
-          statusPag: ['Pago', 'Aguardando']
-        },
+app.get('/pedidos-cadastrados', async (req, res) => {
+  try {
+    console.log('🔍 Iniciando rota /pedidos-cadastrados');
+
+    const graficaId = req.cookies.graficaId;
+    console.log('🧾 ID da gráfica recebido:', graficaId);
+
+    if (!graficaId) {
+      console.warn('⚠️ Usuário não autenticado. Cookie graficaId não encontrado.');
+      return res.status(401).json({ message: "Usuário não autenticado" });
+    }
+
+    const grafica = await Graficas.findByPk(graficaId);
+    if (!grafica) {
+      console.warn('⚠️ Gráfica não encontrada no banco de dados.');
+      return res.status(404).json({ message: "Usuário não encontrado" });
+    }
+    console.log('✅ Gráfica autenticada:', grafica.nomeFantasia || grafica.id);
+
+    const apiKey = 'Ao6IBGy_Nf0u4t9E88BYDytyK5mK3kObchF4R0NV5h--iZ6YgwXPMJEckhAEaKlH';
+
+    const pedidosCadastrados = await ItensPedido.findAll({
+      where: {
+        statusPed: ['Aguardando', 'Pedido Aceito Pela Gráfica', 'Finalizado', 'Pedido Enviado pela Gráfica', 'Pedido Entregue pela Gráfica'],
+        statusPag: ['Pago', 'Aguardando']
+      },
+    });
+    console.log(`📦 Pedidos cadastrados encontrados: ${pedidosCadastrados.length}`);
+
+    const graficas = await Graficas.findAll({ where: { status: 'Ativa' } });
+    console.log(`🏭 Gráficas ativas encontradas: ${graficas.length}`);
+
+    const pedidosProximos = await Promise.all(pedidosCadastrados.map(async (pedido, index) => {
+      console.log(`\n➡️ Processando pedido ${index + 1} - ID: ${pedido.id}, Produto: ${pedido.nomeProd}`);
+
+      const enderecosPedido = await Enderecos.findAll({
+        where: { id: pedido.id },
       });
-  
-      const graficas = await Graficas.findAll({
-        where: { status: 'Ativa' } // filtra apenas gráficas ativas para cálculo de distância
-      });
-  
-      const pedidosProximos = await Promise.all(pedidosCadastrados.map(async (pedido) => {
-        const enderecosPedido = await Enderecos.findAll({
-          where: { id: pedido.id },
-        });
-  
-        const pedidosFiltrados = await Promise.all(enderecosPedido.map(async (enderecoPedido) => {
-          console.log(`Verificando pedido com o Id: ${pedido.id} e Endereço Id: ${enderecoPedido.id}`);
-  
-          const enderecoEntregaInfo = {
-            endereco: enderecoPedido.rua,
-            cep: enderecoPedido.cep,
-            cidade: enderecoPedido.cidade,
-            estado: enderecoPedido.estado,
-          };
-  
-          const coordinatesEnd = await getCoordinatesFromAddress(enderecoEntregaInfo, apiKey);
-  
-          if (coordinatesEnd.latitude && coordinatesEnd.longitude) {
-            console.log(`Latitude do Endereço de Entrega:`, coordinatesEnd.latitude);
-            console.log(`Longitude do Endereço de Entrega:`, coordinatesEnd.longitude);
-  
-            let distanciaMinima = Infinity;
-            let graficaMaisProxima = null;
-  
-            // Usando Promise.all para calcular a distância das gráficas em paralelo
-            const graficasProximas = await Promise.all(graficas.map(async (graficaAtual) => {
-              const graficaCoordinates = await getCoordinatesFromAddress({
-                endereco: graficaAtual.enderecoCad,
-                cep: graficaAtual.cepCad,
-                cidade: graficaAtual.cidadeCad,
-                estado: graficaAtual.estadoCad,
-              }, apiKey);
-  
-              const distanceToGrafica = haversineDistance(graficaCoordinates.latitude, graficaCoordinates.longitude, coordinatesEnd.latitude, coordinatesEnd.longitude);
-              if (distanceToGrafica < distanciaMinima) {
-                distanciaMinima = distanceToGrafica;
-                graficaMaisProxima = graficaAtual;
-              }
-            }));
-  
-            await Promise.all(graficasProximas); // Aguarda todas as promessas de distância serem resolvidas
-  
-            if (distanciaMinima <= enderecoPedido.raio && graficaMaisProxima) {
-              let produtosGrafica;
-  
-              if (typeof graficaMaisProxima.produtos === 'string') {
-                const fixedJsonString = graficaMaisProxima.produtos.replace(/'/g, '"');
-                produtosGrafica = JSON.parse(fixedJsonString);
-              } else {
-                produtosGrafica = graficaMaisProxima.produtos;
-              }
-  
-              console.log(produtosGrafica);
-              console.log(pedido.nomeProd);
-  
-              if (produtosGrafica[pedido.nomeProd]) {
-                const pedidoAssociado = {
-                  ...pedido.dataValues,
-                  enderecoId: enderecoPedido.id,
-                  graficaId: graficaMaisProxima.id,
-                };
-  
-                return pedidoAssociado;
-              }
+      console.log(`📍 Endereços encontrados para o pedido: ${enderecosPedido.length}`);
+
+      const pedidosFiltrados = await Promise.all(enderecosPedido.map(async (enderecoPedido) => {
+        console.log('📌 Endereço atual:', enderecoPedido);
+
+        const enderecoEntregaInfo = {
+          endereco: enderecoPedido.rua,
+          cep: enderecoPedido.cep,
+          cidade: enderecoPedido.cidade,
+          estado: enderecoPedido.estado,
+        };
+
+        const coordinatesEnd = await getCoordinatesFromAddress(enderecoEntregaInfo, apiKey);
+        console.log('📍 Coordenadas do endereço de entrega:', coordinatesEnd);
+
+        if (coordinatesEnd.latitude && coordinatesEnd.longitude) {
+          let distanciaMinima = Infinity;
+          let graficaMaisProxima = null;
+
+          await Promise.all(graficas.map(async (graficaAtual) => {
+            const graficaCoordinates = await getCoordinatesFromAddress({
+              endereco: graficaAtual.enderecoCad,
+              cep: graficaAtual.cepCad,
+              cidade: graficaAtual.cidadeCad,
+              estado: graficaAtual.estadoCad,
+            }, apiKey);
+
+            const distanceToGrafica = haversineDistance(
+              graficaCoordinates.latitude,
+              graficaCoordinates.longitude,
+              coordinatesEnd.latitude,
+              coordinatesEnd.longitude
+            );
+
+            console.log(`📏 Distância até ${graficaAtual.nomeFantasia || graficaAtual.id}: ${distanceToGrafica.toFixed(2)} km`);
+
+            if (distanceToGrafica < distanciaMinima) {
+              distanciaMinima = distanceToGrafica;
+              graficaMaisProxima = graficaAtual;
+            }
+          }));
+
+          console.log(`✅ Gráfica mais próxima: ${graficaMaisProxima.nomeFantasia || graficaMaisProxima.id}, Distância: ${distanciaMinima.toFixed(2)} km`);
+
+          let produtosGrafica;
+          if (typeof graficaMaisProxima.produtos === 'string') {
+            const fixedJsonString = graficaMaisProxima.produtos.replace(/'/g, '"');
+            produtosGrafica = JSON.parse(fixedJsonString);
+          } else {
+            produtosGrafica = graficaMaisProxima.produtos;
+          }
+
+          const produtosExc = await ProdutosExc.findOne({ where: { nomeProd: pedido.nomeProd } });
+          console.log(`🎯 Produto "${pedido.nomeProd}" é exclusivo?`, !!produtosExc);
+
+          if (produtosExc) {
+            if (distanciaMinima <= (pedido.raio || 30)) {
+              console.log('📦 Produto exclusivo dentro do raio. Associando pedido.');
+              return {
+                ...pedido.dataValues,
+                enderecoId: enderecoPedido.id,
+                graficaId: graficaMaisProxima.id,
+              };
+            } else {
+              console.log('🚫 Produto exclusivo fora do raio.');
+            }
+          } else {
+            if (produtosGrafica && produtosGrafica[pedido.nomeProd]) {
+              console.log('📦 Produto encontrado nos produtos da gráfica. Associando pedido.');
+              return {
+                ...pedido.dataValues,
+                enderecoId: enderecoPedido.id,
+                graficaId: graficaMaisProxima.id,
+              };
+            } else {
+              console.log('🚫 Produto não está entre os produtos da gráfica.');
             }
           }
-          return null; // Retorna null se não for encontrado um pedido válido
-        }));
-  
-        return pedidosFiltrados.filter(pedido => pedido !== null);
-      }));
-  
-      const todosPedidos = pedidosProximos.flat(); // Achata o array de pedidos
-  
-      if (todosPedidos.length > 0) {
-        console.log("TODOS OS PEDIDOS", todosPedidos);
-  
-        const pedidosParaGrafica = todosPedidos.filter((pedido) => {
-          return pedido.graficaId === grafica.id;
-        });
-  
-        if (pedidosParaGrafica.length > 0) {
-          console.log(`Pedidos próximos à gráfica com ID ${grafica.id}:`, pedidosParaGrafica);
-          res.json({ pedidos: pedidosParaGrafica });
         } else {
-          console.log('Nenhum pedido próximo à gráfica atual encontrado.');
-          res.json({ message: 'Nenhum pedido próximo à gráfica atual encontrado.' });
+          console.log('🚫 Endereço do pedido não retornou coordenadas.');
         }
+
+        return null;
+      }));
+
+      return pedidosFiltrados.filter(p => p !== null);
+    }));
+
+    const todosPedidos = pedidosProximos.flat();
+    console.log(`🧮 Total de pedidos com gráfica associada: ${todosPedidos.length}`);
+
+    if (todosPedidos.length > 0) {
+      const pedidosParaGrafica = todosPedidos.filter((pedido) => pedido.graficaId === grafica.id);
+      console.log(`🎯 Pedidos atribuídos à gráfica atual: ${pedidosParaGrafica.length}`);
+
+      if (pedidosParaGrafica.length > 0) {
+        return res.json({ pedidos: pedidosParaGrafica });
+      } else {
+        console.log('🔕 Nenhum pedido próximo à gráfica atual encontrado.');
+        return res.json({ message: 'Nenhum pedido próximo à gráfica atual encontrado.' });
       }
-    } catch (error) {
-      console.error('Erro ao buscar pedidos cadastrados:', error);
-      res.status(500).json({ message: 'Erro ao buscar pedidos cadastrados', error: error.message });
+    } else {
+      console.log('🔍 Nenhum pedido foi associado a uma gráfica.');
+      return res.json({ message: 'Nenhum pedido encontrado.' });
     }
-  });  
+
+  } catch (error) {
+    console.error('❌ Erro ao buscar pedidos cadastrados:', error);
+    return res.status(500).json({ message: 'Erro ao buscar pedidos cadastrados', error: error.message });
+  }
+});
 
   app.get('/detalhes-pedido/:idPedido/:idProduto', async (req, res) => {
     try {

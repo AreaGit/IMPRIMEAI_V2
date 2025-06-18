@@ -1535,16 +1535,19 @@ app.post('/criar-pedidos-empresas', async (req, res) => {
   }
 });
 
+async function isProdutoExclusivo(nomeProduto) {
+  const produto = await ProdutosExc.findOne({ where: { nomeProd: nomeProduto } });
+  return !!produto;
+}
+
 async function verificarGraficaMaisProximaEAtualizar(itensPedido, enderecoPedido) {
   try {
-    // Garantir que itensPedido seja um array
     if (!Array.isArray(itensPedido)) {
-      itensPedido = [itensPedido]; // Transformar em um array com um único elemento
+      itensPedido = [itensPedido];
     }
 
     const apiKey = 'Ao6IBGy_Nf0u4t9E88BYDytyK5mK3kObchF4R0NV5h--iZ6YgwXPMJEckhAEaKlH';
 
-    // Extrair informações do endereço de entrega
     const enderecoEntregaInfo = {
       endereco: enderecoPedido.rua,
       cep: enderecoPedido.cep,
@@ -1552,16 +1555,13 @@ async function verificarGraficaMaisProximaEAtualizar(itensPedido, enderecoPedido
       estado: enderecoPedido.estado
     };
 
-    // Obter coordenadas do endereço de entrega
     const coordinatesEnd = await getCoordinatesFromAddress(enderecoEntregaInfo, apiKey);
 
     if (coordinatesEnd.latitude !== null && coordinatesEnd.longitude !== null) {
-      // Buscar todas as gráficas cadastradas
-      let graficas = await Graficas.findAll();
+      const graficas = await Graficas.findAll();
       let distanciaMinima = Infinity;
       let graficaMaisProxima = null;
 
-      // Calcular a distância para cada gráfica e encontrar a mais próxima
       for (let grafica of graficas) {
         const graficaCoordinates = await getCoordinatesFromAddress({
           endereco: grafica.enderecoCad,
@@ -1570,7 +1570,12 @@ async function verificarGraficaMaisProximaEAtualizar(itensPedido, enderecoPedido
           estado: grafica.estadoCad,
         }, apiKey);
 
-        const distanceToGrafica = haversineDistance(graficaCoordinates.latitude, graficaCoordinates.longitude, coordinatesEnd.latitude, coordinatesEnd.longitude);
+        const distanceToGrafica = haversineDistance(
+          graficaCoordinates.latitude,
+          graficaCoordinates.longitude,
+          coordinatesEnd.latitude,
+          coordinatesEnd.longitude
+        );
 
         if (distanceToGrafica < distanciaMinima) {
           distanciaMinima = distanceToGrafica;
@@ -1578,7 +1583,6 @@ async function verificarGraficaMaisProximaEAtualizar(itensPedido, enderecoPedido
         }
       }
 
-      // Verificar se encontrou uma gráfica próxima dentro do raio do endereço
       const raioEndereco = enderecoPedido.raio;
       if (distanciaMinima <= raioEndereco && graficaMaisProxima) {
         let produtosGrafica;
@@ -1589,59 +1593,63 @@ async function verificarGraficaMaisProximaEAtualizar(itensPedido, enderecoPedido
           produtosGrafica = graficaMaisProxima.produtos;
         }
 
-        // Verificar se a gráfica pode atender aos produtos do pedido
         const produtosPedido = itensPedido.map(item => item.nomeProd);
-        const produtosAtendidos = Object.keys(produtosGrafica);
+        const produtosAtendidos = Object.keys(produtosGrafica || {});
+        const produtosAtendiveis = produtosPedido.filter(produto =>
+          produtosAtendidos.includes(produto)
+        );
 
-        const produtosAtendiveis = produtosPedido.filter(produto => produtosAtendidos.includes(produto));
+        // Verificar se existe produto exclusivo
+        const produtosExclusivosBanco = await ProdutosExc.findAll({ attributes: ['nomeProd'] });
+        const nomesProdutosExclusivos = produtosExclusivosBanco.map(p => p.nomeProd);
+        const temProdutoExclusivo = produtosPedido.some(produto =>
+          nomesProdutosExclusivos.includes(produto)
+        );
 
-        if (produtosAtendiveis.length > 0) {
-          console.log(`A gráfica mais próxima que pode atender aos produtos do pedido é: ${graficaMaisProxima.userCad}`);
+        if (produtosAtendiveis.length > 0 || temProdutoExclusivo) {
+          console.log(`A gráfica mais próxima que pode atender é: ${graficaMaisProxima.userCad}`);
           console.log(`Produtos que a gráfica pode produzir:`);
           produtosAtendiveis.forEach(produto => {
             console.log(`- ${produto}`);
           });
 
-          // Notificar a gráfica
-          // Construir mensagem de notificação
           let mensagemStatus = `Novo pedido ID ${itensPedido[0].idPed}.`;
           if (itensPedido[0].statusPed === 'Pedido em Aberto') {
-            mensagemStatus = `Olá, *Equipe da Gráfica ${graficaMaisProxima.userCad}*, tudo bem com vocês?\n\n` +
-            `Passando para avisar que temos um pedido está em aberto por aí -- é o número ${itensPedido[0].idPed} e aguardando o envio da arte do cliente. Fique atento ao painel de pedidos! \n` +
-            `Vocês conseguem dar uma olhadinha e fazer o aceite por esse link? \n` +
-            `👉 https://imprimeai.com.br/login-graficas \n`+
-            `Se precisarem de qualquer informação adicional ou tiverem alguma dúvida, fiquem super à vontade pra nos chamar. A gente tá por aqui e pronto pra ajudar no que for preciso!\n`+
-            `Agradecemos muito a parceria de sempre e ficamos no aguardo do retorno. 😊\n\n` +
-            `Um abraço!\n\n` +
-            `Equipe de Suporte\n` +
-            `imprimeai.com.br`;
+            mensagemStatus =
+              `Olá, *Equipe da Gráfica ${graficaMaisProxima.userCad}*, tudo bem com vocês?\n\n` +
+              `Passando para avisar que temos um pedido está em aberto por aí -- é o número ${itensPedido[0].idPed} e aguardando o envio da arte do cliente. Fique atento ao painel de pedidos! \n` +
+              `Vocês conseguem dar uma olhadinha e fazer o aceite por esse link? \n` +
+              `👉 https://imprimeai.com.br/login-graficas \n` +
+              `Se precisarem de qualquer informação adicional ou tiverem alguma dúvida, fiquem super à vontade pra nos chamar. A gente tá por aqui e pronto pra ajudar no que for preciso!\n` +
+              `Agradecemos muito a parceria de sempre e ficamos no aguardo do retorno. 😊\n\n` +
+              `Um abraço!\n\n` +
+              `Equipe de Suporte\n` +
+              `imprimeai.com.br`;
           } else {
-            mensagemStatus = `Olá, *Equipe da Gráfica ${graficaMaisProxima.userCad}*, tudo bem com vocês?\n\n` +
-            `Passando para avisar que temos um pedido pendente de atendimento por aí -- é o número ${itensPedido[0].idPed}, e ele precisa ser processado o quanto antes. \n` +
-            `Vocês conseguem dar uma olhadinha e fazer o aceite por esse link? \n` +
-            `👉 https://imprimeai.com.br/login-graficas \n`+
-            `Se precisarem de qualquer informação adicional ou tiverem alguma dúvida, fiquem super à vontade pra nos chamar. A gente tá por aqui e pronto pra ajudar no que for preciso!\n`+
-            `Agradecemos muito a parceria de sempre e ficamos no aguardo do retorno. 😊\n\n` +
-            `Um abraço!\n\n` +
-            `Equipe de Suporte\n` +
-            `imprimeai.com.br`;
+            mensagemStatus =
+              `Olá, *Equipe da Gráfica ${graficaMaisProxima.userCad}*, tudo bem com vocês?\n\n` +
+              `Passando para avisar que temos um pedido pendente de atendimento por aí -- é o número ${itensPedido[0].idPed}, e ele precisa ser processado o quanto antes. \n` +
+              `Vocês conseguem dar uma olhadinha e fazer o aceite por esse link? \n` +
+              `👉 https://imprimeai.com.br/login-graficas \n` +
+              `Se precisarem de qualquer informação adicional ou tiverem alguma dúvida, fiquem super à vontade pra nos chamar. A gente tá por aqui e pronto pra ajudar no que for preciso!\n` +
+              `Agradecemos muito a parceria de sempre e ficamos no aguardo do retorno. 😊\n\n` +
+              `Um abraço!\n\n` +
+              `Equipe de Suporte\n` +
+              `imprimeai.com.br`;
           }
 
-          // Enviar notificação por e-mail para a gráfica
-          //await enviarEmailNotificacao(graficaMaisProxima.emailCad, `Novo Pedido - ID ${itensPedido[0].idPed}`, mensagemStatus);
-
-          // Enviar notificação por WhatsApp para a gráfica
+          // await enviarEmailNotificacao(graficaMaisProxima.emailCad, `Novo Pedido - ID ${itensPedido[0].idPed}`, mensagemStatus);
           await enviarNotificacaoWhatsapp(graficaMaisProxima.telefoneCad, mensagemStatus);
 
           console.log(`Gráfica ${graficaMaisProxima.userCad} notificada sobre o novo pedido.`);
         } else {
-          console.log(`A gráfica mais próxima não pode atender aos produtos do pedido.`);
+          console.log(`A gráfica mais próxima não pode atender aos produtos do pedido e nenhum deles é exclusivo.`);
         }
       }
     }
-  } catch(error) {
+  } catch (error) {
     console.error("Erro na função verificarGraficaMaisProximaEAtualizar:", error);
-    throw error; // Propagar o erro para que seja tratado adequadamente
+    throw error;
   }
 }
     
@@ -2000,6 +2008,7 @@ app.post('/registrarPagamento', async (req, res) => {
     const { userId } = req.cookies; // Obtenha o userId dos cookies
     const { valorPed, metodPag } = req.body;
     console.log(userId);
+    console.log(req.body);
     try {
       // Encontre a carteira do usuário pelo userId
       let carteira = await Carteira.findOne({ where: { userId } });
