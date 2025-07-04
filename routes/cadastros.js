@@ -22,6 +22,7 @@ const xlsx = require('xlsx');
 const upload2 = multer({ storage: multer.memoryStorage() });
 const { client, sendMessage } = require('./api/whatsapp-web');
 const EnderecosEmpresas = require('../models/Enderecos-Empresas');
+const { criarClienteAsaas } = require('./api/asaas')
 client.on('ready', () => {
   console.log('Cliente WhatsApp pronto para uso no cadastros.js');
 })
@@ -83,8 +84,51 @@ app.post("/cadastrar", async (req, res) => {
     // Geração do código de verificação
     const verificationCode = Math.floor(1000 + Math.random() * 9000).toString();
 
+    function formatCnpjCpf(value) {
+      const CPF_LENGTH = 11;
+      const cnpjCpf = value.replace(/\D/g, '');
+      
+      if (cnpjCpf.length === CPF_LENGTH) {
+        return cnpjCpf.replace(/(\d{3})(\d{3})(\d{3})(\d{2})/g, "\$1.\$2.\$3-\$4");
+      } 
+      
+      return cnpjCpf.replace(/(\d{2})(\d{3})(\d{3})(\d{4})(\d{2})/g, "\$1.\$2.\$3/\$4-\$5");
+    };
+
+    function formatarTelefone(telefone) {
+      // Remover todos os caracteres que não são números
+      let telefoneLimpo = telefone.replace(/\D/g, '');
+      
+      // Extrair o DDD (primeiros 2 números) e o restante do número
+      let ddd = telefoneLimpo.slice(0, 2);
+      let numero = telefoneLimpo.slice(2);
+      
+      // Retornar no formato desejado
+      return `${ddd} ${numero}`;
+    }
+
+    const cpfFormatado = formatCnpjCpf(cpfCad);
+    const telefoneFormatado = formatarTelefone(telefoneCad);
+
+    const dadosCliente = {
+      name: userCad,
+      document: cpfFormatado,
+      email: emailCad,
+      phone: telefoneFormatado,
+      address: endereçoCad,
+      addressNumber: numCad,
+      complement: compCad,
+      province: bairroCad,
+      postalCode: cepCad,
+      externalReference: Math.floor(Math.random() * 999) + 1
+    }
+
+      const clienteAsaas = await criarClienteAsaas(dadosCliente);
+      const customer_asaas_id = clienteAsaas.id;
+
         const newUser = await User.create({
             userCad: userCad,
+            customer_asaas_id: customer_asaas_id,
             cpfCad: cpfCad,
             endereçoCad: endereçoCad,
             numCad: numCad,
@@ -157,7 +201,47 @@ app.post("/cadastrarUser-empresas", async (req, res) => {
   // Geração do código de verificação
   const verificationCode = Math.floor(1000 + Math.random() * 9000).toString();
 
+    function formatarCNPJ(cnpj) {
+      cnpj = cnpj.replace(/\D+/g, ''); // Remove caracteres não numéricos
+      if (cnpj.length !== 14) {
+        return cnpj; // Retorna o valor original se não tiver 14 dígitos
+      }
+      return cnpj.replace(/(\d{2})(\d{3})(\d{3})(\d{4})(\d{2})/, "$1.$2.$3/$4-$5");
+    }
+
+    function formatarTelefone(telefone) {
+      // Remover todos os caracteres que não são números
+      let telefoneLimpo = telefone.replace(/\D/g, '');
+      
+      // Extrair o DDD (primeiros 2 números) e o restante do número
+      let ddd = telefoneLimpo.slice(0, 2);
+      let numero = telefoneLimpo.slice(2);
+      
+      // Retornar no formato desejado
+      return `${ddd} ${numero}`;
+    }
+
+    const cnpjFormatado = formatarCNPJ(cnpjCad);
+    const telefoneFormatado = formatarTelefone(telefoneCad);
+
+    const dadosCliente = {
+      name: userCad,
+      document: cnpjFormatado,
+      email: emailCad,
+      phone: telefoneFormatado,
+      address: endereçoCad,
+      addressNumber: numCad,
+      complement: compCad,
+      province: bairroCad,
+      postalCode: cepCad,
+      externalReference: Math.floor(Math.random() * 999) + 1
+    }
+
+      const clienteAsaas = await criarClienteAsaas(dadosCliente);
+      const customer_asaas_id = clienteAsaas.id;
+
       const newUser = await UsersEmpresas.create({
+          customer_asaas_id: customer_asaas_id,
           userCad: userCad,
           cnpjCad: cnpjCad,
           endereçoCad: endereçoCad,

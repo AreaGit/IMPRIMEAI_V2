@@ -1,3 +1,19 @@
+function mostrarAvisoErro() {
+  document.getElementById("aviso-erro").style.display = "block";
+}
+
+function fecharAvisoErro() {
+  document.getElementById("aviso-erro").style.display = "none";
+}
+
+function mostrarAvisoSucesso() {
+  document.getElementById("aviso-sucesso").style.display = "block";
+}
+
+function fecharAvisoSucesso() {
+  document.getElementById("aviso-sucesso").style.display = "none";
+}
+
 function getCookie(name) {
     const value = `; ${document.cookie}`;
     const parts = value.split(`; ${name}=`);
@@ -50,13 +66,13 @@ async function carregarInfoUsers() {
         const data = await response.json();
         
         const cpfInput = document.getElementById('cpf');
-        cpfInput.value = data.cpfCad;
+        cpfInput.value = data.user.cpfCad;
         const nomeInput = document.getElementById('nomeCompleto');
-        nomeInput.value = data.userCad;
+        nomeInput.value = data.user.userCad;
         const emailInput = document.getElementById('email');
-        emailInput.value = data.emailCad;
+        emailInput.value = data.user.emailCad;
         const telefoneInput = document.getElementById('telefone');
-        telefoneInput.value = data.telefoneCad;
+        telefoneInput.value = data.user.telefoneCad;
     } catch (error) {
         console.log("erro")
         window.location.href = '/'
@@ -161,6 +177,7 @@ const metodosRecarga = document.getElementById('metodosRecarga');
 const fecharRecargaBtn = document.getElementById('fechar-recarga');
 const qrCodeContainer = document.getElementById('qrCodeContainer');
 const boletoContainer = document.getElementById('boletoContainer');
+const cartaoContainer = document.getElementById('cartaoContainer');
 const formCartao = document.getElementById('formCartao');
 const btnCartaoCredito = document.getElementById('btnCartaoCredito');
 const valores = document.querySelectorAll('#valoresRecarga ul li');
@@ -237,49 +254,20 @@ abrirMetodosBtn.addEventListener('click', () => {
                 return response.json();
             })
             .then(perfilData => {
-                function formatarTelefone(numero) {
-                const numeroLimpo = numero.replace(/\D/g, '');
-                const ddd = numeroLimpo.substring(0, 2);
-                const numeroTelefone = numeroLimpo.substring(2);
-                return { ddd, numeroTelefone };
-            }
-
-            const telefoneFormatado = formatarTelefone(perfilData.telefoneCad);
-            const codPaisCliente = "55";
-            const dddCliente = telefoneFormatado.ddd;
-            const numeroTelefoneCliente = telefoneFormatado.numeroTelefone;
-            
-            const cpf = perfilData.cpfCad.replace(/\D/g, '');
-            const cpfCliente = cpf;
-            
-            const emailCliente = perfilData.emailCad;
-            const cepCliente = perfilData.cepCad;
-            const cidadeCliente = perfilData.cidadeCad;
-            const ruaCliente = perfilData.endereçoCad;
-            const numeroResidenciaCliente = perfilData.numCad;
-            const bairroCliente = perfilData.bairroCad;
-            const numeroDocumento = perfilData.cpfCad;
-            const nomeCliente = perfilData.userCad;
-            const paisCliente = "BR";
-            const idCliente = perfilData.userId;
-            const estadoCliente = perfilData.estadoCad;
             
             const perfilUsuario = {
-                emailCliente: emailCliente,
-                cpfCliente: cpfCliente,
-                cepCliente: cepCliente,
-                cidadeCliente: cidadeCliente,
-                estadoCliente: estadoCliente,
-                ruaCliente: ruaCliente,
-                numeroResidenciaCliente: numeroResidenciaCliente,
-                bairroCliente: bairroCliente,
-                numeroDocumento: numeroDocumento,
-                nomeCliente: nomeCliente,
-                paisCliente: paisCliente,
-                codPaisCliente: codPaisCliente,
-                dddCliente: dddCliente,
-                numeroTelefoneCliente: numeroTelefoneCliente,
-                userId: idCliente,
+                customer: perfilData.user.customer_asaas_id,
+                emailCliente: perfilData.user.emailCad,
+                cpfCliente: perfilData.user.cpfCad,
+                cepCliente: perfilData.user.cepCad,
+                cidadeCliente: perfilData.user.cidadeCad,
+                estadoCliente: perfilData.user.estadoCad,
+                ruaCliente: perfilData.user.endereçoCad,
+                numeroResidenciaCliente: perfilData.user.numCad,
+                bairroCliente: perfilData.user.bairroCad,
+                nomeCliente: perfilData.user.userCad,
+                userId: perfilData.user.id,
+                telefone: perfilData.user.telefoneCad,
                 totalCompra: valorSelecionado, // Certifique-se de que valorSelecionado está definido
             };
             console.log(valorSelecionado)
@@ -306,52 +294,24 @@ fetch('/perfil/dados')
                 return response.json();
             })
             .then(perfilData => {
-                function formatarTelefone(numero) {
-                const numeroLimpo = numero.replace(/\D/g, '');
-                const ddd = numeroLimpo.substring(0, 2);
-                const numeroTelefone = numeroLimpo.substring(2);
-                return { ddd, numeroTelefone };
-            }
-
-            const telefoneFormatado = formatarTelefone(perfilData.telefoneCad);
-            const codPaisCliente = "55";
-            const dddCliente = telefoneFormatado.ddd;
-            const numeroTelefoneCliente = telefoneFormatado.numeroTelefone;
-            
-            const cpf = perfilData.cpfCad.replace(/\D/g, '');
-            const cpfCliente = cpf;
-            
-            const emailCliente = perfilData.emailCad;
-            const cepCliente = perfilData.cepCad;
-            const cidadeCliente = perfilData.cidadeCad;
-            const ruaCliente = perfilData.endereçoCad;
-            const numeroResidenciaCliente = perfilData.numCad;
-            const bairroCliente = perfilData.bairroCad;
-            const numeroDocumento = perfilData.cpfCad;
-            const nomeCliente = perfilData.userCad;
-            const paisCliente = "BR";
-            const idCliente = perfilData.userId;
-            const estadoCliente = perfilData.estadoCad;
-           
            
             perfilUsuario = {
-                emailCliente: emailCliente,
-                cpfCliente: cpfCliente,
-                cepCliente: cepCliente,
-                cidadeCliente: cidadeCliente,
-                estadoCliente: estadoCliente,
-                ruaCliente: ruaCliente,
-                numeroResidenciaCliente: numeroResidenciaCliente,
-                bairroCliente: bairroCliente,
-                numeroDocumento: numeroDocumento,
-                nomeCliente: nomeCliente,
-                paisCliente: paisCliente,
-                codPaisCliente: codPaisCliente,
-                dddCliente: dddCliente,
-                numeroTelefoneCliente: numeroTelefoneCliente,
-                userId: idCliente,
+                customer: perfilData.user.customer_asaas_id,
+                emailCliente: perfilData.user.emailCad,
+                cpfCliente: perfilData.user.cpfCad,
+                cepCliente: perfilData.user.cepCad,
+                cidadeCliente: perfilData.user.cidadeCad,
+                estadoCliente: perfilData.user.estadoCad,
+                ruaCliente: perfilData.user.endereçoCad,
+                numeroResidenciaCliente: perfilData.user.numCad,
+                bairroCliente: perfilData.user.bairroCad,
+                nomeCliente: perfilData.user.userCad,
+                userId: perfilData.user.id,
+                telefoneCad: perfilData.user.telefoneCad,
                 totalCompra: valorSelecionado, // Certifique-se de que valorSelecionado está definido
             };
+
+            console.log(perfilData)
         
         })
 
@@ -364,6 +324,7 @@ fecharRecargaBtn.addEventListener('click', () => {
 
 // Função para registrar o pagamento
 async function registrarPagamento(detalhesPagamento) {
+    console.log(detalhesPagamento)
     try {
         const response = await fetch('/registrarPagamento', {
             method: 'POST',
@@ -372,9 +333,12 @@ async function registrarPagamento(detalhesPagamento) {
         });
         if (!response.ok) throw new Error('Erro ao registrar o pagamento');
         console.log('Pagamento registrado com sucesso!');
-        window.location.reload();
+        setTimeout(() => {
+            window.location.reload();
+        }, 3000);
     } catch (error) {
         console.error('Erro ao registrar o pagamento:', error);
+        mostrarAvisoErro();
     }
 }
 
@@ -395,20 +359,18 @@ document.getElementById('pix').addEventListener('click', async () => {
             body: JSON.stringify({ valor: valorSelecionado, perfilData: perfilCarteira }),
         });
         if (!response.ok) throw new Error('Erro ao processar pagamento via Pix');
-        console.log('ESSE É O RESPONSE', response)
-        const { qr_code_url, charge_id, qr_code } = await response.json();
-        console.log('AQUI: ', qr_code)
-        qrCodeContainer.innerHTML = `<img src="${qr_code_url}"><br><button id="copiarCodigo">Copiar QR Code</button>`;
+        const result = await response.json();
+        console.log('ESSE É O RESPONSE', result)
+        qrCodeContainer.innerHTML = `
+            <h2>Clique aqui para efetuar o pagamento</h2>
+            <a href="${result.data.urlPix}" target="_blank">Acesse Aqui</a>
+        `
         qrCodeContainer.style.display = 'block';
-
-        document.getElementById('copiarCodigo').addEventListener('click', async () => {
-            await navigator.clipboard.writeText(qr_code);
-            alert('Código copiado!');
-        });
-
-        verificarStatusTransacao(charge_id, "PIX");
+        const urlTransacao = result.data.urlPix;
+        verificarStatusTransacao(result.data.payment_id, "PIX", urlTransacao);
     } catch (error) {
         console.error('Erro no Pix:', error);
+        mostrarAvisoErro();
     }
 });
 
@@ -422,15 +384,16 @@ document.getElementById('boleto').addEventListener('click', async () => {
         });
         if (!response.ok) throw new Error('Erro ao processar pagamento via Boleto');
         const dados = await response.json();
-        console.log(dados.id)
-        const charge_id = dados[0].id;
-        const url = dados[0].last_transaction.url
-        console.log(dados)
-        boletoContainer.innerHTML = `<a href="${url}" target="_blank">Abrir Boleto</a>`;
+        boletoContainer.innerHTML = `
+            <h2>Clique aqui para efetuar o pagamento</h2>
+            <a href="${dados.data.pdfBoleto}" target="_blank">Acesse Aqui</a>
+        `;
         boletoContainer.style.display = 'block';
-        verificarStatusTransacao(charge_id, "BOLETO");
+        const urlTransacao = dados.data.urlTransacao;
+        verificarStatusTransacao(dados.data.payment_id, "BOLETO", urlTransacao);
     } catch (error) {
         console.error('Erro no Boleto:', error);
+        mostrarAvisoErro();
     }
 });
 
@@ -462,37 +425,55 @@ btnCartaoCredito.addEventListener('click', async () => {
         });
         if (!response.ok) throw new Error('Erro ao processar pagamento via Cartão de Crédito');
         const dados = await response.json();
-        console.log(dados)
-        const charge_id = dados[0].id
-        verificarStatusTransacao(charge_id, "CARTÃO");
+        cartaoContainer.innerHTML = `
+            <h2>Clique para visualizar o comprovante</h2>
+            <a href="${dados.data.comprovanteCobranca}" target="_blank">Acesse Aqui</a>
+        `
+        formCartao.style.display = 'none';
+        cartaoContainer.style.display = 'block';
+        const urlTransacao = dados.data.urlTransacao;
+        verificarStatusTransacao(dados.data.payment_id, "CARTÃO", urlTransacao);
     } catch (error) {
         console.error('Erro no Cartão de Crédito:', error);
+        mostrarAvisoErro();
     }
 });
 
 // Verificar status da transação
-async function verificarStatusTransacao(charge_id, metod) {
+async function verificarStatusTransacao(payment_id, metod, urlTransacao) {
     try {
-        const response = await fetch(`/charges/${charge_id}`);
+        const response = await fetch(`/status-cobranca/${payment_id}`);
         if (!response.ok) throw new Error('Erro ao verificar status da transação');
         const { status } = await response.json();
 
-        if (status === 'paid') {
+        if (status === 'RECEIVED') {
+            mostrarAvisoSucesso();
+            registrarPagamento({ 
+                userId: userId,
+                valor: valorSelecionado,
+                metodoPagamento: metod,
+                status: "PAGO",
+                idTransacao: payment_id,
+                urlTransacao: urlTransacao
+            });
+        }else if(status === 'CONFIRMED') {
             alert('Pagamento realizado com sucesso!');
             registrarPagamento({ 
                 userId: userId,
                 valor: valorSelecionado,
                 metodoPagamento: metod,
                 status: "PAGO",
-                idTransacao: charge_id
+                idTransacao: payment_id,
+                urlTransacao: urlTransacao
             });
-        } else if (status === 'pending') {
-            setTimeout(() => verificarStatusTransacao(charge_id), 5000);
+        } else if (status === 'PENDING') {
+            setTimeout(() => verificarStatusTransacao(payment_id), 5000);
         } else {
             alert(`Pagamento com status: ${status}`);
         }
     } catch (error) {
         console.error('Erro ao verificar transação:', error);
+        mostrarAvisoErro();
     }
 };
 

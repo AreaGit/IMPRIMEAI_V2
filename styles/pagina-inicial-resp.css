@@ -565,7 +565,9 @@
         width: 100%;
     }
     .menu {
-        display: none;
+        display: block;
+        position: absolute;
+        width: 50%;
     }
     .menu-wrapper {
         z-index: 1;
@@ -635,6 +637,9 @@
         left: 85%;
         top: -22px;
     }
+    .mobile-menu {display: none;}
+    .linhaAbInp {display: block;}
+    .linhaAbNav {display: block;}
     .notCad {
         width: fit-content;
         position: absolute;
@@ -827,7 +832,7 @@
     }
     main {
         position: absolute;
-        top: 155%;
+        top: 170%;
         width: 100%;
         height: 100%;
         padding: 15pc;
@@ -928,7 +933,7 @@
         position: relative;
         left: 50%;
         transform: translate(-50%);
-        top: 400px;
+        top: 340px;
     }
     #prev {
         top: 65%;
@@ -981,7 +986,7 @@
     }
     .contentFooter {
         height: 490px;
-        background-color: #2B2B2B;
+        background: linear-gradient(135deg, #222, #444) ;
         position: relative;
         top: 20px;
         left: 49%;
@@ -1052,7 +1057,7 @@
         position: relative;
         left: 50%;
         transform: translate(-50%);
-        top: 400px;
+        top: 340px;
     }
     #prev {
         top: 65%;
@@ -1109,8 +1114,11 @@
         left: 10%;
         top: 70px;
     }
+    footer {
+        height: 30vw;
+    }
 }
-@media screen and (min-width:2560px) {
+@media screen and (min-width:2100px) {
     div#banners {
         height: 370px;
         position: relative;
@@ -1126,11 +1134,12 @@
     }
     .mainContentHeader {
         position: absolute;
-        height: 37vw;
+        height: 40vw;
         width: 100%;
         z-index: -1;
     }
     main {
+        top: 100%;
         width: 100%; /* Aumenta a largura do main */
         margin: 0 auto; /* Centraliza o main na tela */
       }
@@ -1173,6 +1182,6 @@
         font-size: 20px; /* Aumenta o tamanho da fonte dos links */
       }
       footer {
-        height: 18vw;
+        height: 20vw;
       }
 }

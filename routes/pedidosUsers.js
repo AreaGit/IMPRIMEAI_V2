@@ -43,6 +43,8 @@ const bcrypt = require('bcrypt');
 const TransacoesCarteira = require('../models/TransacoesCarteira');
 const PDFDocument = require('pdfkit');
 const dayjs = require('dayjs');
+const { cobrancaPixAsaas, cobrancaBoletoAsaas, cobrancaCartaoAsaas, consultarCobranca } = require('./api/asaas');
+const QRcode = require('qrcode')
 
 // Use o cliente conforme necessário
 client.on('ready', () => {
@@ -489,18 +491,7 @@ app.get("/perfil/dados", async (req, res) => {
 
     // Retorna os dados do usuário como JSON
     res.json({
-      emailCad: user.emailCad,
-      cepCad: user.cepCad,
-      cidadeCad: user.cidadeCad,
-      estadoCad: user.estadoCad,
-      endereçoCad: user.endereçoCad,
-      telefoneCad: user.telefoneCad,
-      numCad: user.numCad,
-      compCad: user.compCad,
-      bairroCad: user.bairroCad,
-      cpfCad: user.cpfCad,
-      userCad: user.userCad,
-      userId: userId,
+      user
     });
   } catch (error) {
     console.error("Erro ao buscar os dados do usuário:", error);
@@ -1486,7 +1477,11 @@ app.post('/criar-pedidos-empresas', async (req, res) => {
         material: produto.material,
         arquivo: produto.arquivo,
         statusPed: carrinhoQuebrado.some(p => p.downloadLink === "Enviar Arte Depois") ? 'Pedido em Aberto' : 'Aguardando',
-        statusPag: metodPag === 'Boleto' ? 'Esperando Pagamento' : metodPag === 'Carteira Usuário' ? 'Pago' : 'Aguardando',
+        statusPag: (metodPag === 'Boleto' || metodPag === 'BOLETO')
+        ? 'Esperando Pagamento'
+        : (metodPag === 'Carteira Usuário' || metodPag === 'PIX' || metodPag === 'CARTÃO')
+        ? 'Pago'
+        : 'Aguardando',
         linkDownload: produto.downloadLink,
         nomeArquivo: produto.nomeArquivo,
         arteEmpresas: produto.arte == null || produto.arte === "" ? "Não há" : produto.arte,
@@ -1498,11 +1493,6 @@ app.post('/criar-pedidos-empresas', async (req, res) => {
     const itensPedido = await Promise.all(itensPedidoPromises);
 
     // Chamada da função de verificação da gráfica
-    if (isMultipleAddresses) {
-      await verificarGraficaMaisProximaEAtualizar2(itensPedido, enderecos);
-    } else {
-      await verificarGraficaMaisProximaEAtualizar(itensPedido[0], enderecos[0]);
-    }
 
     // Buscar informações do usuário para o WhatsApp
     const usuario = await UserEmpresas.findByPk(userId, { attributes: ['telefoneCad', 'userCad'] });
@@ -1519,7 +1509,9 @@ app.post('/criar-pedidos-empresas', async (req, res) => {
       "https://www.instagram.com/imprimeai.com.br e fique por dentro das novidades, cupons de desconto e assuntos importantes sobre gráfica e comunicação visual!\n\n" +
       "*Tá com pressa? Imprimeaí!*";
 
+      await verificarGraficaMaisProximaEAtualizar(itensPedido[0], enderecos[0]);
       await enviarNotificacaoWhatsapp(telefone, mensagemWhatsapp);
+
     }
 
     // Limpar a sessão
@@ -1542,7 +1534,10 @@ async function isProdutoExclusivo(nomeProduto) {
 
 async function verificarGraficaMaisProximaEAtualizar(itensPedido, enderecoPedido) {
   try {
+    console.log("Iniciando verificação da gráfica mais próxima...");
+
     if (!Array.isArray(itensPedido)) {
+      console.log("Itens do pedido não estão em array, convertendo...");
       itensPedido = [itensPedido];
     }
 
@@ -1555,14 +1550,20 @@ async function verificarGraficaMaisProximaEAtualizar(itensPedido, enderecoPedido
       estado: enderecoPedido.estado
     };
 
+    console.log("Obtendo coordenadas do endereço de entrega:", enderecoEntregaInfo);
     const coordinatesEnd = await getCoordinatesFromAddress(enderecoEntregaInfo, apiKey);
+    console.log("Coordenadas de entrega:", coordinatesEnd);
 
     if (coordinatesEnd.latitude !== null && coordinatesEnd.longitude !== null) {
+      console.log("Buscando gráficas no banco de dados...");
       const graficas = await Graficas.findAll();
+      console.log(`Total de gráficas encontradas: ${graficas.length}`);
+
       let distanciaMinima = Infinity;
       let graficaMaisProxima = null;
 
       for (let grafica of graficas) {
+        console.log(`Calculando distância até a gráfica: ${grafica.userCad}`);
         const graficaCoordinates = await getCoordinatesFromAddress({
           endereco: grafica.enderecoCad,
           cep: grafica.cepCad,
@@ -1577,14 +1578,20 @@ async function verificarGraficaMaisProximaEAtualizar(itensPedido, enderecoPedido
           coordinatesEnd.longitude
         );
 
+        console.log(`Distância até ${grafica.userCad}: ${distanceToGrafica.toFixed(2)} km`);
+
         if (distanceToGrafica < distanciaMinima) {
           distanciaMinima = distanceToGrafica;
           graficaMaisProxima = grafica;
         }
       }
 
+      console.log(`Gráfica mais próxima: ${graficaMaisProxima?.userCad || 'Nenhuma'} a ${distanciaMinima.toFixed(2)} km`);
+
       const raioEndereco = enderecoPedido.raio;
       if (distanciaMinima <= raioEndereco && graficaMaisProxima) {
+        console.log(`A gráfica ${graficaMaisProxima.userCad} está dentro do raio (${raioEndereco} km)`);
+
         let produtosGrafica;
         if (typeof graficaMaisProxima.produtos === 'string') {
           const fixedJsonString = graficaMaisProxima.produtos.replace(/'/g, '"');
@@ -1599,53 +1606,48 @@ async function verificarGraficaMaisProximaEAtualizar(itensPedido, enderecoPedido
           produtosAtendidos.includes(produto)
         );
 
-        // Verificar se existe produto exclusivo
+        console.log("Produtos do pedido:", produtosPedido);
+        console.log("Produtos atendidos pela gráfica:", produtosAtendidos);
+        console.log("Produtos atendíveis:", produtosAtendiveis);
+
         const produtosExclusivosBanco = await ProdutosExc.findAll({ attributes: ['nomeProd'] });
         const nomesProdutosExclusivos = produtosExclusivosBanco.map(p => p.nomeProd);
         const temProdutoExclusivo = produtosPedido.some(produto =>
           nomesProdutosExclusivos.includes(produto)
         );
 
+        console.log("Produtos exclusivos no sistema:", nomesProdutosExclusivos);
+        console.log("Contém produto exclusivo no pedido?", temProdutoExclusivo);
+
         if (produtosAtendiveis.length > 0 || temProdutoExclusivo) {
-          console.log(`A gráfica mais próxima que pode atender é: ${graficaMaisProxima.userCad}`);
-          console.log(`Produtos que a gráfica pode produzir:`);
-          produtosAtendiveis.forEach(produto => {
-            console.log(`- ${produto}`);
-          });
+          console.log(`A gráfica ${graficaMaisProxima.userCad} pode atender ao pedido.`);
 
           let mensagemStatus = `Novo pedido ID ${itensPedido[0].idPed}.`;
           if (itensPedido[0].statusPed === 'Pedido em Aberto') {
             mensagemStatus =
               `Olá, *Equipe da Gráfica ${graficaMaisProxima.userCad}*, tudo bem com vocês?\n\n` +
               `Passando para avisar que temos um pedido está em aberto por aí -- é o número ${itensPedido[0].idPed} e aguardando o envio da arte do cliente. Fique atento ao painel de pedidos! \n` +
-              `Vocês conseguem dar uma olhadinha e fazer o aceite por esse link? \n` +
-              `👉 https://imprimeai.com.br/login-graficas \n` +
-              `Se precisarem de qualquer informação adicional ou tiverem alguma dúvida, fiquem super à vontade pra nos chamar. A gente tá por aqui e pronto pra ajudar no que for preciso!\n` +
-              `Agradecemos muito a parceria de sempre e ficamos no aguardo do retorno. 😊\n\n` +
-              `Um abraço!\n\n` +
-              `Equipe de Suporte\n` +
-              `imprimeai.com.br`;
+              `👉 https://imprimeai.com.br/login-graficas \n\n` +
+              `Equipe de Suporte\nimprimeai.com.br`;
           } else {
             mensagemStatus =
               `Olá, *Equipe da Gráfica ${graficaMaisProxima.userCad}*, tudo bem com vocês?\n\n` +
-              `Passando para avisar que temos um pedido pendente de atendimento por aí -- é o número ${itensPedido[0].idPed}, e ele precisa ser processado o quanto antes. \n` +
-              `Vocês conseguem dar uma olhadinha e fazer o aceite por esse link? \n` +
-              `👉 https://imprimeai.com.br/login-graficas \n` +
-              `Se precisarem de qualquer informação adicional ou tiverem alguma dúvida, fiquem super à vontade pra nos chamar. A gente tá por aqui e pronto pra ajudar no que for preciso!\n` +
-              `Agradecemos muito a parceria de sempre e ficamos no aguardo do retorno. 😊\n\n` +
-              `Um abraço!\n\n` +
-              `Equipe de Suporte\n` +
-              `imprimeai.com.br`;
+              `Passando para avisar que temos um pedido pendente de atendimento por aí -- é o número ${itensPedido[0].idPed}. \n` +
+              `👉 https://imprimeai.com.br/login-graficas \n\n` +
+              `Equipe de Suporte\nimprimeai.com.br`;
           }
 
-          // await enviarEmailNotificacao(graficaMaisProxima.emailCad, `Novo Pedido - ID ${itensPedido[0].idPed}`, mensagemStatus);
+          console.log("Enviando mensagem para WhatsApp...");
           await enviarNotificacaoWhatsapp(graficaMaisProxima.telefoneCad, mensagemStatus);
-
-          console.log(`Gráfica ${graficaMaisProxima.userCad} notificada sobre o novo pedido.`);
+          console.log(`Gráfica ${graficaMaisProxima.userCad} notificada com sucesso.`);
         } else {
-          console.log(`A gráfica mais próxima não pode atender aos produtos do pedido e nenhum deles é exclusivo.`);
+          console.log(`A gráfica mais próxima não atende aos produtos nem há produtos exclusivos.`);
         }
+      } else {
+        console.log(`Nenhuma gráfica encontrada dentro do raio de ${raioEndereco} km.`);
       }
+    } else {
+      console.log("Coordenadas do endereço de entrega são inválidas.");
     }
   } catch (error) {
     console.error("Erro na função verificarGraficaMaisProximaEAtualizar:", error);
@@ -1939,8 +1941,8 @@ async function verificarGraficaMaisProximaEAtualizar2(itensPedido, enderecos) {
   }
 
 app.post('/registrarPagamento', async (req, res) => {
-  let { userId, valor, metodoPagamento, status, idTransacao } = req.body;
-  console.log("REGISTRANDO NA CARTEIRA", userId, valor, metodoPagamento, status);
+  let { userId, valor, metodoPagamento, status, idTransacao, urlTransacao } = req.body;
+  console.log("REGISTRANDO NA CARTEIRA", userId, valor, metodoPagamento, status, urlTransacao);
   
   try {
     if (typeof valor === 'string') {
@@ -1958,10 +1960,25 @@ app.post('/registrarPagamento', async (req, res) => {
       saldo: valor,
       statusPag: status,
       userId,
-      idTransacao
+      idTransacao,
+      urlTransacao: urlTransacao
     });
 
     console.log('Pagamento registrado com sucesso:', { userId, valor, metodoPagamento, status });
+
+    const user = await User.findByPk(userId);
+    const nome = user.userCad;
+    const telefone = user.telefoneCad;
+    let mensagem = `Olá ${nome}! 👋
+Recebemos a recarga realizada em sua carteira no valor de R$ ${valor}. 🎉
+Muito obrigado pela confiança! 😊
+Se precisar de algo, estamos à disposição.
+    
+Atenciosamente,
+IMPRIMEAI`;
+
+    await enviarNotificacaoWhatsapp(telefone, mensagem);
+
     res.status(200).send('Pagamento registrado com sucesso!');
   } catch (error) {
     console.error('Erro ao registrar o pagamento:', error);
@@ -2471,672 +2488,365 @@ app.post('/registrarPagamento', async (req, res) => {
     }
   });
 
-  app.post('/processarPagamento-pix', (req, res) => {
-    const perfilData = req.body.perfilData;
-    const carrinho = req.session.carrinho;
+app.post('/processarPagamento-pix', async(req, res) => {
+  const perfilData = req.body.perfilData;
+  const carrinho = req.session.carrinho;
+  const dataAtual = new Date();
   
-    // Calcula o valor total, incluindo o frete corretamente para cada item
-    const totalAmount = carrinho.reduce((total, item) => {
-      let itemSubtotal;
-      
-      if (item.endereco.tipoEntrega === "Único Endereço") {
-        itemSubtotal = (item.valorUnitario * item.quantidade) + item.endereco.frete;
-      } else if (item.endereco.tipoEntrega === "Entrega a Retirar na Loja") {
-        itemSubtotal = item.valorUnitario * item.quantidade;
-      } else {
-        itemSubtotal = (item.valorUnitario * item.quantidade) + item.endereco.frete;
-      }
-      
-      return total + itemSubtotal * 100; // já está convertendo para centavos corretamente
-    }, 0);
+  // Pega o ano, mês e dia
+  const ano = dataAtual.getFullYear();
+  const mes = (dataAtual.getMonth() + 1).toString().padStart(2, '0'); // Mes começa do 0, então somamos 1
+  const dia = dataAtual.getDate().toString().padStart(2, '0'); // Garantir que o dia tenha dois dígitos
   
-    console.log('Total Amount (cents):', totalAmount);
-  
-    // Define o payload da requisição
-    const body = {
-  "items": carrinho.map(item => {
-    let valorProduto = item.valorUnitario * item.quantidade; // Total do produto
-    let frete = 0;
+  // Formata a data
+  const dataFormatada = `${ano}-${mes}-${dia}`;
 
-    if (item.endereco.tipoEntrega !== "Entrega a Retirar na Loja") {
-      frete = item.endereco.frete; // Adiciona frete se for aplicável
+  // Calcula o valor total, incluindo o frete corretamente para cada item
+  const totalAmount = carrinho.reduce((total, item) => {
+    let itemSubtotal;
+
+    if (item.endereco.tipoEntrega === "Único Endereço") {
+      itemSubtotal = (item.valorUnitario * item.quantidade) + item.endereco.frete;
+    } else if (item.endereco.tipoEntrega === "Entrega a Retirar na Loja") {
+      itemSubtotal = item.valorUnitario * item.quantidade;
+    } else {
+      itemSubtotal = (item.valorUnitario * item.quantidade) + item.endereco.frete;
     }
 
-    const amount = Math.round((valorProduto + frete) * 100); // Total em centavos
+    return total + itemSubtotal; // sem conversão para centavos
+  }, 0);
 
-    return {
-      id: item.produtoId,
-      amount: amount,
-      description: item.nomeProd,
-      quantity: 1, // Aqui representa o "pacote total", pois o amount já está multiplicado
-      code: item.produtoId
-    };
-  }),
-    "customer": {
-        "name": perfilData.nomeCliente,
-        "email": perfilData.emailCliente,
-        "type": perfilData.company = "company" ? "company" : "individual",
-        "document": perfilData.cpfCliente,
-        "phones": {
-            "home_phone": {
-                "country_code": "55",
-                "number": perfilData.numeroTelefoneCliente,
-                "area_code": perfilData.dddCliente,
-            }
-        }
-    },
-    "payments": [
-        {
-            "payment_method": "pix",
-            "pix" : {
-              "expires_in": "175",
-              "additional_information" : [
-                {
-                  "name" : "PEDIDO IMPRIMEAI",
-                  "value" : "1"
-                }
-              ]
-            }
-        }
-    ]
-  };
-  const options = {
-    method: 'POST',
-    uri: 'https://api.pagar.me/core/v5/orders',
-    headers: {
-      'Authorization': 'Basic ' + Buffer.from(`${pagarmeKeyProd}:`).toString('base64'),
-      'Content-Type': 'application/json'
-    },
-    body: body,
-    json: true
+  console.log('Total Amount (normal):', totalAmount);
+
+  const dadosCliente = {
+    customer: perfilData.customer,
+    value: totalAmount,
+    dueDate: dataFormatada
   };
 
-  rp(options)
-  .then(response => {
-    console.log(response.charges);
-    res.status(200).send(response.charges);
-  })
-  .catch(error => {
-      // Handle error response
-      console.error('Error:', error.message);
-      if (error.response) {
-        console.error('Request failed with status code', error.response.statusCode);
-        console.error('Response body:', error.response.body);
-      }
-      res.status(500).send("Transação falhada!");
-    });
+  const cobrancaPix = await cobrancaPixAsaas(dadosCliente);
+  console.log(cobrancaPix);
+  const url = cobrancaPix.invoiceUrl;
+  const idCobranca = cobrancaPix.id;
+
+  res.json({
+    status: 'success',
+    message: 'Transação feita com sucesso!',
+    data: {
+      payment_id: idCobranca,
+      urlPix: url
+    }
+  });
+  
 });
-
 
 // Rota GET para obter informações sobre uma cobrança específica
-app.get('/charges/:chargeId', (req, res) => {
-  const chargeId = req.params.chargeId;
+app.get('/status-cobranca/:payment_id', async(req, res) => {
+  const payment_id = req.params.payment_id;
 
-  // URL da API Pagar.me para obter informações sobre uma cobrança específica
-  const apiUrl = `https://api.pagar.me/core/v5/charges/${chargeId}`;
+  const statusCobranca = await consultarCobranca(payment_id);
+  console.log(statusCobranca);
 
-  // Opções para a solicitação GET
-  const options = {
-      method: 'GET',
-      uri: apiUrl,
-      headers: {
-          'Authorization': 'Basic ' + Buffer.from(`${pagarmeKeyProd}:`).toString('base64')
-      },
-      json: true
-  };
-
-  // Faça a solicitação GET para a API Pagar.me
-  rp(options)
-      .then(response => {
-          // Envie os detalhes da cobrança como resposta
-          res.status(200).json(response);
-      })
-      .catch(error => {
-          // Se ocorrer um erro ao fazer a solicitação, envie uma resposta de erro
-          console.error('Erro ao obter informações da cobrança:', error);
-          res.status(500).send('Erro ao obter informações da cobrança');
-      });
+  res.json({
+    status: statusCobranca.status
+  });
 });
 
-app.post('/processarPagamento-boleto', (req, res) => {
+app.post('/processarPagamento-boleto', async(req, res) => {
   const perfilData = req.body.perfilData;
   const carrinho = req.session.carrinho;
+  const dataAtual = new Date();
 
   // Calcula o valor total, incluindo o frete corretamente para cada item
   const totalAmount = carrinho.reduce((total, item) => {
     let itemSubtotal;
-    
+
     if (item.endereco.tipoEntrega === "Único Endereço") {
       itemSubtotal = (item.valorUnitario * item.quantidade) + item.endereco.frete;
     } else if (item.endereco.tipoEntrega === "Entrega a Retirar na Loja") {
-      itemSubtotal = item.valorUnitario * item.quantidade; // Sem adicionar frete
+      itemSubtotal = item.valorUnitario * item.quantidade;
     } else {
       itemSubtotal = (item.valorUnitario * item.quantidade) + item.endereco.frete;
     }
 
-    return total + itemSubtotal * 100; // Convertendo para centavos
+    return total + itemSubtotal; // sem conversão para centavos
   }, 0);
 
-  console.log('Total Amount (cents):', totalAmount);
+  console.log('Total Amount (normal):', totalAmount);
 
-  // Define o payload da requisição
-const body = {
-  "items": carrinho.map(item => {
-    let valorProduto = item.valorUnitario * item.quantidade; // Total do produto
-    let frete = 0;
+  // Pega o ano, mês e dia
+  const ano = dataAtual.getFullYear();
+  const mes = (dataAtual.getMonth() + 1).toString().padStart(2, '0'); // Mes começa do 0, então somamos 1
+  const dia = dataAtual.getDate().toString().padStart(2, '0'); // Garantir que o dia tenha dois dígitos
 
-    if (item.endereco.tipoEntrega !== "Entrega a Retirar na Loja") {
-      frete = item.endereco.frete; // Adiciona frete se for aplicável
+  // Formata a data
+  const dataFormatada = `${ano}-${mes}-${dia}`;
+
+  const dadosCliente = {
+    customer: perfilData.customer,
+    value: totalAmount,
+    dueDate: dataFormatada
+  };
+
+  const cobrancaBoleto = await cobrancaBoletoAsaas(dadosCliente);
+  console.log(cobrancaBoleto);
+  const idCobranca = cobrancaBoleto.id;
+  const pdfBoleto = cobrancaBoleto.bankSlipUrl;
+  const urlTransacao = cobrancaBoleto.invoiceUrl;
+
+  res.json({
+    status: 'success',
+    message: 'Transação feita com sucesso!',
+    data: {
+      payment_id: idCobranca,
+      pdfBoleto: pdfBoleto,
+      urlTransacao: urlTransacao
     }
+  });
 
-    const amount = Math.round((valorProduto + frete) * 100); // Total em centavos
-
-    return {
-      id: item.produtoId,
-      amount: amount,
-      description: item.nomeProd,
-      quantity: 1, // Aqui representa o "pacote total", pois o amount já está multiplicado
-      code: item.produtoId
-    };
-  }),
-    "customer": {
-      "name": perfilData.nomeCliente,
-      "email": perfilData.emailCliente,
-      "document_type": "CPF",
-      "document": perfilData.cpfCliente,
-      "type": "individual",
-      "address": {
-          "line_1": perfilData.ruaCliente,
-          "line_2": perfilData.complementoCliente,
-          "zip_code": perfilData.cepCliente,
-          "city": perfilData.cidadeCliente,
-          "state": perfilData.estadoCliente,
-          "country": "BR",
-      },
-    },
-    "payments": [
-        {
-            "payment_method": "boleto",
-            "boleto" : {
-              "instructions": "Pagar até o vencimento",
-              "document_number": "123",
-              "type": "DM"
-            }
-        }
-    ]
-  };
-  const options = {
-    method: 'POST',
-    uri: 'https://api.pagar.me/core/v5/orders',
-    headers: {
-      'Authorization': 'Basic ' + Buffer.from(`${pagarmeKeyProd}:`).toString('base64'),
-      'Content-Type': 'application/json'
-    },
-    body: body,
-    json: true
-  };
-
-  rp(options)
-  .then(response => {
-    console.log(response.charges);
-    res.status(200).send(response.charges);
-  })
-  .catch(error => {
-      // Handle error response
-      console.error('Error:', error.message);
-      if (error.response) {
-        console.error('Request failed with status code', error.response.statusCode);
-        console.error('Response body:', error.response.body);
-      }
-      res.status(500).send("Transação falhada!");
-    });
 });
 
-app.post('/processarPagamento-cartao', (req ,res) => {
+app.post('/processarPagamento-cartao', async(req ,res) => {
   const perfilData = req.body.perfilData;
   const carrinho = req.session.carrinho;
-  const formData = req.body.formData
+  const formData = req.body.formData;
+  const dataAtual = new Date();
+
   // Calcula o valor total, incluindo o frete corretamente para cada item
   const totalAmount = carrinho.reduce((total, item) => {
     let itemSubtotal;
-    
+
     if (item.endereco.tipoEntrega === "Único Endereço") {
       itemSubtotal = (item.valorUnitario * item.quantidade) + item.endereco.frete;
     } else if (item.endereco.tipoEntrega === "Entrega a Retirar na Loja") {
-      itemSubtotal = item.valorUnitario * item.quantidade; // Sem adicionar frete
+      itemSubtotal = item.valorUnitario * item.quantidade;
     } else {
       itemSubtotal = (item.valorUnitario * item.quantidade) + item.endereco.frete;
     }
 
-    return total + itemSubtotal * 100; // Convertendo para centavos
+    return total + itemSubtotal; // sem conversão para centavos
   }, 0);
 
-  console.log('Total Amount (cents):', totalAmount);
+  console.log('Total Amount (normal):', totalAmount);
 
-  // Define o payload da requisição
-const body = {
-  "items": carrinho.map(item => {
-    let valorProduto = item.valorUnitario * item.quantidade; // Total do produto
-    let frete = 0;
+  // Pega o ano, mês e dia
+  const ano = dataAtual.getFullYear();
+  const mes = (dataAtual.getMonth() + 1).toString().padStart(2, '0'); // Mes começa do 0, então somamos 1
+  const dia = dataAtual.getDate().toString().padStart(2, '0'); // Garantir que o dia tenha dois dígitos
 
-    if (item.endereco.tipoEntrega !== "Entrega a Retirar na Loja") {
-      frete = item.endereco.frete; // Adiciona frete se for aplicável
+  // Formata a data
+  const dataFormatada = `${ano}-${mes}-${dia}`;
+
+  const documento = perfilData.numeroDocumento.replace(/[.\-\/]/g, '');
+  const cep = perfilData.cepCliente.replace(/[.\-]/g, '');
+  const telefone = perfilData.telefoneCad.replace(/[()\s\-]/g, '');
+
+  const dadosCliente = {
+    value: totalAmount,
+    dueDate: dataFormatada,
+    customer: perfilData.customer,
+    holder_name: formData.nomeTitular,
+    number: formData.numCar,
+    expiryMonth: formData.mesExp,
+    expiryYear: formData.anoExp,
+    ccv: formData.cvvCard,
+    name: perfilData.nomeCliente,
+    email: perfilData.emailCliente,
+    document: perfilData.numeroDocumento.replace(/[.\-\/]/g, ''),
+    postalCode: cep,
+    addressNumber: perfilData.numeroResidenciaCliente,
+    phone: telefone
+  };
+
+  const cobrancaCartao = await cobrancaCartaoAsaas(dadosCliente);
+  console.log(cobrancaCartao);
+  const idCobranca = cobrancaCartao.id;
+  const comprovanteCobranca =  cobrancaCartao.invoiceUrl;
+
+  res.json({
+    status: 'success',
+    message: 'Transação feita com sucesso!',
+    data: {
+      payment_id: idCobranca,
+      comprovanteCobranca: comprovanteCobranca,
+      urlTransacao: comprovanteCobranca
     }
-
-    const amount = Math.round((valorProduto + frete) * 100); // Total em centavos
-
-    return {
-      id: item.produtoId,
-      amount: amount,
-      description: item.nomeProd,
-      quantity: 1, // Aqui representa o "pacote total", pois o amount já está multiplicado
-      code: item.produtoId
-    };
-  }),
-      "customer": {
-        "name": perfilData.nomeCliente,
-        "email": perfilData.emailCliente,
-        "code": perfilData.userId,
-        "type": "individual",
-        "document": perfilData.cpfCliente,
-        "document_type": "CPF",
-        "gender": "male",
-        "address": {
-          "street": perfilData.ruaCliente,
-          "city": perfilData.cidadeCliente,
-          "state": perfilData.estadoCliente,
-            "country": "BR",
-            "zip_code": perfilData.cepCliente,
-            "neighborhood": perfilData.bairroCliente
-          },
-          "phones": {
-            "home_phone": {
-              "country_code": "55",
-              "number": perfilData.numeroTelefoneCliente,
-              "area_code": perfilData.dddCliente,
-          },
-            "mobile_phone": {
-              "country_code": "55",
-              "number": perfilData.numeroTelefoneCliente,
-              "area_code": perfilData.dddCliente,
-            }
-          },
-            "metadata": {} // Metadados do cliente
-        },
-        "payments": [
-          {
-            "payment_method": "credit_card",
-            "credit_card": {
-              "recurrence": false,
-              "installments": 1,
-              "statement_descriptor": "IMPRIMEAI",
-              "card": {
-                "number": formData.numCar,
-                "holder_name": formData.nomeTitular,
-                "exp_month": formData.mesExp,
-                "exp_year": formData.anoExp,
-                "cvv": formData.cvvCard,
-                "billing_address": {
-                  "line_1": perfilData.ruaCliente,
-                  "zip_code": perfilData.cepCliente,
-                  "city": perfilData.cidadeCliente,
-                  "state": perfilData.estadoCliente,
-                  "country": "BR"
-                }
-              }
-            }
-          }
-        ]
-      };
-
-      const options = {
-        method: 'POST',
-        uri: 'https://api.pagar.me/core/v5/orders',
-        headers: {
-          'Authorization': 'Basic ' + Buffer.from(`${pagarmeKeyProd}:`).toString('base64'),
-          'Content-Type': 'application/json'
-        },
-        body: body,
-        json: true
-      };
-      rp(options)
-      .then(response => {
-        console.log(response);
-        res.status(200).send(response.charges);
-      })
-      .catch(error => {
-        // Handle error response
-        console.error('Error:', error.message);
-        if (error.response) {
-          console.error('Request failed with status code', error.response.statusCode);
-          console.error('Response body:', error.response.body);
-        }
-        res.status(500).send("Transação falhada!");
-      });
-});
-
-app.post('/processarPagamento-pix-carteira', (req, res) => {
-  const perfilData = req.body.perfilData;
-  console.log(perfilData)
-  const carrinho = req.session.carrinho;
-  // Define the request payload
-  const body = {
-    "items": [
-      {
-          "amount": Math.max(Math.round(parseFloat(perfilData.totalCompra) * 100), 1),
-          "description": "CARTEIRA",
-          "quantity": 1
-      }
-    ],
-    "customer": {
-        "name": perfilData.nomeCliente,
-        "email": perfilData.emailCliente,
-        "type": "individual",
-        "document": perfilData.cpfCliente,
-        "phones": {
-            "home_phone": {
-                "country_code": "55",
-                "number": perfilData.numeroTelefoneCliente,
-                "area_code": perfilData.dddCliente,
-            }
-        }
-    },
-    "payments": [
-        {
-            "payment_method": "pix",
-            "pix" : {
-              "expires_in": "175",
-              "additional_information" : [
-                {
-                  "name" : "PEDIDO IMPRIMEAI",
-                  "value" : "1"
-                }
-              ]
-            }
-        }
-    ]
-  };
-  const options = {
-    method: 'POST',
-    uri: 'https://api.pagar.me/core/v5/orders',
-    headers: {
-      'Authorization': 'Basic ' + Buffer.from(`${pagarmeKeyProd}:`).toString('base64'),
-      'Content-Type': 'application/json'
-    },
-    body: body,
-    json: true
-  };
-
-  rp(options)
-  .then(response => {
-    console.log(response); // Exibir a resposta completa para depuração
-
-    if (response.charges && response.charges.length > 0) {
-      const charge = response.charges[0]; // Pegando a primeira transação
-      res.status(200).json({
-        qr_code_url: charge.last_transaction.qr_code_url,
-        charge_id: charge.id,
-        qr_code: charge.last_transaction.qr_code
-      });
-    } else {
-      res.status(500).send("Erro ao processar o pagamento.");
-    }
-  })
-  .catch(error => {
-      // Handle error response
-      console.error('Error:', error.message);
-      if (error.response) {
-        console.error('Request failed with status code', error.response.statusCode);
-        console.error('Response body:', error.response.body);
-      }
-      res.status(500).send("Transação falhada!");
-    });
-});
-
-app.post('/processarPagamento-boleto-carteira', (req, res) => {
-  const perfilData = req.body.perfilData;
-  const totalCompra = req.body.valor
-  const carrinho = req.session.carrinho;
-  // Define the request payload
-  console.log(totalCompra)
-  const body = {
-    "items": [
-      {
-          "amount": Math.max(Math.round(parseFloat(req.body.valor) * 100), 1), //Math.max(Math.round(parseFloat(perfilData.totalCompra) * 100), 1),
-          "description": "CARTEIRA",
-          "quantity": 1,
-          "code": "123"
-      }
-    ],
-    "customer": {
-      "name": perfilData.nomeCliente,
-      "email": perfilData.emailCliente,
-      "document_type": "CPF",
-      "document": perfilData.cpfCliente,
-      "type": "individual",
-      "address": {
-          "line_1": perfilData.ruaCliente,
-          "line_2": perfilData.complementoCliente,
-          "zip_code": perfilData.cepCliente,
-          "city": perfilData.cidadeCliente,
-          "state": perfilData.estadoCliente,
-          "country": "BR",
-      },
-    },
-    "payments": [
-        {
-            "payment_method": "boleto",
-            "boleto" : {
-              "instructions": "Pagar até o vencimento",
-              "document_number": "123",
-              "type": "DM"
-            }
-        }
-    ]
-  };
-  const options = {
-    method: 'POST',
-    uri: 'https://api.pagar.me/core/v5/orders',
-    headers: {
-      'Authorization': 'Basic ' + Buffer.from(`${pagarmeKeyProd}:`).toString('base64'),
-      'Content-Type': 'application/json'
-    },
-    body: body,
-    json: true
-  };
-
-rp(options)
-  .then(response => {
-    console.log(response.charges[0])
-    const charge = response.charges[0];
-    const boletoUrl = charge.last_transaction.url;
-    const chargeId = charge.id;
-
-    res.status(200).json({ boleto_url: boletoUrl, charge_id: chargeId });
-  })
-  .catch(error => {
-    console.error('Error:', error.message);
-    if (error.response) {
-      console.error('Request failed with status code', error.response.statusCode);
-      console.error('Response body:', error.response.body);
-    }
-    res.status(500).send("Transação falhada!");
   });
 });
 
-app.post('/processarPagamento-boleto-carteira-cpq', (req, res) => {
+app.post('/processarPagamento-pix-carteira', async(req, res) => {
   const perfilData = req.body.perfilData;
-  const totalCompra = req.body.valor
-  const carrinho = req.session.carrinho;
+  const value = perfilData.totalCompra;
+  const dataAtual = new Date();
 
-  const dueDate = dayjs().add(11, 'day').format('YYYY-MM-DD');
+  // Pega o ano, mês e dia
+  const ano = dataAtual.getFullYear();
+  const mes = (dataAtual.getMonth() + 1).toString().padStart(2, '0'); // Mes começa do 0, então somamos 1
+  const dia = dataAtual.getDate().toString().padStart(2, '0'); // Garantir que o dia tenha dois dígitos
 
-  // Define the request payload
-  console.log(perfilData)
-  console.log(totalCompra)
-  const body = {
-    "items": [
-      {
-          "amount": Math.max(Math.round(parseFloat(req.body.valor) * 100), 1), //Math.max(Math.round(parseFloat(perfilData.totalCompra) * 100), 1),
-          "description": "CARTEIRA",
-          "quantity": 1,
-          "code": "123"
-      }
-    ],
-    "customer": {
-      "name": perfilData.nomeCliente,
-      "email": perfilData.emailFiscalCliente,
-      "document_type": "CPF",
-      "document": perfilData.cpfCliente,
-      "type": "individual",
-      "address": {
-          "line_1": perfilData.ruaCliente,
-          "line_2": perfilData.complementoCliente,
-          "zip_code": perfilData.cepCliente,
-          "city": perfilData.cidadeCliente,
-          "state": perfilData.estadoCliente,
-          "country": "BR",
-      },
-    },
-    "payments": [
-        {
-            "payment_method": "boleto",
-            "boleto" : {
-              "instructions": "Pagar até o vencimento",
-              "document_number": "123",
-              "type": "DM",
-              "due_at": dueDate
-            }
-        }
-    ]
-  };
-  const options = {
-    method: 'POST',
-    uri: 'https://api.pagar.me/core/v5/orders',
-    headers: {
-      'Authorization': 'Basic ' + Buffer.from(`${pagarmeKeyProd}:`).toString('base64'),
-      'Content-Type': 'application/json'
-    },
-    body: body,
-    json: true
+  // Formata a data
+  const dataFormatada = `${ano}-${mes}-${dia}`;
+
+  const dadosCliente = {
+    customer: perfilData.customer,
+    value: value,
+    dueDate: dataFormatada
   };
 
-rp(options)
-  .then(response => {
-    console.log(response.charges[0])
-    const charge = response.charges[0];
-    const boletoUrl = charge.last_transaction.url;
-    const chargeId = charge.id;
+  const cobrancaPix = await cobrancaPixAsaas(dadosCliente);
+  console.log(cobrancaPix);
+  const url = cobrancaPix.invoiceUrl;
+  const idCobranca = cobrancaPix.id;
 
-    res.status(200).json({ boleto_url: boletoUrl, charge_id: chargeId });
-  })
-  .catch(error => {
-    console.error('Error:', error.message);
-    if (error.response) {
-      console.error('Request failed with status code', error.response.statusCode);
-      console.error('Response body:', error.response.body);
+  res.json({
+    status: 'success',
+    message: 'Transação feita com sucesso!',
+    data: {
+      payment_id: idCobranca,
+      urlPix: url
     }
-    res.status(500).send("Transação falhada!");
   });
 });
 
-app.post('/processarPagamento-cartao-carteira', (req ,res) => {
+app.post('/processarPagamento-boleto-carteira', async(req, res) => {
+  const perfilData = req.body.perfilData;
+  const value = req.body.valor;
+  const dataAtual = new Date();
+
+  // Pega o ano, mês e dia
+  const ano = dataAtual.getFullYear();
+  const mes = (dataAtual.getMonth() + 1).toString().padStart(2, '0'); // Mes começa do 0, então somamos 1
+  const dia = dataAtual.getDate().toString().padStart(2, '0'); // Garantir que o dia tenha dois dígitos
+
+  // Formata a data
+  const dataFormatada = `${ano}-${mes}-${dia}`;
+
+  const dadosCliente = {
+    customer: perfilData.customer,
+    value: value,
+    dueDate: dataFormatada
+  };
+  
+  const cobrancaBoleto = await cobrancaBoletoAsaas(dadosCliente);
+  console.log(cobrancaBoleto);
+  const idCobranca = cobrancaBoleto.id;
+  const pdfBoleto = cobrancaBoleto.bankSlipUrl;
+  const urlTransacao = cobrancaBoleto.invoiceUrl;
+
+  res.json({
+    status: 'success',
+    message: 'Transação feita com sucesso!',
+    data: {
+      payment_id: idCobranca,
+      pdfBoleto: pdfBoleto,
+      urlTransacao: urlTransacao
+    }
+  });
+
+});
+
+app.post('/processarPagamento-cartao-carteira', async(req ,res) => {
   const formData = req.body.formData;
   const perfilData = req.body.perfilData;
-  const totalCompra = req.body.valor
-  const carrinho = req.session.carrinho;
-  console.log(formData)
-  console.log(totalCompra)
-  // Monte o body com os dados do usuário e do carrinho
-  const body = {
-    "items": [
-      {
-          "amount": Math.max(Math.round(parseFloat(req.body.valor) * 100), 1),
-          "description": "CARTEIRA",
-          "quantity": 1,
-          "code": "123"
-      }
-    ],
-      "customer": {
-        "name": perfilData.nomeCliente,
-        "email": perfilData.emailCliente,
-        "code": perfilData.userId,
-        "type": "individual",
-        "document": perfilData.cpfCliente,
-        "document_type": "CPF",
-        "gender": "male",
-        "address": {
-          "street": perfilData.ruaCliente,
-          "city": perfilData.cidadeCliente,
-          "state": perfilData.estadoCliente,
-            "country": "BR",
-            "zip_code": perfilData.cepCliente,
-            "neighborhood": perfilData.bairroCliente
-          },
-          "phones": {
-            "home_phone": {
-              "country_code": "55",
-              "number": perfilData.numeroTelefoneCliente,
-              "area_code": perfilData.dddCliente,
-          },
-            "mobile_phone": {
-              "country_code": "55",
-              "number": perfilData.numeroTelefoneCliente,
-              "area_code": perfilData.dddCliente,
-            }
-          },
-            "metadata": {} // Metadados do cliente
-        },
-        "payments": [
-          {
-            "payment_method": "credit_card",
-            "credit_card": {
-              "recurrence": false,
-              "installments": 1,
-              "statement_descriptor": "IMPRIMEAI",
-              "card": {
-                "number": formData.numCar,
-                "holder_name": formData.nomeTitular,
-                "exp_month": formData.mesExp,
-                "exp_year": formData.anoExp,
-                "cvv": formData.cvvCard,
-                "billing_address": {
-                  "line_1": perfilData.ruaCliente,
-                  "zip_code": perfilData.cepCliente,
-                  "city": perfilData.cidadeCliente,
-                  "state": perfilData.estadoCliente,
-                  "country": "BR"
-                }
-              }
-            }
-          }
-        ]
-      };
+  const totalCompra = req.body.valor;
+  const dataAtual = new Date();
+  
+  // Pega o ano, mês e dia
+  const ano = dataAtual.getFullYear();
+  const mes = (dataAtual.getMonth() + 1).toString().padStart(2, '0'); // Mes começa do 0, então somamos 1
+  const dia = dataAtual.getDate().toString().padStart(2, '0'); // Garantir que o dia tenha dois dígitos
+  
+  // Formata a data
+  const dataFormatada = `${ano}-${mes}-${dia}`;
 
-      const options = {
-        method: 'POST',
-        uri: 'https://api.pagar.me/core/v5/orders',
-        headers: {
-          'Authorization': 'Basic ' + Buffer.from(`${pagarmeKeyProd}:`).toString('base64'),
-          'Content-Type': 'application/json'
-        },
-        body: body,
-        json: true
-      };
-      rp(options)
-      .then(response => {
-        console.log(response);
-        res.status(200).send(response.charges);
-      })
-      .catch(error => {
-        // Handle error response
-        console.error('Error:', error.message);
-        if (error.response) {
-          console.error('Request failed with status code', error.response.statusCode);
-          console.error('Response body:', error.response.body);
-        }
-        res.status(500).send("Transação falhada!");
-      });
+  const cpf = perfilData.cpfCliente.replace(/[.\-]/g, '');
+  const cep = perfilData.cepCliente.replace(/[.\-]/g, '');
+  const telefone = perfilData.telefoneCad.replace(/[()\s\-]/g, '');
+
+  const dadosCliente = {
+    value: totalCompra,
+    dueDate: dataFormatada,
+    customer: perfilData.customer,
+    holder_name: formData.nomeTitular,
+    number: formData.numCar,
+    expiryMonth: formData.mesExp,
+    expiryYear: formData.anoExp,
+    ccv: formData.cvvCard,
+    name: perfilData.nomeCliente,
+    email: perfilData.emailCliente,
+    cpfCnpj: cpf,
+    postalCode: cep,
+    addressNumber: perfilData.numeroResidenciaCliente,
+    phone: telefone
+  };
+
+  const cobrancaCartao = await cobrancaCartaoAsaas(dadosCliente);
+  const idCobranca = cobrancaCartao.id;
+  const comprovanteCobranca =  cobrancaCartao.invoiceUrl;
+
+  res.json({
+    status: 'success',
+    message: 'Transação feita com sucesso!',
+    data: {
+      payment_id: idCobranca,
+      comprovanteCobranca: comprovanteCobranca,
+      urlTransacao: comprovanteCobranca
+    }
+  });
+
+});
+
+app.post('/processarPagamento-cartao-carteira-cnpj', async(req ,res) => {
+  const formData = req.body.formData;
+  const perfilData = req.body.perfilData;
+  const totalCompra = req.body.valor;
+  const dataAtual = new Date();
+  
+  console.log(perfilData)
+
+  // Pega o ano, mês e dia
+  const ano = dataAtual.getFullYear();
+  const mes = (dataAtual.getMonth() + 1).toString().padStart(2, '0'); // Mes começa do 0, então somamos 1
+  const dia = dataAtual.getDate().toString().padStart(2, '0'); // Garantir que o dia tenha dois dígitos
+  
+  // Formata a data
+  const dataFormatada = `${ano}-${mes}-${dia}`;
+
+  const cnpj = perfilData.cnpjCliente.replace(/[.\-]/g, '');
+  const cep = perfilData.cepCliente.replace(/[.\-]/g, '');
+  const telefone = perfilData.telefoneCad.replace(/[()\s\-]/g, '');
+
+  const dadosCliente = {
+    value: totalCompra,
+    dueDate: dataFormatada,
+    customer: perfilData.customer,
+    holder_name: formData.nomeTitular,
+    number: formData.numCar,
+    expiryMonth: formData.mesExp,
+    expiryYear: formData.anoExp,
+    ccv: formData.cvvCard,
+    name: perfilData.nomeCliente,
+    email: perfilData.emailCliente,
+    cpfCnpj: cnpj,
+    postalCode: cep,
+    addressNumber: perfilData.numeroResidenciaCliente,
+    phone: telefone
+  };
+
+  const cobrancaCartao = await cobrancaCartaoAsaas(dadosCliente);
+  const idCobranca = cobrancaCartao.id;
+  const comprovanteCobranca =  cobrancaCartao.invoiceUrl;
+
+  res.json({
+    status: 'success',
+    message: 'Transação feita com sucesso!',
+    data: {
+      payment_id: idCobranca,
+      comprovanteCobranca: comprovanteCobranca,
+      urlTransacao: comprovanteCobranca
+    }
+  });
+
 });
 
 app.post('/uploadGoogleDrive', upload.single('file'), async (req, res) => {

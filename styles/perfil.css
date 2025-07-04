@@ -395,7 +395,7 @@ input[readonly] {
   color: white;
 }
 
-#qrCodeContainer, #boletoContainer {
+#qrCodeContainer, #boletoContainer, #cartaoContainer {
   text-align: center;
   margin-top: 20px;
 }
@@ -415,4 +415,38 @@ button#copiarCodigo {
   border-radius: 12px;
   font-weight: bold;
   color: white;
+}
+.alerta {
+  padding: 15px;
+  margin-bottom: 20px;
+  border: 1px solid transparent;
+  border-radius: 4px;
+  position: fixed; /* Para posicionar o botão de fechar */
+  top: 5%;
+  left: 65%;
+  width: 30vw;
+  display: none; /* Inicialmente escondido */
+}
+
+.alerta-aviso {
+  color: #8a6d3b;
+  background-color: #fcf8e3;
+  border-color: #faebcc;
+}
+
+.alerta-aviso-sucesso {
+  color: white;
+  background-color: #24a034;
+}
+
+.icone {
+  margin-right: 8px;
+}
+
+.fechar {
+  position: absolute;
+  top: 5px;
+  right: 10px;
+  cursor: pointer;
+  font-size: 1.2em;
 }

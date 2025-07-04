@@ -55,16 +55,16 @@ btnRetirada.addEventListener("click", async () => {
     
             const data = await response.json();
     
-            const nomeCliente = data.userCad;
-            const enderecoCad = data.endereçoCad;
-            const numCad = data.numCad;
-            const compCad = data.compCad;
-            const bairroCad = data.bairroCad;
-            const cepCad = data.cepCad;
-            const cidadeCad = data.cidadeCad;
-            const telefoneCad = data.telefoneCad;
-            const estadoCad = data.estadoCad;
-            const email = data.emailCad;
+            const nomeCliente = data.user.userCad;
+            const enderecoCad = data.user.endereçoCad;
+            const numCad = data.user.numCad;
+            const compCad = data.user.compCad;
+            const bairroCad = data.user.bairroCad;
+            const cepCad = data.user.cepCad;
+            const cidadeCad = data.user.cidadeCad;
+            const telefoneCad = data.user.telefoneCad;
+            const estadoCad = data.user.estadoCad;
+            const email = data.user.emailCad;
     
             // Aqui você pode adicionar o downloadLink ao endereçoData
             const enderecoData = {
@@ -128,16 +128,16 @@ btnRetirada.addEventListener("click", async () => {
     
             const data = await response.json();
     
-            const nomeCliente = data.userCad;
-            const enderecoCad = data.endereçoCad;
-            const numCad = data.numCad;
-            const compCad = data.compCad;
-            const bairroCad = data.bairroCad;
-            const cepCad = data.cepCad;
-            const cidadeCad = data.cidadeCad;
-            const telefoneCad = data.telefoneCad;
-            const estadoCad = data.estadoCad;
-            const email = data.emailCad;
+            const nomeCliente = data.user.userCad;
+            const enderecoCad = data.user.endereçoCad;
+            const numCad = data.user.numCad;
+            const compCad = data.user.compCad;
+            const bairroCad = data.user.bairroCad;
+            const cepCad = data.user.cepCad;
+            const cidadeCad = data.user.cidadeCad;
+            const telefoneCad = data.user.telefoneCad;
+            const estadoCad = data.user.estadoCad;
+            const email = data.user.emailCad;
     
             // Aqui você pode adicionar o downloadLink ao endereçoData
             const enderecoData = {

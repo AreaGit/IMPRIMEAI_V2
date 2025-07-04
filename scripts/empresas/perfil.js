@@ -1,3 +1,19 @@
+function mostrarAvisoErro() {
+  document.getElementById("aviso-erro").style.display = "block";
+}
+
+function fecharAvisoErro() {
+  document.getElementById("aviso-erro").style.display = "none";
+}
+
+function mostrarAvisoSucesso() {
+  document.getElementById("aviso-sucesso").style.display = "block";
+}
+
+function fecharAvisoSucesso() {
+  document.getElementById("aviso-sucesso").style.display = "none";
+}
+
 function getCookie(name) {
     const value = `; ${document.cookie}`;
     const parts = value.split(`; ${name}=`);
@@ -51,13 +67,13 @@ async function carregarInfoUsers() {
         const data = await response.json();
         
         const cnpjInput = document.getElementById('cnpj');
-        cnpjInput.value = data.cnpjCad;
+        cnpjInput.value = data.user.cnpjCad;
         const nomeInput = document.getElementById('nomeCompleto');
-        nomeInput.value = data.userCad;
+        nomeInput.value = data.user.userCad;
         const emailInput = document.getElementById('email');
-        emailInput.value = data.emailCad;
+        emailInput.value = data.user.emailCad;
         const telefoneInput = document.getElementById('telefone');
-        telefoneInput.value = data.telefoneCad;
+        telefoneInput.value = data.user.telefoneCad;
     } catch (error) {
         console.log("erro")
         window.location.href = '/cpq/inicio'
@@ -251,6 +267,7 @@ const metodosRecarga = document.getElementById('metodosRecarga');
 const fecharRecargaBtn = document.getElementById('fechar-recarga');
 const qrCodeContainer = document.getElementById('qrCodeContainer');
 const boletoContainer = document.getElementById('boletoContainer');
+const cartaoContainer = document.getElementById('cartaoContainer');
 const formCartao = document.getElementById('formCartao');
 const btnCartaoCredito = document.getElementById('btnCartaoCredito');
 const valores = document.querySelectorAll('#valoresRecarga ul li');
@@ -327,38 +344,24 @@ abrirMetodosBtn.addEventListener('click', () => {
                 return response.json();
             })
             .then(perfilData => {
-                function formatarTelefone(numero) {
-                const numeroLimpo = numero.replace(/\D/g, '');
-                const ddd = numeroLimpo.substring(0, 2);
-                const numeroTelefone = numeroLimpo.substring(2);
-                return { ddd, numeroTelefone };
-            }
-
-            const telefoneFormatado = formatarTelefone(perfilData.telefoneCad);
-            const codPaisCliente = "55";
-            const dddCliente = telefoneFormatado.ddd;
-            const numeroTelefoneCliente = telefoneFormatado.numeroTelefone;
             
-            const cpf = perfilData.cnpjCad.replace(/\D/g, '');
-            const cpfCliente = cpf;
-            
-            const emailCliente = perfilData.emailCad;
-            const emailFiscalCliente = perfilData.email_fiscal;
-            const cepCliente = perfilData.cepCad;
-            const cidadeCliente = perfilData.cidadeCad;
-            const ruaCliente = perfilData.endereçoCad;
-            const numeroResidenciaCliente = perfilData.numCad;
-            const bairroCliente = perfilData.bairroCad;
-            const numeroDocumento = perfilData.cpfCad;
-            const nomeCliente = perfilData.userCad;
-            const paisCliente = "BR";
-            const idCliente = perfilData.userId;
-            const estadoCliente = perfilData.estadoCad;
+            const emailCliente = perfilData.user.emailCad;
+            const emailFiscalCliente = perfilData.user.email_fiscal;
+            const cepCliente = perfilData.user.cepCad;
+            const cidadeCliente = perfilData.user.cidadeCad;
+            const ruaCliente = perfilData.user.endereçoCad;
+            const numeroResidenciaCliente = perfilData.user.numCad;
+            const bairroCliente = perfilData.user.bairroCad;
+            const numeroDocumento = perfilData.user.cnpjCad;
+            const nomeCliente = perfilData.user.userCad;
+            const idCliente = perfilData.user.userId;
+            const estadoCliente = perfilData.user.estadoCad;
             
             const perfilUsuario = {
+                customer: perfilData.user.customer_asaas_id,
                 emailCliente: emailCliente,
                 emailFiscalCliente: emailFiscalCliente,
-                cpfCliente: cpfCliente,
+                cnpjCliente: perfilData.user.cnpjCad,
                 cepCliente: cepCliente,
                 cidadeCliente: cidadeCliente,
                 estadoCliente: estadoCliente,
@@ -367,10 +370,7 @@ abrirMetodosBtn.addEventListener('click', () => {
                 bairroCliente: bairroCliente,
                 numeroDocumento: numeroDocumento,
                 nomeCliente: nomeCliente,
-                paisCliente: paisCliente,
-                codPaisCliente: codPaisCliente,
-                dddCliente: dddCliente,
-                numeroTelefoneCliente: numeroTelefoneCliente,
+                telefoneCad: perfilData.user.telefoneCad,
                 userId: idCliente,
                 totalCompra: valorSelecionado, // Certifique-se de que valorSelecionado está definido
             };
@@ -404,7 +404,10 @@ async function registrarPagamento(detalhesPagamento) {
         });
         if (!response.ok) throw new Error('Erro ao registrar o pagamento');
         console.log('Pagamento registrado com sucesso!');
-        window.location.reload();
+        console.log('Pagamento registrado com sucesso!');
+        setTimeout(() => {
+            window.location.reload();
+        }, 3000);
     } catch (error) {
         console.error('Erro ao registrar o pagamento:', error);
     }
@@ -419,18 +422,18 @@ document.getElementById('pix').addEventListener('click', async () => {
             body: JSON.stringify({ valor: valorSelecionado, perfilData: perfilCarteira }),
         });
         if (!response.ok) throw new Error('Erro ao processar pagamento via Pix');
-        const { qr_code_url, charge_id } = await response.json();
-        qrCodeContainer.innerHTML = `<img src="${qr_code_url}"><button id="copiarCodigo">Copiar QR Code</button>`;
+        const result = await response.json();
+        console.log('ESSE É O RESPONSE', result)
+        qrCodeContainer.innerHTML = `
+        <h2>Clique aqui para efetuar o pagamento</h2>
+        <a href="${result.data.urlPix}" target="_blank">Acesse Aqui</a>
+        `
         qrCodeContainer.style.display = 'block';
-
-        document.getElementById('copiarCodigo').addEventListener('click', async () => {
-            await navigator.clipboard.writeText(qr_code_url);
-            alert('Código copiado!');
-        });
-
-        verificarStatusTransacao(charge_id);
+        const urlTransacao = result.data.urlPix;
+        verificarStatusTransacao(result.data.payment_id, "PIX", urlTransacao);
     } catch (error) {
         console.error('Erro no Pix:', error);
+        mostrarAvisoErro();
     }
 });
 
@@ -444,13 +447,17 @@ document.getElementById('boleto').addEventListener('click', async () => {
             body: JSON.stringify({ valor: valorSelecionado, perfilData: perfilCarteira }),
         });
         if (!response.ok) throw new Error('Erro ao processar pagamento via Boleto');
-        const { boleto_url, charge_id } = await response.json();
-        console.log(boleto_url, charge_id);
-        boletoContainer.innerHTML = `<a href="${boleto_url}" target="_blank">Abrir Boleto</a>`;
+        const dados = await response.json();
+        boletoContainer.innerHTML = `
+            <h2>Clique aqui para efetuar o pagamento</h2>
+            <a href="${dados.data.pdfBoleto}" target="_blank">Acesse Aqui</a>
+        `;
         boletoContainer.style.display = 'block';
-        verificarStatusTransacao(charge_id);
+        const urlTransacao = dados.data.urlTransacao;
+        verificarStatusTransacao(dados.data.payment_id, "BOLETO", urlTransacao);
     } catch (error) {
         console.error('Erro no Boleto:', error);
+        mostrarAvisoErro();
     }
 });
 
@@ -467,36 +474,70 @@ btnCartaoCredito.addEventListener('click', async () => {
         const [mesExp, anoExp] = document.getElementById('expiry_date_field').value.split('/');
         const cvv = document.getElementById('cvv_field').value;
 
-        const response = await fetch('/processarPagamento-cartao-carteira', {
+        const formData = {
+            numCar: numeroCartao,
+            nomeTitular: nomeTitular,
+            mesExp: mesExp,
+            anoExp: anoExp,
+            cvvCard: cvv
+        };
+
+        const response = await fetch('/processarPagamento-cartao-carteira-cnpj', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ valor: valorSelecionado, nomeTitular, numeroCartao, mesExp, anoExp, cvv }),
+            body: JSON.stringify({ valor: valorSelecionado, nomeTitular, numeroCartao, mesExp, anoExp, cvv, perfilData: perfilCarteira, formData }),
         });
         if (!response.ok) throw new Error('Erro ao processar pagamento via Cartão de Crédito');
-        const { charge_id } = await response.json();
-        verificarStatusTransacao(charge_id);
+        const dados = await response.json();
+        cartaoContainer.innerHTML = `
+            <h2>Clique para visualizar o comprovante</h2>
+            <a href="${dados.data.comprovanteCobranca}" target="_blank">Acesse Aqui</a>
+        `
+        formCartao.style.display = 'none';
+        cartaoContainer.style.display = 'block';
+        const urlTransacao = dados.data.urlTransacao;
+        verificarStatusTransacao(dados.data.payment_id, "CARTÃO", urlTransacao);
     } catch (error) {
         console.error('Erro no Cartão de Crédito:', error);
+        mostrarAvisoErro();
     }
 });
 
 // Verificar status da transação
-async function verificarStatusTransacao(charge_id) {
+async function verificarStatusTransacao(payment_id, metod, urlTransacao) {
     try {
-        const response = await fetch(`/charges/${charge_id}`);
+        const response = await fetch(`/status-cobranca/${payment_id}`);
         if (!response.ok) throw new Error('Erro ao verificar status da transação');
         const { status } = await response.json();
 
-        if (status === 'paid') {
-            alert('Pagamento realizado com sucesso!');
-            registrarPagamento({ valor: valorSelecionado, status });
-        } else if (status === 'pending') {
-            setTimeout(() => verificarStatusTransacao(charge_id), 5000);
+        if (status === 'RECEIVED') {
+            mostrarAvisoSucesso();
+            registrarPagamento({ 
+                userId: userId,
+                valor: valorSelecionado,
+                metodoPagamento: metod,
+                status: "PAGO",
+                idTransacao: payment_id,
+                urlTransacao: urlTransacao
+            });
+        }else if(status === 'CONFIRMED') {
+            mostrarAvisoSucesso();
+            registrarPagamento({ 
+                userId: userId,
+                valor: valorSelecionado,
+                metodoPagamento: metod,
+                status: "PAGO",
+                idTransacao: payment_id,
+                urlTransacao: urlTransacao
+            });
+        } else if (status === 'PENDING') {
+            setTimeout(() => verificarStatusTransacao(payment_id), 5000);
         } else {
             alert(`Pagamento com status: ${status}`);
         }
     } catch (error) {
         console.error('Erro ao verificar transação:', error);
+        mostrarAvisoErro();
     }
 };
 

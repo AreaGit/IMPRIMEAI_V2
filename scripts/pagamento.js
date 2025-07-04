@@ -28,6 +28,9 @@ const avisoTransacaoErro = document.getElementById('avisoTransacaoErro');
 const avisoFalhaTransacao = document.getElementById('avisoFalhaTransacao');
 const criacaoBoleto = document.getElementById('criacaoBoleto');
 const carregamento = document.getElementById('carregamento');
+const cartaoContainer = document.getElementById('cartaoContainer');
+let metodPag;
+let idTransacao;
 function getCookie(name) {
   const value = `; ${document.cookie}`;
   const parts = value.split(`; ${name}=`);
@@ -194,10 +197,9 @@ btnContPag.addEventListener('click', () => {
     }
 });
 
-async function criarPedido(metodoPag) {
+async function criarPedido() {
   try {
         const totalAPagar = valorAtualGlobal;  
-        const metodPag = metodoPag;
 
         // Crie um objeto XMLHttpRequest
         const xhr = new XMLHttpRequest();
@@ -211,7 +213,8 @@ async function criarPedido(metodoPag) {
           if (xhr.status === 200) {
             // A solicitação foi bem-sucedida, você pode processar a resposta aqui
             const response = JSON.parse(xhr.responseText);
-            carregamento.style.display = 'none'
+            carregamento.style.display = 'none';
+            cartaoContainer.style.display = 'none';
             pedidoCriado.style.display = 'block';
             setTimeout(() => {
               pedidoCriado.style.display = 'none';
@@ -234,7 +237,7 @@ async function criarPedido(metodoPag) {
         const pedidoData = {
           valorPed: totalAPagar, // Atualize valorPed com o valor total do carrinho
           metodPag,
-          //idTransacao: idPix,
+          idTransacao
         };
         console.log('PEDIDO CRIADO')
         // Envie os dados como JSON
@@ -319,7 +322,7 @@ try {
     };
 }
 
-  const telefoneFormatado = formatarTelefone(perfilData.telefoneCad);
+  const telefoneFormatado = formatarTelefone(perfilData.user.telefoneCad);
 
   // Agora você pode acessar as partes formatadas do número de telefone
   const codPaisCliente = "55";
@@ -327,25 +330,26 @@ try {
   const numeroTelefoneCliente = telefoneFormatado.numeroTelefone;
 
 // Remove non-digit characters from CPF and format it
-const cpf = perfilData.cpfCad.replace(/\D/g, ''); // Remove non-digit characters
+const cpf = perfilData.user.cpfCad.replace(/\D/g, ''); // Remove non-digit characters
 
 const cpfCliente = cpf;
 
 
-  const emailCliente = perfilData.emailCad;
-  const cepCliente = perfilData.cepCad;
-  const cidadeCliente = perfilData.cidadeCad;
-  const ruaCliente = perfilData.endereçoCad;
-  const numeroResidenciaCliente = perfilData.numCad;
-  const bairroCliente = perfilData.bairroCad;
-  const numeroDocumento = perfilData.cpfCad;
-  const nomeCliente = perfilData.userCad;
+  const emailCliente = perfilData.user.emailCad;
+  const cepCliente = perfilData.user.cepCad;
+  const cidadeCliente = perfilData.user.cidadeCad;
+  const ruaCliente = perfilData.user.endereçoCad;
+  const numeroResidenciaCliente = perfilData.user.numCad;
+  const bairroCliente = perfilData.user.bairroCad;
+  const numeroDocumento = perfilData.user.cpfCad;
+  const nomeCliente = perfilData.user.userCad;
   const paisCliente = "BR";
-  const idCliente = perfilData.userId;
-  const estadoCliente = perfilData.estadoCad;
+  const idCliente = perfilData.user.userId;
+  const estadoCliente = perfilData.user.estadoCad;
   
   // Crie um objeto para armazenar os dados do perfil do usuário
   const perfilUsuario = {
+      customer: perfilData.user.customer_asaas_id,
       emailCliente: emailCliente,
       cpfCliente: cpfCliente,
       cepCliente: cepCliente,
@@ -379,61 +383,47 @@ const cpfCliente = cpf;
 
   // Extrair o idTransacao da resposta
   const responseData = await response2.json();
-  const chargeId = responseData[0].id
-  const qrPix = responseData[0].last_transaction.qr_code_url;
-  const expiracao = responseData[0].last_transaction.expires_at;
-  const expiracaoDate = new Date(expiracao);
-  const formattedExpiracao = expiracaoDate.toLocaleString('pt-BR', { timeZone: 'UTC' });
-  carregamento.style.display = 'none'
-  qrCodeContainer.style.display = 'block'
   qrCodeContainer.innerHTML = `
-    <span class="material-symbols-outlined" id="fecharFormaPagamento1" onclick="recarregarPagina()">close</span>
-    <img src="${qrPix}">
-    <button id="copiarCodigo">Copiar código</button>
-    <p>Expira em ${formattedExpiracao}</p>
-  `;
-  const copiarCodigoPix = document.getElementById('copiarCodigo');
-  copiarCodigoPix.addEventListener('click', async() => {
-    await navigator.clipboard.writeText(responseData[0].last_transaction.qr_code);
-    divCodigoPix.style.display = 'block';
-    window.setTimeout(() => {
-      divCodigoPix.style.display = 'none';
-    }, 5000);
-  });
-
-  verificarStatusTransacao(chargeId);
+  <h2>Clique aqui para efetuar o pagamento</h2>
+  <a href="${responseData.data.urlPix}" target="_blank">Acesse Aqui</a>
+  `
+  carregamento.style.display = 'none'
+  qrCodeContainer.style.display = 'block';
+  const urlTransacao = responseData.data.urlPix;
+  metodPag = "PIX";
+  idTransacao = responseData.data.payment_id;
+  verificarStatusTransacao(responseData.data.payment_id, "PIX", urlTransacao);
 }catch (error) {
   console.log(error)
 }
 }
 
-async function verificarStatusTransacao(chargeId) {
-  try {
-    // Faça uma solicitação fetch para a rota que criamos no servidor para obter informações sobre a cobrança
-    const response = await fetch(`/charges/${chargeId}`);
-    if (!response.ok) {
-      throw new Error('Erro ao obter informações da cobrança');
+async function verificarStatusTransacao(payment_id, metodoPag, urlTransacao) {
+    try {
+      const metodo = metodoPag
+        const response = await fetch(`/status-cobranca/${payment_id}`);
+        if (!response.ok) throw new Error('Erro ao verificar status da transação');
+        const { status } = await response.json();
+
+        if (status === 'RECEIVED') {
+            qrCodeContainer.style.display = 'none';
+            divBoletoContainer.style.display = 'none';
+            formCartao.style.display = 'none';
+            criarPedido();
+        }else if(status === 'CONFIRMED') {
+          qrCodeContainer.style.display = 'none';
+          divBoletoContainer.style.display = 'none';
+          formCartao.style.display = 'none';
+          criarPedido(); 
+        } else if (status === 'PENDING') {
+            setTimeout(() => verificarStatusTransacao(payment_id), 5000);
+        } else {
+            alert(`Pagamento com status: ${status}`);
+        }
+    } catch (error) {
+        console.error('Erro ao verificar transação:', error);
     }
-    
-    // Extrair o status da resposta
-    const { status } = await response.json();
-    const metodoPag = "Pix"
-    // Se o status for "paid", pare de verificar e execute a próxima etapa
-    if (status === 'paid') {
-      qrCodeContainer.style.display = 'none'
-      console.log('A transação foi paga com sucesso!');
-      criarPedido(metodoPag); // Chame a função criarPedido quando a transação for paga
-      return;
-    }
-    
-    // Se o status não for "paid", aguarde um curto período e, em seguida, verifique novamente
-    setTimeout(() => {
-      verificarStatusTransacao(chargeId);
-    }, 5000); // Verifique a cada 5 segundos (5000 milissegundos)
-  } catch (error) {
-    console.error('Erro:', error);
-  }
-}
+};
 
 async function pagamentoBoleto() {
   // Fetch para obter os dados do perfil do usuário
@@ -444,22 +434,7 @@ async function pagamentoBoleto() {
     }
     const perfilData = await response.json();
   
-    function formatarTelefone(numero) {
-      // Remove todos os caracteres não numéricos
-      const numeroLimpo = numero.replace(/\D/g, '');
-  
-      // Extrai o DDD (dois primeiros dígitos) e o número do telefone
-      const ddd = numeroLimpo.substring(0, 2);
-      const numeroTelefone = numeroLimpo.substring(2);
-  
-      // Retorna um objeto com as partes do número formatado
-      return {
-          ddd: ddd,
-          numeroTelefone: numeroTelefone
-      };
-  }
-  
-    const telefoneFormatado = formatarTelefone(perfilData.telefoneCad);
+    const telefoneFormatado = formatarTelefone(perfilData.user.telefoneCad);
   
     // Agora você pode acessar as partes formatadas do número de telefone
     const codPaisCliente = "55";
@@ -467,43 +442,44 @@ async function pagamentoBoleto() {
     const numeroTelefoneCliente = telefoneFormatado.numeroTelefone;
   
   // Remove non-digit characters from CPF and format it
-  const cpf = perfilData.cpfCad.replace(/\D/g, ''); // Remove non-digit characters
+  const cpf = perfilData.user.cpfCad.replace(/\D/g, ''); // Remove non-digit characters
   
   const cpfCliente = cpf;
   
   
-    const emailCliente = perfilData.emailCad;
-    const cepCliente = perfilData.cepCad;
-    const cidadeCliente = perfilData.cidadeCad;
-    const ruaCliente = perfilData.endereçoCad;
-    const numeroResidenciaCliente = perfilData.numCad;
-    const bairroCliente = perfilData.bairroCad;
-    const numeroDocumento = perfilData.cpfCad;
-    const nomeCliente = perfilData.userCad;
+    const emailCliente = perfilData.user.emailCad;
+    const cepCliente = perfilData.user.cepCad;
+    const cidadeCliente = perfilData.user.cidadeCad;
+    const ruaCliente = perfilData.user.endereçoCad;
+    const numeroResidenciaCliente = perfilData.user.numCad;
+    const bairroCliente = perfilData.user.bairroCad;
+    const numeroDocumento = perfilData.user.cpfCad;
+    const nomeCliente = perfilData.user.userCad;
     const paisCliente = "BR";
-    const idCliente = perfilData.userId;
-    const estadoCliente = perfilData.estadoCad;
-    const complementoCliente = perfilData.compCad
+    const idCliente = perfilData.user.userId;
+    const estadoCliente = perfilData.user.estadoCad;
+    const complementoCliente = perfilData.user.compCad
     
     // Crie um objeto para armazenar os dados do perfil do usuário
     const perfilUsuario = {
-        emailCliente: emailCliente,
-        cpfCliente: cpfCliente,
-        cepCliente: cepCliente,
-        cidadeCliente: cidadeCliente,
-        estadoCliente: estadoCliente,
-        ruaCliente: ruaCliente,
-        complementoCliente: complementoCliente,
-        numeroResidenciaCliente: numeroResidenciaCliente,
-        bairroCliente: bairroCliente,
-        numeroDocumento: numeroDocumento,
-        nomeCliente: nomeCliente,
-        paisCliente: paisCliente,
-        codPaisCliente: codPaisCliente,
-        dddCliente: dddCliente,
-        numeroTelefoneCliente: numeroTelefoneCliente,
-        userId: idCliente,
-        totalCompra:  valorAtualGlobal,
+      customer: perfilData.user.customer_asaas_id,
+      emailCliente: emailCliente,
+      cpfCliente: cpfCliente,
+      cepCliente: cepCliente,
+      cidadeCliente: cidadeCliente,
+      estadoCliente: estadoCliente,
+      ruaCliente: ruaCliente,
+      complementoCliente: complementoCliente,
+      numeroResidenciaCliente: numeroResidenciaCliente,
+      bairroCliente: bairroCliente,
+      numeroDocumento: numeroDocumento,
+      nomeCliente: nomeCliente,
+      paisCliente: paisCliente,
+      codPaisCliente: codPaisCliente,
+      dddCliente: dddCliente,
+      numeroTelefoneCliente: numeroTelefoneCliente,
+      userId: idCliente,
+      totalCompra:  valorAtualGlobal,
     };
   
     // Envie os dados do formulário e do perfil do usuário para o backend
@@ -521,18 +497,16 @@ async function pagamentoBoleto() {
   
     // Extrair o idTransacao da resposta
     const responseData = await response2.json();
-    const chargeId = responseData[0].id;
-    const qrCodeBoleto = responseData[0].last_transaction.qr_code;
-    const pdfBoleto = responseData[0].last_transaction.pdf;
+    divBoletoContainer.innerHTML = `
+    <h2>Clique aqui para efetuar o pagamento</h2>
+    <a href="${responseData.data.pdfBoleto}" target="_blank">Acesse Aqui</a>
+    `;
     carregamento.style.display = 'none'
     divBoletoContainer.style.display = 'block';
-    divBoletoContainer.innerHTML = `
-    <span class="material-symbols-outlined" id="fecharFormaPagamento2" onclick="recarregarPagina()">close</span>
-      <img src="${qrCodeBoleto}">
-      <a href="${pdfBoleto}" target="_blank">Acesse o pdf</a>
-      <p>O boleto expira em 1 dia</p>
-    `
-    verificarStatusTransacaoBoleto(chargeId);
+    const urlTransacao = responseData.data.urlTransacao;
+    metodPag = "BOLETO";
+    idTransacao = responseData.data.payment_id;
+    verificarStatusTransacao(responseData.data.payment_id, "BOLETO", urlTransacao);
   }catch (error) {
     console.log(error)
   }
@@ -617,7 +591,7 @@ btnCartaoCredito.addEventListener('click', async() => {
         };
     }
     
-      const telefoneFormatado = formatarTelefone(perfilData.telefoneCad);
+      const telefoneFormatado = formatarTelefone(perfilData.user.telefoneCad);
     
       // Agora você pode acessar as partes formatadas do número de telefone
       const codPaisCliente = "55";
@@ -625,43 +599,45 @@ btnCartaoCredito.addEventListener('click', async() => {
       const numeroTelefoneCliente = telefoneFormatado.numeroTelefone;
     
     // Remove non-digit characters from CPF and format it
-    const cpf = perfilData.cpfCad.replace(/\D/g, ''); // Remove non-digit characters
+    const cpf = perfilData.user.cpfCad.replace(/\D/g, ''); // Remove non-digit characters
     
     const cpfCliente = cpf;
     
     
-      const emailCliente = perfilData.emailCad;
-      const cepCliente = perfilData.cepCad;
-      const cidadeCliente = perfilData.cidadeCad;
-      const ruaCliente = perfilData.endereçoCad;
-      const numeroResidenciaCliente = perfilData.numCad;
-      const bairroCliente = perfilData.bairroCad;
-      const numeroDocumento = perfilData.cpfCad;
-      const nomeCliente = perfilData.userCad;
+      const emailCliente = perfilData.user.emailCad;
+      const cepCliente = perfilData.user.cepCad;
+      const cidadeCliente = perfilData.user.cidadeCad;
+      const ruaCliente = perfilData.user.endereçoCad;
+      const numeroResidenciaCliente = perfilData.user.numCad;
+      const bairroCliente = perfilData.user.bairroCad;
+      const numeroDocumento = perfilData.user.cpfCad;
+      const nomeCliente = perfilData.user.userCad;
       const paisCliente = "BR";
-      const idCliente = perfilData.userId;
-      const estadoCliente = perfilData.estadoCad;
-      const complementoCliente = perfilData.compCad
+      const idCliente = perfilData.user.userId;
+      const estadoCliente = perfilData.user.estadoCad;
+      const complementoCliente = perfilData.user.compCad
       
       // Crie um objeto para armazenar os dados do perfil do usuário
       const perfilUsuario = {
-          emailCliente: emailCliente,
-          cpfCliente: cpfCliente,
-          cepCliente: cepCliente,
-          cidadeCliente: cidadeCliente,
-          estadoCliente: estadoCliente,
-          ruaCliente: ruaCliente,
-          complementoCliente: complementoCliente,
-          numeroResidenciaCliente: numeroResidenciaCliente,
-          bairroCliente: bairroCliente,
-          numeroDocumento: numeroDocumento,
-          nomeCliente: nomeCliente,
-          paisCliente: paisCliente,
-          codPaisCliente: codPaisCliente,
-          dddCliente: dddCliente,
-          numeroTelefoneCliente: numeroTelefoneCliente,
-          userId: idCliente,
-          totalCompra:  valorAtualGlobal,
+        customer: perfilData.user.customer_asaas_id,
+        emailCliente: emailCliente,
+        cpfCliente: cpfCliente,
+        cepCliente: cepCliente,
+        cidadeCliente: cidadeCliente,
+        estadoCliente: estadoCliente,
+        ruaCliente: ruaCliente,
+        complementoCliente: complementoCliente,
+        numeroResidenciaCliente: numeroResidenciaCliente,
+        bairroCliente: bairroCliente,
+        numeroDocumento: numeroDocumento,
+        nomeCliente: nomeCliente,
+        paisCliente: paisCliente,
+        codPaisCliente: codPaisCliente,
+        dddCliente: dddCliente,
+        numeroTelefoneCliente: numeroTelefoneCliente,
+        userId: idCliente,
+        telefoneCad: perfilData.user.telefoneCad,
+        totalCompra:  valorAtualGlobal,
       };
 
       const formData = {
@@ -686,8 +662,17 @@ btnCartaoCredito.addEventListener('click', async() => {
     
       // Extrair o idTransacao da resposta
       const responseData = await response2.json();
-      const dadosTransacao = responseData
-      monitorarTransacaoCartao(dadosTransacao);
+      cartaoContainer.innerHTML = `
+      <h2>Clique para visualizar o comprovante</h2>
+      <a href="${responseData.data.comprovanteCobranca}" target="_blank">Acesse Aqui</a>
+      `
+      formCartao.style.display = 'none';
+      carregamento.style.display = 'none'
+      cartaoContainer.style.display = 'block';
+      const urlTransacao = responseData.data.urlTransacao;
+      metodPag = "CARTÃO";
+      idTransacao = responseData.data.payment_id;
+      verificarStatusTransacao(responseData.data.payment_id, "CARTÃO", urlTransacao);
     }catch (error) {
       console.log(error)
     }

@@ -1053,23 +1053,11 @@ app.get('/perfil', (req, res) => {
 });
 //Rota get para a página de carteira do usuário
 app.get('/carteira', (req, res) => {
-  try {
-    const carteiraContentHtml = fs.readFileSync(path.join(__dirname, "html", "carteira.html"), "utf-8");
-    res.send(carteiraContentHtml);
-  } catch (err) {
-    console.log("Erro ao ler o arquivo carteira.html: ", err);
-    res.status(500).send("Erro interno do servidor");
-  }
+  res.redirect = '/perfil';
 });
 //Rota get para a página de pedidos do usuário
 app.get('/pedidosUsuario', (req, res) => {
-  try {
-    const pedidosUsuarioContentHtml = fs.readFileSync(path.join(__dirname, "html", "pedidosUsuario.html"), "utf-8");
-    res.send(pedidosUsuarioContentHtml);
-  } catch (err) {
-    console.log("Erro ao ler o arquivo pedidosUsuario.html: ", err);
-    res.status(500).send("Erro interno do servidor");
-  }
+  res.redirect = '/perfil';
 });
 //Rota get para a página de detalhes dos pedidos do usuário
 app.get('/detalhesPedidosUser', (req, res) => {
@@ -2339,19 +2327,7 @@ app.get("/perfil/dados-empresa", async (req, res) => {
 
     // Retorna os dados do usuário como JSON
     res.json({
-      emailCad: user.emailCad,
-      email_fiscal: user.email_fiscal,
-      cepCad: user.cepCad,
-      cidadeCad: user.cidadeCad,
-      estadoCad: user.estadoCad,
-      endereçoCad: user.endereçoCad,
-      telefoneCad: user.telefoneCad,
-      numCad: user.numCad,
-      compCad: user.compCad,
-      bairroCad: user.bairroCad,
-      cnpjCad: user.cnpjCad,
-      userCad: user.userCad,
-      userId: userId,
+      user
     });
   } catch (error) {
     console.error("Erro ao buscar os dados do usuário:", error);

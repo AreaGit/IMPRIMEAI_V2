@@ -675,7 +675,7 @@ span#totalItens {
     transform: scale(1.09);
   }
 }
-#qrCodeContainer {
+#qrCodeContainer, #cartaoContainer {
   display: none;
   width: 590px;
   height: 500px;

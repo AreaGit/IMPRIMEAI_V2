@@ -22,6 +22,9 @@ const Carteira = db.define('carteira', {
     idTransacao: {
         type: Sequelize.STRING(255),
     },
+    urlTransacao: {
+        type: Sequelize.STRING(255),
+    },
 });
 
 //Carteira.sync({force:true});

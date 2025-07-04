@@ -144,6 +144,9 @@
             
                 <!-- Boleto -->
                 <div id="boletoContainer" class="hidden"></div>
+
+                <!-- Cartão -->
+                <div id="cartaoContainer" class="hidden"></div>
             
                 <!-- Cartão de Crédito -->
                 <div class="modal hidden" id="formCartao">
@@ -173,6 +176,16 @@
                 </div>
             </div>            
         </main>
+    </div>
+        <div id="aviso-erro" class="alerta alerta-aviso" style="display: none;">
+        <span class="icone">&#9888;</span>
+        <span class="mensagem">Erro ao efetuar a Recarga!</span>
+        <span class="fechar" onclick="fecharAvisoErro()">&#10005;</span>
+    </div>
+    <div id="aviso-sucesso" class="alerta alerta-aviso-sucesso">
+        <span class="icone"><i class="fas fa-check-circle"></i></span>
+        <span class="mensagem">Recarga feita com Sucesso!</span>
+        <span class="fechar" onclick="fecharAvisoSucesso()">&#10005;</span>
     </div>
     <script src="../../scripts/empresas/perfil.js"></script>
 </body>
