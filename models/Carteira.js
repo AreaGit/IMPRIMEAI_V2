@@ -22,7 +22,7 @@ const Carteira = db.define('carteira', {
     idTransacao: {
         type: Sequelize.STRING(255),
     },
-    urlTransacao: {
+    nfseUrl: {
         type: Sequelize.STRING(255),
     },
 });

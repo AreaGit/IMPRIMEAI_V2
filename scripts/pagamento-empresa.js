@@ -228,7 +228,15 @@ async function criarPedido() {
             const response = JSON.parse(xhr.responseText);
             carregamento.style.display = 'none'
             pedidoCriado.style.display = 'block';
+            if(metodPag === 'BOLETO') {
+              carregamento.style.display = 'none'
+              criacaoBoleto.style.display = 'block';
+            } else {
+              carregamento.style.display = 'none'
+              pedidoCriado.style.display = 'block';
+            }
             setTimeout(() => {
+              criacaoBoleto.style.display = 'none';
               pedidoCriado.style.display = 'none';
               window.location.href = '/cpq/perfil';
             }, 10000);
@@ -252,6 +260,7 @@ async function criarPedido() {
           idTransacao
         };
         console.log('PEDIDO CRIADO')
+        carregamento.style.display = 'block';
         // Envie os dados como JSON
         const requestData = JSON.stringify(pedidoData);
         xhr.send(requestData);
@@ -438,6 +447,33 @@ async function verificarStatusTransacao(payment_id, metodoPag, urlTransacao) {
     }
 };
 
+async function verificarStatusTransacaoBoleto(payment_id, metod, urlTransacao) {
+    try {
+        const response = await fetch(`/status-cobranca/${payment_id}`);
+        if (!response.ok) throw new Error('Erro ao verificar status da transação');
+        const { status } = await response.json();
+
+        if (status === 'RECEIVED' || status === 'CONFIRMED') {
+            qrCodeContainer.style.display = 'none';
+            divBoletoContainer.style.display = 'none';
+            formCartao.style.display = 'none';
+            criarPedido();
+        } else if (status === 'PENDING') {
+            setTimeout(() => {
+              qrCodeContainer.style.display = 'none';
+              divBoletoContainer.style.display = 'none';
+              formCartao.style.display = 'none';
+              criarPedido();
+            }, 10000);
+        } else {
+            alert(`Pagamento com status: ${status}`);
+        }
+    } catch (error) {
+        console.error('Erro ao verificar transação:', error);
+        mostrarAvisoErro();
+    }
+};
+
 async function pagamentoBoleto() {
   // Fetch para obter os dados do perfil do usuário
   try {
@@ -462,12 +498,10 @@ async function pagamentoBoleto() {
       };
   }
   
-    const telefoneFormatado = formatarTelefone(perfilData.user.telefoneCad);
+    const telefoneFormatado = perfilData.user.telefoneCad;
   
     // Agora você pode acessar as partes formatadas do número de telefone
     const codPaisCliente = "55";
-    const dddCliente = telefoneFormatado.ddd;
-    const numeroTelefoneCliente = telefoneFormatado.numeroTelefone;
   
   // Remove non-digit characters from CPF and format it
   const cpf = perfilData.user.cnpjCad.replace(/\D/g, ''); // Remove non-digit characters
@@ -504,8 +538,6 @@ async function pagamentoBoleto() {
       nomeCliente: nomeCliente,
       paisCliente: paisCliente,
       codPaisCliente: codPaisCliente,
-      dddCliente: dddCliente,
-      numeroTelefoneCliente: numeroTelefoneCliente,
       userId: idCliente,
       totalCompra:  valorAtualGlobal,
       company: company,
@@ -540,37 +572,6 @@ async function pagamentoBoleto() {
     console.log(error)
   }
   }
-
-  async function verificarStatusTransacaoBoleto(chargeId) {
-    try {
-        // Faça uma solicitação fetch para a rota que criamos no servidor para obter informações sobre a cobrança
-        const response = await fetch(`/charges/${chargeId}`);
-        if (!response.ok) {
-            throw new Error('Erro ao obter informações da cobrança');
-        }
-        
-        // Extrair o status da resposta
-        const { status } = await response.json();
-        const metodoPag = "Boleto";
-
-        // Se o status for "paid", pare de verificar e execute a próxima etapa
-        if (status === 'pending') {
-          setTimeout(() => {
-            divBoletoContainer.style.display = 'none';
-              criarPedidoBoleto(metodoPag, chargeId); // Chame a função criarPedido quando a transação for paga
-          }, 15000); // Aguarde 15 segundos antes de chamar a função
-          return;
-        }
-        
-        // Se o status não for "paid", aguarde um curto período e, em seguida, verifique novamente
-        // Verifique a cada 5 segundos (5000 milissegundos)
-        setTimeout(() => {
-            verificarStatusTransacaoBoleto(chargeId);
-        }, 5000);
-    } catch (error) {
-        console.error('Erro:', error);
-    }
-}
 
   const expiryDateField = document.getElementById('expiry_date_field');
   expiryDateField.addEventListener('input', function(event) {

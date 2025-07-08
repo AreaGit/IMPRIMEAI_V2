@@ -22,6 +22,9 @@ const CarteiraEmpresas = db.define('carteiraempresas', {
     idTransacao: {
         type: Sequelize.STRING(255),
     },
+    nfseUrl: {
+        type: Sequelize.STRING(150)
+    }
 });
 
 //CarteiraEmpresas.sync({force:true});

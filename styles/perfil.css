@@ -439,6 +439,12 @@ button#copiarCodigo {
   background-color: #24a034;
 }
 
+.alerta-aviso-boleto {
+  color: #8a6d3b;
+  background-color: #fcf8e3;
+  border-color: #faebcc;
+}
+
 .icone {
   margin-right: 8px;
 }

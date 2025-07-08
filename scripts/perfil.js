@@ -14,6 +14,14 @@ function fecharAvisoSucesso() {
   document.getElementById("aviso-sucesso").style.display = "none";
 }
 
+function mostrarAvisoBoleto() {
+  document.getElementById("aviso-boleto").style.display = "block";
+}
+
+function fecharAvisoBoleto() {
+  document.getElementById("aviso-boleto").style.display = "none";
+}
+
 function getCookie(name) {
     const value = `; ${document.cookie}`;
     const parts = value.split(`; ${name}=`);
@@ -390,7 +398,7 @@ document.getElementById('boleto').addEventListener('click', async () => {
         `;
         boletoContainer.style.display = 'block';
         const urlTransacao = dados.data.urlTransacao;
-        verificarStatusTransacao(dados.data.payment_id, "BOLETO", urlTransacao);
+        verificarStatusTransacaoBoleto(dados.data.payment_id, "BOLETO", urlTransacao);
     } catch (error) {
         console.error('Erro no Boleto:', error);
         mostrarAvisoErro();
@@ -457,7 +465,7 @@ async function verificarStatusTransacao(payment_id, metod, urlTransacao) {
                 urlTransacao: urlTransacao
             });
         }else if(status === 'CONFIRMED') {
-            alert('Pagamento realizado com sucesso!');
+            mostrarAvisoSucesso();
             registrarPagamento({ 
                 userId: userId,
                 valor: valorSelecionado,
@@ -468,6 +476,43 @@ async function verificarStatusTransacao(payment_id, metod, urlTransacao) {
             });
         } else if (status === 'PENDING') {
             setTimeout(() => verificarStatusTransacao(payment_id), 5000);
+        } else {
+            alert(`Pagamento com status: ${status}`);
+        }
+    } catch (error) {
+        console.error('Erro ao verificar transação:', error);
+        mostrarAvisoErro();
+    }
+};
+
+async function verificarStatusTransacaoBoleto(payment_id, metod, urlTransacao) {
+    try {
+        const response = await fetch(`/status-cobranca/${payment_id}`);
+        if (!response.ok) throw new Error('Erro ao verificar status da transação');
+        const { status } = await response.json();
+
+        if (status === 'RECEIVED' || status === 'CONFIRMED') {
+            mostrarAvisoSucesso();
+            registrarPagamento({ 
+                userId: userId,
+                valor: valorSelecionado,
+                metodoPagamento: metod,
+                status: "PAGO",
+                idTransacao: payment_id,
+                urlTransacao: urlTransacao
+            });
+        } else if (status === 'PENDING') {
+            setTimeout(() => {
+                mostrarAvisoBoleto();
+                registrarPagamento({ 
+                    userId: userId,
+                    valor: valorSelecionado,
+                    metodoPagamento: metod,
+                    status: "ESPERANDO PAGAMENTO",
+                    idTransacao: payment_id,
+                    urlTransacao: urlTransacao
+                });
+            }, 10000);
         } else {
             alert(`Pagamento com status: ${status}`);
         }

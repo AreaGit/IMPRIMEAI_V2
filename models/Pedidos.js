@@ -36,6 +36,9 @@ const Pedidos = db.define('pedidos', {
         type: Sequelize.STRING(255),
         allowNull: true,
     },
+    nfseUrl: {
+        type: Sequelize.STRING(150)
+    },
     raio: {
         type: Sequelize.FLOAT,
         allowNull: true,

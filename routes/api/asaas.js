@@ -1,6 +1,6 @@
 const axios = require('axios');
 require('dotenv').config();
-const asaas_key = ('$aact_hmlg_000MzkwODA2MWY2OGM3MWRlMDU2NWM3MzJlNzZmNGZhZGY6OjVhYmM1NGRjLTkwMmYtNDk5MC04Yzg3LThjMmNiNDQyZTM0OTo6JGFhY2hfZDZlYzZmOGYtNmFiZC00MzM4LTliZjUtYTFjY2RjNzFjNGU3');
+const asaas_key = ('$aact_hmlg_000MzkwODA2MWY2OGM3MWRlMDU2NWM3MzJlNzZmNGZhZGY6OjNlNmVlN2ViLWU0YTQtNDI0OC1hZDExLTRiYWEyMjJhNzI3NTo6JGFhY2hfZThiYTY2ZDMtOTdiMS00NzkyLTlmNDItMjY5OTdjYmFiMGY4');
 
 
 /*
@@ -251,15 +251,15 @@ async function agendarNfsAsaas(dadosNfs) {
         headers: {
             accept: 'application/json',
             'content-type': 'application/json',
-            access_token: '$aact_hmlg_000MzkwODA2MWY2OGM3MWRlMDU2NWM3MzJlNzZmNGZhZGY6Ojg3YjA5YTE4LTM4ODYtNDQxNS1iYTY0LTM5ZDIyZTYyMWI3Mjo6JGFhY2hfZGFjZTM1YzktNTQ0NC00NjE2LTk5MTYtNGIzZWZmZTI0ZDhi'
+            access_token: asaas_key
         },
         data: {
             taxes: {retainIss: true, cofins: 1, csll: 1, inss: 1, ir: 1, pis: 1, iss: 5},
             payment: dadosNfs.payment,
             installment: null,
             customer: dadosNfs.customer,
-            serviceDescription: 'Nf referente ao Chamado Içamento SSG',
-            observations: 'Nf referente ao Chamado Içamento SSG',
+            serviceDescription: 'Nf referente ao Pedido IMPRIMEAI',
+            observations: 'Nf referente ao Pedido IMPRIMEAI',
             externalReference: dadosNfs.externalReference,
             value: dadosNfs.value,
             deductions: 0,
@@ -289,7 +289,7 @@ async function emitirNfs(invoice) {
     headers: {
         accept: 'application/json',
         'content-type': 'application/json',
-        access_token: '$aact_hmlg_000MzkwODA2MWY2OGM3MWRlMDU2NWM3MzJlNzZmNGZhZGY6Ojg3YjA5YTE4LTM4ODYtNDQxNS1iYTY0LTM5ZDIyZTYyMWI3Mjo6JGFhY2hfZGFjZTM1YzktNTQ0NC00NjE2LTk5MTYtNGIzZWZmZTI0ZDhi'
+        access_token: asaas_key
     }
     };
 
@@ -309,7 +309,7 @@ async function listarNfs(externalReference) {
     url: `https://api-sandbox.asaas.com/v3/invoices?externalReference=${externalReference}`,
     headers: {
         accept: 'application/json',
-        access_token: '$aact_hmlg_000MzkwODA2MWY2OGM3MWRlMDU2NWM3MzJlNzZmNGZhZGY6Ojg3YjA5YTE4LTM4ODYtNDQxNS1iYTY0LTM5ZDIyZTYyMWI3Mjo6JGFhY2hfZGFjZTM1YzktNTQ0NC00NjE2LTk5MTYtNGIzZWZmZTI0ZDhi'
+        access_token: asaas_key
     }
     };
 
@@ -365,4 +365,4 @@ async function transferenciasAsaas() {
     .catch(err => console.error(err));
 }
 
-module.exports = { criarClienteAsaas, cobrancaPixAsaas, cobrancaBoletoAsaas, cobrancaCartaoAsaas, consultarCobranca };
+module.exports = { criarClienteAsaas, cobrancaPixAsaas, cobrancaBoletoAsaas, cobrancaCartaoAsaas, consultarCobranca, agendarNfsAsaas, emitirNfs, consultarNf };

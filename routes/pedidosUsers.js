@@ -43,7 +43,7 @@ const bcrypt = require('bcrypt');
 const TransacoesCarteira = require('../models/TransacoesCarteira');
 const PDFDocument = require('pdfkit');
 const dayjs = require('dayjs');
-const { cobrancaPixAsaas, cobrancaBoletoAsaas, cobrancaCartaoAsaas, consultarCobranca } = require('./api/asaas');
+const { cobrancaPixAsaas, cobrancaBoletoAsaas, cobrancaCartaoAsaas, consultarCobranca, agendarNfsAsaas, emitirNfs, consultarNf } = require('./api/asaas');
 const QRcode = require('qrcode')
 
 // Use o cliente conforme necessário
@@ -1295,6 +1295,8 @@ app.post('/criar-pedidos', async (req, res) => {
       throw new Error('Carrinho vazio.');
     }
 
+    const user = await User.findByPk(userId);
+
     const isMultipleAddresses = carrinhoQuebrado[0].tipoEntrega === 'Múltiplos Enderecos';
 
     const totalUnidades = carrinhoQuebrado.reduce((total, produto) => total + produto.quantidade, 0);
@@ -1308,7 +1310,7 @@ app.post('/criar-pedidos', async (req, res) => {
       nomePed: 'Pedido Geral',
       quantPed: totalUnidades,
       valorPed: totalAPagar,
-      statusPed: metodPag === 'Boleto' ? 'Esperando Pagamento' : 'Pago',
+      statusPed: metodPag === 'BOLETO' ? 'Esperando Pagamento' : 'Pago',
       metodPag: metodPag,
       idTransacao: idTransacao
     });
@@ -1356,7 +1358,7 @@ app.post('/criar-pedidos', async (req, res) => {
         material: produto.material,
         arquivo: produto.arquivo,
         statusPed: carrinhoQuebrado.some(p => p.downloadLink === "Enviar Arte Depois") ? 'Pedido em Aberto' : 'Aguardando',
-        statusPag: metodPag === 'Boleto' ? 'Esperando Pagamento' : metodPag === 'Carteira Usuário' ? 'Pago' : 'Aguardando',
+        statusPag: metodPag === 'BOLETO' ? 'Esperando Pagamento' : metodPag === 'Carteira Usuário' ? 'Pago' : 'Aguardando',
         linkDownload: produto.downloadLink,
         nomeArquivo: produto.nomeArquivo,
         arteEmpresas: produto.arte == null || produto.arte === "" ? "Não há" : produto.arte,
@@ -1390,6 +1392,28 @@ app.post('/criar-pedidos', async (req, res) => {
       "*Tá com pressa? Imprimeaí!*";
 
       await enviarNotificacaoWhatsapp(telefone, mensagemWhatsapp);
+      const hojeComHifen = new Date().toISOString().split('T')[0];
+      const dadosNfse = {
+        payment: idTransacao,
+        customer: user.customer_asaas_id,
+        externalReference:  Math.floor(Math.random() * 999) + 1,
+        value: totalAPagar,
+        effectiveDate: hojeComHifen
+      };
+
+          const nfse = await agendarNfsAsaas(dadosNfse);
+          const invoice = nfse.id;
+          
+          const nfseEmitida = await emitirNfs(invoice);
+          const externalReference = nfseEmitida.externalReference;
+          
+          const notaAutorizada = await consultarNf(externalReference);
+          console.log('Nota autorizada:', notaAutorizada);
+          const nfseUrl = notaAutorizada.pdfUrl;
+          
+          pedido.nfseUrl = nfseUrl
+          pedido.statusPag = 'Pago'
+          pedido.save();
     }
 
     // Limpar a sessão
@@ -1415,6 +1439,8 @@ app.post('/criar-pedidos-empresas', async (req, res) => {
     if (carrinhoQuebrado.length === 0) {
       throw new Error('Carrinho vazio.');
     }
+    
+    const user = await UserEmpresas.findByPk(userId);
 
     const isMultipleAddresses = carrinhoQuebrado[0].tipoEntrega === 'Múltiplos Enderecos';
 
@@ -1429,7 +1455,7 @@ app.post('/criar-pedidos-empresas', async (req, res) => {
       nomePed: 'Pedido Geral',
       quantPed: totalUnidades,
       valorPed: totalAPagar,
-      statusPed: metodPag === 'Boleto' ? 'Esperando Pagamento' : 'Pago',
+      statusPed: metodPag === 'BOLETO' ? 'Esperando Pagamento' : 'Pago',
       metodPag: metodPag,
       idTransacao: idTransacao
     });
@@ -1511,6 +1537,29 @@ app.post('/criar-pedidos-empresas', async (req, res) => {
 
       await verificarGraficaMaisProximaEAtualizar(itensPedido[0], enderecos[0]);
       await enviarNotificacaoWhatsapp(telefone, mensagemWhatsapp);
+
+      const hojeComHifen = new Date().toISOString().split('T')[0];
+      const dadosNfse = {
+        payment: idTransacao,
+        customer: user.customer_asaas_id,
+        externalReference:  Math.floor(Math.random() * 999) + 1,
+        value: totalAPagar,
+        effectiveDate: hojeComHifen
+      };
+
+          const nfse = await agendarNfsAsaas(dadosNfse);
+          const invoice = nfse.id;
+          
+          const nfseEmitida = await emitirNfs(invoice);
+          const externalReference = nfseEmitida.externalReference;
+          
+          const notaAutorizada = await consultarNf(externalReference);
+          console.log('Nota autorizada:', notaAutorizada);
+          const nfseUrl = notaAutorizada.pdfUrl;
+          
+          pedido.nfseUrl = nfseUrl
+          pedido.statusPag = 'Pago'
+          pedido.save();
 
     }
 
@@ -1804,68 +1853,79 @@ async function verificarGraficaMaisProximaEAtualizar2(itensPedido, enderecos) {
     }
   })
   
-  async function verificarPagamentosPendentes() {
-    try {
-        // Consultar pedidos com status 'Esperando Pagamento' no seu banco de dados
-        const pedidosAguardandoPagamento = await Pedidos.findAll({ where: { statusPed: 'Esperando Pagamento' } });
+// Agendar a tarefa para ser executada a cada 5 segundos
+// Agendar a tarefa para ser executada a cada 5 segundos
+cron.schedule('* * * * *', async () => {
+  console.log('Verificando pagamentos pendentes...');
+  await verificarPagamentosPendentes();
+  console.log('Verificação de pagamentos concluída.');
+});
+    
+cron.schedule('* * * * *', async () => {
+  console.log('Verificação de pagamentos Carteira...');
+  verificarPagamentosPendentesCarteira();
+  console.log('Verificação de pagamentos Carteira concluída.');
+});
 
-        // Iterar sobre os pedidos encontrados
-        for (const pedido of pedidosAguardandoPagamento) {
-            // Verificar o status do pagamento no Pagarme usando o ID da transação
-            const chargeId = pedido.idTransacao;
-            console.log('Charge ID:', chargeId);
-            try {
-                // Fetch the charge details directly from the Pagarme API
-                const response = await axios.get(`https://api.pagar.me/core/v5/charges/${chargeId}`, {
-                    headers: {
-                        'Authorization': `Basic ${Buffer.from(`${pagarmeKeyProd}:`).toString('base64')}`
-                    }
-                });
-                const charge = response.data;
-                //console.log('Charge found:', charge); // Check if charge is defined
-                // Verificar se a transação está paga
-                if (charge.status === 'pending') {
-                    // Atualizar o status do pedido para 'Pago'
-                    pedido.statusPed = 'Pago';
-                    await pedido.save();
+cron.schedule('* * * * *', async () => {
+  console.log('Verificação de pagamentos Carteira Empresas...');
+  verificarPagamentosPendentesCarteiraEmpresas();
+  console.log('Verificação de pagamentos Carteira Empresas concluída.');
+});
 
-                    await ItensPedido.update({ statusPag: 'Pago' }, { where: { idPed: pedido.id } });
-                }
-            } catch (error) {
-                // Verificar se o erro é de cobrança não encontrada
-                if (error.response && error.response.status === 404) {
-                    console.error(`Cobrança não encontrada para o pedido ${pedido.id}:`, error);
-                } else {
-                    throw error; // Rejeitar erro para tratamento superior
-                }
-            }
+async function verificarPagamentosPendentes() {
+  try {
+    // Consultar pedidos com status 'Esperando Pagamento' no seu banco de dados
+    const pedidosAguardandoPagamento = await Pedidos.findAll({ where: { statusPed: 'Esperando Pagamento' } });
+  
+    // Iterar sobre os pedidos encontrados
+    for (const pedido of pedidosAguardandoPagamento) {
+      // Verificar o status do pagamento no Pagarme usando o ID da transação
+      const transacaoId = pedido.idTransacao;
+      const user = await User.findByPk(pedido.idUserPed);
+      const hojeComHifen = new Date().toISOString().split('T')[0];
+      console.log('Transação ID:', transacaoId);
+      try {
+        const cobranca = await consultarCobranca(transacaoId)
+        if (cobranca.status === 'CONFIRMED' || cobranca.status === 'RECEIVED') {
+          const dadosNfse = {
+            payment: transacaoId,
+            customer: user.customer_asaas_id,
+            externalReference:  Math.floor(Math.random() * 999) + 1,
+            value: user.saldo,
+            effectiveDate: hojeComHifen
+          };     
+          const nfse = await agendarNfsAsaas(dadosNfse);
+          const invoice = nfse.id;
+      
+          const nfseEmitida = await emitirNfs(invoice);
+          const externalReference = nfseEmitida.externalReference;
+      
+          const notaAutorizada = await consultarNf(externalReference);
+          console.log('Nota autorizada:', notaAutorizada);
+          const nfseUrl = notaAutorizada.pdfUrl;
+      
+          // Atualizar o status do pedido para 'Pago'
+          pedido.nfseUrl = nfseUrl
+          pedido.statusPed = 'Pago';
+          await pedido.save();
+          await ItensPedido.update({ statusPag: 'Pago' }, { where: { idPed: pedido.id } });
+        } else if (cobranca.status === 'OVERDUE') {
+          console.log('Pagamento não realizado dentro do prazo.');
+        } else {
+          console.log(`Aguardando pagamento... Status atual: ${cobranca.status}`);
         }
     } catch (error) {
-        console.error('Erro ao verificar pagamentos pendentes:', error);
+      console.log(error)
     }
 }
+} catch (error) {
+  console.error('Erro ao verificar pagamentos pendentes:', error);
+}
+}
   
-  // Agendar a tarefa para ser executada a cada 5 segundos
-  cron.schedule('0 * * * *', async () => {
-    console.log('Verificando pagamentos pendentes...');
-    await verificarPagamentosPendentes();
-    console.log('Verificação de pagamentos concluída.');
-  });
-  
-  cron.schedule('0 * * * *', async () => {
-    console.log('Verificação de pagamentos Carteira...');
-    verificarPagamentosPendentesCarteira();
-    console.log('Verificação de pagamentos Carteira concluída.');
-  })
-
-  cron.schedule('0 * * * *', async () => {
-    console.log('Verificação de pagamentos Carteira Empresas...');
-    verificarPagamentosPendentesCarteiraEmpresas();
-    console.log('Verificação de pagamentos Carteira Empresas concluída.');
-  });
-  
-    async function verificarPagamentosPendentesCarteiraEmpresas() {
-    try {
+async function verificarPagamentosPendentesCarteiraEmpresas() {
+  try {
     const transacoesPendentes = await CarteiraEmpresas.findAll({ where: { statusPag: 'ESPERANDO PAGAMENTO' } });
     console.log('Transações pendentes:', transacoesPendentes); 
     
@@ -1873,37 +1933,52 @@ async function verificarGraficaMaisProximaEAtualizar2(itensPedido, enderecos) {
     for (const transacao of transacoesPendentes) {
       // Verificar o status do pagamento no Pagarme usando o ID da transação
       const transactionId = transacao.idTransacao;
+      const user = await UserEmpresas.findByPk(transacao.userId);
+      const hojeComHifen = new Date().toISOString().split('T')[0];
       console.log('Transaction ID:', transactionId); // Check if transactionId is defined
       try {
-        const response = await axios.get(`https://api.pagar.me/core/v5/charges/${transactionId}`, {
-        headers: {
-          'Authorization': `Basic ${Buffer.from(`${pagarmeKeyProd}:`).toString('base64')}`
-          }
-        });
-        //console.log('Transaction found:', response); // Check if transaction is defined
-        const charge = response.data;
-        // Verificar se a transação está paga
-        if (charge.status === 'paid') {
-          // Atualizar o status da transação para 'PAGO'
-          transacao.statusPag = 'PAGO';
-          await transacao.save();
+       const cobranca = await consultarCobranca(transactionId);
+       //console.log('Transaction found:', response); // Check if transaction is defined
+       // Verificar se a transação está paga
+       if (cobranca.status === 'CONFIRMED' || cobranca.status === 'RECEIVED') {
+         const dadosNfse = {
+           payment: transactionId,
+            customer: user.customer_asaas_id,
+            externalReference:  Math.floor(Math.random() * 999) + 1,
+            value: user.saldo,
+            effectiveDate: hojeComHifen
+          };
+
+          const nfse = await agendarNfsAsaas(dadosNfse);
+          const invoice = nfse.id;
+          
+          const nfseEmitida = await emitirNfs(invoice);
+          const externalReference = nfseEmitida.externalReference;
+          
+          const notaAutorizada = await consultarNf(externalReference);
+          console.log('Nota autorizada:', notaAutorizada);
+          const nfseUrl = notaAutorizada.pdfUrl;
+          
+          transacao.nfseUrl = nfseUrl
+          transacao.statusPag = 'PAGO'
+          transacao.save();
+        } else if (cobranca.status === 'OVERDUE') {
+          console.log('Pagamento não realizado dentro do prazo.');
+        } else {
+          console.log(`Aguardando pagamento... Status atual: ${cobranca.status}`);
         }
       } catch (error) {
-          // Verificar se o erro é de transação não encontrada
-          if (error.response && error.response.status === 404) {
-            console.error(`Transação não encontrada para a transação ${transacao.id}:`, error);
-          } else {
-              throw error; // Rejeitar erro para tratamento superior
-          }
+        // Verificar se o erro é de transação não encontrada
+        console.log(error)
       }
     }
-    } catch(error) {
-      console.error('Erro ao verificar pagamentos pendentes:', error);
-    }
+  } catch(error) {
+    console.error('Erro ao verificar pagamentos pendentes:', error);
   }
+}
 
-  async function verificarPagamentosPendentesCarteira() {
-    try {
+async function verificarPagamentosPendentesCarteira() {
+  try {
     const transacoesPendentes = await Carteira.findAll({ where: { statusPag: 'ESPERANDO PAGAMENTO' } });
     console.log('Transações pendentes:', transacoesPendentes); 
     
@@ -1911,34 +1986,48 @@ async function verificarGraficaMaisProximaEAtualizar2(itensPedido, enderecos) {
     for (const transacao of transacoesPendentes) {
       // Verificar o status do pagamento no Pagarme usando o ID da transação
       const transactionId = transacao.idTransacao;
+      const user = await User.findByPk(transacao.userId);
+      const hojeComHifen = new Date().toISOString().split('T')[0];
       console.log('Transaction ID:', transactionId); // Check if transactionId is defined
       try {
-        const response = await axios.get(`https://api.pagar.me/core/v5/charges/${transactionId}`, {
-        headers: {
-          'Authorization': `Basic ${Buffer.from(`${pagarmeKeyProd}:`).toString('base64')}`
-          }
-        });
-        //console.log('Transaction found:', response); // Check if transaction is defined
-        const charge = response.data;
-        // Verificar se a transação está paga
-        if (charge.status === 'paid') {
-          // Atualizar o status da transação para 'PAGO'
-          transacao.statusPag = 'PAGO';
-          await transacao.save();
+        const cobranca = await consultarCobranca(transactionId);
+       //console.log('Transaction found:', response); // Check if transaction is defined
+       // Verificar se a transação está paga
+       if (cobranca.status === 'CONFIRMED' || cobranca.status === 'RECEIVED') {
+         const dadosNfse = {
+           payment: transactionId,
+            customer: user.customer_asaas_id,
+            externalReference:  Math.floor(Math.random() * 999) + 1,
+            value: user.saldo,
+            effectiveDate: hojeComHifen
+          };
+
+          const nfse = await agendarNfsAsaas(dadosNfse);
+          const invoice = nfse.id;
+          
+          const nfseEmitida = await emitirNfs(invoice);
+          const externalReference = nfseEmitida.externalReference;
+          
+          const notaAutorizada = await consultarNf(externalReference);
+          console.log('Nota autorizada:', notaAutorizada);
+          const nfseUrl = notaAutorizada.pdfUrl;
+          
+          transacao.nfseUrl = nfseUrl
+          transacao.statusPag = 'PAGO'
+          transacao.save();
+        } else if (cobranca.status === 'OVERDUE') {
+          console.log('Pagamento não realizado dentro do prazo.');
+        } else {
+          console.log(`Aguardando pagamento... Status atual: ${cobranca.status}`);
         }
-      } catch (error) {
-          // Verificar se o erro é de transação não encontrada
-          if (error.response && error.response.status === 404) {
-            console.error(`Transação não encontrada para a transação ${transacao.id}:`, error);
-          } else {
-              throw error; // Rejeitar erro para tratamento superior
-          }
+        } catch (error) {
+          console.log(error)
+        }
       }
-    }
     } catch(error) {
       console.error('Erro ao verificar pagamentos pendentes:', error);
     }
-  }
+}
 
 app.post('/registrarPagamento', async (req, res) => {
   let { userId, valor, metodoPagamento, status, idTransacao, urlTransacao } = req.body;
@@ -2081,49 +2170,6 @@ IMPRIMEAI`;
     }
   });
 
-  cron.schedule('0 * * * *', async () => {
-    console.log('Verificação de pagamentos Carteira...');
-    verificarPagamentosPendentesCarteiraEmpresas();
-    console.log('Verificação de pagamentos Carteira concluída.');
-  })
-  
-  async function verificarPagamentosPendentesCarteiraEmpresas() {
-    try {
-    const transacoesPendentes = await CarteiraEmpresas.findAll({ where: { statusPag: 'ESPERANDO PAGAMENTO' } });
-    console.log('Transações pendentes:', transacoesPendentes); 
-    
-    // Iterar sobre as transações pendentes encontradas
-    for (const transacao of transacoesPendentes) {
-      // Verificar o status do pagamento no Pagarme usando o ID da transação
-      const transactionId = transacao.idTransacao;
-      console.log('Transaction ID:', transactionId); // Check if transactionId is defined
-      try {
-        const response = await axios.get(`https://api.pagar.me/core/v5/charges/${transactionId}`, {
-        headers: {
-          'Authorization': `Basic ${Buffer.from(`${pagarmeKeyProd}:`).toString('base64')}`
-          }
-        });
-        //console.log('Transaction found:', response); // Check if transaction is defined
-        const charge = response.data;
-        // Verificar se a transação está paga
-        if (charge.status === 'paid') {
-          // Atualizar o status da transação para 'PAGO'
-          transacao.statusPag = 'PAGO';
-          await transacao.save();
-        }
-      } catch (error) {
-          // Verificar se o erro é de transação não encontrada
-          if (error.response && error.response.status === 404) {
-            console.error(`Transação não encontrada para a transação ${transacao.id}:`, error);
-          } else {
-              throw error; // Rejeitar erro para tratamento superior
-          }
-      }
-    }
-    } catch(error) {
-      console.error('Erro ao verificar pagamentos pendentes:', error);
-    }
-  }
 
   app.post('/registrarPagamento-empresas', async (req, res) => {
     const { userId, valor, metodoPagamento, status, idTransacao } = req.body;
