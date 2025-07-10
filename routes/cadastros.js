@@ -23,6 +23,7 @@ const upload2 = multer({ storage: multer.memoryStorage() });
 const { client, sendMessage } = require('./api/whatsapp-web');
 const EnderecosEmpresas = require('../models/Enderecos-Empresas');
 const { criarClienteAsaas } = require('./api/asaas')
+const path = require('path');
 client.on('ready', () => {
   console.log('Cliente WhatsApp pronto para uso no cadastros.js');
 })
@@ -61,6 +62,124 @@ async function enviarNotificacaoWhatsapp(destinatario, corpo) {
       throw error;
   }
 } 
+
+function gerarVerificationCode() {
+  return Math.floor(1000 + Math.random() * 9000).toString();
+}
+
+function formatCnpjCpf(value) {
+  const CPF_LENGTH = 11;
+  const cnpjCpf = value.replace(/\D/g, '');
+  if (cnpjCpf.length === CPF_LENGTH) {
+    return cnpjCpf.replace(/(\d{3})(\d{3})(\d{3})(\d{2})/, "$1.$2.$3-$4");
+  }
+  return cnpjCpf.replace(/(\d{2})(\d{3})(\d{3})(\d{4})(\d{2})/, "$1.$2.$3/$4-$5");
+}
+
+function formatarTelefone(telefone) {
+  let telefoneLimpo = telefone.replace(/\D/g, '');
+  let ddd = telefoneLimpo.slice(0, 2);
+  let numero = telefoneLimpo.slice(2);
+  return `${ddd} ${numero}`;
+}
+
+async function importarUsuariosDoExcel(caminhoArquivo) {
+  try {
+    const workbook = xlsx.readFile(caminhoArquivo);
+    const primeiraAba = workbook.SheetNames[0];
+    const planilha = workbook.Sheets[primeiraAba];
+    const dados = xlsx.utils.sheet_to_json(planilha);
+    console.log('Dados da planilha:', dados);
+
+    for (const item of dados) {
+      const verificationCode = gerarVerificationCode();
+      const cpfFormatado = formatCnpjCpf(item.cnpjCad || '');
+      const telefoneFormatado = formatarTelefone(item.telefoneCad || '');
+
+      const dadosCliente = {
+        name: item.userCad,
+        document: cpfFormatado,
+        email: item.emailCad,
+        phone: telefoneFormatado,
+        address: item.endereçoCad,
+        addressNumber: item.numCad,
+        complement: item.compCad,
+        province: item.bairroCad,
+        postalCode: item.cepCad,
+        externalReference: Math.floor(Math.random() * 999) + 1
+      };
+
+      let customer_asaas_id = '';
+
+      try {
+        const clienteAsaas = await criarClienteAsaas(dadosCliente);
+        customer_asaas_id = clienteAsaas.id;
+      } catch (erroAsaas) {
+        console.error(`Erro ao criar cliente Asaas para ${item.userCad}:`, erroAsaas);
+        continue; // pula este registro
+      }
+
+      await UsersEmpresas.create({
+        customer_asaas_id,
+        userCad: item.userCad || '',
+        nomeGerente: item.nomeGerente || '',
+        endereçoCad: item.endereçoCad || '',
+        numCad: item.numCad || '',
+        compCad: item.compCad || '',
+        bairroCad: item.bairroCad || '',
+        cepCad: item.cepCad || '',
+        cidadeCad: item.cidadeCad || '',
+        estadoCad: item.estadoCad || '',
+        cnpjCad: item.cnpjCad || '',
+        telefoneCad: item.telefoneCad || '',
+        empresa: item.empresa || '',
+        particularidades: item.particularidades || '',
+        produtos: '',
+        emailCad: item.emailCad || '',
+        email_fiscal: item.email_fiscal || '',
+        passCad: item.passCad || '',
+        verificationCode,
+        verificado: false
+      });
+    }
+
+    console.log('✅ Usuários importados e clientes Asaas criados com sucesso!');
+  } catch (erro) {
+    console.error('❌ Erro ao importar usuários:', erro);
+  }
+}
+
+const caminhoPlanilha = path.join(__dirname, 'Cadastro de Usuários em Massa CPQ.xlsx');
+//importarUsuariosDoExcel(caminhoPlanilha);
+
+async function hashSenhasUsuarios() {
+  try {
+    const usuarios = await UsersEmpresas.findAll();
+
+    for (const usuario of usuarios) {
+      const senha = usuario.passCad;
+
+      // Ignora se não houver senha cadastrada
+      if (!senha) continue;
+
+      // Verifica se a senha já está hasheada (bcrypt começa com $2b$ ou $2a$)
+      if (senha.startsWith('$2b$') || senha.startsWith('$2a$')) {
+        continue;
+      }
+
+      const hash = await bcrypt.hash(senha, 10);
+
+      await usuario.update({ passCad: hash });
+      console.log(`Senha atualizada para o usuário ID ${usuario.id}`);
+    }
+
+    console.log('✅ Todas as senhas foram hasheadas com sucesso.');
+  } catch (erro) {
+    console.error('❌ Erro ao hashear senhas:', erro);
+  }
+}
+
+//hashSenhasUsuarios();
 
 app.post("/cadastrar", async (req, res) => { 
     try {

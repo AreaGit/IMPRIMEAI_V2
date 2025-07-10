@@ -1,6 +1,6 @@
 const axios = require('axios');
 require('dotenv').config();
-const asaas_key = ('$aact_hmlg_000MzkwODA2MWY2OGM3MWRlMDU2NWM3MzJlNzZmNGZhZGY6OjNlNmVlN2ViLWU0YTQtNDI0OC1hZDExLTRiYWEyMjJhNzI3NTo6JGFhY2hfZThiYTY2ZDMtOTdiMS00NzkyLTlmNDItMjY5OTdjYmFiMGY4');
+const asaas_key = ('$aact_hmlg_000MzkwODA2MWY2OGM3MWRlMDU2NWM3MzJlNzZmNGZhZGY6OmE2ZTM4MzBjLTM4OTYtNDE3NS05MzRjLWJmYjIyMzg3MzBlYjo6JGFhY2hfZmFkN2ZhMjctZjcwMi00NmZkLTg4YjYtYTc5YmI3MjhhMzIz');
 
 
 /*

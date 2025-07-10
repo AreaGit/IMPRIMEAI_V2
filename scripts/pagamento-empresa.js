@@ -767,7 +767,7 @@ async function monitorarTransacaoCartao(dadosTransacao) {
 
 async function pagamentoCarteira() {
   const totalAPagar = valorAtualGlobal;
-  const metodPag = 'Carteira Usuário';
+  metodPag = 'Carteira Usuário';
   const userId = getCookie('userId');
   // Verifique o saldo da carteira do usuário
   const xhr = new XMLHttpRequest();

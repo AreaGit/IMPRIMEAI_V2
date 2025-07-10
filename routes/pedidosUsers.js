@@ -776,31 +776,23 @@ async function getCoordinatesFromAddressEnd(enderecoEntregaInfo, apiKey) {
 }
 // Função para obter coordenadas geográficas (latitude e longitude) a partir do endereço usando a API de Geocodificação do Bing Maps
 async function getCoordinatesFromAddress(addressInfo, apiKey) {
-  const { endereco, cep, cidade, estado } = addressInfo;
-  const formattedAddress = `${endereco}, ${cep}, ${cidade}, ${estado}`;
-  const geocodingUrl = `https://dev.virtualearth.net/REST/v1/Locations/${encodeURIComponent(formattedAddress)}?o=json&key=${apiKey}`;
+    const { endereco, cep, cidade, estado } = addressInfo;
+    const formattedAddress = `${endereco}, ${cep}, ${cidade}, ${estado}`;
+    const url = `https://api.opencagedata.com/geocode/v1/json?q=${encodeURIComponent(formattedAddress)}&key=${`57ae2ecb054049b9aba4dc7eada833a3`}&language=pt&pretty=1`;
 
   try {
-    const response = await fetch(geocodingUrl);
+    const response = await axios.get(url, { timeout: 10000 });
 
-    if (!response.ok) {
-      throw new Error(`Erro na resposta da API: ${response.status} ${response.statusText}`);
-    }
-
-    const data = await response.json();
-
-    if (data.resourceSets.length > 0 && data.resourceSets[0].resources.length > 0) {
-      const coordinates = data.resourceSets[0].resources[0].point.coordinates;
-      return { latitude: coordinates[0], longitude: coordinates[1] };
+    if (response.data.results.length > 0) {
+      const { lat, lng } = response.data.results[0].geometry;
+      return { latitude: lat, longitude: lng };
     } else {
-      console.error('Nenhum resultado de geocodificação encontrado para o endereço:', formattedAddress);
-      return { latitude: null, longitude: null };
+      return { latitude: null, longitude: null, errorMessage: 'Nenhum resultado encontrado' };
     }
   } catch (error) {
-    console.error('Erro ao obter coordenadas de geocodificação:', error.message);
     return { latitude: null, longitude: null, errorMessage: error.message };
   }
-}
+  }
 
 // Função para calcular a distância haversine entre duas coordenadas geográficas
 function haversineDistance(lat1, lon1, lat2, lon2) {
@@ -1538,7 +1530,9 @@ app.post('/criar-pedidos-empresas', async (req, res) => {
       await verificarGraficaMaisProximaEAtualizar(itensPedido[0], enderecos[0]);
       await enviarNotificacaoWhatsapp(telefone, mensagemWhatsapp);
 
-      const hojeComHifen = new Date().toISOString().split('T')[0];
+      if(!metodPag == 'Carteira Usuário') {
+
+        const hojeComHifen = new Date().toISOString().split('T')[0];
       const dadosNfse = {
         payment: idTransacao,
         customer: user.customer_asaas_id,
@@ -1561,6 +1555,7 @@ app.post('/criar-pedidos-empresas', async (req, res) => {
           pedido.statusPag = 'Pago'
           pedido.save();
 
+      }
     }
 
     // Limpar a sessão
@@ -2246,9 +2241,28 @@ IMPRIMEAI`;
       if (!carteira) {
         throw new Error('Carteira não encontrada para o usuário');
       }
+
+      // Consulte o banco de dados para obter a soma de todos os depósitos pagos associados ao usuário
+      const saldoDepositosPagos = await CarteiraEmpresas.sum('saldo', {
+        where: {
+          userId: userId,
+          statusPag: 'PAGO' // Apenas transações com status "PAGO"
+        }
+      });
+  
+      // Consulte o banco de dados para obter a soma de todos os depósitos de saída associados ao usuário
+      const saldoSaidas = await CarteiraEmpresas.sum('saldo', {
+        where: {
+          userId: userId,
+          statusPag: 'SAIDA' // Apenas transações com status "SAÍDA"
+        }
+      });
+  
+      // Calcule o saldo final subtraindo o valor total das saídas do valor total dos depósitos pagos
+      const saldoFinal = saldoDepositosPagos - saldoSaidas;
   
       // Verifique se o saldo é suficiente para a compra
-      if (carteira.saldo < valorPed) {
+      if (saldoFinal < valorPed) {
         throw new Error('Saldo insuficiente na carteira');
       }
   
