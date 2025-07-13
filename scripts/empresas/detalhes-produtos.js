@@ -5,6 +5,24 @@ const retrocederSlides = document.getElementById('retrocederSlides');
 const downloadGab = document.getElementById('downloadGab');
 let modeloSelecionado
 let marcaSelecionada
+let telefone
+
+async function carregarInfoUsers() {
+    try {
+        const response = await fetch('/perfil/dados-empresa');
+        if (!response.ok) {
+            throw new Error('Erro ao buscar os dados do usuário');
+        }
+
+        const data = await response.json();
+        
+        telefone = data.user.telefoneCad;
+    } catch (error) {
+        console.log("erro")
+    }
+}
+carregarInfoUsers();
+
 document.addEventListener('DOMContentLoaded', function() {
   async function exibirSaldoUsuario() {
     try {
@@ -319,6 +337,12 @@ adicionarAoCarrinhoBtn.addEventListener('click', async () => {
       return;
     }
 
+    if(telefone == 'Não informado') {
+      alert('Por favor, insira seu telefone para continuar...');
+      window.location.href = '/cpq/perfil';
+      return
+    }
+
     const params = new URLSearchParams(window.location.search);
     const produtoId = params.get('id');
     const materialSelecionado = document.getElementById('material');
@@ -397,6 +421,12 @@ adicionarAoCarrinhoBtn.addEventListener('click', async () => {
             return;
           }
       
+          if(telefone == 'Não informado') {
+            alert('Por favor, insira seu telefone para continuar...');
+            window.location.href = '/cpq/perfil';
+            return
+          }
+
           const params = new URLSearchParams(window.location.search);
           const produtoId = params.get('id');
           const materialSelecionado = document.getElementById('material');
