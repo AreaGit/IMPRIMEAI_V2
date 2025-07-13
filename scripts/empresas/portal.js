@@ -37,6 +37,9 @@ document.addEventListener('DOMContentLoaded', () => {
           cafe_do_centro: 'https://i.imgur.com/GzLGgyp.png',
           campanha: 'https://i.imgur.com/hshtap8.png',
           lamina_de_menu: 'https://i.imgur.com/aOHq8py.png',
+          "frente-de-caixa": 'https://i.imgur.com/gJWpdrK.png',
+          lâminas: 'https://i.imgur.com/aOHq8py.png',
+          'mini-menu': 'https://i.imgur.com/Ck96grH.png',
         }
         const li = document.createElement('li');
         const a = document.createElement('a');
@@ -181,7 +184,7 @@ const nameUserLog = document.getElementById('nameUserLog');
         e.preventDefault();
     });
 });
-document.addEventListener('DOMContentLoaded', () => {
+/*document.addEventListener('DOMContentLoaded', () => {
   const categorias = document.getElementById('categorias');
   const categoriaContainer = document.getElementById('categoriaContainer');
   const categoriaDesp = document.getElementById('categoriaD-ESP');
@@ -205,7 +208,7 @@ document.addEventListener('DOMContentLoaded', () => {
           produtosContainer.style.display = 'none';
       }
   });
-});
+});*/
 
 document.getElementById('logo').addEventListener('click', () => {
   window.location.href = '/cpq/inicio'

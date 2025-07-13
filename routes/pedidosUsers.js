@@ -43,6 +43,36 @@ const bcrypt = require('bcrypt');
 const TransacoesCarteira = require('../models/TransacoesCarteira');
 const PDFDocument = require('pdfkit');
 const dayjs = require('dayjs');
+require('dayjs/plugin/utc');
+require('dayjs/plugin/timezone');
+dayjs.extend(require('dayjs/plugin/utc'));
+dayjs.extend(require('dayjs/plugin/timezone'));
+
+const Holidays = require('date-holidays');
+
+const hd = new Holidays('BR'); // Brasil
+
+function adicionarHorasUteis(inicio, horasParaAdicionar) {
+  let atual = dayjs(inicio);
+  let horasRestantes = horasParaAdicionar;
+
+  while (horasRestantes > 0) {
+    atual = atual.add(1, 'hour');
+
+    const diaDaSemana = atual.day(); // 0 = Domingo, 6 = Sábado
+    const dataFormatada = atual.format('YYYY-MM-DD');
+
+    const ehFds = diaDaSemana === 0 || diaDaSemana === 6;
+    const ehFeriado = !!hd.isHoliday(new Date(dataFormatada));
+
+    if (!ehFds && !ehFeriado) {
+      horasRestantes--;
+    }
+  }
+
+  return atual;
+}
+
 const { cobrancaPixAsaas, cobrancaBoletoAsaas, cobrancaCartaoAsaas, consultarCobranca, agendarNfsAsaas, emitirNfs, consultarNf } = require('./api/asaas');
 const QRcode = require('qrcode')
 
@@ -1442,6 +1472,9 @@ app.post('/criar-pedidos-empresas', async (req, res) => {
       return produtoInfo.valorProd * produto.quantidade;
     })).then(valores => valores.reduce((total, valor) => total + valor, 0));
 
+    const dataAtual = dayjs().tz('America/Sao_Paulo');
+    const dataPrevisaoProducao = adicionarHorasUteis(dayjs(), 72);
+
     const pedido = await Pedidos.create({
       idUserPed: req.cookies.userId,
       nomePed: 'Pedido Geral',
@@ -1449,7 +1482,8 @@ app.post('/criar-pedidos-empresas', async (req, res) => {
       valorPed: totalAPagar,
       statusPed: metodPag === 'BOLETO' ? 'Esperando Pagamento' : 'Pago',
       metodPag: metodPag,
-      idTransacao: idTransacao
+      idTransacao: idTransacao,
+      dataPrevisaoProducao: dataPrevisaoProducao.toISOString()
     });
 
     const enderecosPromises = carrinhoQuebrado.map(async (produto) => {

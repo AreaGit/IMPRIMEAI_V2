@@ -24,6 +24,12 @@ document.addEventListener('DOMContentLoaded', () => {
     let categoria = getParametroUrl('categoria') || 'Nenhum'; // Valor padrão
     if(categoria == "cardapios") {
         categoria = "Cardápios"
+    } else if(categoria == "banners") {
+        categoria = "Banners";
+    } else if(categoria == "frente-de-caixa") {
+        categoria = "Frente de Caixa"
+    } else if(categoria == "mini-menu") {
+        categoria = "Mini Menu"
     }
     fetch(`/api/produtos-empresas/${categoria}`)
       .then((response) => {
@@ -33,11 +39,12 @@ document.addEventListener('DOMContentLoaded', () => {
         return response.json();
       })
       .then((produtos) => {
+        console.log(produtos)
         const produtosContainer = document.querySelector('.produtos');
         produtosContainer.innerHTML = '';
   
         // Renderiza os produtos
-        produtos.produtos.forEach(produto => {
+        produtos.produtos.produtos.forEach(produto => {
             const produtoDiv = document.createElement('div');
             produtoDiv.classList.add('cxProd');
             produtoDiv.addEventListener("click", () => {

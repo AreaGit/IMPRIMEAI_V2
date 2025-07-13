@@ -49,6 +49,9 @@ const Pedidos = db.define('pedidos', {
     graficaCancl: {
         type: Sequelize.STRING(255),
     },
+    dataPrevisaoProducao: {
+        type: Sequelize.DATE
+    }
 }, {
     indexes: [
         {

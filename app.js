@@ -40,6 +40,7 @@ const Carteira = require('./models/Carteira');
 const { Parser } = require('json2csv');
 const PDFDocument = require('pdfkit');
 const TransacoesCarteira = require('./models/TransacoesCarteira');
+const { where, fn, col } = require("sequelize");
 const client = redis.createClient({
   host: '127.0.0.1', // Substitua pelo endereço IP do seu servidor Redis
   port: 6379,         // Porta onde o Redis está escutando
@@ -353,42 +354,33 @@ const getCategoriasPorProdutosUsuario = async (userId) => {
       throw new Error("Usuário não encontrado.");
     }
 
-    let produtosUsuario;
+    let nomesProdutos = [];
+
     if (typeof user.produtos === "string") {
-      try {
-        produtosUsuario = JSON.parse(user.produtos);
-      } catch (parseError) {
-        throw new Error("Erro ao analisar o campo 'produtos'.");
-      }
-    } else if (typeof user.produtos === "object" && user.produtos !== null) {
-      produtosUsuario = user.produtos;
+      nomesProdutos = [user.produtos.trim()];
+    } else if (Array.isArray(user.produtos)) {
+      nomesProdutos = user.produtos.map(p => p.trim());
     } else {
       throw new Error("O campo 'produtos' não é válido.");
     }
 
-    const nomesProdutos = Object.keys(produtosUsuario).map((nome) =>
-      nome.trim().toLowerCase()
-    );
-
-    console.log("Nomes dos produtos:", nomesProdutos); // Verificar os nomes dos produtos
-
     const produtos = await ProdutosExc.findAll({
       where: {
-        nomeProd: nomesProdutos,
+        categProd: {
+          [Op.in]: nomesProdutos
+        }
       },
-      attributes: ["nomeProd", "categProd2"], // Usar o campo correto
+      attributes: ["categProd2"],
+      group: ["categProd2"]
     });
 
     if (produtos.length === 0) {
       throw new Error("Nenhuma categoria encontrada para os produtos do usuário.");
     }
 
-    const categoriasUnicas = Array.from(
-      new Set(produtos.map((produto) => produto.categProd2)) // Ajuste conforme o nome correto
-    );
-
-
-    console.log(categoriasUnicas)
+    const categoriasUnicas = produtos
+      .map((produto) => produto.categProd2)
+      .filter(Boolean);
 
     return categoriasUnicas;
   } catch (error) {
@@ -1895,31 +1887,100 @@ app.get('/api/empresa/logo', async (req, res) => {
 //Rota get para pegar os produtos da empresa
 app.get('/api-produtos/empresa', async (req, res) => {
   try {
-    // Recupera o nome da empresa dos parâmetros da URL
-    const empresa = req.cookies.empresa;
-    console.log(empresa)
-    // Validação básica do parâmetro
-    if (!empresa) {
-      return res.status(400).json({ error: "Nome da empresa não fornecido ou inválido." });
+    const empresaNome = req.cookies.empresa;
+    console.log('[GET /api-produtos/empresa] Empresa do cookie:', empresaNome);
+
+    if (!empresaNome) {
+      console.warn('[GET /api-produtos/empresa] Nome da empresa não fornecido.');
+      return res.status(400).json({ error: "Nome da empresa não fornecido." });
     }
 
-    // Busca os produtos no banco filtrando pelo nome da empresa
-    const produtos = await ProdutosExc.findAll({
-      where: { empresa }, // Substitua "empresa" pelo nome exato da coluna no banco
+    const user = await UserEmpresas.findOne({ where: { empresa: empresaNome } });
+
+    if (!user) {
+      console.warn('[GET /api-produtos/empresa] Usuário não encontrado.');
+      return res.status(404).json({ error: "Usuário não encontrado." });
+    }
+
+    let produtosUsuario = [];
+
+    if (typeof user.produtos === 'string') {
+      produtosUsuario = user.produtos
+        .split(',')
+        .map(p => p.trim())
+        .filter(p => p.length > 0);
+    } else if (Array.isArray(user.produtos)) {
+      produtosUsuario = user.produtos.map(p => p.trim());
+    }
+
+    console.log('[GET /api-produtos/empresa] Produtos do usuário:', produtosUsuario);
+
+    if (produtosUsuario.length === 0) {
+      console.warn('[GET /api-produtos/empresa] Nenhum produto definido para o usuário.');
+      return res.status(404).json({ error: "Usuário sem produtos definidos." });
+    }
+
+    const produtosRelacionados = await ProdutosExc.findAll({
+      where: {
+        categProd: {
+          [Op.in]: produtosUsuario
+        }
+      },
+      attributes: ['categProd2'],
+      group: ['categProd2']
     });
 
-    // Verifica se encontrou produtos
-    if (produtos.length === 0) {
-      return res.status(404).json({ message: "Nenhum produto encontrado para esta empresa." });
-    }
+    const categoriasSecundarias = produtosRelacionados
+      .map(p => p.categProd2)
+      .filter(Boolean);
 
-    // Retorna os produtos encontrados
-    res.json(produtos);
+    console.log('[GET /api-produtos/empresa] Categorias secundárias encontradas:', categoriasSecundarias);
+
+    res.json({ categoriasSecundarias });
+
   } catch (error) {
-    console.error("Erro ao buscar produtos:", error);
-    res.status(500).json({ error: "Erro ao buscar produtos. Tente novamente mais tarde." });
+    console.error("[GET /api-produtos/empresa] Erro ao buscar categorias secundárias:", error);
+    res.status(500).json({ error: "Erro interno ao buscar categorias." });
   }
 });
+
+app.get('/api-produtos/categorias-secundarias', async (req, res) => {
+  try {
+    const empresaNome = req.cookies.empresa;
+
+    if (!empresaNome) {
+      return res.status(400).json({ error: "Nome da empresa não fornecido." });
+    }
+
+    const user = await UserEmpresas.findOne({
+      where: { empresa: empresaNome }
+    });
+
+    if (!user || !Array.isArray(user.produtos) || user.produtos.length === 0) {
+      return res.status(404).json({ error: "Usuário não encontrado ou sem produtos definidos." });
+    }
+
+    const produtosRelacionados = await ProdutosExc.findAll({
+      where: {
+        categProd: {
+          [Op.in]: user.produtos
+        }
+      },
+      attributes: ['categProd2'],
+      group: ['categProd2']
+    });
+
+    const categoriasSecundarias = produtosRelacionados
+      .map(p => p.categProd2)
+      .filter(Boolean); // remove nulos
+
+    res.json({ categoriasSecundarias });
+  } catch (error) {
+    console.error("Erro ao buscar categorias secundárias:", error);
+    res.status(500).json({ error: "Erro interno ao buscar categorias." });
+  }
+});
+
 //Rotas get para mostrar o produto e as suas variações
 app.get('/produto-empresa/:id', async (req, res) => {
   try {
@@ -2363,58 +2424,116 @@ app.get('/api/produtos-empresas/:categoria', async (req, res) => {
   }
 
   try {
-    const produtos = await getCachedProductsByCategoryEmpresas(userId, categoria, page, limit);
+    const produtos = await getProdutosPorCategoriaDoUsuario(userId, categoria, page, limit);
     res.json({
-      totalItems: produtos.count,
-      totalPages: Math.ceil(produtos.count / limit),
-      currentPage: parseInt(page),
-      produtos: produtos.rows,
+      produtos
     });
   } catch (error) {
+    console.error("[GET /api/produtos-empresas/:categoria] Erro:", error);
     res.status(500).json({ error: error.message });
   }
 });
 
-// Função para obter produtos de uma categoria específica com caching
-const getCachedProductsByCategoryEmpresas = async (userId, categoria, page, limit) => {
-  console.log("Categoria buscada: ", categoria);
 
-  // Recupera os produtos habilitados para o usuário
-  const user = await UserEmpresas.findOne({
-    where: { id: userId },
-    attributes: ['produtos'],
+
+const getProdutosPorCategoriaDoUsuario = async (userId, subcategoria, page = 1, limit = 100) => {
+  console.log(`🔍 Buscando produtos para userId=${userId} com subcategoria=${subcategoria}`);
+
+  const user = await UserEmpresas.findByPk(userId, {
+    attributes: ['produtos']
   });
 
-  if (!user || typeof user.produtos !== 'object') {
-    throw new Error("Produtos não encontrados ou inválidos para este usuário.");
+  if (!user) throw new Error("Usuário não encontrado.");
+
+  let produtosUsuario = [];
+
+  if (typeof user.produtos === 'string') {
+    produtosUsuario = user.produtos.split(',').map(p => p.trim()).filter(Boolean);
+  } else if (Array.isArray(user.produtos)) {
+    produtosUsuario = user.produtos.map(p => p.trim());
+  } else if (typeof user.produtos === 'object' && user.produtos !== null) {
+    produtosUsuario = Object.keys(user.produtos)
+      .filter(key => user.produtos[key] === true)
+      .map(p => p.trim());
+  } else {
+    throw new Error("Campo 'produtos' do usuário inválido.");
   }
 
-  const produtosUsuario = Object.keys(user.produtos)
-    .filter((key) => user.produtos[key] === true)
-    .map((produto) => produto.trim());
+  if (produtosUsuario.length === 0) throw new Error("Usuário sem produtos habilitados.");
 
-  if (produtosUsuario.length === 0) {
-    throw new Error("Nenhum produto habilitado para este usuário.");
+  console.log("✅ Produtos permitidos (categProd):", produtosUsuario);
+
+  const offset = (page - 1) * limit;
+
+  const produtos = await ProdutosExc.findAndCountAll({
+    where: {
+      categProd: {
+        [Op.in]: produtosUsuario
+      },
+      [Op.or]: [
+        where(fn('LOWER', col('categProd2')), subcategoria.toLowerCase()),
+        where(fn('LOWER', col('categProd3')), subcategoria.toLowerCase()),
+      ]
+    },
+    offset,
+    limit: parseInt(limit),
+    order: [['nomeProd', 'ASC']],
+  });
+
+  console.log(`📦 Produtos encontrados: ${produtos.count}`);
+
+  return {
+    totalItems: produtos.count,
+    totalPages: Math.ceil(produtos.count / limit),
+    currentPage: parseInt(page),
+    produtos: produtos.rows,
+  };
+};
+
+
+const getCachedProductsByCategoryEmpresas = async (userId, categoria, page, limit) => {
+  console.log("Categoria buscada:", categoria);
+
+  const user = await UserEmpresas.findByPk(userId, {
+    attributes: ['produtos']
+  });
+
+  if (!user) throw new Error("Usuário não encontrado.");
+
+  let produtosUsuario = [];
+
+  if (typeof user.produtos === 'string') {
+    produtosUsuario = user.produtos.split(',').map(p => p.trim()).filter(p => p.length > 0);
+  } else if (Array.isArray(user.produtos)) {
+    produtosUsuario = user.produtos.map(p => p.trim());
+  } else if (typeof user.produtos === 'object' && user.produtos !== null) {
+    produtosUsuario = Object.keys(user.produtos)
+      .filter(key => user.produtos[key] === true)
+      .map(p => p.trim());
+  } else {
+    throw new Error("Campo 'produtos' do usuário inválido.");
   }
 
-  // Gera uma chave de cache que inclui o ID do usuário e a lista de produtos habilitados
+  if (produtosUsuario.length === 0) throw new Error("Nenhum produto habilitado para este usuário.");
+
+  console.log("Produtos permitidos (categProd):", produtosUsuario);
+
   const cacheKey = `${userId}:${categoria}:products:${page}:${limit}`;
   const cachedData = await client.get(cacheKey);
 
   if (cachedData) {
+    console.log("Cache HIT:", cacheKey);
     return JSON.parse(cachedData);
   }
 
-  // Busca produtos que correspondem à categoria e são habilitados para o usuário
+  console.log("Cache MISS:", cacheKey);
+
   const produtos = await ProdutosExc.findAndCountAll({
     where: {
       [Op.and]: [
-        { 
-          nomeProd: { [Op.in]: produtosUsuario },
-        },
+        { categProd: { [Op.in]: produtosUsuario } },
         {
           [Op.or]: [
-            { categProd: categoria },
             { categProd2: categoria },
             { categProd3: categoria },
           ],
@@ -2427,11 +2546,14 @@ const getCachedProductsByCategoryEmpresas = async (userId, categoria, page, limi
   });
 
   await client.set(cacheKey, JSON.stringify(produtos), {
-    EX: 3600, // Expira após 1 hora
+    EX: 3600,
   });
+
+  console.log(`Produtos encontrados: ${produtos.count}`);
 
   return produtos;
 };
+
 
 app.get('/cpq/painel-administrativo', (req,res) => {
   try {
