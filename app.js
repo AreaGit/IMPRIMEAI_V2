@@ -2395,6 +2395,32 @@ app.get("/perfil/dados-empresa", async (req, res) => {
     res.status(500).json({ message: "Erro interno do servidor" });
   }
 });
+app.put("/perfil/dados-empresa", async (req, res) => {
+  try {
+    const userId = req.cookies.userId;
+    if (!userId) {
+      return res.status(401).json({ message: "Usuário não autenticado" });
+    }
+
+    const { userCad, emailCad, telefoneCad } = req.body;
+
+    const user = await UserEmpresas.findByPk(userId);
+    if (!user) {
+      return res.status(404).json({ message: "Usuário não encontrado" });
+    }
+
+    user.userCad = userCad;
+    user.emailCad = emailCad;
+    user.telefoneCad = telefoneCad;
+
+    await user.save();
+
+    res.json({ message: "Dados atualizados com sucesso" });
+  } catch (error) {
+    console.error("Erro ao atualizar os dados do usuário:", error);
+    res.status(500).json({ message: "Erro interno do servidor" });
+  }
+});
 app.get('/enderecos-empresa/:id_usuario', async (req, res) => {
   const { id_usuario } = req.params;
   try {

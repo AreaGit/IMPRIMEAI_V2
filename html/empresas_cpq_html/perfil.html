@@ -52,6 +52,8 @@
                     <label for="telefone">Telefone (opcional)</label>
                     <input type="text" id="telefone" value=""readonly>
                 </div>
+                <button type="button" class="btn-edit" id="btnEditar" onclick="habilitarEdicao()">Editar</button>
+                <button type="button" class="btn-edit" id="btnSalvar" onclick="salvarDadosEditados()" style="display: none;">Salvar</button>
                 <button type="button" id="btnSairConta">Sair da Conta</button>
             </div>
             <!-- Meus Endereços -->
@@ -186,6 +188,11 @@
         <span class="icone"><i class="fas fa-check-circle"></i></span>
         <span class="mensagem">Recarga feita com Sucesso!</span>
         <span class="fechar" onclick="fecharAvisoSucesso()">&#10005;</span>
+    </div>
+        <div id="aviso-sucesso-salvar" class="alerta alerta-aviso-sucesso-salvar">
+        <span class="icone"><i class="fas fa-check-circle"></i></span>
+        <span class="mensagem">Salvo com Sucesso!</span>
+        <span class="fechar" onclick="fecharAvisoSucessoSalvar()">&#10005;</span>
     </div>
     <div id="aviso-boleto" class="alerta alerta-aviso-boleto">
         <span class="icone"><i class="fas fa-check-circle"></i></span>

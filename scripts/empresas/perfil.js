@@ -6,6 +6,14 @@ function fecharAvisoErro() {
   document.getElementById("aviso-erro").style.display = "none";
 }
 
+function mostrarAvisoSucessoSalvar() {
+  document.getElementById("aviso-sucesso-salvar").style.display = "block";
+}
+
+function fecharAvisoSucessoSalvar() {
+  document.getElementById("aviso-sucesso-salvar").style.display = "none";
+}
+
 function mostrarAvisoSucesso() {
   document.getElementById("aviso-sucesso").style.display = "block";
 }
@@ -88,6 +96,49 @@ async function carregarInfoUsers() {
     }
 }
 carregarInfoUsers();
+
+function habilitarEdicao() {
+    document.getElementById('nomeCompleto').removeAttribute('readonly');
+    document.getElementById('email').removeAttribute('readonly');
+    document.getElementById('telefone').removeAttribute('readonly');
+    document.getElementById('btnSalvar').style.display = 'inline-block';
+    document.getElementById('btnEditar').style.display = 'none';
+}
+
+async function salvarDadosEditados() {
+    const nome = document.getElementById('nomeCompleto').value;
+    const email = document.getElementById('email').value;
+    const telefone = document.getElementById('telefone').value;
+
+    try {
+        const response = await fetch('/perfil/dados-empresa', {
+            method: 'PUT',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                userCad: nome,
+                emailCad: email,
+                telefoneCad: telefone
+            })
+        });
+
+        if (!response.ok) throw new Error('Erro ao salvar os dados');
+
+        document.getElementById('nomeCompleto').setAttribute('readonly', true);
+        document.getElementById('email').setAttribute('readonly', true);
+        document.getElementById('telefone').setAttribute('readonly', true);
+        document.getElementById('btnSalvar').style.display = 'none';
+        document.getElementById('btnEditar').style.display = 'inline-block';
+        mostrarAvisoSucessoSalvar();
+        setTimeout(() => {
+            window.location.reload();
+        }, 2000);
+    } catch (error) {
+        alert('Erro ao atualizar os dados.');
+    }
+}
+
 
 const btnSairConta = document.getElementById('btnSairConta');
 
