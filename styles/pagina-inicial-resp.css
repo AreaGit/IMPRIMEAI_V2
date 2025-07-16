@@ -1139,7 +1139,7 @@
         z-index: -1;
     }
     main {
-        top: 100%;
+        top: 120%;
         width: 100%; /* Aumenta a largura do main */
         margin: 0 auto; /* Centraliza o main na tela */
       }

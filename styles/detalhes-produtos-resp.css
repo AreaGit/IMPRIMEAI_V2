@@ -289,7 +289,7 @@
     #descricao-produto > h2 {
         font-size: 32px;
         font-weight: 600;
-        width: max-content;
+        width: fit-content;
     }
     section#quantidades {
         position: relative;
@@ -759,11 +759,9 @@
         width: 1050px;
         transform: translate(-50%);
     }
-    #logo {
-        position: absolute;
-        left: -2%;
-        top: -7px;
-        width: 107px;
+    .logo-header > a > img {
+        cursor: pointer;
+        width: 10vw;
     }
     #icone-pesquisa {
         width: 22px;
@@ -808,4 +806,10 @@
         border: 1px solid #DEE2E6;
         width: 17vw;
     }
+    .mainContentHeader {
+    position: absolute;
+    height: 40vw;
+    width: 100%;
+    z-index: -1;
+}
 }
