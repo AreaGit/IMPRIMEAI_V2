@@ -1564,7 +1564,7 @@ app.post('/criar-pedidos-empresas', async (req, res) => {
       await verificarGraficaMaisProximaEAtualizar(itensPedido[0], enderecos[0]);
       await enviarNotificacaoWhatsapp(telefone, mensagemWhatsapp);
 
-      if(!metodPag == 'Carteira Usuário') {
+      if(metodPag == 'BOLETO' || 'PIX' || 'CARTÃO') {
 
         const hojeComHifen = new Date().toISOString().split('T')[0];
       const dadosNfse = {
@@ -2022,7 +2022,7 @@ async function verificarPagamentosPendentesCarteira() {
         const cobranca = await consultarCobranca(transactionId);
        //console.log('Transaction found:', response); // Check if transaction is defined
        // Verificar se a transação está paga
-       if (cobranca.status === 'CONFIRMED' || cobranca.status === 'RECEIVED') {
+       if (cobranca.status === 'CONFIRMED' || cobranca.status === 'RECEIVED' || cobranca.status === 'PENDING') {
          const dadosNfse = {
            payment: transactionId,
             customer: user.customer_asaas_id,

@@ -567,7 +567,7 @@ async function pagamentoBoleto() {
     const urlTransacao = responseData.data.urlTransacao;
     metodPag = "BOLETO";
     idTransacao = responseData.data.payment_id;
-    verificarStatusTransacao(responseData.data.payment_id, "BOLETO", urlTransacao);
+    verificarStatusTransacaoBoleto(responseData.data.payment_id, "BOLETO", urlTransacao);
   }catch (error) {
     console.log(error)
   }
