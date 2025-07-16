@@ -111,16 +111,11 @@ async function importarUsuariosDoExcel(caminhoArquivo) {
 
       let customer_asaas_id = '';
 
-      /*try {
         const clienteAsaas = await criarClienteAsaas(dadosCliente);
         customer_asaas_id = clienteAsaas.id;
-      } catch (erroAsaas) {
-        console.error(`Erro ao criar cliente Asaas para ${item.userCad}:`, erroAsaas);
-        continue; // pula este registro
-      }*/
 
       await UsersEmpresas.create({
-        customer_asaas_id,
+        customer_asaas_id: customer_asaas_id,
         userCad: item.userCad || '',
         nomeGerente: item.nomeGerente || '',
         endereçoCad: item.endereçoCad || '',
@@ -136,7 +131,7 @@ async function importarUsuariosDoExcel(caminhoArquivo) {
         particularidades: item.particularidades || '',
         produtos: item.produtos,
         emailCad: item.emailCad || '',
-        email_fiscal: item.email_fiscal || '',
+        email_fiscal: item.emailFiscal || '',
         passCad: item.passCad || '',
         verificationCode,
         verificado: false

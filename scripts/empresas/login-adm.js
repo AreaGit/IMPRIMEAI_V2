@@ -15,6 +15,30 @@ const usersPermitidos = {
         email: 'telmo@cpqbrasil.com.br',
         senha: 'Z1mb@bue1'
     },
+    'Marcelo': {
+        id: 3,
+        username: 'Marcelo ADM',
+        email: 'marcelo.carvalho@cpqbrasil.com.br',
+        senha: 'cpqM@rcel0'
+    },
+    'Vagner': {
+        id: 4,
+        username: 'Vagner ADM',
+        email: 'vagner.chaves@cpqbrasil.com.br',
+        senha: 'cpqV@gn3r'
+    },
+    'Mariana':{
+        id: 5,
+        username: 'Mariana ADM',
+        email: 'mariana.gambini@cpqbrasil.com.br',
+        senha: 'cpqM@r1ana'
+    },
+    'Matheus': {
+        id: 6,
+        username: 'Matheus',
+        email: 'matheus.melchert@cpqbrasil.com.br',
+        senha: 'cpqM@th3us'
+    }
 };
 
 btnCad.addEventListener('click', () => {

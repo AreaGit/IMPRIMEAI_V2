@@ -733,8 +733,8 @@ async function monitorarTransacaoCartao(dadosTransacao) {
 
 async function pagamentoCarteira() {
   const totalAPagar = valorAtualGlobal;
-  const metodPag = 'Carteira Usuário';
   const userId = getCookie('userId');
+  metodPag = "Carteira Usuário"
   // Verifique o saldo da carteira do usuário
   const xhr = new XMLHttpRequest();
   xhr.open('GET', '/saldoUsuario', true);
@@ -749,7 +749,7 @@ async function pagamentoCarteira() {
           valorPed: totalAPagar,
           metodPag: metodPag
         };
-        const metodoPag = "Carteira Usuário"
+        metodPag = "Carteira Usuário"
         // Faça uma solicitação para descontar o valor da compra do saldo da carteira
         const descontoRequest = new XMLHttpRequest();
         descontoRequest.open('POST', '/descontarSaldo', true);
@@ -762,7 +762,7 @@ async function pagamentoCarteira() {
               valorPed: totalAPagar,
               metodPag
             };
-            criarPedido(metodoPag);
+            criarPedido();
           } else {
             console.error('Erro ao descontar o saldo:', descontoRequest.statusText);
             alert('Erro ao descontar o saldo');
