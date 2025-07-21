@@ -40,6 +40,7 @@ const Carteira = require('./models/Carteira');
 const { Parser } = require('json2csv');
 const PDFDocument = require('pdfkit');
 const TransacoesCarteira = require('./models/TransacoesCarteira');
+const UsersAdm = require('./models/UsersAdm');
 const { where, fn, col } = require("sequelize");
 const client = redis.createClient({
   host: '127.0.0.1', // Substitua pelo endereço IP do seu servidor Redis
