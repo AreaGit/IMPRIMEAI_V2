@@ -94,7 +94,7 @@ a {
   left: 50%;
   transform: translate(-50%);
   width: max-content;
-  top: 26%;
+  top: 27%;
   z-index: 1;
 }
 #categs {
@@ -392,20 +392,21 @@ div#banners {
 }
 .messageHeader{
   position: absolute;
-  left: 20%;
-  top: 6%;
+  left: 16%;
+  top: 10%;
   width: fit-content;
 }
 .messageHeader > p {
   width: fit-content;
-  font-size: 14px;
+  font-size: 18px;
+  font-style: italic;
 }
 .linksHeader {
-  width: fit-content;
-  position: absolute;
-  left: 60%;
-  transform: translate(-60%);
-  top: 6%;
+    width: fit-content;
+    position: absolute;
+    left: 60%;
+    transform: translate(-60%);
+    top: 8%;
 }
 .linksHeader > ul {
   display: flex;
@@ -424,7 +425,7 @@ div#banners {
   position: absolute;
   left: 75%;
   transform: translate(-75%);
-  top: 6%;
+  top: 8%;
 }
 .icons-mediaHeader > ul {
   display: flex;
@@ -564,7 +565,7 @@ div#suggestions-container {
   width: 70vw;
   position: absolute;
   left: 50%;
-  top: 30%;
+  top: 32%;
   transform: translate(-50%);
 }
 button {

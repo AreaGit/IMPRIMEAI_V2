@@ -289,15 +289,16 @@ background-color: transparent;
 background-color: #EF4126;
 height: 41px;
 }
-.messageHeader{
-position: absolute;
-left: 20%;
-top: 6%;
-width: fit-content;
+.messageHeader {
+    position: absolute;
+    left: 16%;
+    top: 10%;
+    width: fit-content;
 }
 .messageHeader > p {
-width: fit-content;
-font-size: 14px;
+    width: fit-content;
+    font-size: 18px;
+    font-style: italic;
 }
 .linksHeader {
 width: fit-content;

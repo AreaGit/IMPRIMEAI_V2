@@ -1,7 +1,7 @@
 @media screen and (min-width: 2560px) {
     #produtos {
         position: absolute;
-        top: 70%;
+        top: 55%;
         flex-wrap: nowrap;
         justify-content: space-between;
         left: 50%;
@@ -24,7 +24,7 @@
     }
 } 
 @media screen and (min-width:320px) and (max-width:767px){
-    .popup {
+        .popup {
         display: none;
         position: fixed;
         left: 50%;
@@ -42,6 +42,12 @@
         width: 99%;
         left: 0%;
     }
+    .mainContentHeader {
+        position: absolute;
+        height: 600px;
+        width: 100%;
+        z-index: -1;
+    }
     .messageHeader {
         position: relative;
         left: 1%;
@@ -58,6 +64,7 @@
         width: fit-content;
         position: relative;
         left: 70%;
+        top: 0;
     }
     .linksHeader > ul > li {
         padding-right: 0px;
@@ -76,19 +83,23 @@
     }
     .logo-header {
         position: relative;
-        left: 10%;
+        left: 50%;
+        transform: translate(-50%);
         top: 30px;
         width: fit-content;
     }
     .logo-header > a > img {
         cursor: pointer;
-        width: 60vw;
+        width: 65%;
+        position: relative;
+        left: 50%;
+        transform: translate(-50%);
     }
     .notCad {
         width: fit-content;
         position: relative;
-        left: 85%;
-        top: -17px;
+        left: 30%;
+        top: 50px;
     }
     .notCad > a {
         font-weight: 300;
@@ -97,27 +108,22 @@
     .carrinho {
         width: fit-content;
         position: relative;
-        left: 80%;
-        top: -7px;
+        left: 70%;
+        top: 20px;
     }
+    .mobile-menu {display: none;}
     .linhaAbInp {display: none;}
     .linhaAbNav {display: none;}
     .menu {
         display: none;
     }
     .menu-wrapper {
-        z-index: 1;
-        display: block;
-        position: absolute;
-        left: 50%;
-        transform: translateX(-50%);
-        width: max-content;
-        top: 120%;
+        display: none;
     }
     #iconMenuMob {
-        display: none;
+        display: block;
         position: absolute;
-        top: 11%;
+        top: 35%;
         left: 95%;
         transform: translate(-95%);
         font-size: 28px;
@@ -126,9 +132,9 @@
         position: absolute;
         left: 45%;
         transform: translate(-45%);
-        top: 97%;
+        top: 45%;
         width: fit-content;
-        height: 50px;
+        height: auto;
         z-index: 1;
     }
     div#suggestions-container {
@@ -161,17 +167,383 @@
         left: 85%;
         top: -22px;
     }
+    #wrapper {
+        width: 220px;
+        position: relative;
+        left: 50%;
+        transform: translate(-50%);
+        top: 200px;
+    }
+    #prev {
+        top: 85%;
+        left: -50px;
+        transform: translate(50%, -50%);
+    }
+    #next {
+        top: 85%;
+        right: 19px;
+        transform: translate(50%, -50%);
+    }
+    #nav-bar {
+        display: none;
+        width: 80%;
+        padding: 15px;
+        position: absolute;
+        left: 50%;
+        transform: translate(-50%);
+        top: 5px;
+        box-shadow: -1px -3px 20px black;
+        border-radius: 5px;
+        height: 715px;
+        opacity: 0;
+        z-index: 1000;
+        background-color: white;
+    }
+    #nav-bar > li {
+        display: block;
+        padding-top: 14px;
+        position: relative;
+        top: 65px;
+    }
+    #nav-bar > li > a  {
+        font-size: 28px;
+    }
+    #fechar-menu {
+        display: none;
+        cursor: pointer;
+        width: fit-content;
+        font-size: 40px;
+        position: absolute;
+        left: 72%;
+    }
+    #menu-icon {
+        display: block;
+        position: absolute;
+        left: 100%;
+        transform: translate(-100%);
+        top: -10%;
+    }
+    #logo {
+        display: none;
+    }    
+    #logo2 {
+        display: block;
+        position: absolute;
+        left: 0%;
+        transform: translate(-5%);
+        top: -3px;
+        width: 23%;
+    }
+    #icone-pesquisa {
+        width: 34px;
+        height: 36px;
+        position: absolute;
+        left: 30%;
+        transform: translate(-30%);
+        top: 33px;
+    }
+    #carrinho-compras {
+        width: 44px;
+        height: 46px;
+        position: absolute;
+        left: 33%;
+        transform: translate(-120%);
+        top: 6%;
+    }
     .bannerCateg > img {
         width: 320px;
     }
     .bannerCateg {
         position: absolute;
-        top: 160%;
+        top: 65%;
         left: 50%;
         transform: translate(-50%);
     }
 }
-@media screen and (min-width: 768px) and (max-width: 1440px) {
+@media screen and (min-width: 768px) and (max-width: 1024px) {
+    .mainContentHeader {
+        position: absolute;
+        height: 460px;
+        width: 100%;
+        z-index: -1;
+    }
+    div#banners {
+        height: 165px;
+        position: relative;
+        top: 300px;
+        width: 65%;
+        left: 18%;
+        cursor: pointer;
+    }
+    .banner.active > img {
+        width: 100%;
+    }
+    .menu {
+        display: none;
+    }
+    .mobile-menu {
+        display: block;
+    }
+    .btnsMenu {
+        cursor: pointer;
+        position: absolute;
+        left: 50%;
+        top: 45%;
+        z-index: 9999;
+        transform: translate(-50%);
+    }
+    .menu-wrapper {
+        z-index: 1;
+        display: block;
+        top: 42%;
+    }
+    .linhaAbInp {
+        border: 1px solid #e0e0e0;
+        width: 70vw;
+        position: absolute;
+        left: 50%;
+        transform: translate(-50%);
+        top: 44%;
+    }
+    .linhaAbNav {
+        border: 1px solid #e0e0e0;
+        width: 70vw;
+        position: absolute;
+        left: 50%;
+        top: 55%;
+        transform: translate(-50%);
+    }
+        .messageHeader {
+        position: absolute;
+        left: 4%;
+        top: 18%;
+        width: fit-content;
+    }
+    .linksHeader {
+        width: fit-content;
+        position: absolute;
+        left: 60%;
+        transform: translate(-60%);
+        top: 15%;
+    }
+    .icons-mediaHeader {
+        width: fit-content;
+        position: absolute;
+        left: 85%;
+        transform: translate(-85%);
+        top: 15%;
+    }
+        .logo-header {
+        position: absolute;
+        left: 0%;
+        transform: translate(0%);
+        top: 25%;
+        width: fit-content;
+    
+    }
+    .logo-header > a > img {
+        cursor: pointer;
+        width: 65%;
+    }
+    .search-input {
+        position: absolute;
+        left: 50%;
+        transform: translate(-50%);
+        top: 30%;
+        width: fit-content;
+        height: auto;
+        z-index: 10;
+    }
+    .search-input > button {
+        background-color: transparent;
+        display: block;
+        position: relative;
+        left: 85%;
+        top: -22px;
+    }
+    .notCad {
+        width: 20%;
+        position: absolute;
+        left: 89%;
+        transform: translate(-89%);
+        top: 30%;
+    }
+    .carrinho {
+        width: 6%;
+        position: absolute;
+        left: 95%;
+        transform: translate(-85%);
+        top: 30%;
+    }
+    .bannerCateg > img {
+        width: 620px;
+    }
+    .bannerCateg {
+        position: absolute;
+        top: 65%;
+        left: 50%;
+        transform: translate(-50%);
+    }
+    #produtos {
+        position: absolute;
+        top: 55%;
+        flex-wrap: nowrap;
+        justify-content: space-between;
+        left: 50%;
+        transform: translate(-50%);
+        width: 100%;
+    }
+    .cxProd > h2 {
+        height: 31px;
+        font-size: 20px;
+    }
+}
+
+@media screen and (min-width:1025px) and (max-width:1300px) {  
+    .popup {
+        display: none;
+        position: fixed;
+        left: 50%;
+        transform: translate(-50%);
+        top: 50%;
+        width: 50%;
+        height: fit-content;
+        background: #FFFFFF;
+        box-shadow: 0px 187px 75px rgba(0, 0, 0, 0.01), 0px 105px 63px rgba(0, 0, 0, 0.05), 0px 47px 47px rgba(0, 0, 0, 0.09), 0px 12px 26px rgba(0, 0, 0, 0.1), 0px 0px 0px rgba(0, 0, 0, 0.1);
+        border-radius: 13px;
+    }
+    .mainContentHeader {
+        position: absolute;
+        height: 460px;
+        width: 100%;
+        z-index: -1;
+    }
+    div#banners {
+        height: 165px;
+        position: relative;
+        top: 300px;
+        width: 65%;
+        left: 18%;
+        cursor: pointer;
+    }
+    .banner.active > img {
+        width: 100%;
+    }
+    .menu {
+        left: 50%;
+        transform: translate(-50%);
+        width: 91%;
+        top: 45%;
+        z-index: 1;
+    }
+    .menu-wrapper {
+        z-index: 1;
+        display: none;
+        top: 42%;
+    }
+    .linhaAbInp {
+        border: 1px solid #e0e0e0;
+        width: 70vw;
+        position: absolute;
+        left: 50%;
+        transform: translate(-50%);
+        top: 44%;
+    }
+    .linhaAbNav {
+        border: 1px solid #e0e0e0;
+        width: 70vw;
+        position: absolute;
+        left: 50%;
+        top: 55%;
+        transform: translate(-50%);
+    }
+    .messageHeader {
+       position: absolute;
+        left: 9%;
+        top: 18%;
+        width: fit-content;
+    }
+    .linksHeader {
+        width: fit-content;
+        position: absolute;
+        left: 60%;
+        transform: translate(-60%);
+        top: 15%;
+    }
+    .icons-mediaHeader {
+        width: fit-content;
+        position: absolute;
+        left: 85%;
+        transform: translate(-85%);
+        top: 15%;
+    }
+    .logo-header {
+                position: absolute;
+        left: 7%;
+        transform: translate(0%);
+        top: 25%;
+        width: fit-content;
+    }
+    .logo-header > a > img {
+        cursor: pointer;
+        width: 65%;
+    }
+    .search-input {
+        position: absolute;
+        left: 50%;
+        transform: translate(-50%);
+        top: 30%;
+        width: fit-content;
+        height: auto;
+        z-index: 10;
+    }
+    .search-input > button {
+        background-color: transparent;
+        display: block;
+        position: relative;
+        left: 85%;
+        top: -22px;
+    }
+    .mobile-menu {display: none;}
+    .linhaAbInp {display: block;}
+    .linhaAbNav {display: block;}
+    .notCad {
+        width: fit-content;
+        position: absolute;
+        left: 85%;
+        transform: translate(-85%);
+        top: 30%;
+    }
+    .carrinho {
+        width: 6%;
+        position: absolute;
+        left: 95%;
+        transform: translate(-85%);
+        top: 30%;
+    }
+    .bannerCateg > img {
+        width: 620px;
+    }
+    .bannerCateg {
+        position: absolute;
+        top: 65%;
+        left: 50%;
+        transform: translate(-50%);
+    }
+}
+@media screen and (min-width:1301px) and (max-width:1440px) {
+    .popup {
+        display: none;
+        position: fixed;
+        left: 50%;
+        transform: translate(-50%);
+        top: 50%;
+        width: 50%;
+        height: fit-content;
+        background: #FFFFFF;
+        box-shadow: 0px 187px 75px rgba(0, 0, 0, 0.01), 0px 105px 63px rgba(0, 0, 0, 0.05), 0px 47px 47px rgba(0, 0, 0, 0.09), 0px 12px 26px rgba(0, 0, 0, 0.1), 0px 0px 0px rgba(0, 0, 0, 0.1);
+        border-radius: 13px;
+    }
     .logo-header {
         position: absolute;
         left: 17%;
@@ -183,6 +555,13 @@
         cursor: pointer;
         width: 56%;
     }
+
+    .messageHeader {
+    position: absolute;
+    left: 188px;
+    top: 10%;
+    width: fit-content;
+    }
     .search-input {
         position: absolute;
         left: 50%;
@@ -191,30 +570,6 @@
         width: fit-content;
         height: auto;
         z-index: 1;
-    }
-    .notCad {
-        width: fit-content;
-        position: absolute;
-        left: 80%;
-        transform: translate(-80%);
-        top: 16%;
-    }
-    .carrinho {
-        width: fit-content;
-        position: absolute;
-        left: 90%;
-        transform: translate(-90%);
-        top: 16%;
-    }
-    #nav-bar {
-        position: absolute;
-        left: 50%;
-        top: 25%;
-        width: 700px;
-        transform: translate(-50%);
-    }
-    .bannerCateg > img {
-        width: 730px;
     }
     .mainContentHeader {
         position: absolute;
@@ -245,17 +600,198 @@
         left: 90%;
         top: -22px;
     }
-    #produtos {
+    .notCad {
+        width: fit-content;
         position: absolute;
-        top: 75%;
-        flex-wrap: nowrap;
-        justify-content: space-between;
+        left: 80%;
+        transform: translate(-80%);
+        top: 16%;
+    }
+    .menu {
+        position: absolute;
+    left: 50%;
+    transform: translate(-50%);
+    width: max-content;
+    top: 26%;
+    z-index: 1;
+
+    }
+    .carrinho {
+        width: fit-content;
+        position: absolute;
+        left: 90%;
+        transform: translate(-90%);
+        top: 16%;
+    }
+    #nav-bar {
+        position: absolute;
+        left: 50%;
+        top: 25%;
+        width: 700px;
+        transform: translate(-50%);
+    }
+    .bannerCateg > img {
+        width: 620px;
+    }
+    .bannerCateg {
+        position: absolute;
+        top: 32%;
         left: 50%;
         transform: translate(-50%);
+    }
+    #produtos {
+    position: absolute;
+    top: 54%;
+    flex-wrap: nowrap;
+    justify-content: space-between;
+    left: 50%;
+    transform: translate(-50%);
+    width: 80%;
+    display: grid
+;
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+    gap: 80px;
+    padding: 20px;
+}
+}
+@media screen and (min-width:1441px) and (max-width:1635px) {
+    .popup {
+        display: none;
+        position: fixed;
+        left: 50%;
+        transform: translate(-50%);
+        top: 50%;
+        width: 50%;
+        height: fit-content;
+        background: #FFFFFF;
+        box-shadow: 0px 187px 75px rgba(0, 0, 0, 0.01), 0px 105px 63px rgba(0, 0, 0, 0.05), 0px 47px 47px rgba(0, 0, 0, 0.09), 0px 12px 26px rgba(0, 0, 0, 0.1), 0px 0px 0px rgba(0, 0, 0, 0.1);
+        border-radius: 13px;
+    }
+    .logo-header {
+        position: absolute;
+        left: 17%;
+        transform: translate(-17%);
+        top: 14%;
+        width: fit-content;
+    }
+    .logo-header > a > img {
+        cursor: pointer;
+        width: 56%;
+    }
+
+    .messageHeader {
+    position: absolute;
+    left: 188px;
+    top: 10%;
+    width: fit-content;
+    }
+    .search-input {
+        position: absolute;
+        left: 50%;
+        transform: translate(-55%);
+        top: 16%;
+        width: fit-content;
+        height: auto;
+        z-index: 1;
+    }
+    .mainContentHeader {
+        position: absolute;
+        height: 65vw;
         width: 100%;
+        z-index: -1;
     }
-    .cxProd > h2 {
-        height: 31px;
-        font-size: 20px;
+    div#suggestions-container {
+        display: none;
+        background-color: white;
+        width: 35vw;
+        box-shadow: -1px -1px 3px black;
+        height: auto;
+        z-index: 1;
+        position: relative;
+        top: 35px;
+        left: 50%;
+        transform: translate(-50%);
+        border-radius: 5px;
+        padding: 20px;
+        max-height: 455px;
+        overflow-y: auto;
     }
+    .search-input > button {
+        background-color: transparent;
+        display: block;
+        position: relative;
+        left: 90%;
+        top: -22px;
+    }
+    .notCad {
+        width: fit-content;
+        position: absolute;
+        left: 80%;
+        transform: translate(-80%);
+        top: 16%;
+    }
+    .menu {
+        position: absolute;
+    left: 50%;
+    transform: translate(-50%);
+    width: max-content;
+    top: 26%;
+    z-index: 1;
+
+    }
+    .carrinho {
+        width: fit-content;
+        position: absolute;
+        left: 90%;
+        transform: translate(-90%);
+        top: 16%;
+    }
+    #nav-bar {
+        position: absolute;
+        left: 50%;
+        top: 25%;
+        width: 700px;
+        transform: translate(-50%);
+    }
+    .bannerCateg > img {
+        width: 620px;
+    }
+    .bannerCateg {
+        position: absolute;
+        top: 32%;
+        left: 50%;
+        transform: translate(-50%);
+    }
+    #produtos {
+    position: absolute;
+    top: 54%;
+    flex-wrap: nowrap;
+    justify-content: space-between;
+    left: 50%;
+    transform: translate(-50%);
+    width: 80%;
+    display: grid
+;
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+    gap: 80px;
+    padding: 20px;
+}
+}
+@media screen and (min-width:2100px) {
+    .logo-header > a > img {
+        cursor: pointer;
+        width: 10vw;
+    }
+    .mainContentHeader {
+        position: absolute;
+        height: 30vw;
+        width: 100%;
+        z-index: -1;
+    }
+    .bannerCateg {
+        position: absolute;
+        top: 35%;
+        left: 50%;
+        transform: translate(-50%);
+    } 
 }

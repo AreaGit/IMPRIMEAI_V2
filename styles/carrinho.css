@@ -33,7 +33,7 @@ header {
 }
 .mainContentHeader {
   position: absolute;
-  height: 50vw;
+  height: 40vw;
   width: 100%;
   z-index: 1;
 }
@@ -104,7 +104,7 @@ position: absolute;
 left: 50%;
 transform: translate(-50%);
 width: max-content;
-top: 26%;
+top: 27%;
 z-index: 1;
 }
 #categs {
@@ -400,22 +400,23 @@ background-color: transparent;
 background-color: #EF4126;
 height: 41px;
 }
-.messageHeader{
-position: absolute;
-left: 20%;
-top: 6%;
-width: fit-content;
+.messageHeader {
+    position: absolute;
+    left: 16%;
+    top: 10%;
+    width: fit-content;
 }
 .messageHeader > p {
-width: fit-content;
-font-size: 14px;
+    width: fit-content;
+    font-size: 18px;
+    font-style: italic;
 }
 .linksHeader {
 width: fit-content;
 position: absolute;
 left: 60%;
 transform: translate(-60%);
-top: 6%;
+top: 8%;
 }
 .linksHeader > ul {
 display: flex;
@@ -434,7 +435,7 @@ width: fit-content;
 position: absolute;
 left: 75%;
 transform: translate(-75%);
-top: 6%;
+top: 8%;
 }
 .icons-mediaHeader > ul {
 display: flex;
@@ -480,7 +481,7 @@ border-radius: 30px;
   background-color: transparent;
   display: block;
   position: relative;
-  left: 93%;
+  left: 95%;
   top: -35px;
   border: none;
 }
@@ -575,7 +576,7 @@ border: 1px solid #e0e0e0;
 width: 70vw;
 position: absolute;
 left: 50%;
-top: 30%;
+top: 32%;
 transform: translate(-50%);
 }
 .content-carrousel {
