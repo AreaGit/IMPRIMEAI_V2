@@ -1,6 +1,6 @@
 @media screen and (min-width: 1300px) and (max-width: 1400px) {
     header {
-        height: 24vh;
+        height: 18vh;
         box-shadow: 1px 2px 6px black;
         background-color: #015524;
     }
@@ -46,5 +46,37 @@
         grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
         gap: 72px;
         padding: 20px;
+    }
+    header {
+        height: 18vh;
+        box-shadow: 1px 2px 6px black;
+        background-color: #015524;
+    }
+}
+@media screen and (min-width:768px) and (max-width:1299px) {
+    header {
+        height: 18vh;
+        box-shadow: 1px 2px 6px black;
+        background-color: #015524;
+    }
+    .logo {
+        width: fit-content;
+        display: flex;
+        justify-content: center;
+        position: relative;
+        left: 0%;
+        top: -1%;
+        cursor: pointer;
+    }
+    .nav-bar {
+        width: fit-content;
+        display: flex;
+        position: relative;
+        left: 20%;
+        top: -90px;
+    }
+    footer {
+        height: 400px;
+        padding: 15px;
     }
 }
