@@ -48,25 +48,35 @@ btnCad.addEventListener('click', () => {
     let userFound = false;
     let userName = '';
 
-    for (const key in usersPermitidos) {
-        if (usersPermitidos.hasOwnProperty(key)) {
-            const user = usersPermitidos[key];
-            if (user.email === emailUser && user.senha === senhaUser) {
-                userFound = true;
-                userName = user.username;
-                break;
-            }
+    const userData = {
+        email: emailUser,
+        senha: senhaUser
+    };
+
+    fetch('/login-adm-cpq', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(userData)
+    })
+    .then(response => {
+        if (!response.ok) {
+            throw new Error(`Erro de rede - ${response.status}`);
         }
-    }
-
-    if (userFound) {
-        // Salva o nome do usuário nos cookies
-        document.cookie = `username=${userName}; path=/;`;
-
-        // Redireciona para a página desejada
-        window.location.href = '/cpq/painel-administrativo';
-    }  else {
-        //atualiza a página
-       
-    }
+        return response.json();
+    })
+    .then(data => {
+        if (data.message === 'Login bem-sucedido') {
+          document.cookie = `username=${data.name}; path=/;`;
+          alert('Redirecionando para o painel...')
+          setTimeout(() => {
+            window.location.href = '/cpq/painel-administrativo';
+          }, 2000);
+        } else {
+          // Exibir mensagem de erro
+          alert('Erro ao fazer login...');
+          window.location.reload();
+        }
+      });
 });

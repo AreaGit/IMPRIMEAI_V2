@@ -24,6 +24,7 @@ const { client, sendMessage } = require('./api/whatsapp-web');
 const EnderecosEmpresas = require('../models/Enderecos-Empresas');
 const { criarClienteAsaas } = require('./api/asaas')
 const path = require('path');
+const UsersAdm = require('../models/UsersAdm');
 client.on('ready', () => {
   console.log('Cliente WhatsApp pronto para uso no cadastros.js');
 })
@@ -1362,6 +1363,36 @@ app.post("/trocar-senha-cnpj-cpq", async (req, res) => {
   } catch (error) {
     console.error("Erro ao trocar senha:", error);
     return res.status(500).json({ success: false, message: "Erro ao trocar senha." });
+  }
+});
+
+app.post('/login-adm-cpq', async (req, res) => {
+  try {
+    const { email, senha } = req.body;
+
+    // Verifique se o usuário existe no banco de dados
+    const user = await UsersAdm.findOne({ where: { email: email} });
+
+    if (!user) {
+      return res.status(401).json({ message: "Usuário não encontrado" });
+    }
+
+    const passwordMatch = await bcrypt.compare(senha, user.senha);
+
+    // Verifique se a senha está correta
+    if (!passwordMatch) {
+      return res.status(401).json({ message: "Senha incorreta" });
+    }
+
+    res.cookie('nameAdm', user.name);
+    res.cookie('idAdm', user.id)
+
+    // Gere um token de autenticação (exemplo simples)
+    const token = Math.random().toString(16).substring(2);
+
+    res.json({ message: "Login bem-sucedido", token: token, user: user });
+  } catch (error) {
+    console.log(error);
   }
 });
 
