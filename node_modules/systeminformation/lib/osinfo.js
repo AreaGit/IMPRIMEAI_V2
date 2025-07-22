@@ -34,11 +34,17 @@ const _sunos = (_platform === 'sunos');
 
 function time() {
   let t = new Date().toString().split(' ');
+  let timezoneName = '';
+  try {
+    timezoneName = Intl.DateTimeFormat().resolvedOptions().timeZone;
+  } catch {
+    timezoneName = (t.length >= 7) ? t.slice(6).join(' ').replace(/\(/g, '').replace(/\)/g, '') : '';
+  }
   const result = {
     current: Date.now(),
     uptime: os.uptime(),
     timezone: (t.length >= 7) ? t[5] : '',
-    timezoneName: Intl ? Intl.DateTimeFormat().resolvedOptions().timeZone : (t.length >= 7) ? t.slice(6).join(' ').replace(/\(/g, '').replace(/\)/g, '') : ''
+    timezoneName
   };
   if (_darwin || _linux) {
     try {
@@ -345,6 +351,8 @@ function osInfo(callback) {
           result.codename = (result.release.startsWith('13.') ? 'Ventura' : result.codename);
           result.codename = (result.release.startsWith('14.') ? 'Sonoma' : result.codename);
           result.codename = (result.release.startsWith('15.') ? 'Sequoia' : result.codename);
+          result.codename = (result.release.startsWith('16.') ? 'Tahoe' : result.codename);
+          result.codename = (result.release.startsWith('26.') ? 'Tahoe' : result.codename);
           result.uefi = true;
           result.codepage = util.getCodepage();
           if (callback) {
@@ -1238,8 +1246,8 @@ echo -n "hardware: "; cat /sys/class/dmi/id/product_uuid 2> /dev/null; echo;`;
       if (_freebsd || _openbsd || _netbsd) {
         exec('sysctl -i kern.hostid kern.hostuuid', function (error, stdout) {
           const lines = stdout.toString().split('\n');
-          result.os = util.getValue(lines, 'kern.hostid', ':').toLowerCase();
-          result.hardware = util.getValue(lines, 'kern.hostuuid', ':').toLowerCase();
+          result.hardware = util.getValue(lines, 'kern.hostid', ':').toLowerCase();
+          result.os = util.getValue(lines, 'kern.hostuuid', ':').toLowerCase();
           if (result.os.indexOf('unknown') >= 0) { result.os = ''; }
           if (result.hardware.indexOf('unknown') >= 0) { result.hardware = ''; }
           if (callback) {

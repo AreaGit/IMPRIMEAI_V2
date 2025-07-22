@@ -16,6 +16,7 @@
 const fs = require('fs');
 const os = require('os');
 const util = require('./util');
+const { uuid } = require('./osinfo');
 const exec = require('child_process').exec;
 const execSync = require('child_process').execSync;
 const execPromise = util.promisify(require('child_process').exec);
@@ -107,14 +108,30 @@ function system(callback) {
           }
           if (!result.virtual) {
             try {
-              const disksById = execSync('ls -1 /dev/disk/by-id/ 2>/dev/null', util.execOptsLinux).toString();
-              if (disksById.indexOf('_QEMU_') >= 0) {
+              const disksById = execSync('ls -1 /dev/disk/by-id/ 2>/dev/null; pciconf -lv  2>/dev/null', util.execOptsLinux).toString();
+              if (disksById.indexOf('_QEMU_') >= 0 || disksById.indexOf('QEMU ') >= 0) {
                 result.virtual = true;
                 result.virtualHost = 'QEMU';
               }
               if (disksById.indexOf('_VBOX_') >= 0) {
                 result.virtual = true;
                 result.virtualHost = 'VirtualBox';
+              }
+            } catch (e) {
+              util.noop();
+            }
+          }
+          if (_freebsd || _openbsd || _netbsd) {
+            try {
+              const lines = execSync('sysctl -i kern.hostuuid kern.hostid hw.model', util.execOptsLinux).toString().split('\n');
+              if (!result.uuid) {
+                result.uuid = util.getValue(lines, 'kern.hostuuid', ':').toLowerCase();
+              }
+              if (!result.serial || result.serial === '-') {
+                result.serial = util.getValue(lines, 'kern.hostid', ':').toLowerCase();
+              }
+              if (!result.model || result.model === 'Computer') {
+                result.model = util.getValue(lines, 'hw.model', ':').trim();
               }
             } catch (e) {
               util.noop();
