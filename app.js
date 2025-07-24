@@ -3136,6 +3136,16 @@ app.get('/seja-parceiro', (req, res) => {
     res.status(500).send("Erro interno do servidor", err);
   }
 });
+//Rota get para painel da gráfica
+app.get('/graficas/painel', (req, res) => {
+  try {
+    const graficasHtmlContent = fs.readFileSync(path.join(__dirname, "html", "painel-grafica.html"), "utf-8");
+    res.send(graficasHtmlContent);
+  } catch (error) {
+    console.log("Erro ao ler o arquivo painel-grafica.html", error);
+    res.status(500).send("Erro interno do servidor", error);
+  }
+});
 app.listen(PORT, () => {
   console.log(`Servidor rodando na porta ${PORT} https://localhost:${PORT}`);
 });
