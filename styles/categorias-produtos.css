@@ -22,10 +22,10 @@ header {
     width: 100%;
 }
 .mainContentHeader {
-  position: absolute;
-  height: 50vw;
-  width: 100%;
-  z-index: -1;
+    position: absolute;
+    height: 40vw;
+    width: 100%;
+    z-index: -1;
 }
 /*header.scrolled {
     position: fixed;
@@ -582,7 +582,7 @@ button {
 }
 .bannerCateg {
     position: absolute;
-    top: 30%;
+    top: 34%;
     left: 50%;
     transform: translate(-50%);
 }

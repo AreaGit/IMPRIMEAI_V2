@@ -1090,11 +1090,50 @@
         cursor: pointer;
         width: 10vw;
     }
+
     .mainContentHeader {
         position: absolute;
-        height: 40vw;
+        height: 30vw;
         width: 100%;
         z-index: -1;
+    }
+    .linksHeader {
+        width: fit-content;
+        position: absolute;
+        left: 60%;
+        transform: translate(-60%);
+        top: 8%;
+    }
+    .icons-mediaHeader {
+        width: fit-content;
+        position: absolute;
+        left: 75%;
+        transform: translate(-75%);
+        top: 8%;
+    }
+    .menu {
+        position: absolute;
+        left: 50%;
+        transform: translate(-50%);
+        width: max-content;
+        top: 27%;
+        z-index: 1;
+    }
+    .linhaAbNav {
+        border: 1px solid #e0e0e0;
+        width: 70vw;
+        position: absolute;
+        left: 50%;
+        top: 32%;
+        transform: translate(-50%);
+    }
+    .search-input > button {
+        background-color: transparent;
+        display: block;
+        position: relative;
+        left: 95%;
+        top: -35px;
+        border: none;
     }
     #detalhes-produto {
         width: 12%;
