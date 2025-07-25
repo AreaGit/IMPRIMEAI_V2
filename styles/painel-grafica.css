@@ -313,3 +313,55 @@ select.status-select {
     cursor: pointer; border-radius: 5px; 
     font-weight: bold;
 }
+
+.cards-pedidos {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, min(280px, 1fr));
+    gap: 1.5rem;
+}
+
+.card-pedido {
+  background: #fff;
+  border-radius: 16px;
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.08);
+  padding: 1.25rem 1.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  cursor: pointer;
+  transform: translateY(10px);
+  opacity: 0;
+  transition: all 0.4s ease;
+}
+
+.card-pedido.aparecendo {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.card-pedido h4 {
+  margin: 0;
+  font-size: 1.1rem;
+  color: #4f46e5;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.card-pedido p {
+  margin: 0;
+  color: #444;
+  font-size: 0.95rem;
+}
+
+.card-pedido .status {
+  font-weight: 600;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+}
+
+.card-pedido:hover {
+  box-shadow: 0 6px 20px rgba(79, 70, 229, 0.15);
+  transform: scale(1.015);
+}
