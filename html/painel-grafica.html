@@ -1,0 +1,108 @@
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Painel da Gráfica</title>
+  <link rel="stylesheet" href="../styles/painel-grafica.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <link href="https://fonts.googleapis.com/css2?family=Open+Sans&family=Poppins&display=swap" rel="stylesheet">
+</head>
+<body>
+  <div id="loading">
+    <div class="loader"></div>
+    <div class="loading-text" id="loading-frase">Carregando pedidos...</div>
+  </div>
+  <aside class="sidebar">
+    <div class="logo">
+      <img src="../images/favicon-imprimeai.png" alt="Imprimeai" id="inicio">
+      <span>Painel da Gráfica</span>
+    </div>
+    <nav>
+      <ul>
+        <li><a href="#" data-section="pedidos"><i class="fa-solid fa-box"></i> <span>Pedidos</span></a></li>
+        <li><a href="#" data-section="saldo"><i class="fa-solid fa-wallet"></i> <span>Saldo</span></a></li>
+        <li><a href="#" data-section="minha-conta"><i class="fa-solid fa-user"></i> <span>Minha Conta</span></a></li>
+      </ul>
+    </nav>
+  </aside>
+
+  <main class="content">
+    <section id="welcome" class="card section active">
+      <h2>Bem-vindo <span id="nome-grafica"></span></h2>
+      <p>Use o menu lateral para navegar entre as seções.</p>
+      <div class="resumo-geral">
+        <h2>Resumo</h2>
+        <div class="estatistica">
+          <div class="bg-white border border-gray-200 rounded-2xl shadow-md p-6 flex items-center gap-4">
+            <div class="bg-[#EF4126] p-3 rounded-full text-white">
+              <i class="fa-solid fa-box"></i>
+            </div>
+            <div>
+              <p class="text-gray-600 text-sm">Pedidos Recebidos</p>
+              <h3 id="pedidos-recebidos" class="text-2xl font-bold text-[#EF4126]">0</h3>
+            </div>
+          </div>
+        </div>
+        <div class="estatistica">
+          <div class="bg-white border border-gray-200 rounded-2xl shadow-md p-6 flex items-center gap-4">
+            <div class="bg-[#F37160] p-3 rounded-full text-white">
+              <i class="fa-solid fa-wallet"></i>
+            </div>
+            <div>
+              <p class="text-gray-600 text-sm">Saldo Atual</p>
+              <h3 id="saldo-atual" class="text-2xl font-bold text-[#F37160]">R$ 0,00</h3>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="pedidos" class="card section">
+      <h3>Pedidos</h3>
+      <div class="filtros">
+        <label>Data Início: <input type="date" id="filtro-data-inicio"></label>
+        <label>Data Término: <input type="date" id="filtro-data-fim"></label>
+        <label>Status:
+          <select id="filtro-status">
+            <option value="Todos">Todos</option>
+            <option value="Aguardando">Aguardando</option>
+            <option value="Pedido Aceito Pela Gráfica">Pedido Aceito Pela Gráfica</option>
+            <option value="Finalizado">Finalizado</option>
+            <option value="Pedido Enviado pela Gráfica">Pedido Enviado pela Gráfica</option>
+            <option value="Pedido Entregue pela Gráfica">Pedido Entregue pela Gráfica</option>
+          </select>
+        </label>
+        <button id="limpar-filtros">Limpar Filtros</button>
+      </div>
+      <table>
+        <thead>
+          <tr>
+            <th>ID</th>
+            <th>Produto</th>
+            <th>Quantidade</th>
+            <th>Status</th>
+            <th>Data</th>
+          </tr>
+        </thead>
+        <tbody id="pedidos-body"></tbody>
+      </table>
+    </section>
+
+    <section id="saldo" class="card section">
+      <h3>Saldo da Gráfica</h3>
+      <div id="dados-saldo"></div>
+      
+      <button class="btn-saque" id="sacar-disponivel">Sacar Valor Disponível</button>
+      <button class="btn-saque" id="sacar-total">Sacar Saldo Total</button>
+      
+      <div id="mensagem-saque" class="mensagem-saque"></div>
+    </section>
+
+    <section id="minha-conta" class="card section">
+      <h3>Dados da Gráfica</h3>
+      <div id="dados-conta"></div>
+    </section>
+  </main>
+  <script src="../scripts/painel-grafica.js"></script>
+</body>
+</html>

@@ -1414,28 +1414,32 @@ app.post('/criar-pedidos', async (req, res) => {
       "*Tá com pressa? Imprimeaí!*";
 
       await enviarNotificacaoWhatsapp(telefone, mensagemWhatsapp);
+      
       const hojeComHifen = new Date().toISOString().split('T')[0];
       const dadosNfse = {
         payment: idTransacao,
         customer: user.customer_asaas_id,
-        externalReference:  Math.floor(Math.random() * 999) + 1,
+        externalReference: Math.floor(Math.random() * 999) + 1,
         value: totalAPagar,
         effectiveDate: hojeComHifen
       };
 
-          const nfse = await agendarNfsAsaas(dadosNfse);
-          const invoice = nfse.id;
-          
-          const nfseEmitida = await emitirNfs(invoice);
-          const externalReference = nfseEmitida.externalReference;
-          
-          const notaAutorizada = await consultarNf(externalReference);
-          console.log('Nota autorizada:', notaAutorizada);
-          const nfseUrl = notaAutorizada.pdfUrl;
-          
-          pedido.nfseUrl = nfseUrl
-          pedido.statusPag = 'Pago'
-          pedido.save();
+      // Verificar se o pagamento é diferente de "Carteira Usuário"
+      if (metodPag !== 'Carteira Usuário') {
+        const nfse = await agendarNfsAsaas(dadosNfse);
+        const invoice = nfse.id;
+        
+        const nfseEmitida = await emitirNfs(invoice);
+        const externalReference = nfseEmitida.externalReference;
+        
+        const notaAutorizada = await consultarNf(externalReference);
+        console.log('Nota autorizada:', notaAutorizada);
+        const nfseUrl = notaAutorizada.pdfUrl;
+        
+        pedido.nfseUrl = nfseUrl;
+        pedido.statusPag = 'Pago';
+        await pedido.save();
+      }
     }
 
     // Limpar a sessão

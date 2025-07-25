@@ -111,24 +111,24 @@ async function getCoordinatesFromAddressEnd(enderecoEntregaInfo, apiKey) {
   }
   
   // Função para obter coordenadas geográficas (latitude e longitude) a partir do endereço usando a API de Geocodificação do Bing Maps
-  async function getCoordinatesFromAddress(addressInfo, apiKey) {
-    const { endereco, cep, cidade, estado } = addressInfo;
-    const formattedAddress = `${endereco}, ${cep}, ${cidade}, ${estado}`;
-    const url = `https://api.opencagedata.com/geocode/v1/json?q=${encodeURIComponent(formattedAddress)}&key=${`57ae2ecb054049b9aba4dc7eada833a3`}&language=pt&pretty=1`;
+async function getCoordinatesFromAddress(addressInfo, apiKey = '5a60ea0d353449a7b80f2a203218387e') {
+  const { endereco, cep, cidade, estado } = addressInfo;
+  const formattedAddress = `${endereco}, ${cep}, ${cidade}, ${estado}`;
+  const url = `https://api.geoapify.com/v1/geocode/search?text=${encodeURIComponent(formattedAddress)}&lang=pt&apiKey=${'5a60ea0d353449a7b80f2a203218387e'}`;
 
   try {
     const response = await axios.get(url, { timeout: 10000 });
 
-    if (response.data.results.length > 0) {
-      const { lat, lng } = response.data.results[0].geometry;
-      return { latitude: lat, longitude: lng };
+    if (response.data.features.length > 0) {
+      const { lat, lon } = response.data.features[0].properties;
+      return { latitude: lat, longitude: lon };
     } else {
       return { latitude: null, longitude: null, errorMessage: 'Nenhum resultado encontrado' };
     }
   } catch (error) {
     return { latitude: null, longitude: null, errorMessage: error.message };
   }
-  }
+}
   
   // Função para calcular a distância haversine entre duas coordenadas geográficas
   function haversineDistance(lat1, lon1, lat2, lon2) {
@@ -844,6 +844,7 @@ app.get("/perfilGrafica/dados", async (req, res) => {
     res.json({
       userCad: user.userCad,
       userId: userId,
+      user
     });
   } catch (error) {
     console.error("Erro ao buscar os dados do usuário:", error);
