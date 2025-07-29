@@ -40,7 +40,7 @@ btnCad.addEventListener('click', () => {
           avisoSucesso.style.display = 'block';
           setTimeout(() => {
             avisoSucesso.style.display = 'none';
-            window.location.href = '/pedidos';
+            window.location.href = '/graficas/painel';
           }, 3000);
         } else {
           // Exibir mensagem de erro

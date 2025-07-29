@@ -78,28 +78,32 @@ document.addEventListener('DOMContentLoaded', async () => {
       }
 
       async function renderPedidos(pedidosFiltrados) {
-        tbody.innerHTML = '';
-        for (const pedido of pedidosFiltrados) {
-          const dataCriacao = new Date(pedido.createdAt).toLocaleString('pt-BR');
+        const container = document.getElementById('cards-pedidos');
+        container.innerHTML = '';
+        
+        for (const [i, pedido] of pedidosFiltrados.entries()) {
+          const card = document.createElement('div');
+          card.className = 'card-pedido';
           const icon = getStatusIcon(pedido.statusPed);
-          const tr = document.createElement('tr');
-          tr.style.opacity = 0;
-          tr.innerHTML = `
-            <td>${pedido.idPed}</td>
-            <td>${pedido.nomeProd}</td>
-            <td>${pedido.quantidade}</td>
-            <td><span class="status-icon">${icon}</span>${pedido.statusPed}</td>
-            <td>${dataCriacao}</td>
-          `;
-          tbody.appendChild(tr);
-          requestAnimationFrame(() => {
-            tr.style.transition = 'opacity 0.4s ease';
-            tr.style.opacity = 1;
-          });
+          const dataCriacao = new Date(pedido.createdAt).toLocaleString('pt-BR');
 
-          tr.addEventListener('click', () => {
+          card.innerHTML = `
+            <h4><span class="status-icon">${icon}</span>Pedido #${pedido.idPed}</h4>
+            <p><strong>Produto:</strong> ${pedido.nomeProd}</p>
+            <p><strong>Quantidade:</strong> ${pedido.quantidade}</p>
+            <p class="status"><strong>Status:</strong> ${pedido.statusPed}</p>
+            <p><strong>Data:</strong> ${dataCriacao}</p>
+          `;
+
+          card.addEventListener('click', () => {
             window.location.href = `/detalhes-pedidos?idPedido=${pedido.idPed}&idProduto=${pedido.idProduto}`;
           });
+
+          container.appendChild(card);
+
+          setTimeout(() => {
+            card.classList.add('aparecendo');
+          }, i * 80);
         }
       }
 
@@ -151,8 +155,10 @@ document.addEventListener('DOMContentLoaded', async () => {
         pedidos = data.pedidos;
         const aguardando = pedidos.filter(p => p.statusPed === 'Aguardando');
         document.getElementById('pedidos-recebidos').textContent = aguardando.length;
+        // Define filtro como "Aguardando" por padrão
+        filtroStatus.value = 'Aguardando';
         aplicarFiltros();
-    } catch (error) {
+      } catch (error) {
           console.error('Erro ao buscar pedidos:', error);
         } finally {  
           loading.style.display = 'none';

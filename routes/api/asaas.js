@@ -1,6 +1,5 @@
 const axios = require('axios');
-require('dotenv').config({ path: './routes/api/.env' });  // Certifique-se de que o caminho está correto
-const asaas_key = (process.env.ASAAS_SECRET_API_KEY_PROD);
+const asaas_key = ("");
 /*
 
 CLIENTE CRIADO EM AMBIENTE SANDBOX DO ASAAS
