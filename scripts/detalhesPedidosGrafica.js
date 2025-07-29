@@ -68,7 +68,7 @@ document.addEventListener('DOMContentLoaded', async() => {
     }else if(statusPedido == "Pedido Entregue pela Gráfica") {
       btnAceitarPedido.style.display = 'none'
       btnCancelarPedido.style.display = 'none'
-      avisoEntregue.style.display = 'block'
+      document.getElementById('avisoEntregue').style.display = 'block'
     } 
     // Exibe as variações do produto no console.log do HTML
     if (detalhesPedido.itenspedidos && detalhesPedido.itenspedidos.length > 0) {
@@ -113,7 +113,7 @@ document.addEventListener('DOMContentLoaded', async() => {
               if (data.success) {
                 console.log('Pedido aceito com sucesso!');
                 setTimeout( () =>{
-                  window.location.href = '/pedidos';
+                  history.back();
                 },3000);
                 // Verifica se o novo status é 'Pedido Aceito Pela Gráfica'
                 if (data.novoStatus === 'Pedido Aceito Pela Gráfica') {
@@ -158,7 +158,7 @@ document.addEventListener('DOMContentLoaded', async() => {
           const data = await response.json();
           if (data.success) {
             console.log('Pedido aceito com sucesso!');
-            window.location.href = '/pedidos';
+            history.back();
     
             // Verifica se o novo status é 'Pedido Aceito Pela Gráfica'
             if (data.novoStatus === 'Pedido Aceito Pela Gráfica') {
@@ -229,7 +229,7 @@ document.addEventListener('DOMContentLoaded', async() => {
               if (data.success) {
                 console.log('Pedido aceito com sucesso!');
                 setTimeout( () =>{
-                  window.location.href = '/pedidos';
+                  history.back();
                 },3000);
                 // Verifica se o novo status é 'Pedido Aceito Pela Gráfica'
                 if (data.novoStatus === 'Pedido Aceito Pela Gráfica') {
@@ -275,7 +275,7 @@ document.addEventListener('DOMContentLoaded', async() => {
             const data = await response.json();
             if (data.success) {
               console.log('Pedido aceito com sucesso!');
-              window.location.href = '/pedidos';
+              history.back();
       
               // Verifica se o novo status é 'Pedido Aceito Pela Gráfica'
               if (data.novoStatus === 'Pedido Aceito Pela Gráfica') {
@@ -516,7 +516,7 @@ document.addEventListener('DOMContentLoaded', async() => {
         if (data.success) {
           console.log('Pedido cancelado com sucesso!');
           setTimeout(() => {
-            window.location.href = '/pedidos'
+            history.back();
           }, 3000)
           // Redirecione ou faça outras ações necessárias após o cancelamento
         } else {
@@ -580,7 +580,7 @@ document.addEventListener('DOMContentLoaded', async() => {
           // Redirect to after updating the order status
           window.setTimeout(() => {
             carregamento.style.display = 'none';
-            window.location.href = '/pedidos';
+            history.back();
           },5000)
          
 

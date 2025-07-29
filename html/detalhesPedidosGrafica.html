@@ -18,33 +18,34 @@
 </head>
 <body>
     <header>
-        <a href="/pedidos"><img src="../images/logo-imprimeai.png" alt="..." id="logo"></a>
+        <a onclick="history.back()" style="cursor: pointer;"><img src="../images/logo-imprimeai.png" alt="..." id="logo"></a>
         <h1>Detalhes do pedido</h1>
         <div id="linhaHr"></div>
     </header>
     <main>
         <div id="produto-info" class="infoProd">
-            <div id="botoes-container">
-              <a id="btnCancelarPedido" href="#">Cancelar Pedido</a>
-              <button id="btnAceitarPedido" class="aceitPed">Aceitar Pedido</button>
-            </div>
+        </div>
+<div id="acoesPedido">
             <div id="avisoEntregue">
                 <div class="notifications-container">
                     <div class="success">
-                      <div class="flex">
-                        <div class="flex-shrink-0">
-                          <svg aria-hidden="true" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg" class="succes-svg">
-                            <path clip-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" fill-rule="evenodd"></path>
-                          </svg>
+                        <div class="flex">
+                            <div class="flex-shrink-0">
+                                <svg aria-hidden="true" fill="currentColor" viewBox="0 0 20 20" class="succes-svg">
+                                    <path clip-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" fill-rule="evenodd"></path>
+                                </svg>
+                            </div>
+                            <div class="success-prompt-wrap">
+                                <p class="success-prompt-heading">Pedido Entregue!</p>
+                            </div>
                         </div>
-                        <div class="success-prompt-wrap">
-                          <p class="success-prompt-heading">
-                            Pedido Entregue!
-                          </p>
-                        </div>
-                      </div>
                     </div>
-                  </div>
+                </div>
+            </div>
+
+            <div id="botoes-container">
+                <button id="btnCancelarPedido">Cancelar Pedido</button>
+                <button id="btnAceitarPedido" class="aceitPed">Aceitar Pedido</button>
             </div>
         </div>
         <div id="formEntrega">
