@@ -349,46 +349,58 @@ app.get('/imagens/:id', async (req, res) => {
 });
 
 const getCategoriasPorProdutosUsuario = async (userId) => {
-  try {
-    const user = await UsersEmpresas.findByPk(userId);
-    if (!user) {
-      throw new Error("Usuário não encontrado.");
-    }
+  const user = await UsersEmpresas.findByPk(userId);
 
-    let nomesProdutos = [];
-
-    if (typeof user.produtos === "string") {
-      nomesProdutos = [user.produtos.trim()];
-    } else if (Array.isArray(user.produtos)) {
-      nomesProdutos = user.produtos.map(p => p.trim());
-    } else {
-      throw new Error("O campo 'produtos' não é válido.");
-    }
-
-    const produtos = await ProdutosExc.findAll({
-      where: {
-        categProd: {
-          [Op.in]: nomesProdutos
-        }
-      },
-      attributes: ["categProd2"],
-      group: ["categProd2"]
-    });
-
-    if (produtos.length === 0) {
-      throw new Error("Nenhuma categoria encontrada para os produtos do usuário.");
-    }
-
-    const categoriasUnicas = produtos
-      .map((produto) => produto.categProd2)
-      .filter(Boolean);
-
-    return categoriasUnicas;
-  } catch (error) {
-    console.error("Erro ao buscar categorias:", error);
-    throw new Error(error.message);
+  if (!user) {
+    throw new Error("Usuário não encontrado.");
   }
+
+  let filtrarPorProdutos = true;
+  let nomesProdutos = [];
+
+  if (typeof user.produtos === "string") {
+    if (user.produtos.trim().toUpperCase() === "TODOS") {
+      filtrarPorProdutos = false;
+    } else {
+      nomesProdutos = [user.produtos.trim()];
+    }
+  } else if (Array.isArray(user.produtos)) {
+    nomesProdutos = user.produtos.map((p) => p.trim());
+  } else {
+    throw new Error("O campo 'produtos' não é válido.");
+  }
+
+  const whereCondition = filtrarPorProdutos
+    ? { categProd: { [Op.in]: nomesProdutos } }
+    : {}; // sem filtro
+
+  const produtos = await ProdutosExc.findAll({
+    where: whereCondition,
+    attributes: ["categProd2"],
+    group: ["categProd2"],
+    raw: true,
+  });
+
+  if (!produtos.length) {
+    throw new Error("Nenhuma categoria encontrada.");
+  }
+
+  const categoriasUnicas = produtos
+    .map((p) => p.categProd2)
+    .filter(Boolean);
+
+  // Também retorna todos os produtos, se desejar
+  const todosProdutos = await ProdutosExc.findAll({
+    where: whereCondition,
+    raw: true,
+  });
+
+  return {
+    categorias: categoriasUnicas,
+    produtos: todosProdutos,
+  };
 };
+
 
 //getCategoriasPorProdutosUsuario(1);
 //Rota get da página de comunicação visual
@@ -2145,11 +2157,12 @@ app.get('/cpq/inicio', (req, res) => {
 app.get("/categorias-produtos-usuario/:userId", async (req, res) => {
   try {
     const { userId } = req.params;
-    const categorias = await getCategoriasPorProdutosUsuario(userId);
+    const { categorias, produtos } = await getCategoriasPorProdutosUsuario(userId);
 
-    res.json({
-      message: "Categorias únicas recuperadas com sucesso.",
+    res.status(200).json({
+      message: "Categorias e produtos recuperados com sucesso.",
       categorias,
+      produtos,
     });
   } catch (error) {
     res.status(400).json({ message: error.message });
@@ -2452,16 +2465,12 @@ app.get('/api/produtos-empresas/:categoria', async (req, res) => {
 
   try {
     const produtos = await getProdutosPorCategoriaDoUsuario(userId, categoria, page, limit);
-    res.json({
-      produtos
-    });
+    res.json({ produtos });
   } catch (error) {
     console.error("[GET /api/produtos-empresas/:categoria] Erro:", error);
     res.status(500).json({ error: error.message });
   }
 });
-
-
 
 const getProdutosPorCategoriaDoUsuario = async (userId, subcategoria, page = 1, limit = 100) => {
   console.log(`🔍 Buscando produtos para userId=${userId} com subcategoria=${subcategoria}`);
@@ -2473,9 +2482,14 @@ const getProdutosPorCategoriaDoUsuario = async (userId, subcategoria, page = 1, 
   if (!user) throw new Error("Usuário não encontrado.");
 
   let produtosUsuario = [];
+  let filtrarPorProdutos = true;
 
   if (typeof user.produtos === 'string') {
-    produtosUsuario = user.produtos.split(',').map(p => p.trim()).filter(Boolean);
+    if (user.produtos.trim().toUpperCase() === "TODOS") {
+      filtrarPorProdutos = false;
+    } else {
+      produtosUsuario = user.produtos.split(',').map(p => p.trim()).filter(Boolean);
+    }
   } else if (Array.isArray(user.produtos)) {
     produtosUsuario = user.produtos.map(p => p.trim());
   } else if (typeof user.produtos === 'object' && user.produtos !== null) {
@@ -2486,22 +2500,29 @@ const getProdutosPorCategoriaDoUsuario = async (userId, subcategoria, page = 1, 
     throw new Error("Campo 'produtos' do usuário inválido.");
   }
 
-  if (produtosUsuario.length === 0) throw new Error("Usuário sem produtos habilitados.");
+  if (filtrarPorProdutos && produtosUsuario.length === 0) {
+    throw new Error("Usuário sem produtos habilitados.");
+  }
 
-  console.log("✅ Produtos permitidos (categProd):", produtosUsuario);
+  console.log("✅ Produtos permitidos (categProd):", filtrarPorProdutos ? produtosUsuario : "[TODOS]");
 
   const offset = (page - 1) * limit;
 
+  const whereCond = {
+    [Op.or]: [
+      where(fn('LOWER', col('categProd2')), subcategoria.toLowerCase()),
+      where(fn('LOWER', col('categProd3')), subcategoria.toLowerCase()),
+    ]
+  };
+
+  if (filtrarPorProdutos) {
+    whereCond.categProd = {
+      [Op.in]: produtosUsuario
+    };
+  }
+
   const produtos = await ProdutosExc.findAndCountAll({
-    where: {
-      categProd: {
-        [Op.in]: produtosUsuario
-      },
-      [Op.or]: [
-        where(fn('LOWER', col('categProd2')), subcategoria.toLowerCase()),
-        where(fn('LOWER', col('categProd3')), subcategoria.toLowerCase()),
-      ]
-    },
+    where: whereCond,
     offset,
     limit: parseInt(limit),
     order: [['nomeProd', 'ASC']],
