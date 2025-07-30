@@ -1,45 +1,40 @@
 :root {
-    --branco:#ffff;
-    --coral:#F37160;
-    --flamingo:#F69896;
-    --concreto:#A7A9AC;
-    --preto:#000000;
-    --vermelho:#EF4126;
-    --font-padrao:'Open Sans';
-    --cor-fundo: #f9f9f9;
-    --cor-primaria: #015524;
-    --cor-secundaria: #ffffff;
-    --cor-texto: #333;
-    --cor-borda: #ddd;
-    --cor-hover: #f0f0f0;
-  }
-  * {
-    margin: 0px;
-    padding: 0px;
-    box-sizing: border-box;
-  }
-  body {
-    font-family: 'Open Sans';
-    color: #333;
-    background-color: #f1f1f1;
-  }
-  header {
-    height: 15vh;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    /*background: linear-gradient(135deg, #F69896, #F37160);*/
-    box-shadow: 1px 1px 3px #333;
-  }
-  .logo {
-    width: fit-content;
-    display: flex;
-    justify-content: center;
-    cursor: pointer;
-  }
-  .logo > img {
-    width: 70%;
-  }
+  --branco: #ffffff;
+  --coral: #F37160;
+  --flamingo: #F69896;
+  --concreto: #A7A9AC;
+  --preto: #000000;
+  --vermelho: #EF4126;
+  --cinza-fundo: #F5F5F7;
+  --cinza-borda: #E0E0E0;
+  --cinza-texto: #444;
+  --font-padrao: 'Open Sans', sans-serif;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: var(--font-padrao);
+  background-color: var(--cinza-fundo);
+  color: var(--cinza-texto);
+}
+
+header {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 20px 0;
+  background-color: var(--branco);
+  border-bottom: 1px solid var(--cinza-borda);
+}
+
+.logo img {
+  height: 10%;
+}
   .container {
     max-width: 500px;
     background: white;
@@ -50,7 +45,7 @@
     position: absolute;
     left: 50%;
     transform: translate(-50%);
-    top: 20%;
+    top: 25%;
 }
 .container > h2 {
     color: #EF4126;
@@ -61,14 +56,14 @@ label {
     display: block;
     text-align: left;
 }
-select, input, textarea, button {
+select, input, textarea, #btnEnviarPedido {
     width: 100%;
     padding: 10px;
     margin-top: 5px;
     border-radius: 5px;
     border: 1px solid #ccc;
 }
-button {
+#btnEnviarPedido {
     width: 100%;
     padding: 10px;
     background: #F04D41;
@@ -80,7 +75,122 @@ button {
     transition: 0.3s;
     font-weight: bold;
 }
-button:hover {
+#btnEnviarPedido:hover {
     background: #D93A33;
     box-shadow: 0px 5px 15px rgba(217, 58, 51, 0.3);
+}
+
+.contentFooter {
+  background-color: #2B2B2B;
+  position: relative;
+  top: 1350px;
+  left: 49%;
+  transform: translate(-50%);
+  width: 101vw;
+}
+footer {
+  height: 20vw;
+  padding: 15px;
+}
+/* Estilos gerais do rodapé */
+/* Rodapé moderno */
+footer.modern-footer {
+  background: linear-gradient(135deg, #222, #444);
+  color: #fff;
+  padding: 50px 20px;
+}
+
+footer .footer-container {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+footer .footer-section {
+  flex: 1;
+  min-width: 200px;
+  margin: 10px;
+}
+
+footer h4 {
+  font-size: 18px;
+  margin-bottom: 15px;
+  color: #EF4126; /* Destaque com uma cor vibrante */
+  position: relative;
+}
+
+footer h4::after {
+  content: '';
+  display: block;
+  width: 50px;
+  height: 3px;
+  background: #EF4126;
+  margin-top: 5px;
+}
+
+footer ul {
+  list-style: none;
+  padding: 0;
+}
+
+footer ul li {
+  width: 280px;
+  height: 49px;
+}
+
+footer ul li a {
+  color: #ccc;
+  text-decoration: none;
+  font-size: 14px;
+  display: inline-block;
+  margin: 0px 0;
+  transition: color 0.3s ease-in-out;
+  margin: 20px;
+}
+
+footer ul li a:hover {
+  color: #F37160;
+}
+
+footer .social-icons a {
+  margin: 0 10px;
+  text-decoration: none;
+  display: inline-block;
+}
+
+footer .social-icons img {
+  width: 30px;
+  height: 30px;
+  transition: transform 0.3s ease;
+  filter: grayscale(100%);
+}
+
+footer .social-icons img:hover {
+  transform: scale(1.2);
+  filter: grayscale(0%);
+}
+
+footer .payment-icons img {
+  width: 35px;
+  margin: 5px;
+  filter: brightness(0.8);
+  transition: filter 0.3s ease-in-out;
+}
+
+footer .payment-icons img:hover {
+  filter: brightness(1);
+}
+
+footer .footer-bottom {
+  text-align: center;
+  padding-top: 20px;
+  border-top: 1px solid #555;
+  margin-top: 30px;
+}
+
+footer .footer-bottom p {
+  color: #aaa;
+  font-size: 14px;
 }

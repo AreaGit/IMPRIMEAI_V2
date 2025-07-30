@@ -91,9 +91,10 @@ header {
   }
 }
 
-main {
-  padding: 40px 20px;
+section {
+    margin-top: 50px;
 }
+
 
 .intro p,
 #comoFunciona p,
@@ -104,35 +105,136 @@ main {
 }
 
 .intro {
-  text-align: center;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 40px;
+  flex-wrap: wrap;
   margin-bottom: 48px;
+  width: 50%;
+  position: relative;
+  left: 50%;
+  transform: translate(-50%);
 }
 
-.intro img {
-  max-width: 40%; /* ou o tamanho desejado, ex: 250px */
+.intro-texto {
+  flex: 1;
+  min-width: 300px;
+}
+
+.intro-texto h1 {
+  font-size: 28px;
+  margin-bottom: 16px;
+}
+
+.intro-texto p {
+  font-size: 16px;
+  margin-bottom: 20px;
+}
+
+.intro-texto > a {
+    position: relative;
+    left: 35%;
+    background-color: var(--vermelho);
+    color: var(--branco);
+    padding: 10px 18px;
+    border: none;
+    border-radius: 6px;
+    font-weight: 600;
+    cursor: pointer;
+}
+
+.intro-imagem {
+  flex: 1;
+  min-width: 300px;
+  display: flex;
+  justify-content: center;
+}
+
+.intro-imagem img {
+  width: 100%;
+  max-width: 400px;
   height: auto;
-  display: block;
-  margin: 0 auto 20px auto; /* centraliza a imagem acima do texto */
-}
-
-.intro a {
-  display: inline-block;
-  margin-top: 16px;
-  padding: 12px 24px;
-  background-color: var(--vermelho);
-  color: var(--branco);
-  border-radius: 6px;
-  font-weight: 600;
+  border-radius: 8px;
 }
 
 .titulo-secao {
   text-align: center;
-  margin: 48px 0 24px;
-  font-size: 28px;
+  font-size: 24px;
+  color: #333;
+  margin-bottom: 40px;
+  font-weight: 600;
 }
 
-.vantagens,
-.passos,
+.vantagens {
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  flex-wrap: wrap;
+  gap: 40px;
+  max-width: 1000px;
+  margin: 0 auto;
+}
+
+.vantagem {
+  text-align: center;
+  max-width: 220px;
+}
+
+.vantagem img {
+  width: 60px;
+  height: auto;
+  margin-bottom: 15px;
+}
+
+.vantagem h3 {
+  font-size: 16px;
+  font-weight: bold;
+  margin-bottom: 10px;
+  color: #333;
+}
+
+.vantagem p {
+  font-size: 14px;
+  color: #666;
+  line-height: 1.4;
+}
+
+.passos {
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  flex-wrap: wrap;
+  gap: 40px;
+  max-width: 1000px;
+  margin: 0 auto;
+}
+
+.passo {
+  text-align: center;
+  max-width: 220px;
+}
+
+.passo img {
+  width: 60px;
+  height: auto;
+  margin-bottom: 15px;
+}
+
+.passo h3 {
+  font-size: 16px;
+  font-weight: bold;
+  margin-bottom: 10px;
+  color: #333;
+}
+
+.passo p {
+  font-size: 14px;
+  color: #666;
+  line-height: 1.4;
+}
+
+
 .requisitos {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
@@ -140,8 +242,7 @@ main {
   padding: 0 20px;
 }
 
-.vantagem,
-.passo,
+
 .requisito {
   text-align: center;
   padding: 16px;
@@ -149,41 +250,53 @@ main {
   border-radius: 8px;
 }
 
-.vantagem img,
-.passo img {
-  width: 80px;
-  margin-bottom: 16px;
+
+
+#comoFunciona {
+  position: relative;
+  padding: 60px 20px;
+  background-color: #FEDDD6;
 }
 
 #comoFunciona .conteudo {
+  position: relative;
   display: flex;
   flex-wrap: wrap;
   align-items: center;
   justify-content: center;
   gap: 32px;
-  padding: 20px;
+  z-index: 1;
 }
 
 #comoFunciona img {
   width: 320px;
   max-width: 100%;
   border-radius: 12px;
+  position: relative;
+  z-index: 1;
 }
 
-#comoFunciona h2 {
-  margin-bottom: 16px;
+#comoFunciona h2,
+#comoFunciona p {
+  color: #000000;
+  z-index: 1;
+  position: relative;
+  text-align: left;
+  width: 35vw;
 }
-
 .btn-cadastro {
-  display: block;
-  margin: 40px auto 0;
-  width: fit-content;
-  padding: 12px 28px;
-  background-color: var(--vermelho);
-  color: var(--branco);
-  font-weight: 600;
-  border-radius: 6px;
-  text-align: center;
+    display: block;
+    margin: 0px auto 0;
+    width: fit-content;
+    padding: 12px 28px;
+    background-color: var(--vermelho);
+    color: var(--branco);
+    font-weight: 600;
+    border-radius: 200px;
+    text-align: center;
+    position: relative;
+    left: 104%;
+    top: -155px;
 }
 
 .requisitos {
@@ -205,24 +318,40 @@ main {
 
 .lista-requisitos {
   list-style: none;
-  padding: 0;
-  margin: 0;
+  padding: 40px 20px;
+  margin: 0 auto;
   display: grid;
-  gap: 32px;
+  grid-template-columns: repeat(3, 1fr); /* 3 colunas */
+  gap: 30px;
+
+  max-width: 1200px;
+  background-color: #ffffff;
+  border-radius: 12px;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.08);
 }
 
 .imagem-requisitos img {
-  max-width: 100%;
-  height: auto;
-  border-radius: 12px;
-  object-fit: cover;
+    max-width: 645px;
+    height: auto;
+    border-radius: 12px;
+    object-fit: cover;
+    position: relative;
+    left: 25%;
 }
+
+
 
 .lista-requisitos li {
   padding: 24px;
   border-radius: 12px;
-  border: 1px solid #eee;
+  /*border: 1px solid #eee;*/
   text-align: center;
+}
+
+.lista-requisitos li img {
+  width: 60px;
+  height: auto;
+  margin-bottom: 15px;
 }
 
 .lista-requisitos h3 {
@@ -234,4 +363,119 @@ main {
   margin: 0;
   font-size: 15px;
   text-align: center;
+}
+
+.contentFooter {
+  background-color: #2B2B2B;
+  position: relative;
+  top: 50px;
+  left: 49%;
+  transform: translate(-50%);
+  width: 101vw;
+}
+footer {
+  height: 20vw;
+  padding: 15px;
+}
+/* Estilos gerais do rodapé */
+/* Rodapé moderno */
+footer.modern-footer {
+  background: linear-gradient(135deg, #222, #444);
+  color: #fff;
+  padding: 50px 20px;
+}
+
+footer .footer-container {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+footer .footer-section {
+  flex: 1;
+  min-width: 200px;
+  margin: 10px;
+}
+
+footer h4 {
+  font-size: 18px;
+  margin-bottom: 15px;
+  color: #EF4126; /* Destaque com uma cor vibrante */
+  position: relative;
+}
+
+footer h4::after {
+  content: '';
+  display: block;
+  width: 50px;
+  height: 3px;
+  background: #EF4126;
+  margin-top: 5px;
+}
+
+footer ul {
+  list-style: none;
+  padding: 0;
+}
+
+footer ul li {
+  width: 280px;
+  height: 49px;
+}
+
+footer ul li a {
+  color: #ccc;
+  text-decoration: none;
+  font-size: 14px;
+  display: inline-block;
+  margin: 0px 0;
+  transition: color 0.3s ease-in-out;
+  margin: 20px;
+}
+
+footer ul li a:hover {
+  color: #F37160;
+}
+
+footer .social-icons a {
+  margin: 0 10px;
+  text-decoration: none;
+  display: inline-block;
+}
+
+footer .social-icons img {
+  width: 30px;
+  height: 30px;
+  transition: transform 0.3s ease;
+  filter: grayscale(100%);
+}
+
+footer .social-icons img:hover {
+  transform: scale(1.2);
+  filter: grayscale(0%);
+}
+
+footer .payment-icons img {
+  width: 35px;
+  margin: 5px;
+  filter: brightness(0.8);
+  transition: filter 0.3s ease-in-out;
+}
+
+footer .payment-icons img:hover {
+  filter: brightness(1);
+}
+
+footer .footer-bottom {
+  text-align: center;
+  padding-top: 20px;
+  border-top: 1px solid #555;
+  margin-top: 30px;
+}
+
+footer .footer-bottom p {
+  color: #aaa;
+  font-size: 14px;
 }

@@ -1,224 +1,108 @@
 :root {
-    --branco:#ffff;
-    --coral:#F37160;
-    --flamingo:#F69896;
-    --concreto:#A7A9AC;
-    --preto:#000000;
-    --vermelho:#EF4126;
-    --font-padrao:'Open Sans';
-  }
-  * {
-    margin: 0px;
-    padding: 0px;
-    box-sizing: border-box;
-  }
-  body {
-    font-family: var(--font-padrao);
-    background-color: #F5F5F7;
-  }
-  header {
-    height: 15vh;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    /*background: linear-gradient(135deg, #F69896, #F37160);*/
-}
-.logo {
-    width: fit-content;
-    display: flex;
-    justify-content: center;
-    cursor: pointer;
-}
-  .logo > img {
-    width: 70%;
-  }
-  li {
-    list-style: none;
-  }
-  a {
-    text-decoration: none;
-    color: black;
-  }
-main > h1 {
-    font-weight: 500;
-    font-size: 24px;
-    position: absolute;
-    left: 15%;
-    top: 120px;
-}
-#linhaHr {
-    border: 1px solid black;
-    width: 90vw;
-    position: absolute;
-    top: 170px;
-    left: 50%;
-    transform: translate(-50%);
-}
-main > h2 {
-    font-weight: 700;
-    font-size: 40px;
-    line-height: 61px;
-    position: absolute;
-    top: 220px;
-    left: 20%;
-    transform: translate(-20%);
-}
-  .input-wrapper {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 15px;
-    position: absolute;
-    left: 25%;
-    top: -10px;
-}
-  
-  .input {
-    border-style: none;
-    height: 40px;
-    width: 50px;
-    padding: 10px;
-    outline: none;
-    border-radius: 50%;
-    transition: .5s ease-in-out;
-    background-color: transparent;
-    box-shadow: 0px 0px 3px transparent;
-    padding-right: 40px;
-    color: #020202;
-  }
-  
-  .input::placeholder,
-  .input {
-    font-size: 17px;
-  }
-  
-  .input::placeholder {
-    color: #8f8f8f;
-  }
-  
-  .icon {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    position: absolute;
-    right: 0px;
-    cursor: pointer;
-    width: 50px;
-    height: 50px;
-    outline: none;
-    border-style: none;
-    border-radius: 50%;
-    pointer-events: painted;
-    background-color: transparent;
-    transition: .2s linear;
-  }
-  
-  .icon:focus ~ .input,
-  .input:focus {
-    box-shadow: none;
-    width: 250px;
-    border-radius: 0px;
-    background-color: transparent;
-    border-bottom: 2px solid #020202;
-    transition: all 500ms cubic-bezier(0, 0.110, 0.35, 2);
-  }
-#sugestoes {
-    display: none;
-    cursor: pointer;
-    border: 1px solid #ccc;
-    padding: 10px;
-    height: auto;
-    overflow-y: auto;
-    width: 250px;
-    border-radius: 3px;
-    position: absolute;
-    top: 35px;
-    left: 20%;
-    transition: 0.8s;
-    background-color: white;
-    z-index: 1000; /* Valor alto para garantir sobreposição */
-}
-#sugestoes:hover {
-    transition: 0.8s;  
-    box-shadow: 1px 1px 4px black;  
-} 
-#sugestoes ul {
-    list-style-type: none; /* Remova os marcadores de lista */
-    padding: 0;
+  --branco: #ffffff;
+  --coral: #F37160;
+  --flamingo: #F69896;
+  --concreto: #A7A9AC;
+  --preto: #000000;
+  --vermelho: #EF4126;
+  --cinza-fundo: #F5F5F7;
+  --cinza-borda: #E0E0E0;
+  --cinza-texto: #444;
+  --font-padrao: 'Open Sans', sans-serif;
 }
 
-#sugestoes li {
-    margin-bottom: 5px;
-    cursor: pointer;
-    border-bottom: 1px solid;
-    height: 27px;
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
 }
 
-#sugestoes li:hover {
-    background-color: #f0f0f0; /* Mude a cor de fundo ao passar o mouse sobre os itens */
+body {
+  font-family: var(--font-padrao);
+  background-color: var(--cinza-fundo);
+  color: var(--cinza-texto);
 }
-#opcoes {
-    width: 1200px;
-    height: 500px;
-    position: absolute;
-    left: 50%;
-    transform: translate(-50%);
-    top: 350px;
-    display: flex;
-    padding: 10px;
+
+header {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 20px 0;
+  background-color: var(--branco);
+  border-bottom: 1px solid var(--cinza-borda);
 }
-.contato {
-    border-radius: 5px;
-    margin: 10px;
-    position: relative;
-    left: 25%;
-    transform: translate(-25%);
-    top: 30px;
-    background-color: white;
-    box-shadow: 1px 1px 3px black;
-    width: 332px;
-    height: 330px;
-    cursor: pointer;
-    transition: 0.8s;
+
+.logo img {
+  height: 10%;
 }
-.contato:hover {
-    transition: 0.8s;
-    box-shadow: 1px 1px 3px #F37160;
-}
-.contato > svg {
-  position: relative;
-  left: 50%;
-  transform: translate(-50%);
-  top: 50px;
-}
-.contato > h2 {
-  position: relative;
-  top: 70px;
+
+main {
+  padding: 40px 20px;
   text-align: center;
 }
-.contato > a {
+
+main > h1 {
+  font-size: 32px;
+  font-weight: 700;
+  color: var(--vermelho);
+  margin-bottom: 8px;
+}
+
+#linhaHr {
+  height: 2px;
+  background-color: var(--coral);
+  width: 100px;
+  margin: 0 auto 40px auto;
+  border: none;
+}
+
+main > h2 {
+  font-size: 24px;
+  margin-bottom: 40px;
+  font-weight: 500;
+}
+
+#opcoes {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 32px;
+}
+
+.contato {
+  background-color: var(--branco);
+  border-radius: 12px;
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.06);
+  padding: 40px 20px;
+  width: 320px;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.contato:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 12px 28px rgba(243, 113, 96, 0.3);
+}
+
+.contato img {
+  width: 64px;
+  margin-bottom: 20px;
+}
+
+.contato h2 {
+  font-size: 20px;
+  color: var(--coral);
+  margin-bottom: 12px;
+}
+
+.contato a {
+  font-size: 16px;
+  color: var(--preto);
   text-decoration: underline;
 }
-#email > a {
-  position: relative;
-  left: 15%;
-  transform: translate(-15%);
-  top: 90px;
-}
-#email > img {
-  position: relative;
-  left: 50%;
-  transform: translate(-50%);
-  top: 50px;
-}
-#whatsapp > a {
-  position: relative;
-  left: 32%;
-  top: 90px;
-}
-#whatsapp > img {
-  position: relative;
-  left: 50%;
-  transform: translate(-50%);
-  top: 50px;
+
+@media (max-width: 768px) {
+  #opcoes {
+    flex-direction: column;
+    align-items: center;
+  }
 }
