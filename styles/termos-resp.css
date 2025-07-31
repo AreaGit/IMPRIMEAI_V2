@@ -1,0 +1,28 @@
+@media screen and (min-width: 320px) and (max-width:767px){
+    
+    .logo img {
+        height: 10%;
+        width: 100%;
+    }
+
+    section.regulamento-content {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%);
+        width: 100%;
+        background-color: white;
+        text-align: justify;
+        padding: 12px 28px;
+        box-shadow: 1px 1px 2px 0px black;
+        border-radius: 12px;
+    }
+
+    .regulamento-content > p {
+        font-size: 16px;
+        font-weight: 300;
+        width: 100%;
+        margin: 18px;
+        text-align: justify;
+    }
+}
