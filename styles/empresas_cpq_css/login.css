@@ -34,8 +34,8 @@ body {
   max-width: 630px;
   border: 1px solid #e2e8f0;
 }
-#loginEmail {display: block;}
-#loginCnpj {display: none;}
+#loginEmail {display: none;}
+#loginCnpj {display: block;}
 form {
   display: flex;
   flex-direction: column;
