@@ -7,6 +7,9 @@ const secaoPedidos = document.getElementById('pedidos');
 const secaoSaldo = document.getElementById('saldo');
 const secaoConta = document.getElementById('minha-conta');
 let conta = {};
+const agora = new Date();
+const mesAtual = agora.getMonth(); // 0-11
+const anoAtual = agora.getFullYear();
     
 iconeHome.addEventListener('click', () => {
     boasVindas.style.display = 'block';
@@ -108,8 +111,8 @@ document.addEventListener('DOMContentLoaded', async () => {
       }
 
       function aplicarFiltros() {
-        const inicio = filtroDataInicio.value;
-        const fim = filtroDataFim.value;
+        const inicio = `${anoAtual}-${String(mesAtual + 1).padStart(2, '0')}-01`;
+        const fim = `${anoAtual}-${String(mesAtual + 1).padStart(2, '0')}-${String(agora.getDate()).padStart(2, '0')};`;
         const statusSelecionado = filtroStatus.value;
 
         const filtrados = pedidos.filter(pedido => {

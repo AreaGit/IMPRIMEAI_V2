@@ -2571,7 +2571,6 @@ IMPRIMEAI`;
         material: item.material,
         linkDownload: item.linkDownload,
         nomeArquivo: item.nomeArquivo,
-        imgProd: item.produto.imgProd,
         tipo: item.tipo,
         arteEmpresas: item.arteEmpresas,
       }));
