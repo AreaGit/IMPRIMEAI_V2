@@ -32,6 +32,13 @@ header {
   border-bottom: 1px solid var(--cinza-borda);
 }
 
+li > a {
+  text-decoration: none;
+  color: #555555;
+  padding: 15px;
+  transition: 0.8s;
+}
+  
 .logo img {
   height: 10%;
 }
@@ -61,7 +68,7 @@ header {
 }
 section#sobre {
     position: absolute;
-    top: 40%;
+    margin-top: 10px;
     left: 50%;
     transform: translate(-50%);
     width: 60vw;
@@ -91,7 +98,7 @@ section#sobre {
   width: 101vw;
 }
 footer {
-  height: 20vw;
+  height: auto;
   padding: 15px;
 }
 /* Estilos gerais do rodapé */
@@ -137,11 +144,6 @@ footer ul {
   padding: 0;
 }
 
-footer ul li {
-  width: 280px;
-  height: 49px;
-}
-
 footer ul li a {
   color: #ccc;
   text-decoration: none;
@@ -149,7 +151,6 @@ footer ul li a {
   display: inline-block;
   margin: 0px 0;
   transition: color 0.3s ease-in-out;
-  margin: 20px;
 }
 
 footer ul li a:hover {
