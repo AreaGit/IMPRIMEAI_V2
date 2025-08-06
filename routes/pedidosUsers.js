@@ -1578,7 +1578,7 @@ app.post('/criar-pedidos-empresas', async (req, res) => {
         value: totalAPagar,
         effectiveDate: hojeComHifen
       };
-
+        if (metodPag !== 'Carteira Usuário') {
           const nfse = await agendarNfsAsaas(dadosNfse);
           const invoice = nfse.id;
           
@@ -1592,6 +1592,7 @@ app.post('/criar-pedidos-empresas', async (req, res) => {
           pedido.nfseUrl = nfseUrl
           pedido.statusPag = 'Pago'
           pedido.save();
+        }
 
       }
     }
