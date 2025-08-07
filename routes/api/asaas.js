@@ -251,12 +251,12 @@ async function agendarNfsAsaas(dadosNfs) {
             access_token: asaas_key
         },
         data: {
-            taxes: {retainIss: false, cofins: 1, csll: 1, inss: 1, ir: 1, pis: 1, iss: 5},
+            taxes: {retainIss: false, cofins: 0, csll: 0, inss: 0, ir: 0, pis: 0, iss: 5},
             payment: dadosNfs.payment,
             installment: null,
             customer: dadosNfs.customer,
-            serviceDescription: 'Nf referente ao Pedido IMPRIMEAI',
-            observations: 'Nf referente ao Pedido IMPRIMEAI',
+            serviceDescription: 'Prestação de Serviços Gráficos IMPRIMEAI',
+            observations: 'Prestação de Serviços Gráficos IMPRIMEAI',
             externalReference: dadosNfs.externalReference,
             value: dadosNfs.value,
             deductions: 0,

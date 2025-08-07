@@ -1414,13 +1414,29 @@ app.post('/criar-pedidos', async (req, res) => {
       "*Tá com pressa? Imprimeaí!*";
 
       await enviarNotificacaoWhatsapp(telefone, mensagemWhatsapp);
+
+      const carrinho = req.session.carrinho;
+      // Calcula o valor total, incluindo o frete corretamente para cada item
+      const totalAmount = carrinho.reduce((total, item) => {
+      let itemSubtotal;
+
+      if (item.endereco.tipoEntrega === "Único Endereço") {
+        itemSubtotal = (item.valorUnitario * item.quantidade) + item.endereco.frete;
+      } else if (item.endereco.tipoEntrega === "Entrega a Retirar na Loja") {
+        itemSubtotal = item.valorUnitario * item.quantidade;
+      } else {
+        itemSubtotal = (item.valorUnitario * item.quantidade) + item.endereco.frete;
+      }
       
+      return total + itemSubtotal; // sem conversão para centavos
+    }, 0);
+
       const hojeComHifen = new Date().toISOString().split('T')[0];
       const dadosNfse = {
         payment: idTransacao,
         customer: user.customer_asaas_id,
         externalReference: Math.floor(Math.random() * 999) + 1,
-        value: totalAPagar,
+        value: totalAmount,
         effectiveDate: hojeComHifen
       };
 
@@ -1570,12 +1586,28 @@ app.post('/criar-pedidos-empresas', async (req, res) => {
 
       if(metodPag == 'BOLETO' || 'PIX' || 'CARTÃO') {
 
+        const carrinho = req.session.carrinho;
+        // Calcula o valor total, incluindo o frete corretamente para cada item
+        const totalAmount = carrinho.reduce((total, item) => {
+          let itemSubtotal;
+          
+          if (item.endereco.tipoEntrega === "Único Endereço") {
+            itemSubtotal = (item.valorUnitario * item.quantidade) + item.endereco.frete;
+          } else if (item.endereco.tipoEntrega === "Entrega a Retirar na Loja") {
+            itemSubtotal = item.valorUnitario * item.quantidade;
+          } else {
+            itemSubtotal = (item.valorUnitario * item.quantidade) + item.endereco.frete;
+          }
+          
+          return total + itemSubtotal; // sem conversão para centavos
+        }, 0);
+
         const hojeComHifen = new Date().toISOString().split('T')[0];
       const dadosNfse = {
         payment: idTransacao,
         customer: user.customer_asaas_id,
         externalReference:  Math.floor(Math.random() * 999) + 1,
-        value: totalAPagar,
+        value: totalAmount,
         effectiveDate: hojeComHifen
       };
         if (metodPag !== 'Carteira Usuário') {
