@@ -71,11 +71,10 @@ document.addEventListener('DOMContentLoaded', async () => {
 
       function getStatusIcon(status) {
         switch(status) {
-          case "Aguardando": return "⏳";
-          case "Pedido Aceito Pela Gráfica": return "✅";
-          case "Finalizado": return "🎉";
-          case "Pedido Enviado pela Gráfica": return "📦";
-          case "Pedido Entregue pela Gráfica": return "📬";
+          case "Recebido": return "⏳";
+          case "Em produção": return "🏭";
+          case "Finalizado/Enviado para Transporte": return "📦";
+          case "Entregue": return "✅";
           default: return "📄";
         }
       }
@@ -156,10 +155,10 @@ document.addEventListener('DOMContentLoaded', async () => {
         const response = await fetch('/pedidos-cadastrados');
         const data = await response.json();
         pedidos = data.pedidos;
-        const aguardando = pedidos.filter(p => p.statusPed === 'Aguardando');
+        const aguardando = pedidos.filter(p => p.statusPed === 'Recebido');
         document.getElementById('pedidos-recebidos').textContent = aguardando.length;
         // Define filtro como "Aguardando" por padrão
-        filtroStatus.value = 'Aguardando';
+        filtroStatus.value = 'Recebido';
         aplicarFiltros();
       } catch (error) {
           console.error('Erro ao buscar pedidos:', error);

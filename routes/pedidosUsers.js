@@ -1379,7 +1379,7 @@ app.post('/criar-pedidos', async (req, res) => {
         formato: produto.formato,
         material: produto.material,
         arquivo: produto.arquivo,
-        statusPed: carrinhoQuebrado.some(p => p.downloadLink === "Enviar Arte Depois") ? 'Pedido em Aberto' : 'Aguardando',
+        statusPed: carrinhoQuebrado.some(p => p.downloadLink === "Enviar Arte Depois") ? 'Pedido em Aberto' : 'Recebido',
         statusPag: metodPag === 'BOLETO' ? 'Esperando Pagamento' : metodPag === 'Carteira Usuário' ? 'Pago' : 'Aguardando',
         linkDownload: produto.downloadLink,
         nomeArquivo: produto.nomeArquivo,
@@ -1404,14 +1404,24 @@ app.post('/criar-pedidos', async (req, res) => {
       const nome = usuario.userCad;
       const telefone = usuario.telefoneCad;
       const linkDetalhamento = `https://www.imprimeai.com.br/detalhesPedidosUser?idPedido=${pedido.id}`
-      const mensagemWhatsapp = "Oi " + nome + ", tudo bem? 😊\n" + "Queremos te agradecer por confiar sua impressão à Imprimeaí!\n" + "Nosso time está super feliz por poder te atender.\n" + "Se precisar de algo mais ou tiver alguma dúvida, por favor nos chame.\n\n" +
-      "Em breve, te traremos mais novidades sobre o pedido " + pedido.id + "\n" +
-      "Se preferir acompanhe também pelo site:" + linkDetalhamento + "\n\n" +
-      "Pri\n\n" +
-      "Obrigada!\n\n" +
-      "Siga-nos no Insta\n" +
-      "https://www.instagram.com/imprimeai.com.br e fique por dentro das novidades, cupons de desconto e assuntos importantes sobre gráfica e comunicação visual!\n\n" +
-      "*Tá com pressa? Imprimeaí!*";
+      const mensagemWhatsapp = `Oi, ${nome}! Tudo bem? 😊
+
+Parabéns pela sua escolha! 🎊
+Obrigado por confiar sua impressão à ImprimeAí. Nosso time está super feliz por poder te atender!
+
+Se precisar de algo mais ou tiver qualquer dúvida, é só nos chamar.
+
+📦 Em breve, você receberá novidades sobre o andamento do seu pedido #${pedido.id}.
+Você também pode acompanhar tudo pelo site:
+🔗 ${linkDetalhamento}
+
+📸 Siga nosso Instagram: @imprimeai.com.br
+Lá você encontra novidades, cupons de desconto e dicas de comunicação visual. 
+
+Obrigada,
+
+Pri !
+✨ Tá com pressa? ImprimeAí!`;
 
       await enviarNotificacaoWhatsapp(telefone, mensagemWhatsapp);
 
@@ -1548,7 +1558,7 @@ app.post('/criar-pedidos-empresas', async (req, res) => {
         formato: produto.formato,
         material: produto.material,
         arquivo: produto.arquivo,
-        statusPed: carrinhoQuebrado.some(p => p.downloadLink === "Enviar Arte Depois") ? 'Pedido em Aberto' : 'Aguardando',
+        statusPed: carrinhoQuebrado.some(p => p.downloadLink === "Enviar Arte Depois") ? 'Pedido em Aberto' : 'Recebido',
         statusPag: (metodPag === 'Boleto' || metodPag === 'BOLETO')
         ? 'Esperando Pagamento'
         : (metodPag === 'Carteira Usuário' || metodPag === 'PIX' || metodPag === 'CARTÃO')
@@ -1572,14 +1582,24 @@ app.post('/criar-pedidos-empresas', async (req, res) => {
       const nome = usuario.userCad;
       const telefone = usuario.telefoneCad;
       const linkDetalhamento = `https://www.imprimeai.com.br/detalhesPedidosUser?idPedido=${pedido.id}`
-      const mensagemWhatsapp = "Oi " + nome + ", tudo bem? 😊\n" + "Queremos te agradecer por confiar sua impressão à Imprimeaí!\n" + "Nosso time está super feliz por poder te atender.\n" + "Se precisar de algo mais ou tiver alguma dúvida, por favor nos chame.\n\n" +
-      "Em breve, te traremos mais novidades sobre o pedido " + pedido.id + "\n" +
-      "Se preferir acompanhe também pelo site:" + linkDetalhamento + "\n\n" +
-      "Pri\n\n" +
-      "Obrigada!\n\n" +
-      "Siga-nos no Insta\n" +
-      "https://www.instagram.com/imprimeai.com.br e fique por dentro das novidades, cupons de desconto e assuntos importantes sobre gráfica e comunicação visual!\n\n" +
-      "*Tá com pressa? Imprimeaí!*";
+      const mensagemWhatsapp = `Oi, ${nome}! Tudo bem? 😊
+
+Parabéns pela sua escolha! 🎊
+Obrigado por confiar sua impressão à ImprimeAí. Nosso time está super feliz por poder te atender!
+
+Se precisar de algo mais ou tiver qualquer dúvida, é só nos chamar.
+
+📦 Em breve, você receberá novidades sobre o andamento do seu pedido #${pedido.id}.
+Você também pode acompanhar tudo pelo site:
+🔗 ${linkDetalhamento}
+
+📸 Siga nosso Instagram: @imprimeai.com.br
+Lá você encontra novidades, cupons de desconto e dicas de comunicação visual. 
+
+Obrigada,
+
+Pri !
+✨ Tá com pressa? ImprimeAí!`;
 
       await verificarGraficaMaisProximaEAtualizar(itensPedido[0], enderecos[0]);
       await enviarNotificacaoWhatsapp(telefone, mensagemWhatsapp);

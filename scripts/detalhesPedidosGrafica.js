@@ -51,21 +51,17 @@ document.addEventListener('DOMContentLoaded', async() => {
     const statusPedido = detalhesPedido.itenspedidos[0].statusPed;
     tipo = detalhesPedido.itenspedidos[0].tipo;
     idPedMult = detalhesPedido.itenspedidos[0].id;
-    if(statusPedido == "Aguardando") {
-      novoStatusPedido = "Pedido Aceito Pela Gráfica";
-    }else if(statusPedido == "Pedido Aceito Pela Gráfica") {
-      novoStatusPedido = "Finalizado";
+    if(statusPedido == "Recebido") {
+      novoStatusPedido = "Em produção";
+    }else if(statusPedido == "Em produção") {
+      novoStatusPedido = "Finalizado/Enviado para Transporte";
       btnAceitarPedido.textContent = "Finalizar Pedido"
       btnCancelarPedido.style.display = 'none'
-    }else if(statusPedido == "Finalizado") {
-      novoStatusPedido = "Pedido Enviado pela Gráfica";
+    }else if(statusPedido == "Finalizado/Enviado para Transporte") {
+      novoStatusPedido = "Entregue";
       btnAceitarPedido.textContent = "Enviar Pedido"
       btnCancelarPedido.style.display = 'none'
-    }else if(statusPedido == "Pedido Enviado pela Gráfica") {
-      novoStatusPedido = "Pedido Entregue pela Gráfica";
-      btnAceitarPedido.textContent = "Pedido Entregue"
-      btnCancelarPedido.style.display = 'none'
-    }else if(statusPedido == "Pedido Entregue pela Gráfica") {
+    }else if(statusPedido == "Entregue") {
       btnAceitarPedido.style.display = 'none'
       btnCancelarPedido.style.display = 'none'
       document.getElementById('avisoEntregue').style.display = 'block'
@@ -82,7 +78,7 @@ document.addEventListener('DOMContentLoaded', async() => {
     detalhesItens.id = `detalhesItens${data.pedido.id}`
     detalhesItens.className = 'itensProduto'
     console.log(statusPedido , tipoEntrega)
-    if(statusPedido == "Pedido Enviado pela Gráfica") {
+    if(statusPedido == "Finalizado/Enviado para Transporte") {
       btnAceitarPedido.addEventListener('click', () => {
         formEntrega.style.display = 'block';
       });
@@ -127,7 +123,7 @@ document.addEventListener('DOMContentLoaded', async() => {
               console.error('Erro ao aceitar pedido:', error);
             }
         });
-    }else if (statusPedido === 'Pedido Aceito Pela Gráfica' || 'Finalizado' && tipoEntrega === 'Entrega a Retirar na Loja') {
+    }else if (statusPedido === 'Em produção' || 'Finalizado/Enviado para Transporte' && tipoEntrega === 'Entrega a Retirar na Loja') {
       const btnAceitarPedido = document.getElementById('btnAceitarPedido');
       
       btnAceitarPedido.addEventListener('click', async () => {
@@ -161,7 +157,7 @@ document.addEventListener('DOMContentLoaded', async() => {
             history.back();
     
             // Verifica se o novo status é 'Pedido Aceito Pela Gráfica'
-            if (data.novoStatus === 'Pedido Aceito Pela Gráfica') {
+            if (data.novoStatus === 'Em produção') {
               // Redireciona o usuário para a nova página
                // Substitua '/pagina-nova' pela rota desejada
             } else {
@@ -207,7 +203,7 @@ document.addEventListener('DOMContentLoaded', async() => {
             console.log('ACEITANDO PEDIDO');
             const urlParams = new URLSearchParams(window.location.search);
             const idPedido = urlParams.get('idPedido');
-            const novoStatus = 'Pedido Aceito Pela Gráfica';
+            const novoStatus = 'Em produpção';
             // Envia uma requisição para o servidor para atualizar o status
             const response = await fetch('/atualizar-status-pedido', {
               method: 'POST',
@@ -232,7 +228,7 @@ document.addEventListener('DOMContentLoaded', async() => {
                   history.back();
                 },3000);
                 // Verifica se o novo status é 'Pedido Aceito Pela Gráfica'
-                if (data.novoStatus === 'Pedido Aceito Pela Gráfica') {
+                if (data.novoStatus === 'Em produção') {
                 } else {
                   // Adicione código aqui para outras ações quando o status não é 'Pedido Aceito Pela Gráfica'
                 }
@@ -278,7 +274,7 @@ document.addEventListener('DOMContentLoaded', async() => {
               history.back();
       
               // Verifica se o novo status é 'Pedido Aceito Pela Gráfica'
-              if (data.novoStatus === 'Pedido Aceito Pela Gráfica') {
+              if (data.novoStatus === 'Em produção') {
                 // Redireciona o usuário para a nova página
                  // Substitua '/pagina-nova' pela rota desejada
               } else {
@@ -560,7 +556,7 @@ document.addEventListener('DOMContentLoaded', async() => {
           // Faça qualquer ação necessária após o envio dos dados
           try {
           const idPedido = currentPedidoId;
-          const novoStatus = 'Pedido Entregue pela Gráfica';
+          const novoStatus = 'Entregue';
 
           const response = await fetch('/atualizar-status-pedido', {
             method: 'POST',
