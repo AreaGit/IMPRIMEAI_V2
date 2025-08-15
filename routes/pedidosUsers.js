@@ -1451,7 +1451,7 @@ Pri !
       };
 
       // Verificar se o pagamento é diferente de "Carteira Usuário"
-      if (metodPag !== 'Carteira Usuário') {
+      if (metodPag !== 'Carteira Usuário' && metodPag !== 'BOLETO') {
         const nfse = await agendarNfsAsaas(dadosNfse);
         const invoice = nfse.id;
         
@@ -1630,7 +1630,7 @@ Pri !
         value: totalAmount,
         effectiveDate: hojeComHifen
       };
-        if (metodPag !== 'Carteira Usuário') {
+        if (metodPag !== 'Carteira Usuário' && metodPag !== 'BOLETO') {
           const nfse = await agendarNfsAsaas(dadosNfse);
           const invoice = nfse.id;
           
@@ -1856,7 +1856,7 @@ async function verificarGraficaMaisProximaEAtualizar2(itensPedido, enderecos) {
       
                     let mensagemStatus = '';
       
-                    if (pedidoCadastrado.statusPed === 'Aguardando') {
+                    if (pedidoCadastrado.statusPed === 'Recebido') {
                        mensagemStatus = `Olá *Parceiro ${graficaMaisProxima.userCad}*, tudo bem?\n\n` +
                       `Estou passando para avisar que temos um pedido aguardando atendimento de vocês. \n` +
                       `O número do pedido é ${itensPedido[0].idPed} e ele precisa ser processado o quanto antes. \n` +
@@ -2725,6 +2725,8 @@ app.post('/processarPagamento-boleto', async(req, res) => {
   console.log('Total Amount (normal):', totalAmount);
 
   // Pega o ano, mês e dia
+  dataAtual.setDate(dataAtual.getDate() + 2); // Adiciona dois dias à data atual
+
   const ano = dataAtual.getFullYear();
   const mes = (dataAtual.getMonth() + 1).toString().padStart(2, '0'); // Mes começa do 0, então somamos 1
   const dia = dataAtual.getDate().toString().padStart(2, '0'); // Garantir que o dia tenha dois dígitos
@@ -2864,6 +2866,8 @@ app.post('/processarPagamento-boleto-carteira', async(req, res) => {
   const dataAtual = new Date();
 
   // Pega o ano, mês e dia
+  dataAtual.setDate(dataAtual.getDate() + 2); // Adiciona dois dias à data atual
+
   const ano = dataAtual.getFullYear();
   const mes = (dataAtual.getMonth() + 1).toString().padStart(2, '0'); // Mes começa do 0, então somamos 1
   const dia = dataAtual.getDate().toString().padStart(2, '0'); // Garantir que o dia tenha dois dígitos
@@ -3017,7 +3021,7 @@ app.post('/uploadGoogleDrive', upload.single('file'), async (req, res) => {
 
     // Se todos os produtos foram enviados, atualize o status do pedido para "Aguardando"
     if (todosProdutosEnviados) {
-      await atualizarStatusPedido(pedidoId, 'Aguardando');
+      await atualizarStatusPedido(pedidoId, 'Recebido');
     }
 
     res.json(result);
@@ -3098,7 +3102,7 @@ async function verificarTodosProdutosEnviados(idPedido) {
 
   // Se todos os produtos foram enviados, atualize o status do pedido para 'Aguardando'
   if (todosEnviados.length > 0) {
-    await atualizarStatusPedido(idPedido, 'Aguardando');
+    await atualizarStatusPedido(idPedido, 'Recebido');
     console.log('Notificando a Gráfica!')
     await notificarGrafica(idPedido);  // Adiciona a notificação para a gráfica
     return true;
