@@ -1307,7 +1307,7 @@ app.get('/graficas', async (req, res) => {
 });
 
 app.post('/criar-pedidos', async (req, res) => {
-  const { metodPag, idTransacao, valorPed } = req.body;
+  const { metodPag, idTransacao, valorPed, linkPagamento } = req.body;
   const carrinhoQuebrado = req.session.carrinho || [];
   const enderecoDaSessao = req.session.endereco;
   const userId = req.cookies.userId
@@ -1401,29 +1401,6 @@ app.post('/criar-pedidos', async (req, res) => {
     // Buscar informações do usuário para o WhatsApp
     const usuario = await User.findByPk(userId, { attributes: ['telefoneCad', 'userCad'] });
     if (usuario) {
-      const nome = usuario.userCad;
-      const telefone = usuario.telefoneCad;
-      const linkDetalhamento = `https://www.imprimeai.com.br/detalhesPedidosUser?idPedido=${pedido.id}`
-      const mensagemWhatsapp = `Oi, ${nome}! Tudo bem? 😊
-
-Parabéns pela sua escolha! 🎊
-Obrigado por confiar sua impressão à ImprimeAí. Nosso time está super feliz por poder te atender!
-
-Se precisar de algo mais ou tiver qualquer dúvida, é só nos chamar.
-
-📦 Em breve, você receberá novidades sobre o andamento do seu pedido #${pedido.id}.
-Você também pode acompanhar tudo pelo site:
-🔗 ${linkDetalhamento}
-
-📸 Siga nosso Instagram: @imprimeai.com.br
-Lá você encontra novidades, cupons de desconto e dicas de comunicação visual. 
-
-Obrigada,
-
-Pri !
-✨ Tá com pressa? ImprimeAí!`;
-
-      await enviarNotificacaoWhatsapp(telefone, mensagemWhatsapp);
 
       const carrinho = req.session.carrinho;
       // Calcula o valor total, incluindo o frete corretamente para cada item
@@ -1468,6 +1445,56 @@ Pri !
       }
     }
 
+    if(metodPag != 'BOLETO') {
+    const nome = usuario.userCad;
+      const telefone = usuario.telefoneCad;
+      const linkDetalhamento = `https://www.imprimeai.com.br/detalhesPedidosUser?idPedido=${pedido.id}`
+      const mensagemWhatsapp = `Oi, ${nome}! Tudo bem? 😊
+
+Parabéns pela sua escolha! 🎊
+Obrigado por confiar sua impressão à ImprimeAí. Nosso time está super feliz por poder te atender!
+
+Se precisar de algo mais ou tiver qualquer dúvida, é só nos chamar.
+
+📦 Em breve, você receberá novidades sobre o andamento do seu pedido #${pedido.id}.
+Você também pode acompanhar tudo pelo site:
+🔗 ${linkDetalhamento}
+
+📸 Siga nosso Instagram: @imprimeai.com.br
+Lá você encontra novidades, cupons de desconto e dicas de comunicação visual. 
+
+Obrigada,
+
+Pri !
+✨ Tá com pressa? ImprimeAí!`;
+
+      await enviarNotificacaoWhatsapp(telefone, mensagemWhatsapp);
+    } else{
+      const nome = usuario.userCad;
+      const telefone = usuario.telefoneCad;
+      const linkDetalhamento = `https://www.imprimeai.com.br/detalhesPedidosUser?idPedido=${pedido.id}`;
+      mensagemWhatsapp = `Oi, ${nome}! Tudo bem? 😊
+        
+Parabéns pela sua escolha! 🎊
+Muito obrigado por confiar sua impressão à ImprimeAí. Nosso time está super feliz por poder te atender!
+        
+Para que possamos liberar seu pedido #${pedido.id}, lembramos que é necessário efetuar o pagamento do boleto. Você pode acessar o seu boleto clicando no link abaixo:
+        
+🔗 ${linkPagamento}
+
+O prazo para o pagamento é de até dois dias a partir da data de emissão. Após a confirmação do pagamento, seu pedido será liberado e você receberá atualizações sobre o andamento. 📦
+        
+Caso precise de qualquer ajuda ou tenha dúvidas, estamos à disposição para te apoiar. 🙂
+        
+📸 Ah, aproveite para seguir nosso Instagram: @imprimeai.com.br, lá você encontra novidades, cupons de desconto e dicas de comunicação visual!
+
+Obrigada,
+        
+Pri!
+✨ Tá com pressa? ImprimeAí!`;
+await enviarNotificacaoWhatsapp(telefone, mensagemWhatsapp);
+    }
+
     // Limpar a sessão
     req.session.carrinho = [];
     req.session.endereco = {};
@@ -1482,7 +1509,7 @@ Pri !
 });
 
 app.post('/criar-pedidos-empresas', async (req, res) => {
-  const { metodPag, idTransacao, valorPed } = req.body;
+  const { metodPag, idTransacao, valorPed, linkPagamento } = req.body;
   const carrinhoQuebrado = req.session.carrinho || [];
   const enderecoDaSessao = req.session.endereco;
   const userId = req.cookies.userId
@@ -1579,30 +1606,7 @@ app.post('/criar-pedidos-empresas', async (req, res) => {
     // Buscar informações do usuário para o WhatsApp
     const usuario = await UserEmpresas.findByPk(userId, { attributes: ['telefoneCad', 'userCad'] });
     if (usuario) {
-      const nome = usuario.userCad;
-      const telefone = usuario.telefoneCad;
-      const linkDetalhamento = `https://www.imprimeai.com.br/detalhesPedidosUser?idPedido=${pedido.id}`
-      const mensagemWhatsapp = `Oi, ${nome}! Tudo bem? 😊
-
-Parabéns pela sua escolha! 🎊
-Obrigado por confiar sua impressão à ImprimeAí. Nosso time está super feliz por poder te atender!
-
-Se precisar de algo mais ou tiver qualquer dúvida, é só nos chamar.
-
-📦 Em breve, você receberá novidades sobre o andamento do seu pedido #${pedido.id}.
-Você também pode acompanhar tudo pelo site:
-🔗 ${linkDetalhamento}
-
-📸 Siga nosso Instagram: @imprimeai.com.br
-Lá você encontra novidades, cupons de desconto e dicas de comunicação visual. 
-
-Obrigada,
-
-Pri !
-✨ Tá com pressa? ImprimeAí!`;
-
       await verificarGraficaMaisProximaEAtualizar(itensPedido[0], enderecos[0]);
-      await enviarNotificacaoWhatsapp(telefone, mensagemWhatsapp);
 
       if(metodPag == 'BOLETO' || 'PIX' || 'CARTÃO') {
 
@@ -1647,6 +1651,55 @@ Pri !
         }
 
       }
+    }
+
+    if(metodPag != 'BOLETO') {
+    const nome = usuario.userCad;
+      const telefone = usuario.telefoneCad;
+      const linkDetalhamento = `https://www.imprimeai.com.br/detalhesPedidosUser?idPedido=${pedido.id}`
+      const mensagemWhatsapp = `Oi, ${nome}! Tudo bem? 😊
+
+Parabéns pela sua escolha! 🎊
+Obrigado por confiar sua impressão à ImprimeAí. Nosso time está super feliz por poder te atender!
+
+Se precisar de algo mais ou tiver qualquer dúvida, é só nos chamar.
+
+📦 Em breve, você receberá novidades sobre o andamento do seu pedido #${pedido.id}.
+Você também pode acompanhar tudo pelo site:
+🔗 ${linkDetalhamento}
+
+📸 Siga nosso Instagram: @imprimeai.com.br
+Lá você encontra novidades, cupons de desconto e dicas de comunicação visual. 
+
+Obrigada,
+
+Pri !
+✨ Tá com pressa? ImprimeAí!`;
+
+      await enviarNotificacaoWhatsapp(telefone, mensagemWhatsapp);
+    } else{
+      const nome = usuario.userCad;
+      const telefone = usuario.telefoneCad;
+      mensagemWhatsapp = `Oi, ${nome}! Tudo bem? 😊
+        
+Parabéns pela sua escolha! 🎊
+Muito obrigado por confiar sua impressão à ImprimeAí. Nosso time está super feliz por poder te atender!
+        
+Para que possamos liberar seu pedido #${pedido.id}, lembramos que é necessário efetuar o pagamento do boleto. Você pode acessar o seu boleto clicando no link abaixo:
+        
+🔗 ${linkPagamento}
+
+O prazo para o pagamento é de até dois dias a partir da data de emissão. Após a confirmação do pagamento, seu pedido será liberado e você receberá atualizações sobre o andamento. 📦
+        
+Caso precise de qualquer ajuda ou tenha dúvidas, estamos à disposição para te apoiar. 🙂
+        
+📸 Ah, aproveite para seguir nosso Instagram: @imprimeai.com.br, lá você encontra novidades, cupons de desconto e dicas de comunicação visual!
+
+Obrigada,
+        
+Pri!
+✨ Tá com pressa? ImprimeAí!`;
+await enviarNotificacaoWhatsapp(telefone, mensagemWhatsapp);
     }
 
     // Limpar a sessão
