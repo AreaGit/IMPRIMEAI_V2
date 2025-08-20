@@ -14,26 +14,36 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter+Tight:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" />
     <link rel="stylesheet" href="../styles/verificacaoUser.css">
-    <link rel="stylesheet" href="../styles/verificacaoUser-resp.css">
 </head>
 <body>
-    <header>
-        <a href="/"><img src="../images/logo-imprimeai.png" alt="..." id="logo"></a>
-        <h1>Verificação</h1>
-        <div id="linhaHr"></div>
-        <h2>Prencha os campos abaixo para <br> verificar a sua conta</h2>
-    </header>
-    <form class="form" id="verificationForm"> 
-        <div class="title"></div> <div class="title">Código de Verificação</div>
-        <p class="message">Enviamos um código de verificação para o seu e-mail</p>
-        <div class="inputs">
-            <input id="input1" type="text" maxlength="1">
-            <input id="input2" type="text" maxlength="1">
-            <input id="input3" type="text" maxlength="1">
-            <input id="input4" type="text" maxlength="1">
-        </div>
-        <button class="action">Verificar</button> 
-    </form>
+  <header class="header">
+    <div class="logo">
+            <a href="/">
+                <img src="../images/logo-imprimeai.png" alt="...">
+            </a>
+        </div>      
+  </header>
+
+  <main>
+    <h1>Verificação</h1>
+     <div id="linhaHr"></div>
+    <p class="subtitle">Preencha os campos abaixo para verificar sua conta</p>
+  </main>
+
+
+  <form class="form" id="verificationForm"> 
+    <h2 class="form-title">Código de Verificação</h2>
+    <p class="message">Enviamos um código de verificação para o seu e-mail</p>
+    
+    <div class="inputs">
+      <input id="input1" type="text" maxlength="1">
+      <input id="input2" type="text" maxlength="1">
+      <input id="input3" type="text" maxlength="1">
+      <input id="input4" type="text" maxlength="1">
+    </div>
+  </form>
+
+    <button class="action">Verificar</button> 
     <div id="erroUsuario">
         <div class="notifications-container">
             <div class="error-alert">

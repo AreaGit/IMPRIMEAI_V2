@@ -21,7 +21,7 @@
         position: absolute;
         height: 600px;
         width: 100%;
-        z-index: -1;
+        z-index: 1;
     }
        .messageHeader {
         position: relative;
@@ -246,9 +246,9 @@
         font-weight: 600;
         font-size: 30px;
         position: relative;
-        left: 50%;
-        width: fit-content;
-        transform: translate(-50%);
+        left: 12%;
+        width: 80%;
+        /* transform: translate(-50%); */
         text-align: center;
     }
     #voltar {
@@ -258,7 +258,7 @@
         box-shadow: -1px 2px 8px #000000a3;
         border-radius: 5px;
         position: absolute;
-        top: 105px;
+        top: 150px;
         left: 50%;
         transform: translate(-50%);
         transition: 0.8s;
@@ -411,6 +411,18 @@
       }
 }
 @media screen and (min-width: 768px) and (max-width: 1024px) {
+     .popup {
+        display: none;
+        position: fixed;
+        left: 50%;
+        transform: translate(-50%);
+        top: 50%;
+        width: 50%;
+        height: fit-content;
+        background: #FFFFFF;
+        box-shadow: 0px 187px 75px rgba(0, 0, 0, 0.01), 0px 105px 63px rgba(0, 0, 0, 0.05), 0px 47px 47px rgba(0, 0, 0, 0.09), 0px 12px 26px rgba(0, 0, 0, 0.1), 0px 0px 0px rgba(0, 0, 0, 0.1);
+        border-radius: 13px;
+    }
     .mainContentHeader {
         position: absolute;
         height: 460px;
@@ -508,8 +520,8 @@
         background-color: transparent;
         display: block;
         position: relative;
-        left: 88%;
-        top: -37px;
+        left: 85%;
+        top: -22px;
     }
     .notCad {
         width: 20%;
@@ -524,6 +536,98 @@
         left: 95%;
         transform: translate(-85%);
         top: 30%;
+    }
+    #banners > #nextBtn1 {
+        right: -125px;
+    }
+    #wrapper {
+        width: 100%;
+        max-width: 452px;
+        position: relative;
+        left: 50%;
+        transform: translate(-50%);
+        top: 435px;
+        cursor: pointer;
+    }
+    .mobile-menu {display: none;}
+    .linhaAbInp {display: block;}
+    .linhaAbNav {display: block;}
+    .notCad {
+        width: fit-content;
+        position: absolute;
+        left: 85%;
+        transform: translate(-85%);
+        top: 30%;
+    }
+    .carrinho {
+        width: 6%;
+        position: absolute;
+        left: 95%;
+        transform: translate(-85%);
+        top: 30%;
+    }
+
+    #totalCarrinho {
+    display: none;
+    width: 85%;
+    height: 220px;
+    position: absolute;
+    left: 50%;
+    transform: translate(-50%);
+    top: 10px;
+    border-bottom: 1px solid black;
+}
+
+    #totalCarrinho > h1 {
+        font-weight: 600;
+        font-size: 40px;
+        position: relative;
+        left: 50%;
+        width: fit-content;
+        transform: translate(-50%);
+        text-align: center;
+    }
+
+
+    .produto-carrinho {
+        position: relative;
+        width: 100%;
+        left: 50%;
+        transform: translate(-50%);
+        top: 220px;
+        border-bottom: 1px solid black;
+    }
+
+    h2.nomeProduto {
+        position: relative;
+        left: 65%;
+        width: 20%;
+        transform: translate(-65%);
+        top: -295px;
+    }
+
+    p.qnt {
+        width: fit-content;
+        position: relative;
+        left: 65%;
+        transform: translate(-65%);
+        top: -280px;
+    }
+
+    #voltar {
+        border: 1px solid #EF4126;
+        color: #EF4126;
+        background-color: white;
+        box-shadow: -1px 2px 8px #000000a3;
+        padding: 18px 28px 18px 28px;
+        border-radius: 5px;
+        position: absolute;
+        top: 125px;
+        left: 50%;
+        transform: translate(-50%);
+        transition: 0.8s;
+        font-weight: 500;
+        font-size: 17px;
     }
 }
 
@@ -544,7 +648,7 @@
         position: absolute;
         height: 460px;
         width: 100%;
-        z-index: -1;
+        z-index: 1;
     }
     div#banners {
         height: 165px;
@@ -558,9 +662,9 @@
         width: 100%;
     }
     .menu {
-        left: 50%;
+        left: 51%;
         transform: translate(-50%);
-        width: 91%;
+        width: 90%;
         top: 45%;
         z-index: 1;
     }
@@ -625,12 +729,12 @@
         height: auto;
         z-index: 10;
     }
-    .search-input > button {
+        .search-input > button {
         background-color: transparent;
         display: block;
         position: relative;
-        left: 85%;
-        top: -22px;
+        left: 92%;
+        top: -33px;
     }
     .mobile-menu {display: none;}
     .linhaAbInp {display: block;}
@@ -649,8 +753,10 @@
         transform: translate(-85%);
         top: 30%;
     }
+
+    
 }
-@media screen and (min-width:1301px) and (max-width:1440px){
+@media screen and (min-width:1301px) and (max-width:1439px){
      .popup {
         display: none;
         position: fixed;
@@ -709,7 +815,7 @@
         position: absolute;
         height: 65vw;
         width: 100%;
-        z-index: -1;
+        z-index: 1;
     }
     div#suggestions-container {
         display: none;
@@ -874,12 +980,12 @@
         top: -265px;
     }
 }
-@media screen and (min-width:1441px) and (max-width:1635px) {
+@media screen and (min-width:1440px) and (max-width:1635px) {
     .mainContentHeader {
         position: absolute;
         height: 28vw;
         width: 100%;
-        z-index: -1;
+        z-index: 1;
     }
 
     .linksHeader {
@@ -1000,7 +1106,7 @@
     position: absolute;
     height: 40vw;
     width: 100%;
-    z-index: -1;
+    z-index: 1;
 }
 .messageHeader {
     position: absolute;
@@ -1111,7 +1217,7 @@
         position: absolute;
         height: 30vw;
         width: 100%;
-        z-index: -1;
+        z-index: 1;
     }
 
     .logo-header {

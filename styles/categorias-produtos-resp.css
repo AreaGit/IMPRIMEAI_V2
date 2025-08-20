@@ -258,7 +258,10 @@
         top: 65%;
         left: 50%;
         transform: translate(-50%);
+        display: none;
     }
+
+
 }
 @media screen and (min-width: 768px) and (max-width: 1024px) {
     .mainContentHeader {
@@ -383,10 +386,11 @@
         top: 65%;
         left: 50%;
         transform: translate(-50%);
+        display: none;
     }
     #produtos {
         position: absolute;
-        top: 55%;
+        top: 40%;
         flex-wrap: nowrap;
         justify-content: space-between;
         left: 50%;
