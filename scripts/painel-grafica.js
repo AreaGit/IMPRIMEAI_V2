@@ -7,6 +7,9 @@ const secaoPedidos = document.getElementById('pedidos');
 const secaoSaldo = document.getElementById('saldo');
 const secaoConta = document.getElementById('minha-conta');
 let conta = {};
+const agora = new Date();
+const mesAtual = agora.getMonth(); // 0-11
+const anoAtual = agora.getFullYear();
     
 iconeHome.addEventListener('click', () => {
     boasVindas.style.display = 'block';
@@ -68,11 +71,10 @@ document.addEventListener('DOMContentLoaded', async () => {
 
       function getStatusIcon(status) {
         switch(status) {
-          case "Aguardando": return "⏳";
-          case "Pedido Aceito Pela Gráfica": return "✅";
-          case "Finalizado": return "🎉";
-          case "Pedido Enviado pela Gráfica": return "📦";
-          case "Pedido Entregue pela Gráfica": return "📬";
+          case "Recebido": return "⏳";
+          case "Em produção": return "🏭";
+          case "Finalizado/Enviado para Transporte": return "📦";
+          case "Entregue": return "✅";
           default: return "📄";
         }
       }
@@ -108,8 +110,8 @@ document.addEventListener('DOMContentLoaded', async () => {
       }
 
       function aplicarFiltros() {
-        const inicio = filtroDataInicio.value;
-        const fim = filtroDataFim.value;
+        const inicio = `${anoAtual}-${String(mesAtual + 1).padStart(2, '0')}-01`;
+        const fim = `${anoAtual}-${String(mesAtual + 1).padStart(2, '0')}-${String(agora.getDate()).padStart(2, '0')};`;
         const statusSelecionado = filtroStatus.value;
 
         const filtrados = pedidos.filter(pedido => {
@@ -153,10 +155,10 @@ document.addEventListener('DOMContentLoaded', async () => {
         const response = await fetch('/pedidos-cadastrados');
         const data = await response.json();
         pedidos = data.pedidos;
-        const aguardando = pedidos.filter(p => p.statusPed === 'Aguardando');
+        const aguardando = pedidos.filter(p => p.statusPed === 'Recebido');
         document.getElementById('pedidos-recebidos').textContent = aguardando.length;
         // Define filtro como "Aguardando" por padrão
-        filtroStatus.value = 'Aguardando';
+        filtroStatus.value = 'Recebido';
         aplicarFiltros();
       } catch (error) {
           console.error('Erro ao buscar pedidos:', error);

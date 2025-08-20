@@ -173,7 +173,7 @@ document.addEventListener('DOMContentLoaded', () => {
             alert('Endereço salvo com sucesso!');
             setTimeout(() => {
                 window.location.href = '/pagamento-empresas'
-            }, 3000);
+            }, 1000);
         } catch (error) {
             console.error('Erro ao enviar o endereço:', error);
             alert('Erro ao salvar o endereço. Tente novamente.');

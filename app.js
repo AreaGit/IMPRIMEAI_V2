@@ -2143,6 +2143,17 @@ app.get('/cpq/', (req, res) => {
     res.status(500).send("Erro interno do servidor.")
   }
 });
+
+app.get('/cpq', (req, res) => {
+  try {
+    const cpqLoginHtmlContent = fs.readFileSync(path.join(__dirname, "html/empresas_cpq_html", "login.html"), "utf-8");
+    res.send(cpqLoginHtmlContent);
+  } catch(err) {
+    console.log("Erro ao carregar a página login.html", err);
+    res.status(500).send("Erro interno do servidor.")
+  }
+});
+
 //Rota get para a tela do portal de usuários da CPQ
 app.get('/cpq/inicio', (req, res) => {
   try {

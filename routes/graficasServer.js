@@ -168,7 +168,7 @@ app.get('/pedidos-cadastrados', async (req, res) => {
 
     const pedidosCadastrados = await ItensPedido.findAll({
       where: {
-        statusPed: ['Aguardando', 'Pedido Aceito Pela Gráfica', 'Finalizado', 'Pedido Enviado pela Gráfica', 'Pedido Entregue pela Gráfica'],
+        statusPed: ['Recebido', 'Em Produção', 'Finalizado/Enviado para Transporte', 'Entregue'],
         statusPag: ['Pago', 'Aguardando']
       },
     });
@@ -443,7 +443,6 @@ app.get('/pedidos-cadastrados', async (req, res) => {
 
         // Procura o usuário pelo 'idUserPed' do pedido
         const userId = pedido.idUserPed;
-        const user = await User.findByPk(userId);
 
         // Atualiza o status do pedido
         pedido.statusPed = novoStatus;
@@ -451,26 +450,42 @@ app.get('/pedidos-cadastrados', async (req, res) => {
         await pedido.save();
       }
       
-      if(novoStatus === "Pedido Aceito Pela Gráfica") {
+      if(novoStatus === "Em produção") {
         //mensagem whatsapp
-        const corpoMensagem = "Olá! Temos o prazer de informar que seu pedido foi aceito pela gráfica e está em processo de produção. Em breve entraremos em contato para fornecer atualizações sobre o progresso e a entrega. Agradecemos por escolher nossos serviços!😉";
+        const corpoMensagem = `Olá, ${user.userCad}! 👋
+
+Que alegria ter você com a gente!
+Seu pedido já está em produção e nossa equipe está cuidando de cada detalhe para que o resultado supere suas expectativas. 🖨️
+
+Em breve, você receberá novas atualizações sobre o andamento e a previsão de entrega.
+
+Obrigada por escolher a ImprimeAí — é um orgulho ter você como cliente! 😉
+
+Pri
+✨ Tá com pressa? ImprimeAí!`;
         await enviarNotificacaoWhatsapp(user.telefoneCad, corpoMensagem);
         console.log("Mensagem enviada Com Sucesso!")
-      }else if(novoStatus === "Finalizado") {
+      }else if(novoStatus === "Finalizado/Enviado para Transporte") {
         //mensagem whatsapp
-        const corpoMensagem = "Olá! Seu pedido foi finalizado e está pronto para retirada ou entrega. Por favor, entre em contato conosco para agendar a retirada ou fornecer detalhes de entrega. Obrigado por escolher nossos serviços!😉";
-        await enviarNotificacaoWhatsapp(user.telefoneCad, corpoMensagem);
-        console.log("Mensagem enviada Com Sucesso!")
-      }else if(novoStatus === "Pedido Enviado pela Gráfica") {
-        //mensagem whatsapp
-        const corpoMensagem = "Olá! Seu pedido foi despachado e está a caminho do seu endereço. Estamos trabalhando para garantir que ele chegue até você o mais rápido possível. Obrigado por escolher nossos serviços!😉";
+        const corpoMensagem = `Olá, ${user.userCad}! 👋
+
+Boas notícias! 🎉
+Seu pedido foi finalizado com sucesso e está pronto para seguir para o transporte.
+Nossa equipe cuidou de cada detalhe para que ele chegue perfeito até você. 📦
+
+Em breve, você receberá informações sobre a conclusão da entrega.
+
+Obrigado por escolher a ImprimeAí — é um orgulho ter você como cliente! 😉
+
+Pri
+✨ Tá com pressa? ImprimeAí!`;
         await enviarNotificacaoWhatsapp(user.telefoneCad, corpoMensagem);
         console.log("Mensagem enviada Com Sucesso!")
       }else {
         console.log("Não foi possível encontrar o pedido!")
       }
 
-      if (novoStatus === "Pedido Entregue pela Gráfica") {
+      if (novoStatus === "Entregue") {
         const valorTotalPedido = tablePedidos.valorPed;
         const valorAdm = valorTotalPedido * 0.20;
         const valorGrafica = valorTotalPedido * 0.80;
@@ -738,6 +753,56 @@ app.get('/pedidos-cadastrados', async (req, res) => {
       }
     }
   }
+
+  async function uploadFileEntrega(file, name) {
+  const nomeArquivo = name;
+  const fileMetaData = {
+    'name': nomeArquivo, // Nome do arquivo
+    'parents': [GOOGLE_API_FOLDER_ID], // ID da pasta no Google Drive
+  };
+
+  // Certifique-se de que file.buffer seja um Buffer
+  const buffer = Buffer.from(file.buffer); // Converter ArrayBuffer para Buffer
+
+  // Criar o stream legível a partir do Buffer
+  const readableStream = stream.Readable.from(buffer); // Usar Readable.from para transformar o Buffer em um stream
+
+  // Corpo da requisição para upload
+  const media = {
+    mimeType: file.mimetype,
+    body: readableStream, // Passar o stream legível aqui
+    length: file.size,
+  };
+
+  try {
+    const auth = await new google.auth.GoogleAuth({
+      keyFile: './googledrive.json',
+      scopes: ['https://www.googleapis.com/auth/drive'],
+    });
+
+    const driveService = google.drive({ version: 'v3', auth });
+
+    const response = await driveService.files.create({
+      resource: fileMetaData,
+      media: media,
+      fields: 'id,webViewLink', // Retorna o ID e o link para visualizar no Drive
+      timeout: 10000, // Timeout de 10 segundos para a requisição
+    });
+
+    const fileId = response.data.id;
+    const webViewLink = response.data.webViewLink;
+
+    // Criando o link de download
+    const downloadLink = `https://drive.google.com/uc?export=download&id=${fileId}`;
+
+    return { fileId, webViewLink, downloadLink };
+    
+  } catch (err) {
+    console.error('Erro ao fazer upload para o Google Drive:', err.message);
+    throw err;
+  }
+}
+
 // Rota para receber os dados do formulário de entrega
 app.post('/dadosEntrega', upload.fields([
   { name: 'fotoEnt', maxCount: 1 },
@@ -775,46 +840,58 @@ app.post('/dadosEntrega', upload.fields([
     } else {
       user = await User.findByPk(userId);
     }
-
-    const corpoMensagem = `Olá! Temos o prazer de informar que seu pedido foi entregue com sucesso para ${recEnt} no horário ${horEnt}. Esperamos que você esteja satisfeito com nossos produtos e serviços. Se precisar de mais alguma coisa, não hesite em nos contatar. Obrigado!😉`;
+    
     const corpoObs = `Observações do pedido ${obsEnt}`;
 
+    // Fazer o upload dos arquivos para o Google Drive
     const arquivosRecebidos = [
       { arquivo: fotoEnt, prefixo: 'foto' },
       { arquivo: produtoEnt, prefixo: 'produto' },
       { arquivo: protocoloEnt, prefixo: 'protocolo' }
     ];
 
-    // Array para armazenar os caminhos dos arquivos salvos
-    const imagePaths = [];
+    const linksArquivos = [];
 
-    // Salvar cada arquivo no diretório temporário
-    arquivosRecebidos.forEach((item) => {
+    // Upload de cada arquivo e salvar os links
+    for (const item of arquivosRecebidos) {
       if (item.arquivo) {
-        const caminho = `./routes/${item.prefixo}_${Date.now()}_${item.arquivo.originalname}`;
-        fs.writeFileSync(caminho, item.arquivo.buffer);
-        imagePaths.push(caminho);
+        const resultado = await uploadFileEntrega(item.arquivo, item.prefixo + Date.now());
+        linksArquivos.push(resultado.downloadLink);
       }
-    });
-    
+    }
+
+    // Substituir "LINK" pelo link real dos arquivos
+    const linksNaMensagem = linksArquivos.map((link, index) => `🔗 Link do arquivo ${index + 1}: ${link}`).join("\n");
+
+    const corpoMensagem = `Olá, ${user.userCad}! 👋
+
+Boas notícias! 🎉
+Seu pedido foi entregue com sucesso para (${user.userCad}, ${recEnt} e ${horEnt}) 📦
+
+Para sua segurança e comodidade, você pode acessar as evidências da entrega e fotos do protocolo através do link abaixo:
+🔗 Ver evidências e fotos do pedido
+
+${linksNaMensagem}
+
+Esperamos que você esteja satisfeito com nossos produtos e serviços.
+Se precisar de qualquer coisa, não hesite em nos contatar.
+
+Obrigada por escolher a ImprimeAí — é sempre um prazer atendê-lo! 😉
+
+Pri
+✨ Tá com pressa? ImprimeAí!`;
+
+
     try {
       // Enviar mensagens pelo WhatsApp
-      if(obsEnt.length) {
+      if (obsEnt.length) {
         await enviarNotificacaoWhatsapp(user.telefoneCad, corpoObs);
       }
       await enviarNotificacaoWhatsapp(user.telefoneCad, corpoMensagem);
-      await enviarNotificacaoWhatsappComMidia(user.telefoneCad, imagePaths, 'Evidências');
     
       console.log('Mensagens enviadas com sucesso!');
     } catch (error) {
       console.error('Erro ao enviar mensagens:', error);
-    } finally {
-      // Remover arquivos temporários
-      imagePaths.forEach((path) => {
-        if (fs.existsSync(path)) {
-          fs.unlinkSync(path);
-        }
-      });
     }
 
     res.send('Dados de entrega recebidos com sucesso!');
@@ -823,6 +900,7 @@ app.post('/dadosEntrega', upload.fields([
     res.status(500).send('Erro ao processar entrega.');
   }
 });
+
 
 app.get("/perfilGrafica/dados", async (req, res) => {
   try {

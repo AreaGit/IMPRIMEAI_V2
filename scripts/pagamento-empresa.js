@@ -44,6 +44,7 @@ const criacaoBoleto = document.getElementById('criacaoBoleto');
 const carregamento = document.getElementById('carregamento');
 let metodPag;
 let idTransacao;
+let linkPagamento;
 function getCookie(name) {
   const value = `; ${document.cookie}`;
   const parts = value.split(`; ${name}=`);
@@ -257,7 +258,8 @@ async function criarPedido() {
         const pedidoData = {
           valorPed: totalAPagar, // Atualize valorPed com o valor total do carrinho
           metodPag,
-          idTransacao
+          idTransacao,
+          linkPagamento
         };
         console.log('PEDIDO CRIADO')
         carregamento.style.display = 'block';
@@ -564,6 +566,7 @@ async function pagamentoBoleto() {
     `;
     carregamento.style.display = 'none'
     divBoletoContainer.style.display = 'block';
+    linkPagamento = responseData.data.pdfBoleto;
     const urlTransacao = responseData.data.urlTransacao;
     metodPag = "BOLETO";
     idTransacao = responseData.data.payment_id;

@@ -23,6 +23,13 @@ body {
   color: var(--cinza-texto);
 }
 
+li > a {
+  text-decoration: none;
+  color: #555555;
+  padding: 15px;
+  transition: 0.8s;
+}
+
 header {
   display: flex;
   justify-content: center;
@@ -78,119 +85,4 @@ select, input, textarea, #btnEnviarPedido {
 #btnEnviarPedido:hover {
     background: #D93A33;
     box-shadow: 0px 5px 15px rgba(217, 58, 51, 0.3);
-}
-
-.contentFooter {
-  background-color: #2B2B2B;
-  position: relative;
-  top: 1350px;
-  left: 49%;
-  transform: translate(-50%);
-  width: 101vw;
-}
-footer {
-  height: 20vw;
-  padding: 15px;
-}
-/* Estilos gerais do rodapé */
-/* Rodapé moderno */
-footer.modern-footer {
-  background: linear-gradient(135deg, #222, #444);
-  color: #fff;
-  padding: 50px 20px;
-}
-
-footer .footer-container {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: space-between;
-  max-width: 1200px;
-  margin: 0 auto;
-}
-
-footer .footer-section {
-  flex: 1;
-  min-width: 200px;
-  margin: 10px;
-}
-
-footer h4 {
-  font-size: 18px;
-  margin-bottom: 15px;
-  color: #EF4126; /* Destaque com uma cor vibrante */
-  position: relative;
-}
-
-footer h4::after {
-  content: '';
-  display: block;
-  width: 50px;
-  height: 3px;
-  background: #EF4126;
-  margin-top: 5px;
-}
-
-footer ul {
-  list-style: none;
-  padding: 0;
-}
-
-footer ul li {
-  width: 280px;
-  height: 49px;
-}
-
-footer ul li a {
-  color: #ccc;
-  text-decoration: none;
-  font-size: 14px;
-  display: inline-block;
-  margin: 0px 0;
-  transition: color 0.3s ease-in-out;
-  margin: 20px;
-}
-
-footer ul li a:hover {
-  color: #F37160;
-}
-
-footer .social-icons a {
-  margin: 0 10px;
-  text-decoration: none;
-  display: inline-block;
-}
-
-footer .social-icons img {
-  width: 30px;
-  height: 30px;
-  transition: transform 0.3s ease;
-  filter: grayscale(100%);
-}
-
-footer .social-icons img:hover {
-  transform: scale(1.2);
-  filter: grayscale(0%);
-}
-
-footer .payment-icons img {
-  width: 35px;
-  margin: 5px;
-  filter: brightness(0.8);
-  transition: filter 0.3s ease-in-out;
-}
-
-footer .payment-icons img:hover {
-  filter: brightness(1);
-}
-
-footer .footer-bottom {
-  text-align: center;
-  padding-top: 20px;
-  border-top: 1px solid #555;
-  margin-top: 30px;
-}
-
-footer .footer-bottom p {
-  color: #aaa;
-  font-size: 14px;
 }

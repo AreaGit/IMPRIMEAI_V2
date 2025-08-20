@@ -25,6 +25,13 @@ a {
   text-decoration: none;
 }
 
+li > a {
+  text-decoration: none;
+  color: #555555;
+  padding: 15px;
+  transition: 0.8s;
+}
+
 header {
   display: flex;
   justify-content: space-between;
@@ -284,97 +291,116 @@ section {
   text-align: left;
   width: 35vw;
 }
-.btn-cadastro {
-    display: block;
-    margin: 0px auto 0;
-    width: fit-content;
-    padding: 12px 28px;
-    background-color: var(--vermelho);
-    color: var(--branco);
-    font-weight: 600;
-    border-radius: 200px;
-    text-align: center;
-    position: relative;
-    left: 104%;
-    top: -155px;
-}
 
+/* Estilo geral para a seção de pré-requisitos */
 .requisitos {
   display: grid;
-  grid-template-columns: repeat(2, 1fr);
+  grid-template-columns: repeat(2, 1fr); /* Duas colunas para telas grandes */
   gap: 50px;
   padding: 0 20px;
 }
 
-.requisito {
-    text-align: center;
+/* Ajustes para a imagem dentro do contêiner de requisitos */
+.imagem-requisitos img {
+  width: 100%; /* A imagem ocupa toda a largura do contêiner */
+  height: auto; /* A altura ajusta automaticamente para manter a proporção */
+  object-fit: cover; /* Garante que a imagem cubra o contêiner sem distorção */
+  border-radius: 12px; /* Bordas arredondadas para a imagem */
 }
 
-@media (max-width: 768px) {
-  .requisitos {
-    grid-template-columns: 1fr;
-  }
-}
-
+/* Lista de requisitos (tela grande) */
 .lista-requisitos {
   list-style: none;
   padding: 40px 20px;
   margin: 0 auto;
   display: grid;
-  grid-template-columns: repeat(3, 1fr); /* 3 colunas */
+  grid-template-columns: repeat(3, 1fr); /* Três colunas em telas grandes */
   gap: 30px;
-
   max-width: 1200px;
-  background-color: #ffffff;
+  background-color: #fff;
   border-radius: 12px;
   box-shadow: 0 8px 20px rgba(0, 0, 0, 0.08);
 }
 
-.imagem-requisitos img {
-    max-width: 645px;
-    height: auto;
-    border-radius: 12px;
-    object-fit: cover;
-    position: relative;
-    left: 25%;
-}
-
-
-
+/* Estilos para os itens dentro da lista de requisitos */
 .lista-requisitos li {
+  text-align: center;
   padding: 24px;
   border-radius: 12px;
-  /*border: 1px solid #eee;*/
-  text-align: center;
+  background-color: #f9f9f9;
+  transition: background-color 0.3s ease;
 }
 
+/* Efeito de hover nos itens da lista */
+.lista-requisitos li:hover {
+  background-color: #f1f1f1; /* Cor de fundo mais clara no hover */
+}
+
+/* Imagens dentro da lista de requisitos */
 .lista-requisitos li img {
   width: 60px;
   height: auto;
   margin-bottom: 15px;
 }
 
+/* Títulos (h3) dos requisitos */
 .lista-requisitos h3 {
   margin: 0 0 8px;
   font-size: 18px;
+  color: #333; /* Cor de texto escuro para melhor contraste */
 }
 
+/* Parágrafos dentro da lista de requisitos */
 .lista-requisitos p {
   margin: 0;
   font-size: 15px;
+  color: #666; /* Cor de texto mais suave */
   text-align: center;
+}
+
+/* Responsividade para telas menores */
+@media (max-width: 768px) {
+  /* Mudança no layout da grid */
+  .requisitos {
+    grid-template-columns: 1fr; /* Uma coluna para telas pequenas */
+    gap: 30px; /* Menor espaçamento entre os itens */
+  }
+
+  /* Ajuste da imagem do contêiner de requisitos */
+  .imagem-requisitos img {
+    max-width: 100%; /* A imagem ocupa toda a largura disponível */
+    height: auto;
+    margin: 0; /* Remove margem extra */
+    left: 0; /* Remove o deslocamento da imagem */
+  }
+
+  /* Ajuste no layout da lista de requisitos */
+  .lista-requisitos {
+    grid-template-columns: 1fr; /* Uma coluna para a lista em telas pequenas */
+    padding: 20px;
+  }
+
+  /* Ajuste no botão de cadastro */
+  .btn-cadastro {
+    display: block; /* O botão ocupa toda a largura disponível */
+    width: 100%;
+    padding: 15px;
+    text-align: center;
+    font-size: 18px;
+    margin-top: 20px; /* Espaçamento superior para o botão */
+  }
 }
 
 .contentFooter {
   background-color: #2B2B2B;
   position: relative;
-  top: 50px;
+  top: 300px;
   left: 49%;
   transform: translate(-50%);
   width: 101vw;
 }
 footer {
-  height: 20vw;
+  height: auto;
   padding: 15px;
 }
 /* Estilos gerais do rodapé */
@@ -420,11 +446,6 @@ footer ul {
   padding: 0;
 }
 
-footer ul li {
-  width: 280px;
-  height: 49px;
-}
-
 footer ul li a {
   color: #ccc;
   text-decoration: none;
@@ -432,7 +453,6 @@ footer ul li a {
   display: inline-block;
   margin: 0px 0;
   transition: color 0.3s ease-in-out;
-  margin: 20px;
 }
 
 footer ul li a:hover {

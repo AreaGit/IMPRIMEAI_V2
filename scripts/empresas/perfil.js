@@ -105,6 +105,20 @@ function habilitarEdicao() {
     document.getElementById('btnEditar').style.display = 'none';
 }
 
+let campoTelefone = document.getElementById('telefone');
+
+campoTelefone.addEventListener('input', () => {
+    let telefoneValue = campoTelefone.value.replace(/\D/g, ''); // Remove todos os caracteres não numéricos
+    if (telefoneValue.length > 11) {
+        telefoneValue = telefoneValue.slice(0, 11); // Limite o comprimento a 11 caracteres
+    }
+
+    // Formata o telefone com parênteses e traço (por exemplo, (99) 99999-9999)
+    telefoneValue = telefoneValue.replace(/(\d{2})(\d{5})(\d{4})/, '($1) $2-$3');
+
+    campoTelefone.value = telefoneValue; // Define o valor formatado de volta no campo
+});
+
 async function salvarDadosEditados() {
     const nome = document.getElementById('nomeCompleto').value;
     const email = document.getElementById('email').value;

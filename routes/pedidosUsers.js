@@ -1307,7 +1307,7 @@ app.get('/graficas', async (req, res) => {
 });
 
 app.post('/criar-pedidos', async (req, res) => {
-  const { metodPag, idTransacao, valorPed } = req.body;
+  const { metodPag, idTransacao, valorPed, linkPagamento } = req.body;
   const carrinhoQuebrado = req.session.carrinho || [];
   const enderecoDaSessao = req.session.endereco;
   const userId = req.cookies.userId
@@ -1379,7 +1379,7 @@ app.post('/criar-pedidos', async (req, res) => {
         formato: produto.formato,
         material: produto.material,
         arquivo: produto.arquivo,
-        statusPed: carrinhoQuebrado.some(p => p.downloadLink === "Enviar Arte Depois") ? 'Pedido em Aberto' : 'Aguardando',
+        statusPed: carrinhoQuebrado.some(p => p.downloadLink === "Enviar Arte Depois") ? 'Pedido em Aberto' : 'Recebido',
         statusPag: metodPag === 'BOLETO' ? 'Esperando Pagamento' : metodPag === 'Carteira Usuário' ? 'Pago' : 'Aguardando',
         linkDownload: produto.downloadLink,
         nomeArquivo: produto.nomeArquivo,
@@ -1401,31 +1401,34 @@ app.post('/criar-pedidos', async (req, res) => {
     // Buscar informações do usuário para o WhatsApp
     const usuario = await User.findByPk(userId, { attributes: ['telefoneCad', 'userCad'] });
     if (usuario) {
-      const nome = usuario.userCad;
-      const telefone = usuario.telefoneCad;
-      const linkDetalhamento = `https://www.imprimeai.com.br/detalhesPedidosUser?idPedido=${pedido.id}`
-      const mensagemWhatsapp = "Oi " + nome + ", tudo bem? 😊\n" + "Queremos te agradecer por confiar sua impressão à Imprimeaí!\n" + "Nosso time está super feliz por poder te atender.\n" + "Se precisar de algo mais ou tiver alguma dúvida, por favor nos chame.\n\n" +
-      "Em breve, te traremos mais novidades sobre o pedido " + pedido.id + "\n" +
-      "Se preferir acompanhe também pelo site:" + linkDetalhamento + "\n\n" +
-      "Pri\n\n" +
-      "Obrigada!\n\n" +
-      "Siga-nos no Insta\n" +
-      "https://www.instagram.com/imprimeai.com.br e fique por dentro das novidades, cupons de desconto e assuntos importantes sobre gráfica e comunicação visual!\n\n" +
-      "*Tá com pressa? Imprimeaí!*";
 
-      await enviarNotificacaoWhatsapp(telefone, mensagemWhatsapp);
+      const carrinho = req.session.carrinho;
+      // Calcula o valor total, incluindo o frete corretamente para cada item
+      const totalAmount = carrinho.reduce((total, item) => {
+      let itemSubtotal;
+
+      if (item.endereco.tipoEntrega === "Único Endereço") {
+        itemSubtotal = (item.valorUnitario * item.quantidade) + item.endereco.frete;
+      } else if (item.endereco.tipoEntrega === "Entrega a Retirar na Loja") {
+        itemSubtotal = item.valorUnitario * item.quantidade;
+      } else {
+        itemSubtotal = (item.valorUnitario * item.quantidade) + item.endereco.frete;
+      }
       
+      return total + itemSubtotal; // sem conversão para centavos
+    }, 0);
+
       const hojeComHifen = new Date().toISOString().split('T')[0];
       const dadosNfse = {
         payment: idTransacao,
         customer: user.customer_asaas_id,
         externalReference: Math.floor(Math.random() * 999) + 1,
-        value: totalAPagar,
+        value: totalAmount,
         effectiveDate: hojeComHifen
       };
 
       // Verificar se o pagamento é diferente de "Carteira Usuário"
-      if (metodPag !== 'Carteira Usuário') {
+      if (metodPag !== 'Carteira Usuário' && metodPag !== 'BOLETO') {
         const nfse = await agendarNfsAsaas(dadosNfse);
         const invoice = nfse.id;
         
@@ -1442,6 +1445,56 @@ app.post('/criar-pedidos', async (req, res) => {
       }
     }
 
+    if(metodPag != 'BOLETO') {
+    const nome = usuario.userCad;
+      const telefone = usuario.telefoneCad;
+      const linkDetalhamento = `https://www.imprimeai.com.br/detalhesPedidosUser?idPedido=${pedido.id}`
+      const mensagemWhatsapp = `Oi, ${nome}! Tudo bem? 😊
+
+Parabéns pela sua escolha! 🎊
+Obrigado por confiar sua impressão à ImprimeAí. Nosso time está super feliz por poder te atender!
+
+Se precisar de algo mais ou tiver qualquer dúvida, é só nos chamar.
+
+📦 Em breve, você receberá novidades sobre o andamento do seu pedido #${pedido.id}.
+Você também pode acompanhar tudo pelo site:
+🔗 ${linkDetalhamento}
+
+📸 Siga nosso Instagram: @imprimeai.com.br
+Lá você encontra novidades, cupons de desconto e dicas de comunicação visual. 
+
+Obrigada,
+
+Pri !
+✨ Tá com pressa? ImprimeAí!`;
+
+      await enviarNotificacaoWhatsapp(telefone, mensagemWhatsapp);
+    } else{
+      const nome = usuario.userCad;
+      const telefone = usuario.telefoneCad;
+      const linkDetalhamento = `https://www.imprimeai.com.br/detalhesPedidosUser?idPedido=${pedido.id}`;
+      mensagemWhatsapp = `Oi, ${nome}! Tudo bem? 😊
+        
+Parabéns pela sua escolha! 🎊
+Muito obrigado por confiar sua impressão à ImprimeAí. Nosso time está super feliz por poder te atender!
+        
+Para que possamos liberar seu pedido #${pedido.id}, lembramos que é necessário efetuar o pagamento do boleto. Você pode acessar o seu boleto clicando no link abaixo:
+        
+🔗 ${linkPagamento}
+
+O prazo para o pagamento é de até dois dias a partir da data de emissão. Após a confirmação do pagamento, seu pedido será liberado e você receberá atualizações sobre o andamento. 📦
+        
+Caso precise de qualquer ajuda ou tenha dúvidas, estamos à disposição para te apoiar. 🙂
+        
+📸 Ah, aproveite para seguir nosso Instagram: @imprimeai.com.br, lá você encontra novidades, cupons de desconto e dicas de comunicação visual!
+
+Obrigada,
+        
+Pri!
+✨ Tá com pressa? ImprimeAí!`;
+await enviarNotificacaoWhatsapp(telefone, mensagemWhatsapp);
+    }
+
     // Limpar a sessão
     req.session.carrinho = [];
     req.session.endereco = {};
@@ -1456,7 +1509,7 @@ app.post('/criar-pedidos', async (req, res) => {
 });
 
 app.post('/criar-pedidos-empresas', async (req, res) => {
-  const { metodPag, idTransacao, valorPed } = req.body;
+  const { metodPag, idTransacao, valorPed, linkPagamento } = req.body;
   const carrinhoQuebrado = req.session.carrinho || [];
   const enderecoDaSessao = req.session.endereco;
   const userId = req.cookies.userId
@@ -1532,7 +1585,7 @@ app.post('/criar-pedidos-empresas', async (req, res) => {
         formato: produto.formato,
         material: produto.material,
         arquivo: produto.arquivo,
-        statusPed: carrinhoQuebrado.some(p => p.downloadLink === "Enviar Arte Depois") ? 'Pedido em Aberto' : 'Aguardando',
+        statusPed: carrinhoQuebrado.some(p => p.downloadLink === "Enviar Arte Depois") ? 'Pedido em Aberto' : 'Recebido',
         statusPag: (metodPag === 'Boleto' || metodPag === 'BOLETO')
         ? 'Esperando Pagamento'
         : (metodPag === 'Carteira Usuário' || metodPag === 'PIX' || metodPag === 'CARTÃO')
@@ -1553,32 +1606,35 @@ app.post('/criar-pedidos-empresas', async (req, res) => {
     // Buscar informações do usuário para o WhatsApp
     const usuario = await UserEmpresas.findByPk(userId, { attributes: ['telefoneCad', 'userCad'] });
     if (usuario) {
-      const nome = usuario.userCad;
-      const telefone = usuario.telefoneCad;
-      const linkDetalhamento = `https://www.imprimeai.com.br/detalhesPedidosUser?idPedido=${pedido.id}`
-      const mensagemWhatsapp = "Oi " + nome + ", tudo bem? 😊\n" + "Queremos te agradecer por confiar sua impressão à Imprimeaí!\n" + "Nosso time está super feliz por poder te atender.\n" + "Se precisar de algo mais ou tiver alguma dúvida, por favor nos chame.\n\n" +
-      "Em breve, te traremos mais novidades sobre o pedido " + pedido.id + "\n" +
-      "Se preferir acompanhe também pelo site:" + linkDetalhamento + "\n\n" +
-      "Pri\n\n" +
-      "Obrigada!\n\n" +
-      "Siga-nos no Insta\n" +
-      "https://www.instagram.com/imprimeai.com.br e fique por dentro das novidades, cupons de desconto e assuntos importantes sobre gráfica e comunicação visual!\n\n" +
-      "*Tá com pressa? Imprimeaí!*";
-
       await verificarGraficaMaisProximaEAtualizar(itensPedido[0], enderecos[0]);
-      await enviarNotificacaoWhatsapp(telefone, mensagemWhatsapp);
 
       if(metodPag == 'BOLETO' || 'PIX' || 'CARTÃO') {
+
+        const carrinho = req.session.carrinho;
+        // Calcula o valor total, incluindo o frete corretamente para cada item
+        const totalAmount = carrinho.reduce((total, item) => {
+          let itemSubtotal;
+          
+          if (item.endereco.tipoEntrega === "Único Endereço") {
+            itemSubtotal = (item.valorUnitario * item.quantidade) + item.endereco.frete;
+          } else if (item.endereco.tipoEntrega === "Entrega a Retirar na Loja") {
+            itemSubtotal = item.valorUnitario * item.quantidade;
+          } else {
+            itemSubtotal = (item.valorUnitario * item.quantidade) + item.endereco.frete;
+          }
+          
+          return total + itemSubtotal; // sem conversão para centavos
+        }, 0);
 
         const hojeComHifen = new Date().toISOString().split('T')[0];
       const dadosNfse = {
         payment: idTransacao,
         customer: user.customer_asaas_id,
         externalReference:  Math.floor(Math.random() * 999) + 1,
-        value: totalAPagar,
+        value: totalAmount,
         effectiveDate: hojeComHifen
       };
-
+        if (metodPag !== 'Carteira Usuário' && metodPag !== 'BOLETO') {
           const nfse = await agendarNfsAsaas(dadosNfse);
           const invoice = nfse.id;
           
@@ -1592,8 +1648,58 @@ app.post('/criar-pedidos-empresas', async (req, res) => {
           pedido.nfseUrl = nfseUrl
           pedido.statusPag = 'Pago'
           pedido.save();
+        }
 
       }
+    }
+
+    if(metodPag != 'BOLETO') {
+    const nome = usuario.userCad;
+      const telefone = usuario.telefoneCad;
+      const linkDetalhamento = `https://www.imprimeai.com.br/detalhesPedidosUser?idPedido=${pedido.id}`
+      const mensagemWhatsapp = `Oi, ${nome}! Tudo bem? 😊
+
+Parabéns pela sua escolha! 🎊
+Obrigado por confiar sua impressão à ImprimeAí. Nosso time está super feliz por poder te atender!
+
+Se precisar de algo mais ou tiver qualquer dúvida, é só nos chamar.
+
+📦 Em breve, você receberá novidades sobre o andamento do seu pedido #${pedido.id}.
+Você também pode acompanhar tudo pelo site:
+🔗 ${linkDetalhamento}
+
+📸 Siga nosso Instagram: @imprimeai.com.br
+Lá você encontra novidades, cupons de desconto e dicas de comunicação visual. 
+
+Obrigada,
+
+Pri !
+✨ Tá com pressa? ImprimeAí!`;
+
+      await enviarNotificacaoWhatsapp(telefone, mensagemWhatsapp);
+    } else{
+      const nome = usuario.userCad;
+      const telefone = usuario.telefoneCad;
+      mensagemWhatsapp = `Oi, ${nome}! Tudo bem? 😊
+        
+Parabéns pela sua escolha! 🎊
+Muito obrigado por confiar sua impressão à ImprimeAí. Nosso time está super feliz por poder te atender!
+        
+Para que possamos liberar seu pedido #${pedido.id}, lembramos que é necessário efetuar o pagamento do boleto. Você pode acessar o seu boleto clicando no link abaixo:
+        
+🔗 ${linkPagamento}
+
+O prazo para o pagamento é de até dois dias a partir da data de emissão. Após a confirmação do pagamento, seu pedido será liberado e você receberá atualizações sobre o andamento. 📦
+        
+Caso precise de qualquer ajuda ou tenha dúvidas, estamos à disposição para te apoiar. 🙂
+        
+📸 Ah, aproveite para seguir nosso Instagram: @imprimeai.com.br, lá você encontra novidades, cupons de desconto e dicas de comunicação visual!
+
+Obrigada,
+        
+Pri!
+✨ Tá com pressa? ImprimeAí!`;
+await enviarNotificacaoWhatsapp(telefone, mensagemWhatsapp);
     }
 
     // Limpar a sessão
@@ -1803,7 +1909,7 @@ async function verificarGraficaMaisProximaEAtualizar2(itensPedido, enderecos) {
       
                     let mensagemStatus = '';
       
-                    if (pedidoCadastrado.statusPed === 'Aguardando') {
+                    if (pedidoCadastrado.statusPed === 'Recebido') {
                        mensagemStatus = `Olá *Parceiro ${graficaMaisProxima.userCad}*, tudo bem?\n\n` +
                       `Estou passando para avisar que temos um pedido aguardando atendimento de vocês. \n` +
                       `O número do pedido é ${itensPedido[0].idPed} e ele precisa ser processado o quanto antes. \n` +
@@ -2571,7 +2677,6 @@ IMPRIMEAI`;
         material: item.material,
         linkDownload: item.linkDownload,
         nomeArquivo: item.nomeArquivo,
-        imgProd: item.produto.imgProd,
         tipo: item.tipo,
         arteEmpresas: item.arteEmpresas,
       }));
@@ -2673,6 +2778,8 @@ app.post('/processarPagamento-boleto', async(req, res) => {
   console.log('Total Amount (normal):', totalAmount);
 
   // Pega o ano, mês e dia
+  dataAtual.setDate(dataAtual.getDate() + 2); // Adiciona dois dias à data atual
+
   const ano = dataAtual.getFullYear();
   const mes = (dataAtual.getMonth() + 1).toString().padStart(2, '0'); // Mes começa do 0, então somamos 1
   const dia = dataAtual.getDate().toString().padStart(2, '0'); // Garantir que o dia tenha dois dígitos
@@ -2812,6 +2919,8 @@ app.post('/processarPagamento-boleto-carteira', async(req, res) => {
   const dataAtual = new Date();
 
   // Pega o ano, mês e dia
+  dataAtual.setDate(dataAtual.getDate() + 2); // Adiciona dois dias à data atual
+
   const ano = dataAtual.getFullYear();
   const mes = (dataAtual.getMonth() + 1).toString().padStart(2, '0'); // Mes começa do 0, então somamos 1
   const dia = dataAtual.getDate().toString().padStart(2, '0'); // Garantir que o dia tenha dois dígitos
@@ -2965,7 +3074,7 @@ app.post('/uploadGoogleDrive', upload.single('file'), async (req, res) => {
 
     // Se todos os produtos foram enviados, atualize o status do pedido para "Aguardando"
     if (todosProdutosEnviados) {
-      await atualizarStatusPedido(pedidoId, 'Aguardando');
+      await atualizarStatusPedido(pedidoId, 'Recebido');
     }
 
     res.json(result);
@@ -3046,7 +3155,7 @@ async function verificarTodosProdutosEnviados(idPedido) {
 
   // Se todos os produtos foram enviados, atualize o status do pedido para 'Aguardando'
   if (todosEnviados.length > 0) {
-    await atualizarStatusPedido(idPedido, 'Aguardando');
+    await atualizarStatusPedido(idPedido, 'Recebido');
     console.log('Notificando a Gráfica!')
     await notificarGrafica(idPedido);  // Adiciona a notificação para a gráfica
     return true;
