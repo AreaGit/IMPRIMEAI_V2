@@ -1307,7 +1307,7 @@ app.get('/graficas', async (req, res) => {
 });
 
 app.post('/criar-pedidos', async (req, res) => {
-  const { metodPag, idTransacao, valorPed, linkPagamento } = req.body;
+  const { metodPag, idTransacao, valorPed, linkPagamento, dataVencimento } = req.body;
   const carrinhoQuebrado = req.session.carrinho || [];
   const enderecoDaSessao = req.session.endereco;
   const userId = req.cookies.userId
@@ -1334,7 +1334,8 @@ app.post('/criar-pedidos', async (req, res) => {
       valorPed: totalAPagar,
       statusPed: metodPag === 'BOLETO' ? 'Esperando Pagamento' : 'Pago',
       metodPag: metodPag,
-      idTransacao: idTransacao
+      idTransacao: idTransacao,
+      dataVencimento: dataVencimento
     });
 
     const enderecosPromises = carrinhoQuebrado.map(async (produto) => {
@@ -1390,13 +1391,6 @@ app.post('/criar-pedidos', async (req, res) => {
     });
 
     const itensPedido = await Promise.all(itensPedidoPromises);
-
-    // Chamada da função de verificação da gráfica
-    if (isMultipleAddresses) {
-      await verificarGraficaMaisProximaEAtualizar2(itensPedido, enderecos);
-    } else {
-      await verificarGraficaMaisProximaEAtualizar(itensPedido[0], enderecos[0]);
-    }
 
     // Buscar informações do usuário para o WhatsApp
     const usuario = await User.findByPk(userId, { attributes: ['telefoneCad', 'userCad'] });
@@ -1468,6 +1462,12 @@ Obrigada,
 Pri !
 ✨ Tá com pressa? ImprimeAí!`;
 
+    // Chamada da função de verificação da gráfica  
+    if (isMultipleAddresses) {
+      await verificarGraficaMaisProximaEAtualizar2(itensPedido, enderecos);
+    } else {
+      await verificarGraficaMaisProximaEAtualizar(itensPedido[0], enderecos[0]);
+    }
       await enviarNotificacaoWhatsapp(telefone, mensagemWhatsapp);
     } else{
       const nome = usuario.userCad;
@@ -1509,7 +1509,7 @@ await enviarNotificacaoWhatsapp(telefone, mensagemWhatsapp);
 });
 
 app.post('/criar-pedidos-empresas', async (req, res) => {
-  const { metodPag, idTransacao, valorPed, linkPagamento } = req.body;
+  const { metodPag, idTransacao, valorPed, linkPagamento, dataVencimento } = req.body;
   const carrinhoQuebrado = req.session.carrinho || [];
   const enderecoDaSessao = req.session.endereco;
   const userId = req.cookies.userId
@@ -1540,7 +1540,8 @@ app.post('/criar-pedidos-empresas', async (req, res) => {
       statusPed: metodPag === 'BOLETO' ? 'Esperando Pagamento' : 'Pago',
       metodPag: metodPag,
       idTransacao: idTransacao,
-      dataPrevisaoProducao: dataPrevisaoProducao.toISOString()
+      dataPrevisaoProducao: dataPrevisaoProducao.toISOString(),
+      dataVencimento: dataVencimento
     });
 
     const enderecosPromises = carrinhoQuebrado.map(async (produto) => {
@@ -1606,7 +1607,6 @@ app.post('/criar-pedidos-empresas', async (req, res) => {
     // Buscar informações do usuário para o WhatsApp
     const usuario = await UserEmpresas.findByPk(userId, { attributes: ['telefoneCad', 'userCad'] });
     if (usuario) {
-      await verificarGraficaMaisProximaEAtualizar(itensPedido[0], enderecos[0]);
 
       if(metodPag == 'BOLETO' || 'PIX' || 'CARTÃO') {
 
@@ -1677,6 +1677,7 @@ Pri !
 ✨ Tá com pressa? ImprimeAí!`;
 
       await enviarNotificacaoWhatsapp(telefone, mensagemWhatsapp);
+      await verificarGraficaMaisProximaEAtualizar(itensPedido[0], enderecos[0]);
     } else{
       const nome = usuario.userCad;
       const telefone = usuario.telefoneCad;
@@ -2014,53 +2015,133 @@ cron.schedule('* * * * *', async () => {
 
 async function verificarPagamentosPendentes() {
   try {
-    // Consultar pedidos com status 'Esperando Pagamento' no seu banco de dados
     const pedidosAguardandoPagamento = await Pedidos.findAll({ where: { statusPed: 'Esperando Pagamento' } });
-  
-    // Iterar sobre os pedidos encontrados
+
     for (const pedido of pedidosAguardandoPagamento) {
-      // Verificar o status do pagamento no Pagarme usando o ID da transação
       const transacaoId = pedido.idTransacao;
       const user = await User.findByPk(pedido.idUserPed);
-      const hojeComHifen = new Date().toISOString().split('T')[0];
-      console.log('Transação ID:', transacaoId);
+      const hoje = new Date();
+      const hojeUTC = new Date(hoje.toISOString().split('T')[0]);
+
+      const dataVencimento = new Date(pedido.dataVencimento);
+      const dataVencimentoUTC = new Date(dataVencimento.toISOString().split('T')[0]);
+
+      const diffMillis = dataVencimentoUTC.getTime() - hojeUTC.getTime();
+      const diffDias = Math.floor(diffMillis / (1000 * 60 * 60 * 24));
+
+      // 📢 Notificação 1 dia antes do vencimento
+      if (diffDias === 1 && !pedido.notificacaoVencimento1Dia) {
+        await enviarNotificacaoWhatsapp(
+          user.telefoneCad,
+          `⚠️ Atenção: sua cobrança vence amanhã (${dataVencimento.toLocaleDateString('pt-BR')}). Evite juros e complicações! Realize o pagamento agora e fique em dia.`
+        );
+        pedido.notificacaoVencimento1Dia = true;
+        await pedido.save();
+      }
+
+      // 📢 Notificação no dia do vencimento
+      if (diffDias === 0 && !pedido.notificacaoVencimentoHoje) {
+        await enviarNotificacaoWhatsapp(
+          user.telefoneCad,
+          `Oi,  ${user.userCad}! Tudo bem? 😊
+
+Parabéns pela sua escolha! 🎊
+Seu pedido ${pedido.id} já foi registrado com a gente , mas
+lembramos que ele será confirmado assim que o pagamento do boleto for identificado.
+Assim que isso acontecer, você receberá uma notificação automática e poderá acompanhar todas as etapas diretamente no portal.
+
+Qualquer dúvida, é só falar com a gente! 💬
+
+Obrigada,
+Pri ✨
+Tá com pressa? ImprimeAí!`
+        );
+        pedido.notificacaoVencimentoHoje = true;
+        await pedido.save();
+      }
+
       try {
-        const cobranca = await consultarCobranca(transacaoId)
-        if (cobranca.status === 'CONFIRMED' || cobranca.status === 'RECEIVED') {
+        const cobranca = await consultarCobranca(transacaoId);
+
+        // ✅ Pagamento confirmado
+        if ((cobranca.status === 'CONFIRMED' || cobranca.status === 'RECEIVED') && !pedido.notificacaoPagamentoRecebido) {
+          await enviarNotificacaoWhatsapp(
+            user.telefoneCad,
+            `✅ Pagamento confirmado com sucesso! Seu compromisso foi cumprido e o seu pedido já foi liberado. Ele está a caminho da gráfica mais próxima para ser processado. Agradecemos muito pela sua pontualidade e confiança!`
+          );
+
           const dadosNfse = {
             payment: transacaoId,
             customer: user.customer_asaas_id,
-            externalReference:  Math.floor(Math.random() * 999) + 1,
+            externalReference: Math.floor(Math.random() * 999) + 1,
             value: user.saldo,
-            effectiveDate: hojeComHifen
-          };     
+            effectiveDate: hoje.toISOString().split('T')[0],
+          };
+
           const nfse = await agendarNfsAsaas(dadosNfse);
           const invoice = nfse.id;
-      
           const nfseEmitida = await emitirNfs(invoice);
           const externalReference = nfseEmitida.externalReference;
-      
           const notaAutorizada = await consultarNf(externalReference);
-          console.log('Nota autorizada:', notaAutorizada);
-          const nfseUrl = notaAutorizada.pdfUrl;
-      
-          // Atualizar o status do pedido para 'Pago'
-          pedido.nfseUrl = nfseUrl
+
+          pedido.nfseUrl = notaAutorizada.pdfUrl;
           pedido.statusPed = 'Pago';
+          pedido.notificacaoPagamentoRecebido = true;
           await pedido.save();
+
           await ItensPedido.update({ statusPag: 'Pago' }, { where: { idPed: pedido.id } });
-        } else if (cobranca.status === 'OVERDUE') {
-          console.log('Pagamento não realizado dentro do prazo.');
+
+          const itensPedido = await ItensPedido.findAll({ where: { idPed: pedido.id } });
+          const enderecos = await Enderecos.findAll({ where: { idPed: pedido.id } });
+          
+          const isMultipleAddresses = enderecos.length > 1; // Considera múltiplos endereços se houver mais de um
+
+          // Chama a função para verificar a gráfica mais próxima e atualizar os itens do pedido
+          if (isMultipleAddresses) {
+            await verificarGraficaMaisProximaEAtualizar2(itensPedido, enderecos);
+          } else {
+            await verificarGraficaMaisProximaEAtualizar(itensPedido[0], enderecos[0]);
+          }
+
+        // ❗ Pagamento vencido — notificar uma vez
+        } else if ((cobranca.status === 'OVERDUE' || diffDias < 0) && !pedido.notificacaoCobrancaVencida) {
+          await enviarNotificacaoWhatsapp(
+            user.telefoneCad,
+            `Oi, ${user.userCad} Tudo bem? ✨
+
+Notamos que o boleto do pedido ${pedido.id} venceu e não foi compensado.
+Por isso, o pedido não pôde ser confirmado em nossa produção.
+
+👉 Mas não se preocupe! Você pode:
+
+Refazer o pedido normalmente em nosso site; ou
+
+Usar a carteira digital ImprimeAí: basta carregar créditos e, a cada compra, o pagamento é confirmado automaticamente — sem precisar gerar um novo boleto a cada vez.
+
+🔗 Acesse sua conta e escolha a melhor opção para você:
+imprimeai.com.br/perfil
+
+Qualquer dúvida, estamos aqui para ajudar! 💬
+
+Obrigada,
+Pri ✨
+Tá com pressa? ImprimeAí!`
+          );
+          pedido.notificacaoCobrancaVencida = true;
+          await pedido.save();
+
         } else {
           console.log(`Aguardando pagamento... Status atual: ${cobranca.status}`);
         }
-    } catch (error) {
-      console.log(error)
+
+      } catch (error) {
+        console.log('Erro ao consultar cobrança:', error);
+      }
     }
-}
-} catch (error) {
-  console.error('Erro ao verificar pagamentos pendentes:', error);
-}
+
+  } catch (error) {
+    console.error('Erro ao verificar pagamentos pendentes:', error);
+  }
 }
   
 async function verificarPagamentosPendentesCarteiraEmpresas() {
@@ -2559,35 +2640,46 @@ IMPRIMEAI`;
       res.status(500).json({ error: 'Erro ao buscar pedidos do usuário', message: error.message });
     }
   });
-  app.get('/pedidos-usuario-empresa/:userId', async (req, res) => {
-    const userId = req.cookies.userId;
-  
-    try {
-      // Consulte o banco de dados para buscar os pedidos do usuário com base no userId
-      const pedidosDoUsuario = await Pedidos.findAll({
-        where: {
-          idUserPed: userId,
+
+app.get('/pedidos-usuario-empresa/:userId', async (req, res) => {
+  const userId = req.params.userId; // Usando userId diretamente dos parâmetros da URL
+
+  // Verificar se userId está disponível
+  if (!userId) {
+    return res.status(400).json({ error: 'User ID não encontrado' });
+  }
+
+  try {
+    // Consulta os pedidos do usuário com tipo "Empresas"
+    const pedidosDoUsuario = await Pedidos.findAll({
+      where: {
+        idUserPed: userId, // Filtro pelo userId
+      },
+      include: [
+        {
+          model: ItensPedido, // Carrega os itens do pedido
+          where: { tipo: 'Empresas' }, // Filtro para itens do tipo 'Empresas'
+          attributes: ['statusPed', 'nomeProd', 'idProduto'],
         },
-        include: [
-          {
-            model: ItensPedido,
-            where: { tipo: 'Empresas' },
-            attributes: ['statusPed', 'nomeProd', 'idProduto'], // Inclua apenas a coluna 'statusPed'
-          },
-          {
-            model: Enderecos,
-            attributes: ['frete']
-          }
-        ],
-      });
-  
-      // Renderize a página HTML de pedidos-usuario e passe os pedidos como JSON
-      res.json({ pedidos: pedidosDoUsuario });
-    } catch (error) {
-      console.error('Erro ao buscar pedidos do usuário:', error);
-      res.status(500).json({ error: 'Erro ao buscar pedidos do usuário', message: error.message });
+        {
+          model: Enderecos, // Inclui os endereços do pedido
+          attributes: ['frete'],
+        }
+      ],
+    });
+
+    // Verificar se foi encontrado algum pedido
+    if (pedidosDoUsuario.length === 0) {
+      return res.status(404).json({ error: 'Nenhum pedido encontrado para este usuário.' });
     }
-  });
+
+    // Retornar os pedidos encontrados
+    res.json({ pedidos: pedidosDoUsuario });
+  } catch (error) {
+    console.error('Erro ao buscar pedidos do usuário:', error);
+    res.status(500).json({ error: 'Erro ao buscar pedidos do usuário', message: error.message });
+  }
+});
   
   app.get('/imagens/:id', async (req, res) => {
     try {
@@ -2798,6 +2890,7 @@ app.post('/processarPagamento-boleto', async(req, res) => {
   const idCobranca = cobrancaBoleto.id;
   const pdfBoleto = cobrancaBoleto.bankSlipUrl;
   const urlTransacao = cobrancaBoleto.invoiceUrl;
+  const dueDate = cobrancaBoleto.dueDate;
 
   res.json({
     status: 'success',
@@ -2805,7 +2898,8 @@ app.post('/processarPagamento-boleto', async(req, res) => {
     data: {
       payment_id: idCobranca,
       pdfBoleto: pdfBoleto,
-      urlTransacao: urlTransacao
+      urlTransacao: urlTransacao,
+      dueDate: dueDate
     }
   });
 

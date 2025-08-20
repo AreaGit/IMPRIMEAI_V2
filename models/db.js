@@ -12,8 +12,8 @@ sequelize.authenticate()
     console.log("Erro ao conectar com o banco de dados")
 });
 
-/*const sequelize = new Sequelize("listauser", "root", "", {
-    host: "localhost",
+/*const sequelize = new Sequelize("imprimeai_dev", "imprimeai_dev", "admBancoD@dos2", {
+    host: "imprimeai_dev.mysql.dbaas.com.br",
     dialect: 'mysql'
 })
 sequelize.authenticate()

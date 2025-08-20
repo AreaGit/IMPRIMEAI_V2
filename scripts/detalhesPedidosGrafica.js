@@ -109,7 +109,7 @@ document.addEventListener('DOMContentLoaded', async() => {
               if (data.success) {
                 console.log('Pedido aceito com sucesso!');
                 setTimeout( () =>{
-                  history.back();
+                  window.location.href = '/graficas/painel';
                 },3000);
                 // Verifica se o novo status é 'Pedido Aceito Pela Gráfica'
                 if (data.novoStatus === 'Pedido Aceito Pela Gráfica') {
@@ -154,7 +154,7 @@ document.addEventListener('DOMContentLoaded', async() => {
           const data = await response.json();
           if (data.success) {
             console.log('Pedido aceito com sucesso!');
-            history.back();
+            window.location.href = '/graficas/painel';
     
             // Verifica se o novo status é 'Pedido Aceito Pela Gráfica'
             if (data.novoStatus === 'Em produção') {
@@ -225,7 +225,7 @@ document.addEventListener('DOMContentLoaded', async() => {
               if (data.success) {
                 console.log('Pedido aceito com sucesso!');
                 setTimeout( () =>{
-                  history.back();
+                  window.location.href = '/graficas/painel';
                 },3000);
                 // Verifica se o novo status é 'Pedido Aceito Pela Gráfica'
                 if (data.novoStatus === 'Em produção') {
@@ -271,7 +271,7 @@ document.addEventListener('DOMContentLoaded', async() => {
             const data = await response.json();
             if (data.success) {
               console.log('Pedido aceito com sucesso!');
-              history.back();
+              window.location.href = '/graficas/painel';
       
               // Verifica se o novo status é 'Pedido Aceito Pela Gráfica'
               if (data.novoStatus === 'Em produção') {
@@ -512,7 +512,7 @@ document.addEventListener('DOMContentLoaded', async() => {
         if (data.success) {
           console.log('Pedido cancelado com sucesso!');
           setTimeout(() => {
-            history.back();
+            window.location.href = '/graficas/painel';
           }, 3000)
           // Redirecione ou faça outras ações necessárias após o cancelamento
         } else {
@@ -576,7 +576,7 @@ document.addEventListener('DOMContentLoaded', async() => {
           // Redirect to after updating the order status
           window.setTimeout(() => {
             carregamento.style.display = 'none';
-            history.back();
+            window.location.href = '/graficas/painel';
           },5000)
          
 

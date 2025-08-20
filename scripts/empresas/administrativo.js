@@ -25,6 +25,7 @@ function abrirDetalhe(id, name, saldo, email) {
     fetch(`/pedidos-usuario-empresa/${id}`)
         .then(response => response.json())
         .then(data => {
+            console.log(data.pedidos);
             const listaPedidos = document.getElementById("detalhe-pedidos");
             listaPedidos.innerHTML = "";
 

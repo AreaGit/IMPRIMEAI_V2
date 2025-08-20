@@ -45,6 +45,7 @@ const carregamento = document.getElementById('carregamento');
 let metodPag;
 let idTransacao;
 let linkPagamento;
+let dataVencimento;
 function getCookie(name) {
   const value = `; ${document.cookie}`;
   const parts = value.split(`; ${name}=`);
@@ -259,7 +260,8 @@ async function criarPedido() {
           valorPed: totalAPagar, // Atualize valorPed com o valor total do carrinho
           metodPag,
           idTransacao,
-          linkPagamento
+          linkPagamento,
+          dataVencimento
         };
         console.log('PEDIDO CRIADO')
         carregamento.style.display = 'block';

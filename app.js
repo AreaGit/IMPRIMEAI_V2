@@ -2670,11 +2670,28 @@ app.get('/saldo-allusers', async (req, res) => {
 
       const usersWithBalance = await Promise.all(users.map(async user => {
           const carteira = await CarteiraEmpresas.findOne({ where: { userId: user.id } }); // findPkId (Find by Primary Key)
+
+          const saldoDepositosPagos = await CarteiraEmpresas.sum('saldo', {
+            where: {
+              userId: user.id,
+              statusPag: 'PAGO'
+            }
+          }) || 0;
+
+      const saldoSaidas = await CarteiraEmpresas.sum('saldo', {
+        where: {
+          userId: user.id,
+          statusPag: 'SAIDA'
+        }
+      }) || 0;
+
+      const saldoFinal = saldoDepositosPagos - saldoSaidas;
+
           return {
               id: user.id,
               name: user.userCad,
               email: user.emailCad,
-              balance: carteira ? carteira.saldo : 0
+              balance: saldoFinal
           };
       }));
 
