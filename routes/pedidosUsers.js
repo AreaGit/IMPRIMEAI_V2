@@ -2153,7 +2153,16 @@ async function verificarPagamentosPendentesCarteiraEmpresas() {
     for (const transacao of transacoesPendentes) {
       // Verificar o status do pagamento no Pagarme usando o ID da transação
       const transactionId = transacao.idTransacao;
-      const user = await UserEmpresas.findByPk(transacao.userId);
+      const itemPedido = await ItensPedido.findOne({ where: { idPed: transacao.id } }); // Buscar o item do pedido
+      let user;
+
+      if (itemPedido.tipo === 'Empresas') {
+        // Se o tipo do item for 'Empresas', busca na tabela UsersEmpresas
+        user = await UserEmpresas.findOne({ where: { id: transacao.idUserPed } });
+      } else {
+        // Caso contrário, busca na tabela User
+        user = await User.findByPk(transacao.idUserPed);
+      }
       const hojeComHifen = new Date().toISOString().split('T')[0];
       console.log('Transaction ID:', transactionId); // Check if transactionId is defined
       try {
