@@ -3356,6 +3356,16 @@ app.get('/graficas/painel', (req, res) => {
     res.status(500).send("Erro interno do servidor", error);
   }
 });
+//Rota get para protocolo de entrega
+app.get('/graficas/protocolo-entrega', (req, res) => {
+  try {
+    const graficasProtocoloHtmlContent = fs.readFileSync(path.join(__dirname, "html", "protocolo-entrega.html"), "utf-8");
+    res.send(graficasProtocoloHtmlContent);
+  } catch (error) {
+    console.log("Erro ao ler o arquivo protocolo-entrega.html", error);
+    res.status(500).send("Erro interno do servidor", error);
+  }
+});
 app.listen(PORT, () => {
   console.log(`Servidor rodando na porta ${PORT} https://localhost:${PORT}`);
 });

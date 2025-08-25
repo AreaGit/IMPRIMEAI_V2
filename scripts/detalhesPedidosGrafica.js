@@ -319,6 +319,7 @@ document.addEventListener('DOMContentLoaded', async() => {
                     <p class="endComp"><strong>Complemento:</strong>Entrega a Retirar na Loja</p>
                     <p class="endBairro"><strong>Bairro:</strong>Entrega a Retirar na Loja</p>
                     <p class="endCid"><strong>Cidade:</strong>Entrega a Retirar na Loja</p>
+                    <p class="protocComp"><strong>Protocolo Completo: </strong> <a href="/graficas/protocolo-entrega?id=${detalhesPedido.id}" target="_blank">Acesse Aqui</a></p>
                   `).join('<br>');
                 } else if(nomeEmpresa) {
                   detalhesEntrega.innerHTML = detalhesPedido.enderecos.map(endereco => `
@@ -329,6 +330,7 @@ document.addEventListener('DOMContentLoaded', async() => {
                     <p class="endBairro"><strong>Bairro:</strong> ${endereco.bairro}</p>
                     <p class="endCid"><strong>Cidade:</strong> ${endereco.cidade}</p>
                     <p class="endPart"><strong>Observações da Entrega:</strong> ${detalhesUsuario.particularidades}</p>
+                    <p class="protocComp"><strong>Protocolo Completo: </strong> <a href="/graficas/protocolo-entrega?id=${detalhesPedido.id}" target="_blank">Acesse Aqui</a></p>
                   `).join('<br>');
                 } else {
                   detalhesEntrega.innerHTML = detalhesPedido.enderecos.map(endereco => `
@@ -338,6 +340,7 @@ document.addEventListener('DOMContentLoaded', async() => {
                     <p class="endComp"><strong>Complemento:</strong> ${endereco.complemento}</p>
                     <p class="endBairro"><strong>Bairro:</strong> ${endereco.bairro}</p>
                     <p class="endCid"><strong>Cidade:</strong> ${endereco.cidade}</p>
+                    <p class="protocComp"><strong>Protocolo Completo: </strong> <a href="/graficas/protocolo-entrega?id=${detalhesPedido.id}" target="_blank">Acesse Aqui</a></p>
                   `).join('<br>');
                 }
                 if (detalhesPedido.enderecos && detalhesPedido.enderecos.length > 0) {

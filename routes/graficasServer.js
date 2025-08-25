@@ -295,6 +295,83 @@ app.get('/pedidos-cadastrados', async (req, res) => {
   }
 });
 
+app.get('/pedido-detalhes', async (req, res) => {
+  try {
+    console.log('🔍 Iniciando rota /pedido-detalhes');
+
+    const graficaId = req.cookies.graficaId;
+    console.log('🧾 ID da gráfica recebido:', graficaId);
+
+    if (!graficaId) {
+      console.warn('⚠️ Usuário não autenticado. Cookie graficaId não encontrado.');
+      return res.status(401).json({ message: "Usuário não autenticado" });
+    }
+
+    const grafica = await Graficas.findByPk(graficaId);
+    const loja = grafica.userCad;
+    if (!grafica) {
+      console.warn('⚠️ Gráfica não encontrada no banco de dados.');
+      return res.status(404).json({ message: "Gráfica não encontrada" });
+    }
+    console.log('✅ Gráfica autenticada:', grafica.nomeFantasia || grafica.id);
+
+    const pedidoId = req.query.id;
+    console.log(`🔎 ID do Pedido recebido: ${pedidoId}`);
+    
+    if (!pedidoId) {
+      return res.status(400).json({ message: "ID do pedido não fornecido" });
+    }
+
+    // Usando findOne para buscar o pedido pelo idPed
+    const pedido = await ItensPedido.findOne({ where: { idPed: pedidoId } });
+    if (!pedido) {
+      console.error(`❌ Pedido com ID ${pedidoId} não encontrado.`);
+      return res.status(404).json({ message: "Pedido não encontrado" });
+    }
+
+    console.log(`📦 Pedido encontrado: ${pedido.id}, Produto: ${pedido.nomeProd}`);
+
+    // Buscar os produtos associados a esse pedido
+    const produtosPedido = await ItensPedido.findAll({
+      where: {
+        idPed: pedido.idPed,   // Usando idPed diretamente
+      }
+    });
+
+    const enderecosPedido = await Enderecos.findAll({
+      where: {
+        idPed: pedido.idPed
+      }
+    });
+
+    let nomeCliente = "Não informado";
+    if (pedido.tipo === "Empresas") {
+      const user = await UserEmpresas.findByPk(pedido.idUserPed);
+      if (user) {
+        nomeCliente = `${user.userCad}`;
+      }
+    } else if (pedido.tipo === "Normal") {
+      const user = await User.findByPk(pedido.idUserPed);
+      if (user) {
+        nomeCliente = user.userCad; // ou user.nomeCompleto, dependendo do modelo
+      }
+    }
+
+    console.log(`🧾 Produtos encontrados para o pedido: ${produtosPedido.length}`);
+
+    if (produtosPedido.length > 0) {
+      return res.json({ pedido, produtos: produtosPedido, enderecos: enderecosPedido, nomeCliente, loja });
+    } else {
+      console.log('🔕 Nenhum produto encontrado para este pedido.');
+      return res.json({ message: 'Nenhum produto encontrado para este pedido.' });
+    }
+
+  } catch (error) {
+    console.error('❌ Erro ao buscar pedido detalhes:', error);
+    return res.status(500).json({ message: 'Erro ao buscar pedido detalhes', error: error.message });
+  }
+});
+
   app.get('/detalhes-pedido/:idPedido/:idProduto', async (req, res) => {
     try {
       const { idPedido, idProduto } = req.params;

@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Protocolo de Entrega</title>
+    <link rel="shortcut icon" href="../images/favicon-imprimeai.png" type="image/x-icon">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,300;1,400;1,500;1,600;1,700;1,800&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter+Tight:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" />
+    <link rel="stylesheet" href="../styles/protocolo-entrega.css">
+</head>
+<body>
+    <div class="protocolo-container">
+    
+    <!-- Cabeçalho -->
+    <header class="protocolo-header">
+      <img src="../images/logo-imprimeai.png" alt="Logo Imprimeai" class="logo">
+      <h1>PROTOCOLO DE ENTREGA</h1>
+    </header>
+
+    <!-- Dados principais -->
+    <section class="dados-principais">
+        <table>
+        <tr>
+            <td><strong>ID</strong></td>
+            <td class="pedido-id"></td>
+            <td><strong>LOJA</strong></td>
+            <td class="pedido-loja"></td>
+        </tr>
+        <tr>
+            <td><strong>CLIENTE</strong></td>
+            <td colspan="3" class="pedido-cliente"></td>
+        </tr>
+        <tr>
+            <td><strong>END.</strong></td>
+            <td colspan="3" class="pedido-endereco"></td>
+        </tr>
+        <tr>
+            <td><strong>CIDADE</strong></td>
+            <td class="pedido-cidade"></td>
+            <td><strong>UF</strong></td>
+            <td class="pedido-uf"></td>
+        </tr>
+        <tr>
+            <td><strong>BAIRRO</strong></td>
+            <td class="pedido-bairro"></td>
+            <td><strong>OBS.</strong></td>
+            <td class="pedido-obs"></td>
+        </tr>
+        </table>
+    </section>
+
+    <!-- Produtos -->
+    <section class="produtos">
+      <h2>DECLARAMOS TER RECEBIDO O MATERIAL ABAIXO INDICADO:</h2>
+        <table>
+        <thead>
+            <tr>
+            <th>QTDE</th>
+            <th>NOME DO ITEM RECEBIDO</th>
+            </tr>
+        </thead>
+        <tbody>
+            <!-- JS vai preencher aqui -->
+        </tbody>
+        </table>
+    </section>
+
+    <!-- Assinaturas -->
+    <section class="assinatura">
+      <div class="linha">___________________________________<br> RECEBIDO POR:</div>
+      <div class="linha">___________________________________<br> TELEFONE DO RECEBEDOR</div>
+      <div class="linha">___________________________________<br> DATA DO RECEBIMENTO</div>
+    </section>
+
+  </div>
+    <script src="../scripts/protocolo-entrega.js"></script>
+</body>
+</html>
