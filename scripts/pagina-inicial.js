@@ -155,27 +155,6 @@ document.addEventListener("DOMContentLoaded", function() {
     }
 });
 
-const subNews = document.getElementById('subNews');
-subNews.addEventListener('click',  () => {
-    const email = document.getElementById('email').value;
-    fetch('/inscrever-newsletter', {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({ email: email })
-    })
-    .then(response => response.text())
-    .then(data => {
-        const avisoGeral = document.getElementById('avisoGeral');
-        avisoGeral.style.display = 'block';
-        window.setTimeout(() => {
-            newsletter.style.display = 'none';
-            window.location.reload();
-        },5000)
-    })
-    .catch(error => console.error('Erro:', error));
-});
 document.addEventListener("DOMContentLoaded", () => {
     const gap = 16;
     const carousel = document.getElementById("carousel");
