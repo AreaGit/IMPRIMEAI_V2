@@ -155,12 +155,6 @@ document.addEventListener("DOMContentLoaded", function() {
     }
 });
 
-const fecharPopup = document.getElementById('fechar-popup');
-fecharPopup.addEventListener('click', () =>  {
-    const newsletter = document.getElementById('newsletter');
-    newsletter.style.display = 'none';
-})
-
 const subNews = document.getElementById('subNews');
 subNews.addEventListener('click',  () => {
     const email = document.getElementById('email').value;
