@@ -1167,32 +1167,66 @@ app.get('/blog', (req, res) => {
 app.post('/inscrever-newsletter', async (req, res) => {
   const email = req.body.email;
   try {
+
+    const existingUser = await Newsletter.findOne({
+      where: {
+        [Op.or]: [
+          { email: email },
+        ],
+      },
+    });
+
+    if (existingUser) {
+      return res.status(400).json({
+        message: "Já existe um usuário com este e-mail cadastrado",
+      });
+    }
+
     const subscriber = await Newsletter.create({ email });
     console.log('Inscrição adicionada ao banco de dados:', subscriber.email);
 
     const transporter = nodemailer.createTransport({
-      host: 'smtp.gmail.com',
-      port: 465,
-      secure: true,
+      host: 'email-ssl.com.br',  // Servidor SMTP da LocalWeb
+      port: 465,                 // Porta para SSL (465)
+      secure: true,              // Usar conexão segura (SSL)
       auth: {
-        user: "gabrieldiastrin63@gmail.com",
-        pass: "bwep pyqq zocy ljsi"
-      }
+        user: 'atendimento@imprimeai.com.br',  // E-mail que você vai usar para enviar
+        pass: 'Z1mb@bue',                    // Senha do e-mail
+      },
     });
-
+      
     const mailOptions = {
-      from: 'gabrieldiastrin63@gmail.com',
+      from: 'atendimento@imprimeai.com.br',
       to: email,
       subject: 'Bem-vindo à nossa Newsletter!',
-      html: '<p>Obrigado por se inscrever em nossa newsletter!</p>'
+      text: `Olá! 👋
+
+Que alegria ter você conosco!
+
+Agora que você se inscreveu na newsletter da ImprimeAí, você passa a receber diretamente no seu e-mail:
+
+Novidades fresquinhas sobre produtos e serviços.
+
+Ofertas exclusivas que só nossos assinantes recebem.
+
+Dicas e conteúdos úteis para facilitar o seu dia a dia.
+
+Nosso objetivo é tornar sua experiência mais prática, divertida e cheia de oportunidades. Queremos que você seja sempre o primeiro a saber das novidades e promoções!
+
+Se você não se inscreveu, não se preocupe: apenas ignore este e-mail.
+
+Mais uma vez, seja muito bem-vindo(a) à nossa comunidade. Estamos animados para compartilhar momentos incríveis com você! 🚀
+
+Com carinho,
+Equipe ImprimeAí ❤️`
     };
 
     transporter.sendMail(mailOptions, (error, info) => {
       if (error) {
-        return res.status(500).send(error.toString());
+        return res.status(500).json({ message: error.toString() });
       }
       console.log('Email enviado:', info.response);
-      res.send('Inscrição bem-sucedida!');
+      res.status(200).json({ message: 'Inscrição bem-sucedida!' });
     });
   } catch (error) {
     console.error('Erro ao adicionar inscrição ao banco de dados:', error);

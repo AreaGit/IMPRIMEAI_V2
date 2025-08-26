@@ -153,16 +153,6 @@ document.addEventListener("DOMContentLoaded", function() {
         }
         return null;
     }
-
-    const newsletter = document.getElementById('newsletter');
-    const newsletterShown = getCookie("newsletterShown");
-
-    if (!newsletterShown) {
-        newsletter.style.display = 'block';
-        setCookie("newsletterShown", "true", 30);
-    } else {
-        newsletter.style.display = 'none';
-    }
 });
 
 const fecharPopup = document.getElementById('fechar-popup');
@@ -555,3 +545,58 @@ document.getElementById('bannerFolhetos').addEventListener('click', () => {
             abrirMenu.style.display = 'block';
             fecharMenu.style.display = 'none';
         });
+
+       // NewsLetter
+const form = document.getElementById("newsletterForm");
+const confirmarBtn = document.getElementById("confirmarBtn");
+const mensagem = document.getElementById("mensagem");
+let email;
+
+form.addEventListener("submit", function(e){
+  e.preventDefault();
+
+  email = document.getElementById("email").value;
+
+  if(email.includes("@") && email.includes(".")) {
+    // Esconde o form e mostra o botão vermelho
+    form.style.display = "none";
+    confirmarBtn.style.display = "inline-block";
+    mensagem.style.color = "#333";
+    mensagem.textContent = "Confirme seu cadastro clicando no botão acima:";
+  } else {
+    mensagem.style.color = "red";
+    mensagem.textContent = "Por favor, insira um e-mail válido.";
+  }
+});
+
+confirmarBtn.addEventListener("click", function(){
+   fetch('/inscrever-newsletter', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ email: email })
+    })
+    .then(response => response.json())
+    .then(data => {
+        if(data.message.includes("Já existe")) {
+            confirmarBtn.style.display = "none";
+            mensagem.style.color = "red";
+            mensagem.textContent = "Email já cadastrado! ❌";
+        } else if(data.message.includes("Inscrição bem-sucedida")) {
+            confirmarBtn.style.display = "none";
+            mensagem.style.color = "green";
+            mensagem.textContent = "Obrigado por se cadastrar! 🎉";
+        } else {
+            confirmarBtn.style.display = "none";
+            mensagem.style.color = "red";
+            mensagem.textContent = data.message || "Ocorreu um erro, tente novamente.";
+        }
+    })
+    .catch(error => {
+        console.error('Erro:', error);
+        confirmarBtn.style.display = "none";
+        mensagem.style.color = "red";
+        mensagem.textContent = "Ocorreu um erro, tente novamente.";
+    });
+});
