@@ -80,6 +80,7 @@ main {
 
 #produto-info img {
   border-radius: 20px;
+  max-width: 800px;
 }
 
 div#acoesPedido {

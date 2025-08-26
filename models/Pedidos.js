@@ -51,6 +51,25 @@ const Pedidos = db.define('pedidos', {
     },
     dataPrevisaoProducao: {
         type: Sequelize.DATE
+    },
+    dataVencimento: {
+        type: Sequelize.STRING(50)
+    },
+    notificacaoVencimento1Dia: {
+        type: Sequelize.BOOLEAN,
+        defaultValue: false,
+    },
+    notificacaoVencimentoHoje: {
+        type: Sequelize.BOOLEAN,
+        defaultValue: false,
+    },
+    notificacaoPagamentoRecebido: {
+        type: Sequelize.BOOLEAN,
+        defaultValue: false,
+    },
+    notificacaoCobrancaVencida: {
+        type: Sequelize.BOOLEAN,
+        defaultValue: false,
     }
 }, {
     indexes: [

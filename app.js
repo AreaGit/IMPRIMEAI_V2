@@ -2700,22 +2700,200 @@ app.get('/allusers', async (req, res) => {
 });
 app.get('/saldo-allusers', async (req, res) => {
   try {
-      const users = await UsersEmpresas.findAll({ attributes: ['id', 'userCad', 'emailCad'] });
+    const users = await UsersEmpresas.findAll({
+      attributes: ['id', 'userCad', 'emailCad']
+    });
 
-      const usersWithBalance = await Promise.all(users.map(async user => {
-          const carteira = await CarteiraEmpresas.findOne({ where: { userId: user.id } }); // findPkId (Find by Primary Key)
-          return {
-              id: user.id,
-              name: user.userCad,
-              email: user.emailCad,
-              balance: carteira ? carteira.saldo : 0
-          };
-      }));
+    const usersWithBalance = await Promise.all(users.map(async user => {
+      const carteira = await CarteiraEmpresas.findOne({ where: { userId: user.id } });
 
-      res.json(usersWithBalance);
+      const saldoDepositosPagos = await CarteiraEmpresas.sum('saldo', {
+        where: { userId: user.id, statusPag: 'PAGO' }
+      }) || 0;
+
+      const saldoSaidas = await CarteiraEmpresas.sum('saldo', {
+        where: { userId: user.id, statusPag: 'SAIDA' }
+      }) || 0;
+
+      const saldoFinal = saldoDepositosPagos - saldoSaidas;
+
+      // Buscar o número de pedidos feitos pela loja
+      const pedidosCount = await Pedidos.count({
+        where: { idUserPed: user.id },
+        include: [
+          {
+            model: ItensPedido,
+            where: { tipo: 'Empresas' }
+          }
+        ]
+      });
+
+      // Verificando se a loja comprou ou não (baseado em pedidos)
+      const comprou = pedidosCount > 0 ? 'Sim' : 'Não';
+
+      return {
+        id: user.id,
+        name: user.userCad,
+        email: user.emailCad,
+        balance: saldoFinal,
+        comprou: comprou,
+        numPedidos: pedidosCount
+      };
+    }));
+
+    res.json(usersWithBalance);
   } catch (error) {
-      console.error(error);
-      res.status(500).json({ error: 'Erro ao buscar usuários e saldos' });
+    console.error(error);
+    res.status(500).json({ error: 'Erro ao buscar usuários e saldos' });
+  }
+});
+
+app.get('/relatorio-loja/:id', async (req, res) => {
+  const userId = req.params.id; // Pega o ID da loja da URL
+
+  try {
+    // Buscar as informações da loja
+    const user = await UsersEmpresas.findOne({
+      where: { id: userId },
+      attributes: ['id', 'userCad', 'emailCad']
+    });
+
+    if (!user) {
+      return res.status(404).json({ error: 'Loja não encontrada' });
+    }
+
+    // Buscar os saldos da loja
+    const saldoDepositosPagos = await CarteiraEmpresas.sum('saldo', {
+      where: { userId: user.id, statusPag: 'PAGO' }
+    }) || 0;
+
+    const saldoSaidas = await CarteiraEmpresas.sum('saldo', {
+      where: { userId: user.id, statusPag: 'SAIDA' }
+    }) || 0;
+
+    const saldoFinal = saldoDepositosPagos - saldoSaidas;
+
+    // Buscar o número de pedidos da loja
+    const pedidosCount = await Pedidos.count({
+      where: { idUserPed: user.id },
+      include: [
+        {
+          model: ItensPedido,
+          where: { tipo: 'Empresas' }
+        }
+      ]
+    });
+
+    // Verificando se a loja comprou ou não
+    const comprou = pedidosCount > 0 ? 'Sim' : 'Não';
+
+    // Criando o conteúdo do relatório (CSV)
+    const relatorioData = [
+      {
+        'ID da Loja': user.id,
+        'Nome da Loja': user.userCad,
+        'Email': user.emailCad,
+        'Saldo Total': saldoFinal,
+        'Comprou': comprou,
+        'Número de Pedidos': pedidosCount
+      }
+    ];
+
+    // Convertendo os dados para CSV
+    const json2csv = new Parser();
+    const csv = json2csv.parse(relatorioData);
+
+    // Definir o caminho para salvar o arquivo CSV
+    const filePath = `./relatorios/relatorio-loja-${user.id}.csv`;
+
+    // Salvar o CSV em um arquivo
+    fs.writeFileSync(filePath, csv);
+
+    // Enviar o arquivo para o cliente
+    res.download(filePath, `relatorio-loja-${user.id}.csv`, (err) => {
+      if (err) {
+        console.error('Erro ao enviar o arquivo:', err);
+        res.status(500).json({ error: 'Erro ao enviar o arquivo de relatório' });
+      } else {
+        // Após o download, podemos remover o arquivo, se necessário
+        fs.unlinkSync(filePath);
+      }
+    });
+  } catch (error) {
+    console.error('Erro ao gerar o relatório:', error);
+    res.status(500).json({ error: 'Erro ao gerar o relatório da loja', message: error.message });
+  }
+});
+
+// Rota para gerar o relatório de todas as lojas
+app.get('/relatorio-todas-lojas', async (req, res) => {
+  try {
+    // Buscar todas as lojas
+    const users = await UsersEmpresas.findAll({
+      attributes: ['id', 'userCad', 'emailCad']
+    });
+
+    // Coletando dados de todas as lojas
+    const allStoresData = await Promise.all(users.map(async user => {
+      // Buscar os saldos da loja
+      const saldoDepositosPagos = await CarteiraEmpresas.sum('saldo', {
+        where: { userId: user.id, statusPag: 'PAGO' }
+      }) || 0;
+
+      const saldoSaidas = await CarteiraEmpresas.sum('saldo', {
+        where: { userId: user.id, statusPag: 'SAIDA' }
+      }) || 0;
+
+      const saldoFinal = saldoDepositosPagos - saldoSaidas;
+
+      // Buscar o número de pedidos da loja
+      const pedidosCount = await Pedidos.count({
+        where: { idUserPed: user.id },
+        include: [
+          {
+            model: ItensPedido,
+            where: { tipo: 'Empresas' }
+          }
+        ]
+      });
+
+      // Verificando se a loja comprou ou não
+      const comprou = pedidosCount > 0 ? 'Sim' : 'Não';
+
+      // Retorna os dados para o relatório
+      return {
+        'ID da Loja': user.id,
+        'Nome da Loja': user.userCad,
+        'Email': user.emailCad,
+        'Saldo Total': saldoFinal,
+        'Comprou': comprou,
+        'Número de Pedidos': pedidosCount
+      };
+    }));
+
+    // Criando o CSV com os dados de todas as lojas
+    const json2csv = new Parser();
+    const csv = json2csv.parse(allStoresData);
+
+    // Definir o caminho para salvar o arquivo CSV
+    const filePath = './relatorios/relatorio-todas-lojas.csv';
+
+    // Salvar o CSV em um arquivo
+    fs.writeFileSync(filePath, csv);
+
+    // Enviar o arquivo para o cliente
+    res.download(filePath, 'relatorio-todas-lojas.csv', (err) => {
+      if (err) {
+        console.error('Erro ao enviar o arquivo:', err);
+        res.status(500).json({ error: 'Erro ao enviar o arquivo de relatório' });
+      } else {
+        // Após o download, podemos remover o arquivo, se necessário
+        fs.unlinkSync(filePath);
+      }
+    });
+  } catch (error) {
+    console.error('Erro ao gerar o relatório de todas as lojas:', error);
+    res.status(500).json({ error: 'Erro ao gerar o relatório de todas as lojas', message: error.message });
   }
 });
 
@@ -3209,6 +3387,16 @@ app.get('/graficas/painel', (req, res) => {
     res.send(graficasHtmlContent);
   } catch (error) {
     console.log("Erro ao ler o arquivo painel-grafica.html", error);
+    res.status(500).send("Erro interno do servidor", error);
+  }
+});
+//Rota get para protocolo de entrega
+app.get('/graficas/protocolo-entrega', (req, res) => {
+  try {
+    const graficasProtocoloHtmlContent = fs.readFileSync(path.join(__dirname, "html", "protocolo-entrega.html"), "utf-8");
+    res.send(graficasProtocoloHtmlContent);
+  } catch (error) {
+    console.log("Erro ao ler o arquivo protocolo-entrega.html", error);
     res.status(500).send("Erro interno do servidor", error);
   }
 });

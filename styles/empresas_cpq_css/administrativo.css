@@ -101,3 +101,16 @@ header {
 ul#detalhe-pedidos > li > a {
     color: #013D1C;
 }
+
+.btn-download {
+    margin-top: 15px;
+    margin-bottom: 15px;
+    padding: 12px 28px 12px 28px;
+    background-color: #02572D;
+    color: white;
+    font-weight: bold;
+    font-size: 1em;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+}
