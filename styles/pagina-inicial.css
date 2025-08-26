@@ -845,19 +845,19 @@ transform: translate(-50%);
 #prod4 > h2:hover {
     text-decoration: underline;
 }
-main {
-  position: absolute;
-  top: 130%;
+section {
   width: 100%;
-  height: 100%;
-  padding: 15pc;
-  padding-top: 70px;
+  padding: 70px 15px;
 }
 #novidades {
   display: flex;
   flex-direction: column; /* Alinha o título e os links em coluna */
   align-items: center; /* Centraliza horizontalmente */
+  position: relative;
+  top: 1100px;
 }
+
+
 #novidades > h2 {
   font-size: 33px;
   font-weight: 300;
@@ -906,6 +906,8 @@ transform: scale(1.1);
   flex-direction: column; /* Coloca os filhos em coluna */
   align-items: center; /* Centraliza horizontalmente */
   padding: 15px; /* Adiciona algum espaçamento interno */
+  position: relative;
+  top: 1100px;
 }
 
 #motivosCompra > h2 {
@@ -1010,6 +1012,8 @@ footer.modern-footer {
   background: linear-gradient(135deg, #222, #444);
   color: #fff;
   padding: 50px 20px;
+  position: relative;
+  top: 1200px;
 }
 
 footer .footer-container {
@@ -1207,18 +1211,7 @@ div#lg {
 #sugestoes li:hover {
     background-color: #f0f0f0; /* Mude a cor de fundo ao passar o mouse sobre os itens */
 }
-.popup {
-    display: none;
-    position: fixed;
-    left: 50%;
-    transform: translate(-50%);
-    top: 45%;
-    width: 18vw;
-    height: fit-content;
-    background: #FFFFFF;
-    box-shadow: 0px 187px 75px rgba(0, 0, 0, 0.01), 0px 105px 63px rgba(0, 0, 0, 0.05), 0px 47px 47px rgba(0, 0, 0, 0.09), 0px 12px 26px rgba(0, 0, 0, 0.1), 0px 0px 0px rgba(0, 0, 0, 0.1);
-    border-radius: 13px;
-  }
+
   
   .form {
     display: flex;
@@ -1557,3 +1550,87 @@ svg {
   background: #e4405f;
   color: #fff;
 }
+
+/* Newsletter */
+.newsletter {
+  background: #fff;
+  padding: 30px;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  text-align: center;
+  width: 100%;
+  max-width: 600px;
+  margin: 50px auto;
+  position: relative;
+  top: 1120px;
+}
+
+.newsletter h2 {
+  margin-bottom: 10px;
+  color: #333;
+}
+
+.newsletter p {
+  color: #555;
+  font-size: 14px;
+  margin-bottom: 20px;
+}
+
+.newsletter form {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+    width: 50%;
+    max-width: 500px;
+    margin: 0 auto;
+    position: relative;
+    left: -21%;
+}
+
+.newsletter input {
+  flex: 1; /* ocupa o espaço da esquerda */
+  padding: 10px;
+  border: 2px solid #ddd;
+  border-radius: 8px;
+  font-size: 14px;
+  transition: border 0.3s;
+}
+
+.newsletter input:focus {
+  border-color: #ff6600;
+  outline: none;
+}
+
+.newsletter button {
+    padding: 10px 20px;
+    border: none;
+    background: linear-gradient(45deg, #ff6600, #ff3300);
+    color: white;
+    border-radius: 8px;
+    cursor: pointer;
+    right: -230px;
+}
+
+.mensagem {
+  margin-top: 15px;
+  font-size: 14px;
+  font-weight: bold;
+}
+
+/* Botão vermelho de confirmação */
+.confirmar-btn {
+    margin-top: 15px;
+    padding: 10px 20px;
+    background: #e60000;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: bold;
+    display: none;
+    position: relative;
+    /* right: -230px; */
+    left: 0px;
+}
+

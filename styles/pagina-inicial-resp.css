@@ -228,15 +228,19 @@
     }
     #banners{display: none;}
     #progress{display: none;}
-    main {
-        width: 95%; /* Aumenta a largura do main para telas pequenas */
-        padding: 10px; /* Ajusta o padding */
-        top: 90%;
-      }
+
     
+      #novidades {
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          position: relative;
+          top: 700px;
+        }
+
       #novidades > h2 {
         font-size: 24px; /* Ajusta o tamanho da fonte do título */
-        left: 5%; /* Ajusta a posição */
+        left: 2%; /* Ajusta a posição */
         text-align: center; /* Centraliza o texto */
         margin-bottom: 10px;
       }
@@ -252,6 +256,15 @@
         margin: 10px 0; /* Ajusta a margem */
       }
     
+      #motivosCompra {
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          padding: 15px;
+          position: relative;
+          top: 700px;
+        }
+
       #motivosCompra > h2 {
         font-size: 24px; /* Ajusta o tamanho do título */
         text-align: center; /* Centraliza o texto */
@@ -293,6 +306,8 @@
         font-size: 14px; /* Ajusta o tamanho da fonte dos links */
         text-align: center; /* Centraliza o texto */
       }
+
+
       .contentFooter {
         height: 700px;
         background-color: #2B2B2B;
@@ -302,6 +317,13 @@
         transform: translate(-50%);
         width: 105vw;
       }
+      footer.modern-footer {
+          background: linear-gradient(135deg, #222, #444);
+          color: #fff;
+          padding: 50px 20px;
+          position: relative;
+          top: 800px;
+        }
       footer > a {
         color: white;
         font-size: 12px;
@@ -389,8 +411,60 @@
         height: 85vh;
         /* padding: 15px; */
     }
+
+    .newsletter {
+        background: #fff;
+        padding: 30px;
+        border-radius: 12px;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        text-align: center;
+        width: 100%;
+        max-width: 600px;
+        margin: 50px auto;
+        position: relative;
+        top: 740px;
+    }   
+
+    .newsletter button {
+        padding: 10px 20px;
+        border: none;
+        background: linear-gradient(45deg, #ff6600, #ff3300);
+        color: white;
+        border-radius: 8px;
+        cursor: pointer;
+        transition: transform 0.2s, background 0.3s;
+        right: -160px;
+    }
 }
+
 @media screen and (min-width: 768px) and (max-width: 1024px) {
+
+    #novidades {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        position: relative;
+        top: 950px;
+    }
+    
+    #novidades > h2 {
+        font-size: 33px;
+        font-weight: 300;
+        color: #A7A9AC;
+        width: fit-content;
+        position: relative;
+        left: 2%;
+    }
+
+    #motivosCompra {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        padding: 15px;
+        position: relative;
+        top: 950px;
+    }
+    
     .mainContentHeader {
         position: absolute;
         height: 460px;
@@ -517,6 +591,7 @@
         top: 435px;
         cursor: pointer;
     }
+
     footer {
         position: absolute;
         top: 388%;
@@ -526,6 +601,15 @@
         border: 1px solid;
         padding: 15px;
     }
+
+    footer.modern-footer {
+        background: linear-gradient(135deg, #222, #444);
+        color: #fff;
+        padding: 50px 20px;
+        position: relative;
+        top: 1000px;
+    }
+
     #institucional {
         width: fit-content;
         position: relative;
@@ -550,13 +634,18 @@
         box-shadow: 0px 187px 75px rgba(0, 0, 0, 0.01), 0px 105px 63px rgba(0, 0, 0, 0.05), 0px 47px 47px rgba(0, 0, 0, 0.09), 0px 12px 26px rgba(0, 0, 0, 0.1), 0px 0px 0px rgba(0, 0, 0, 0.1);
         border-radius: 13px;
     }
-    main {
-        position: absolute;
-        top: 107%;
+
+    .newsletter {
+        background: #fff;
+        padding: 30px;
+        border-radius: 12px;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        text-align: center;
         width: 100%;
-        height: 100%;
-        padding: 15pc;
-        padding-top: 70px;
+        max-width: 600px;
+        margin: 50px auto;
+        position: relative;
+        top: 960px;
     }
 }
 @media screen and (min-width:1025px) and (max-width:1300px) {  
@@ -702,6 +791,16 @@
         transform: translate(-50%);
         width: 101vw;
     }
+
+    footer.modern-footer {
+        background: linear-gradient(135deg, #222, #444);
+        color: #fff;
+        padding: 50px 20px;
+        position: relative;
+        top: 1200px;
+        height: 60vh;
+    }
+
     footer > a {
         color: white;
         font-size: 12px;
@@ -899,9 +998,12 @@
         cursor: pointer;
     }
     footer.modern-footer {
-        background: none;
+        background: linear-gradient(135deg, #222, #444);
         color: #fff;
         padding: 50px 20px;
+        position: relative;
+        top: 1200px;
+        height: 60vh;
     }
     .contentFooter {
         height: 520px;
@@ -1091,6 +1193,16 @@
         transform: translate(-50%);
         width: 101vw;
     }
+
+    footer.modern-footer {
+        background: linear-gradient(135deg, #222, #444);
+        color: #fff;
+        padding: 50px 20px;
+        position: relative;
+        top: 1200px;
+        height: 60vh;
+    }
+
     footer > a {
         color: white;
         font-size: 12px;
@@ -1241,7 +1353,7 @@
         position: absolute;
         height: 30vw;
         width: 100%;
-        z-index: -1;
+        z-index: 1;
     }
     main {
         top: 120%;
@@ -1253,7 +1365,7 @@
         font-size: 40px; /* Aumenta o tamanho da fonte do título */
       }
       .contentImagesNovidades {
-        width: 99%;
+        width: 75%;
         display: flex;
         flex-wrap: wrap;
         justify-content: center;
