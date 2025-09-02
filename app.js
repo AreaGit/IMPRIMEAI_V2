@@ -2659,21 +2659,21 @@ app.get('/cpq/painel-administrativo', (req,res) => {
 });
 app.get('/allusers', async (req, res) => {
   try {
-    const users = await User.findAll({
+    const users = await UserEmpresas.findAll({
       attributes: ['id', 'userCad', 'emailCad', 'telefoneCad']
     });
 
     const usersWithBalance = await Promise.all(users.map(async user => {
       const userId = user.id;
 
-      const saldoDepositosPagos = await Carteira.sum('saldo', {
+      const saldoDepositosPagos = await CarteiraEmpresas.sum('saldo', {
         where: {
           userId: userId,
           statusPag: 'PAGO'
         }
       }) || 0;
 
-      const saldoSaidas = await Carteira.sum('saldo', {
+      const saldoSaidas = await CarteiraEmpresas.sum('saldo', {
         where: {
           userId: userId,
           statusPag: 'SAIDA'

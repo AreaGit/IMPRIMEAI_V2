@@ -1,178 +1,184 @@
-const nomeGrafica = document.getElementById('nome-grafica');
-document.getElementById('pedidos-recebidos').textContent = pedidos.length;
-const pedidosBody = document.getElementById('pedidos-body');
-const iconeHome = document.getElementById('inicio');
-const boasVindas = document.getElementById('welcome');
-const secaoPedidos = document.getElementById('pedidos');
-const secaoSaldo = document.getElementById('saldo');
-const secaoConta = document.getElementById('minha-conta');
+// =======================
+// Variáveis globais
+// =======================
+let pedidos = [];
 let conta = {};
 const agora = new Date();
 const mesAtual = agora.getMonth(); // 0-11
 const anoAtual = agora.getFullYear();
-    
-iconeHome.addEventListener('click', () => {
-    boasVindas.style.display = 'block';
-    secaoPedidos.style.display = 'none';
-    secaoSaldo.style.display = 'none';
-    secaoConta.style.display = 'none';
-});    
 
+// =======================
+// Elementos da UI
+// =======================
+const nomeGrafica     = document.getElementById('nome-grafica');
+const pedidosBody     = document.getElementById('pedidos-body');
+const iconeHome       = document.getElementById('inicio');
+const boasVindas      = document.getElementById('welcome');
+const secaoPedidos    = document.getElementById('pedidos');
+const secaoSaldo      = document.getElementById('saldo');
+const secaoConta      = document.getElementById('minha-conta');
+const loadingScreen   = document.getElementById('loading');
 
-async function carregarInfoUsers() {
-    try {
-        const response = await fetch('/perfilGrafica/dados');
-        if (!response.ok) {
-            throw new Error('Erro ao buscar os dados do usuário');
-        }
-
-        const data = await response.json();
-        nomeGrafica.textContent = `${data.userCad}`
-
-        conta = {
-          nome: data.userCad,
-          email: data.user.emailCad,
-          telefone: data.user.telefoneCad,
-          banco: data.user.bancoCad,
-          agencia: data.user.agenciaCad,
-          conta: data.user.contaCorrenteCad
-        };
-
-        // Agora sim: exibe os dados na tela após carregar
-        const dadosConta = document.getElementById('dados-conta');
-        dadosConta.innerHTML = ''; // limpa antes de popular
-        for (const chave in conta) {
-          const p = document.createElement('p');
-          p.innerHTML = `<strong>${capitalize(chave)}:</strong> ${conta[chave]}`;
-          dadosConta.appendChild(p);
-        }
-
-    } catch (error) {
-        console.log(error)
-    }
-}
-
+// =======================
+// Utilitários
+// =======================
 function capitalize(str) {
   return str.charAt(0).toUpperCase() + str.slice(1);
 }
 
-carregarInfoUsers();
+function getStatusIcon(status) {
+  switch (status) {
+    case 'Recebido': return '📥';
+    case 'Em produção': return '⚙️';
+    case 'Finalizado/Enviado para Transporte': return '📦';
+    case 'Entregue': return '✅';
+    default: return '❓';
+  }
+}
 
-document.addEventListener('DOMContentLoaded', async () => {
-      const tbody = document.getElementById('pedidos-body');
-      const filtroDataInicio = document.getElementById('filtro-data-inicio');
-      const filtroDataFim = document.getElementById('filtro-data-fim');
-      const filtroStatus = document.getElementById('filtro-status');
-      const btnLimparFiltros = document.getElementById('limpar-filtros');
-      const loading = document.getElementById('loading');
-      const loadingFrase = document.getElementById('loading-frase');
+// =======================
+// Carregar dados do usuário
+// =======================
+async function carregarInfoUsers() {
+  try {
+    const response = await fetch('/perfilGrafica/dados');
+    if (!response.ok) throw new Error('Erro ao buscar os dados do usuário');
 
-      let pedidos = [];
+    const data = await response.json();
+    nomeGrafica.textContent = data.userCad;
 
-      function getStatusIcon(status) {
-        switch(status) {
-          case "Recebido": return "⏳";
-          case "Em produção": return "🏭";
-          case "Finalizado/Enviado para Transporte": return "📦";
-          case "Entregue": return "✅";
-          default: return "📄";
-        }
-      }
+    conta = {
+      nome: data.userCad,
+      email: data.user.emailCad,
+      telefone: data.user.telefoneCad,
+      banco: data.user.bancoCad,
+      agencia: data.user.agenciaCad,
+      conta: data.user.contaCorrenteCad
+    };
 
-      async function renderPedidos(pedidosFiltrados) {
-        const container = document.getElementById('cards-pedidos');
-        container.innerHTML = '';
-        
-        for (const [i, pedido] of pedidosFiltrados.entries()) {
-          const card = document.createElement('div');
-          card.className = 'card-pedido';
-          const icon = getStatusIcon(pedido.statusPed);
-          const dataCriacao = new Date(pedido.createdAt).toLocaleString('pt-BR');
-
-          card.innerHTML = `
-            <h4><span class="status-icon">${icon}</span>Pedido #${pedido.idPed}</h4>
-            <p><strong>Produto:</strong> ${pedido.nomeProd}</p>
-            <p><strong>Quantidade:</strong> ${pedido.quantidade}</p>
-            <p class="status"><strong>Status:</strong> ${pedido.statusPed}</p>
-            <p><strong>Data:</strong> ${dataCriacao}</p>
-          `;
-
-          card.addEventListener('click', () => {
-            window.location.href = `/detalhes-pedidos?idPedido=${pedido.idPed}&idProduto=${pedido.idProduto}`;
-          });
-
-          container.appendChild(card);
-
-          setTimeout(() => {
-            card.classList.add('aparecendo');
-          }, i * 80);
-        }
-      }
-
-      function aplicarFiltros() {
-        const inicio = `${anoAtual}-${String(mesAtual + 1).padStart(2, '0')}-01`;
-        const fim = `${anoAtual}-${String(mesAtual + 1).padStart(2, '0')}-${String(agora.getDate()).padStart(2, '0')};`;
-        const statusSelecionado = filtroStatus.value;
-
-        const filtrados = pedidos.filter(pedido => {
-          const dataPedido = new Date(pedido.createdAt);
-          const dataISO = dataPedido.toISOString().split('T')[0];
-
-          const dataOk = (!inicio || dataISO >= inicio) && (!fim || dataISO <= fim);
-          const statusOk = statusSelecionado === "Todos" || pedido.statusPed === statusSelecionado;
-          return dataOk && statusOk;
-        });
-
-        renderPedidos(filtrados);
-      }
-
-      const frases = [
-        "Preparando seu painel...",
-        "Carregando os pedidos...",
-        "Organizando as informações...",
-        "Quase lá...",
-        "Finalizando carregamento..."
-      ];
-      let fraseIndex = 0;
-      setInterval(() => {
-        loadingFrase.textContent = frases[fraseIndex];
-        fraseIndex = (fraseIndex + 1) % frases.length;
-      }, 2000);
-
-      function limparFiltros() {
-        filtroDataInicio.value = '';
-        filtroDataFim.value = '';
-        filtroStatus.value = 'Todos';
-        aplicarFiltros();
-      }
-
-      filtroDataInicio.addEventListener('change', aplicarFiltros);
-      filtroDataFim.addEventListener('change', aplicarFiltros);
-      filtroStatus.addEventListener('change', aplicarFiltros);
-      btnLimparFiltros.addEventListener('click', limparFiltros);
-
-    try {
-        const response = await fetch('/pedidos-cadastrados');
-        const data = await response.json();
-        pedidos = data.pedidos;
-        const aguardando = pedidos.filter(p => p.statusPed === 'Recebido');
-        document.getElementById('pedidos-recebidos').textContent = aguardando.length;
-        // Define filtro como "Aguardando" por padrão
-        filtroStatus.value = 'Recebido';
-        aplicarFiltros();
-      } catch (error) {
-          console.error('Erro ao buscar pedidos:', error);
-        } finally {  
-          loading.style.display = 'none';
+    const dadosConta = document.getElementById('dados-conta');
+    dadosConta.innerHTML = '';
+    for (const chave in conta) {
+      const p = document.createElement('p');
+      p.innerHTML = `<strong>${capitalize(chave)}:</strong> ${conta[chave]}`;
+      dadosConta.appendChild(p);
     }
-});
+  } catch (error) {
+    console.error(error);
+  }
+}
 
-const graficaId = 1; // ou de onde você pegar o ID
-const recipientId = 123; // id do recipient no Pagar.me
-    
+// =======================
+// Renderizar pedidos
+// =======================
+function renderPedidos(pedidosFiltrados) {
+  const container = document.getElementById('cards-pedidos');
+  if (!container) return;
+
+  container.innerHTML = '';
+
+  pedidosFiltrados.forEach((pedido, i) => {
+    const card = document.createElement('div');
+    card.className = 'card-pedido';
+
+    const icon = getStatusIcon(pedido.statusPed);
+    const dataCriacao = new Date(pedido.createdAt).toLocaleString('pt-BR');
+    const produtos = Array.isArray(pedido.produtos) ? pedido.produtos : [];
+
+    const produtosHtml = produtos.length > 0
+      ? produtos.map(p => `<li>${p.nomeProd} - <strong>${p.quantidade}</strong></li>`).join('')
+      : `<li>Nenhum produto encontrado</li>`;
+
+    card.innerHTML = `
+      <h4><span class="status-icon">${icon}</span> Pedido #${pedido.idPed}</h4>
+      <p><strong>Produtos:</strong></p>
+      <ul class="lista-produtos">${produtosHtml}</ul>
+      <p class="status"><strong>Status:</strong> ${pedido.statusPed}</p>
+      <p><strong>Data:</strong> ${dataCriacao}</p>
+    `;
+
+    card.addEventListener('click', () => {
+      window.location.href = `/detalhes-pedidos?idPedido=${pedido.idPed}`;
+    });
+
+    container.appendChild(card);
+
+    setTimeout(() => card.classList.add('aparecendo'), i * 80);
+  });
+
+  document.getElementById('pedidos-recebidos').textContent = pedidosFiltrados.length;
+}
+
+// =======================
+// Filtros
+// =======================
+function aplicarFiltros() {
+  const filtroStatus     = document.getElementById('filtro-status');
+  const filtroDataInicio = document.getElementById('filtro-data-inicio');
+  const filtroDataFim    = document.getElementById('filtro-data-fim');
+
+  const statusSelecionado = filtroStatus ? filtroStatus.value : "Todos";
+  const inicio = filtroDataInicio ? filtroDataInicio.value : "";
+  const fim    = filtroDataFim ? filtroDataFim.value : "";
+
+  const filtrados = pedidos.filter(pedido => {
+    const dataPedido = new Date(pedido.createdAt);
+    const dataISO = dataPedido.toISOString().split('T')[0];
+    const dataOk = (!inicio || dataISO >= inicio) && (!fim || dataISO <= fim);
+    const statusOk = statusSelecionado === "Todos" || pedido.statusPed === statusSelecionado;
+    return dataOk && statusOk;
+  });
+
+  renderPedidos(filtrados);
+}
+
+function limparFiltros() {
+  ['filtro-status', 'filtro-data-inicio', 'filtro-data-fim'].forEach(id => {
+    const el = document.getElementById(id);
+    if (el) el.value = id === 'filtro-status' ? "Todos" : "";
+  });
+  renderPedidos(pedidos);
+}
+
+function inicializarFiltros() {
+  const filtroStatus     = document.getElementById('filtro-status');
+  const filtroDataInicio = document.getElementById('filtro-data-inicio');
+  const filtroDataFim    = document.getElementById('filtro-data-fim');
+  const btnLimpar        = document.getElementById('limpar-filtros');
+
+  if (filtroStatus) filtroStatus.addEventListener('change', aplicarFiltros);
+  if (filtroDataInicio) filtroDataInicio.addEventListener('change', aplicarFiltros);
+  if (filtroDataFim) filtroDataFim.addEventListener('change', aplicarFiltros);
+  if (btnLimpar) btnLimpar.addEventListener('click', limparFiltros);
+}
+
+// =======================
+// Buscar pedidos no backend
+// =======================
+async function carregarPedidos() {
+  try {
+    const res = await fetch('/pedidos-cadastrados');
+    const data = await res.json();
+    pedidos = data.pedidos || [];
+
+    console.log("✅ Pedidos recebidos do backend:", pedidos);
+
+    aplicarFiltros();
+  } catch (err) {
+    console.error("❌ Erro ao carregar pedidos:", err);
+  } finally {
+    if (loadingScreen) loadingScreen.style.display = 'none';
+  }
+}
+
+// =======================
+// Saldo e Saques
+// =======================
+const graficaId   = 1;   // Ajustar conforme necessário
+const recipientId = 123; // Ajustar conforme necessário
+
 async function carregarSaldos() {
   const dadosSaldo = document.getElementById('dados-saldo');
-
   try {
     const [disponivelRes, totalRes] = await Promise.all([
       fetch(`/api/saldo-grafica?graficaId=${graficaId}`),
@@ -181,6 +187,7 @@ async function carregarSaldos() {
 
     const disponivel = await disponivelRes.json();
     const total = await totalRes.json();
+
     document.getElementById('saldo-atual').textContent = disponivel.graficaBalance;
 
     dadosSaldo.innerHTML = `
@@ -194,16 +201,13 @@ async function carregarSaldos() {
   }
 }
 
-document.getElementById('sacar-disponivel').addEventListener('click', async () => {
-  const confirmacao = confirm('Deseja sacar o valor disponível para saque agora?');
-  if (!confirmacao) return;
-
+async function sacar(endpoint) {
   const res = await fetch(`/api/full-balance-grafica?graficaId=${graficaId}`);
   const data = await res.json();
   const valor = parseFloat(data.valorComDesconto);
 
   try {
-    const saque = await fetch('/api/withdraw-grafica', {
+    const saque = await fetch(endpoint, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ amount: valor, recipient_id: recipientId })
@@ -211,65 +215,60 @@ document.getElementById('sacar-disponivel').addEventListener('click', async () =
 
     const result = await saque.json();
     document.getElementById('mensagem-saque').textContent = result.message || 'Erro no saque';
-
     carregarSaldos();
   } catch (err) {
     console.error(err);
   }
-});
+}
 
-document.getElementById('sacar-total').addEventListener('click', async () => {
-  const confirmacao = confirm('Deseja sacar o saldo total (sem considerar elegibilidade)?');
-  if (!confirmacao) return;
+// =======================
+// Navegação
+// =======================
+function inicializarNavegacao() {
+  const links = document.querySelectorAll('.sidebar nav a');
+  const sections = document.querySelectorAll('.section');
 
-  const res = await fetch(`/api/full-balance-grafica?graficaId=${graficaId}`);
-  const data = await res.json();
-  const valor = parseFloat(data.valorComDesconto);
+  links.forEach(link => {
+    link.addEventListener('click', e => {
+      e.preventDefault();
+      const target = link.dataset.section;
+      sections.forEach(sec => sec.classList.remove('active'));
+      sections.forEach(sec => sec.style.display = 'none');
+      const destino = document.getElementById(target);
+      destino.classList.add('active');
+      destino.style.display = 'block';
+    });
+  });
 
-  try {
-    const saque = await fetch('/api/full-withdraw-grafica', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ amount: valor, recipient_id: recipientId })
+  iconeHome.addEventListener('click', () => {
+    boasVindas.style.display = 'block';
+    secaoPedidos.style.display = 'none';
+    secaoSaldo.style.display = 'none';
+    secaoConta.style.display = 'none';
+  });
+}
+
+// =======================
+// Inicialização
+// =======================
+document.addEventListener('DOMContentLoaded', () => {
+  inicializarFiltros();
+  inicializarNavegacao();
+  carregarInfoUsers();
+  carregarPedidos();
+  carregarSaldos();
+
+  document.getElementById('sacar-disponivel')
+    .addEventListener('click', () => {
+      if (confirm('Deseja sacar o valor disponível para saque agora?')) {
+        sacar('/api/withdraw-grafica');
+      }
     });
 
-    const result = await saque.json();
-    document.getElementById('mensagem-saque').textContent = result.message || 'Erro no saque';
-
-    carregarSaldos();
-  } catch (err) {
-    console.error(err);
-  }
-});
-
-carregarSaldos();
-    
-    const links = document.querySelectorAll('.sidebar nav a');
-    const sections = document.querySelectorAll('.section');
-    links.forEach(link => {
-        link.addEventListener('click', e => {
-            e.preventDefault();
-            const target = link.dataset.section;
-            sections.forEach(sec => sec.classList.remove('active'));
-            sections.forEach(sec => sec.style.display = 'none');
-            document.getElementById(target).classList.add('active');
-            document.getElementById(target).style.display = 'block';
-      });
+  document.getElementById('sacar-total')
+    .addEventListener('click', () => {
+      if (confirm('Deseja sacar o saldo total (sem considerar elegibilidade)?')) {
+        sacar('/api/full-withdraw-grafica');
+      }
     });
-
-    const filtroData = document.getElementById('filtro-data');
-    const filtroStatus = document.getElementById('filtro-status');
-
-    function filtrarPedidos() {
-        const data = filtroData.value;
-        const status = filtroStatus.value;
-      const filtrado = pedidos.filter(p => {
-          const dataOk = !data || p.data === data;
-          const statusOk = !status || p.status === status;
-          return dataOk && statusOk;
-        });
-        renderPedidos(filtrado);
-    }
-    
-    filtroData.addEventListener('change', filtrarPedidos);
-    filtroStatus.addEventListener('change', filtrarPedidos);
+});

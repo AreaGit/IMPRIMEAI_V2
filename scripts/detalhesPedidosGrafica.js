@@ -1,592 +1,212 @@
 let tipoEntrega;
-let pId
-let novoStatusPedido
-let idPedMult
+let idPedidoGlobal;
 let nomeGrafica;
-let tipo;
-let nomeEmpresa;
-let nomeGerente;
+let nomeLoja;
+
 const btnAceitarPedido = document.getElementById('btnAceitarPedido');
 const btnCancelarPedido = document.getElementById('btnCancelarPedido');
-const formEntrega = document.getElementById('formEntrega');
-const btnConfEnt = document.getElementById('btnConfEnt');
 const avisoEntregue = document.getElementById('avisoEntregue');
-const carregamento = document.getElementById('carregamento');
+const produtoInfo = document.getElementById('produto-info');
+
+// ---------------------------
+// Função para buscar nome da gráfica
+// ---------------------------
 async function carregarInfoUsers() {
   try {
-      const response = await fetch('/perfilGrafica/dados');
-      if (!response.ok) {
-          throw new Error('Erro ao buscar os dados do usuário');
-      }
-
-      const data = await response.json();
-      nomeGrafica = data.userCad;
-  } catch (error) {
-      console.log("erro ao buscar nome");
+    const res = await fetch('/perfilGrafica/dados');
+    if (!res.ok) throw new Error('Erro ao buscar os dados da gráfica');
+    const data = await res.json();
+    nomeGrafica = data.userCad;
+  } catch (err) {
+    console.error('Erro ao buscar nome da gráfica', err);
   }
 }
 carregarInfoUsers();
-document.addEventListener('DOMContentLoaded', async() => { 
-  // Obtém o ID do pedido e do produto da URL
-  const urlParams = new URLSearchParams(window.location.search);
-  const idPedido = urlParams.get('idPedido');
-  const idProduto = urlParams.get('idProduto');
-  const produtoInfo = document.getElementById('produto-info');
 
-  if (idPedido && idProduto) {
-    try {
-      // Faz a requisição para o servidor para obter os detalhes do pedido
-      const response = await fetch(`/detalhes-pedido/${idPedido}/${idProduto}`);
-      const data = await response.json();
-      if(data.usuario.nomeGerente) {
-        nomeGerente = data.usuario.nomeGerente;
-        console.log(nomeGerente)
-      }
-      if(data.usuario.empresa) {
-        nomeEmpresa = data.usuario.empresa;
-        console.log(nomeEmpresa)
-      }
-    const detalhesPedido = data.pedido;
-    const detalhesUsuario = data.usuario;
-    const statusPedido = detalhesPedido.itenspedidos[0].statusPed;
-    tipo = detalhesPedido.itenspedidos[0].tipo;
-    idPedMult = detalhesPedido.itenspedidos[0].id;
-    if(statusPedido == "Recebido") {
-      novoStatusPedido = "Em produção";
-    }else if(statusPedido == "Em produção") {
-      novoStatusPedido = "Finalizado/Enviado para Transporte";
-      btnAceitarPedido.textContent = "Finalizar Pedido"
-      btnCancelarPedido.style.display = 'none'
-    }else if(statusPedido == "Finalizado/Enviado para Transporte") {
-      novoStatusPedido = "Entregue";
-      btnAceitarPedido.textContent = "Enviar Pedido"
-      btnCancelarPedido.style.display = 'none'
-    }else if(statusPedido == "Entregue") {
-      btnAceitarPedido.style.display = 'none'
-      btnCancelarPedido.style.display = 'none'
-      document.getElementById('avisoEntregue').style.display = 'block'
-    } 
-    // Exibe as variações do produto no console.log do HTML
-    if (detalhesPedido.itenspedidos && detalhesPedido.itenspedidos.length > 0) {
-      const variacoesProduto = detalhesPedido.itenspedidos[0];
-    } else {
-      console.log('Variações do Produto não encontradas no pedido.');
-    }
-    const variacoesProduto = detalhesPedido.itenspedidos[0]
-    tipoEntrega = detalhesPedido.enderecos[0].tipoEntrega;
-    const detalhesItens = document.createElement('div');
-    detalhesItens.id = `detalhesItens${data.pedido.id}`
-    detalhesItens.className = 'itensProduto'
-    console.log(statusPedido , tipoEntrega)
-    if(statusPedido == "Finalizado/Enviado para Transporte") {
-      btnAceitarPedido.addEventListener('click', () => {
-        formEntrega.style.display = 'block';
-      });
-    }else if(tipoEntrega === "Múltiplos Enderecos") {
-      const btnAceitarPedido = document.getElementById('btnAceitarPedido') 
-      btnAceitarPedido.addEventListener('click', async () => {
-          try {
-            const idPedido = detalhesPedido.itenspedidos[0].id;
-            const novoStatus = novoStatusPedido;
-            // Envia uma requisição para o servidor para atualizar o status
-            const response = await fetch('/atualizar-status-pedido', {
-              method: 'POST',
-              headers: {
-                'Content-Type': 'application/json',
-              },
-                body: JSON.stringify({
-                  pedidoId: idPedido,
-                  novoStatus: novoStatus,
-                  tipoPed: "Mult",
-                }),
-              });
-                // Verifica se a atualização foi bem-sucedida
-              if (!response.ok) {
-                 throw new Error(`Erro ao aceitar pedido: ${response.statusText}`);
-              }
-              // Exibe uma mensagem ou realiza outras ações conforme necessário
-              const data = await response.json();
-              if (data.success) {
-                console.log('Pedido aceito com sucesso!');
-                setTimeout( () =>{
-                  window.location.href = '/graficas/painel';
-                },3000);
-                // Verifica se o novo status é 'Pedido Aceito Pela Gráfica'
-                if (data.novoStatus === 'Pedido Aceito Pela Gráfica') {
-                } else {
-                  // Adicione código aqui para outras ações quando o status não é 'Pedido Aceito Pela Gráfica'
-                }
-              } else {
-                console.error('Erro ao aceitar pedido:', data.message);
-              }
-            } catch (error) {
-              console.error('Erro ao aceitar pedido:', error);
-            }
-        });
-    }else if (statusPedido === 'Em produção' || 'Finalizado/Enviado para Transporte' && tipoEntrega === 'Entrega a Retirar na Loja') {
-      const btnAceitarPedido = document.getElementById('btnAceitarPedido');
-      
-      btnAceitarPedido.addEventListener('click', async () => {
-        try {
-          const urlParams = new URLSearchParams(window.location.search);
-          const idPedido = urlParams.get('idPedido');
-          const novoStatus = novoStatusPedido;
-    
-          // Envia uma requisição para o servidor para atualizar o status
-          const response = await fetch('/atualizar-status-pedido', {
-            method: 'POST',
-            headers: {
-              'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({
-              pedidoId: idPedido,
-              novoStatus: novoStatus,
-              tipoPed: "Norm",
-            }),
-          });
-    
-          // Verifica se a atualização foi bem-sucedida
-          if (!response.ok) {
-            throw new Error(`Erro ao aceitar pedido: ${response.statusText}`);
-          }
-    
-          // Exibe uma mensagem ou realiza outras ações conforme necessário
-          const data = await response.json();
-          if (data.success) {
-            console.log('Pedido aceito com sucesso!');
-            window.location.href = '/graficas/painel';
-    
-            // Verifica se o novo status é 'Pedido Aceito Pela Gráfica'
-            if (data.novoStatus === 'Em produção') {
-              // Redireciona o usuário para a nova página
-               // Substitua '/pagina-nova' pela rota desejada
-            } else {
-              // Adicione código aqui para outras ações quando o status não é 'Pedido Aceito Pela Gráfica'
-            }
-          } else {
-            console.error('Erro ao aceitar pedido:', data.message);
-          }
-    
-        } catch (error) {
-          console.error('Erro ao aceitar pedido:', error);
-        }
-        });
-    }
-    else if(tipoEntrega === 'Entrega a Retirar na Loja') {
-      console.log(1)
-      const btnAceitarPedido = document.getElementById('btnAceitarPedido') 
-      btnAceitarPedido.addEventListener('click', async () => {
-      console.log('ATUALIZANDO ENDERECO DE ENTREGA')
-      const urlParams = new URLSearchParams(window.location.search);
-      const idPedido = urlParams.get('idPedido');
-      const idProduto = urlParams.get('idProduto');
-      const responseEndereco = await fetch('/atualizar-endereco-entrega', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-          body: JSON.stringify({
-            pedidoId: idPedido
-          })
-        });
-        try {
-          if (!responseEndereco.ok) {
-            throw new Error(`Erro ao enviar: ${responseEndereco.statusText}`);
-          }else {
-            console.log('BOM')
-          }
-          } catch (error) {
-            console.log('RUIM')
-            throw new Error(`Erro ao enviar: ${responseEndereco.statusText}`);
-          }
-          try {
-            console.log('ACEITANDO PEDIDO');
-            const urlParams = new URLSearchParams(window.location.search);
-            const idPedido = urlParams.get('idPedido');
-            const novoStatus = 'Em produpção';
-            // Envia uma requisição para o servidor para atualizar o status
-            const response = await fetch('/atualizar-status-pedido', {
-              method: 'POST',
-              headers: {
-                'Content-Type': 'application/json',
-              },
-                body: JSON.stringify({
-                  pedidoId: idPedido,
-                  novoStatus: novoStatus,
-                  tipoPed: "Norm",
-                }),
-              });
-                // Verifica se a atualização foi bem-sucedida
-              if (!response.ok) {
-                 throw new Error(`Erro ao aceitar pedido: ${response.statusText}`);
-              }
-              // Exibe uma mensagem ou realiza outras ações conforme necessário
-              const data = await response.json();
-              if (data.success) {
-                console.log('Pedido aceito com sucesso!');
-                setTimeout( () =>{
-                  window.location.href = '/graficas/painel';
-                },3000);
-                // Verifica se o novo status é 'Pedido Aceito Pela Gráfica'
-                if (data.novoStatus === 'Em produção') {
-                } else {
-                  // Adicione código aqui para outras ações quando o status não é 'Pedido Aceito Pela Gráfica'
-                }
-              } else {
-                console.error('Erro ao aceitar pedido:', data.message);
-              }
-            } catch (error) {
-              console.error('Erro ao aceitar pedido:', error);
-            }
-        });
-      }else {
-        console.log(2)
-        const btnAceitarPedido = document.getElementById('btnAceitarPedido');
-      
-        btnAceitarPedido.addEventListener('click', async () => {
-          try {
-            const urlParams = new URLSearchParams(window.location.search);
-            const idPedido = urlParams.get('idPedido');
-            const novoStatus = novoStatusPedido;
-      
-            // Envia uma requisição para o servidor para atualizar o status
-            const response = await fetch('/atualizar-status-pedido', {
-              method: 'POST',
-              headers: {
-                'Content-Type': 'application/json',
-              },
-              body: JSON.stringify({
-                pedidoId: idPedido,
-                novoStatus: novoStatus,
-                tipoPed: "Norm",
-              }),
-            });
-      
-            // Verifica se a atualização foi bem-sucedida
-            if (!response.ok) {
-              throw new Error(`Erro ao aceitar pedido: ${response.statusText}`);
-            }
-      
-            // Exibe uma mensagem ou realiza outras ações conforme necessário
-            const data = await response.json();
-            if (data.success) {
-              console.log('Pedido aceito com sucesso!');
-              window.location.href = '/graficas/painel';
-      
-              // Verifica se o novo status é 'Pedido Aceito Pela Gráfica'
-              if (data.novoStatus === 'Em produção') {
-                // Redireciona o usuário para a nova página
-                 // Substitua '/pagina-nova' pela rota desejada
-              } else {
-                // Adicione código aqui para outras ações quando o status não é 'Pedido Aceito Pela Gráfica'
-              }
-            } else {
-              console.error('Erro ao aceitar pedido:', data.message);
-            }
-      
-          } catch (error) {
-            console.error('Erro ao aceitar pedido:', error);
-          }
-          });
-        }      
-        const imgUrl = await pegarImagemProduto(idProduto);
-        detalhesItens.innerHTML = `
-            <img src="${imgUrl}"></img>
-            <h2>${detalhesPedido.itenspedidos[0].nomeProd}</h2>
-            <p class="idPed"><strong>Id do Pedido:</strong> ${detalhesPedido.id}</p>
-            <p class="quantPed"><strong>Quantidade:</strong> ${detalhesPedido.itenspedidos[0].quantidade}</p>
-            <p class="valorPed"><strong>Valor:</strong> R$${detalhesPedido.itenspedidos[0].valorProd}</p>
-            <p class="nomeDest"><strong>Nome do Destinatário:</strong> ${detalhesUsuario.userCad}</p>
-            <p class=""><strong>Material:</strong> ${variacoesProduto.material}</p>
-            <p class=""><strong>Formato:</strong> ${variacoesProduto.formato}</p>
-            <p class=""><strong>Acabamento:</strong> ${variacoesProduto.acabamento}</p>
-            <p class=""><strong>Cor:</strong> ${variacoesProduto.cor}</p>
-            <p class=""><strong>Enobrecimento:</strong> ${variacoesProduto.enobrecimento}</p>
-            <a href="${detalhesPedido.itenspedidos[0].linkDownload !== null ? detalhesPedido.itenspedidos[0].linkDownload : detalhesPedido.itenspedidos[0].arteEmpresas}" target="_blank">Clique Aqui para Baixar a Arte</a>
-            `
-        produtoInfo.appendChild(detalhesItens);
+// ---------------------------
+// Função para buscar imagem do produto
+// ---------------------------
+async function pegarImagemProduto(idProduto, tipo) {
+  try {
+    const url = tipo === "Empresas" ? `/imagens-empresa/${idProduto}` : `/imagens/${idProduto}`;
+    const res = await fetch(url);
+    if (!res.ok) throw new Error('Erro ao obter a imagem do produto');
+    const data = await res.json();
+    return data.imgProdUrl || null;
+  } catch (err) {
+    console.error('Erro ao carregar a imagem:', err);
+    return null;
+  }
+}
 
-            const detalhesEntrega = document.createElement('div');
-            detalhesEntrega.id = `detalhesEntrega${data.pedido.id}`
-            detalhesEntrega.className = 'detalhesEntrega'
-            if (detalhesPedido.enderecos && detalhesPedido.enderecos.length > 0) {
-                const tipoEntrega = detalhesPedido.enderecos[0].tipoEntrega;
-                if (tipoEntrega === 'Entrega a Retirar na Loja') {
-                  detalhesEntrega.innerHTML = detalhesPedido.enderecos.map(endereco => `
-                    <h2>Dados da Entrega</h2>
-                    <p class="vrEnd"><strong>Endereço:</strong>Entrega a Retirar na Loja</p>
-                    <p class="endNum"><strong>Número da Residência:</strong>Entrega a Retirar na Loja</p>
-                    <p class="endComp"><strong>Complemento:</strong>Entrega a Retirar na Loja</p>
-                    <p class="endBairro"><strong>Bairro:</strong>Entrega a Retirar na Loja</p>
-                    <p class="endCid"><strong>Cidade:</strong>Entrega a Retirar na Loja</p>
-                    <p class="protocComp"><strong>Protocolo Completo: </strong> <a href="/graficas/protocolo-entrega?id=${detalhesPedido.id}" target="_blank">Acesse Aqui</a></p>
-                  `).join('<br>');
-                } else if(nomeEmpresa) {
-                  detalhesEntrega.innerHTML = detalhesPedido.enderecos.map(endereco => `
-                    <h2>Dados da Entrega</h2>
-                    <p class="vrEnd"><strong>Endereço:</strong> ${endereco.rua}, ${endereco.cep}, ${endereco.estado}</p>
-                    <p class="endNum"><strong>Número da Residência:</strong> ${endereco.numero}</p>
-                    <p class="endComp"><strong>Complemento:</strong> ${endereco.complemento}</p>
-                    <p class="endBairro"><strong>Bairro:</strong> ${endereco.bairro}</p>
-                    <p class="endCid"><strong>Cidade:</strong> ${endereco.cidade}</p>
-                    <p class="endPart"><strong>Observações da Entrega:</strong> ${detalhesUsuario.particularidades}</p>
-                    <p class="protocComp"><strong>Protocolo Completo: </strong> <a href="/graficas/protocolo-entrega?id=${detalhesPedido.id}" target="_blank">Acesse Aqui</a></p>
-                  `).join('<br>');
-                } else {
-                  detalhesEntrega.innerHTML = detalhesPedido.enderecos.map(endereco => `
-                    <h2>Dados da Entrega</h2>
-                    <p class="vrEnd"><strong>Endereço:</strong> ${endereco.rua}, ${endereco.cep}, ${endereco.estado}</p>
-                    <p class="endNum"><strong>Número da Residência:</strong> ${endereco.numero}</p>
-                    <p class="endComp"><strong>Complemento:</strong> ${endereco.complemento}</p>
-                    <p class="endBairro"><strong>Bairro:</strong> ${endereco.bairro}</p>
-                    <p class="endCid"><strong>Cidade:</strong> ${endereco.cidade}</p>
-                    <p class="protocComp"><strong>Protocolo Completo: </strong> <a href="/graficas/protocolo-entrega?id=${detalhesPedido.id}" target="_blank">Acesse Aqui</a></p>
-                  `).join('<br>');
-                }
-                if (detalhesPedido.enderecos && detalhesPedido.enderecos.length > 0) {
-                  detalhesPedido.enderecos.forEach(endereco => {
-                      let enderecoData
-                      const protocoloBtn = document.createElement('a');
-                      protocoloBtn.id = 'btnGerarProtocolo';
-                      protocoloBtn.href = '#';
-                      protocoloBtn.textContent = 'Clique Aqui para Baixar o Protocolo de Entrega';
-                      detalhesEntrega.appendChild(protocoloBtn);
-              
-                      protocoloBtn.addEventListener('click', async () => {
-                        if(nomeEmpresa) {
-                          enderecoData = {
-                            id: detalhesPedido.id,
-                            nomeGrafica: nomeGrafica,
-                            nomeEmpresa: nomeEmpresa,
-                            nomeGerente: nomeGerente,
-                            cliente: detalhesUsuario.userCad,
-                            endereco: detalhesPedido.enderecos[0].rua,
-                            cidade: detalhesPedido.enderecos[0].cidade,
-                            estado: detalhesPedido.enderecos[0].estado,
-                            responsavel: detalhesUsuario.userCad,
-                            quantidade: detalhesPedido.itenspedidos[0].quantidade,
-                            item: detalhesPedido.itenspedidos[0].nomeProd,
-                            observacoes: detalhesUsuario.particularidades
-                          }
-                        } else {
-                        enderecoData = {
-                          id: detalhesPedido.id,
-                          nomeGrafica: nomeGrafica,
-                          nomeEmpresa: nomeEmpresa,
-                          nomeGerente: nomeGerente,
-                          cliente: detalhesUsuario.userCad,
-                          endereco: detalhesPedido.enderecos[0].rua,
-                          cidade: detalhesPedido.enderecos[0].cidade,
-                          estado: detalhesPedido.enderecos[0].estado,
-                          responsavel: detalhesUsuario.userCad,
-                          quantidade: detalhesPedido.itenspedidos[0].quantidade,
-                          item: detalhesPedido.itenspedidos[0].nomeProd,
-                        }
-                      }
-                        try {
-                          // Mudando o método de GET para POST e serializando os dados
-                          const response = await fetch('/gerarProtocoloEntrega', {
-                            method: 'POST',  // Agora é POST
-                            headers: {
-                              'Content-Type': 'application/json',
-                            },
-                            body: JSON.stringify(enderecoData),  // Certificando-se de que os dados sejam passados como JSON
-                          });
-                      
-                          // Verificando se a resposta foi bem-sucedida
-                          if (response.ok) {
-                            const data = await response.json();  // Processa a resposta como JSON
-                            console.log('Protocolo gerado com sucesso:', data);
-                            window.open(data.protocolo.webViewLink);
-                            // Aqui você pode tratar a resposta, como exibir uma mensagem de sucesso ou fazer outra ação
-                          } else {
-                            console.error('Erro ao gerar o protocolo:', response.statusText);
-                          }
-                        } catch (err) {
-                          console.log('Erro ao tentar enviar a requisição:', err);
-                        }
-                      });
-                  });
-              }              
-              } else {
-                console.error('Endereço não encontrado no pedido.');
-              }
-            produtoInfo.appendChild(detalhesEntrega);
-          
-          } catch (error) {
-            console.error('Erro ao obter detalhes do pedido:', error);
-          }
-        }
-      });
+// ---------------------------
+// Função para renderizar os produtos do pedido
+// ---------------------------
+async function renderProdutosPedido(produtos, nomeCliente) {
+  produtoInfo.innerHTML = ''; // Limpa conteúdo
 
-      async function pegarImagemProduto(idProduto) {
-        if(tipo == "Empresas") {
-          try {
-            const imgResponse = await fetch(`/imagens-empresa/${idProduto}`);
-            if (!imgResponse.ok) {
-              throw new Error('Erro ao obter a URL da imagem do produto');
-            }
-            const imgData = await imgResponse.json();
-            return imgData.imgProdUrl;
-          } catch (error) {
-            console.error('Erro ao carregar a imagem:', error);
-            return null;
-          }
-        } else {
-        try {
-          const imgResponse = await fetch(`/imagens/${idProduto}`);
-          if (!imgResponse.ok) {
-            throw new Error('Erro ao obter a URL da imagem do produto');
-          }
-          const imgData = await imgResponse.json();
-          return imgData.imgProdUrl;
-        } catch (error) {
-          console.error('Erro ao carregar a imagem:', error);
-          return null;
-        }
-      }
-      }
+  for (const item of produtos) {
+    const imgUrl = await pegarImagemProduto(item.idProduto, item.tipo);
+    const itemDiv = document.createElement('div');
+    itemDiv.className = 'itensProduto';
 
-    // Defina uma variável global para armazenar os cookies
-    let cookies;
-    const urlParams = new URLSearchParams(window.location.search);
-    const idPedido = urlParams.get('idPedido');
+    itemDiv.innerHTML = `
+      <img src="${imgUrl}" alt="${item.nomeProd}">
+      <h2>${item.nomeProd}</h2>
+      <p><strong>Id do Pedido:</strong> ${item.idPed}</p>
+      <p><strong>Quantidade:</strong> ${item.quantidade}</p>
+      <p><strong>Valor:</strong> R$${item.valorProd}</p>
+      <p><strong>Nome do Cliente:</strong> ${nomeCliente}</p>
+      <p><strong>Material:</strong> ${item.material || '-'}</p>
+      <p><strong>Formato:</strong> ${item.formato || '-'}</p>
+      <p><strong>Acabamento:</strong> ${item.acabamento || '-'}</p>
+      <p><strong>Cor:</strong> ${item.cor || '-'}</p>
+      <p><strong>Enobrecimento:</strong> ${item.enobrecimento || '-'}</p>
+      <a href="${item.linkDownload || item.arteEmpresas}" target="_blank">Clique Aqui para Baixar a Arte</a>
+    `;
 
-    // Função para obter o ID da gráfica dos cookies
-    function getGraficaIdFromCookies() {
-      for (const cookie of cookies) {
-        const [name, value] = cookie.trim().split('=');
-        if (name === 'graficaId') {
-          console.log('ID da Gráfica nos Cookies:', value);
-          return value;
-        }
-      }
-      console.log('ID da Gráfica não encontrado nos Cookies.');
-      return null;
-    }
+    produtoInfo.appendChild(itemDiv);
+  }
+}
 
-    // Função para obter todos os cookies e atribuí-los à variável global
-    function getAllCookies() {
-      cookies = document.cookie.split(';');
-    }
+// ---------------------------
+// Função para renderizar endereços do pedido
+// ---------------------------
+function renderEnderecos(enderecos, nomeCliente) {
+  const detalhesEntrega = document.createElement('div');
+  detalhesEntrega.className = 'detalhesEntrega';
 
-    // Exemplo de chamada da função para obter todos os cookies
-    getAllCookies();
+  enderecos.forEach(endereco => {
+    let enderecoHTML = `
+      <h2>Dados da Entrega</h2>
+      <p><strong>Endereço:</strong> ${endereco.tipoEntrega === 'Entrega a Retirar na Loja' ? 'Retirar na Loja' : `${endereco.rua}, ${endereco.cep}, ${endereco.estado}`}</p>
+      <p><strong>Número:</strong> ${endereco.numero || '-'}</p>
+      <p><strong>Complemento:</strong> ${endereco.complemento || '-'}</p>
+      <p><strong>Bairro:</strong> ${endereco.bairro || '-'}</p>
+      <p><strong>Cidade:</strong> ${endereco.cidade || '-'}</p>
+      <p><strong>Protocolo Completo:</strong> <a href="/graficas/protocolo-entrega?id=${idPedidoGlobal}" target="_blank">Acesse Aqui</a></p>
+    `;
+    const divEndereco = document.createElement('div');
+    divEndereco.innerHTML = enderecoHTML;
 
-    // Modificação para acessar o valor do cookie 'userId'
-    // Obtenha o ID da gráfica dos cookies
-    const graficaId = getGraficaIdFromCookies();
-
-    console.log(`Id da gráfica ${graficaId} id do pedido ${idPedido}`);
-
-
-    btnCancelarPedido.addEventListener('click', async () => {
-        // Prompt de confirmação
-        const confirmacao = window.confirm('Tem certeza que deseja Cancelar o Pedido?');
-        // Verifique se o usuário confirmou
-        if (!confirmacao) {
-          return; // Se o usuário clicou em "Cancelar", saia da função
-        }
+    // Botão gerar protocolo
+    const btnProtocolo = document.createElement('a');
+    btnProtocolo.href = '#';
+    btnProtocolo.textContent = 'Clique Aqui para Baixar o Protocolo de Entrega';
+    btnProtocolo.addEventListener('click', async (e) => {
+      e.preventDefault();
       try {
-        const idGrafica = graficaId;
-        let idPedidoCancl
-        if(tipoEntrega === "Múltiplos Enderecos") {
-           idPedidoCancl = idPedMult;
-        }else {
-           idPedidoCancl = urlParams.get('idPedido');
-        }
-
-        const response = await fetch(`/cancelar-pedido/${idPedido}/${idGrafica}`, {
+        const response = await fetch('/gerarProtocoloEntrega', {
           method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
+          headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({
-            idPedido: idPedidoCancl,
-            graficaId: graficaId,
+            id: idPedidoGlobal,
+            nomeGrafica,
+            cliente: nomeCliente,
+            endereco: endereco.rua,
+            cidade: endereco.cidade,
+            estado: endereco.estado,
+            quantidade: enderecos.length,
+            item: endereco.idProduto || '',
+            observacoes: endereco.observacoes || ''
           }),
         });
-
-        if (!response.ok) {
-          throw new Error(`Erro ao cancelar pedido: ${response.statusText}`);
-        }
-
         const data = await response.json();
-        if (data.success) {
-          console.log('Pedido cancelado com sucesso!');
-          setTimeout(() => {
-            window.location.href = '/graficas/painel';
-          }, 3000)
-          // Redirecione ou faça outras ações necessárias após o cancelamento
-        } else {
-          console.error('Erro ao cancelar pedido:', data.message);
-        }
-      } catch (error) {
-        console.error('Erro ao cancelar pedido:', error);
+        window.open(data.protocolo.webViewLink);
+      } catch (err) {
+        console.error('Erro ao gerar protocolo', err);
       }
     });
 
-    btnConfEnt.addEventListener('click', async () => {
-      carregamento.style.display = 'block';
-      const recEnt = document.getElementById('recEnt').value;
-      const horEnt = document.getElementById('horEnt').value;
-      const fotoEnt = document.getElementById('fotoEnt').files[0];
-      const produtoEnt = document.getElementById('produtoEnt').files[0];
-      const protocoloEnt = document.getElementById('protocoloEnt').files[0];
-      const currentPedidoId = urlParams.get('idPedido');
-      const obsEnt = document.getElementById('obsEnt').value;
-      const formData = new FormData();
-      formData.append('recEnt', recEnt);
-      formData.append('horEnt', horEnt);
-      formData.append('fotoEnt', fotoEnt);
-      formData.append('produtoEnt', produtoEnt);
-      formData.append('protocoloEnt', protocoloEnt);
-      formData.append('pedidoId', currentPedidoId);
-      formData.append('tipo', tipo);
-      formData.append('obsEnt', obsEnt);
-
-      try {
-          const response = await fetch('/dadosEntrega', {
-              method: 'POST',
-              body: formData
-          });
-
-          if (!response.ok) {
-              throw new Error(`Erro ao enviar dados: ${response.statusText}`);
-          }
-
-          console.log('Dados enviados com sucesso!');
-          // Faça qualquer ação necessária após o envio dos dados
-          try {
-          const idPedido = currentPedidoId;
-          const novoStatus = 'Entregue';
-
-          const response = await fetch('/atualizar-status-pedido', {
-            method: 'POST',
-            headers: {
-              'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({
-              pedidoId: idPedido,
-              novoStatus: novoStatus,
-            }),
-          });
-
-          if (!response.ok) {
-            throw new Error(`Erro ao enviar pedido: ${response.statusText}`);
-          }
-
-          // Redirect to after updating the order status
-          window.setTimeout(() => {
-            carregamento.style.display = 'none';
-            window.location.href = '/graficas/painel';
-          },5000)
-         
-
-        } catch (error) {
-          console.error('Erro ao enviar pedido:', error);
-        }
-      } catch (error) {
-          console.error('Erro ao enviar dados:', error);
-      }
+    divEndereco.appendChild(btnProtocolo);
+    detalhesEntrega.appendChild(divEndereco);
   });
+
+  produtoInfo.appendChild(detalhesEntrega);
+}
+
+// ---------------------------
+// Função principal
+// ---------------------------
+document.addEventListener('DOMContentLoaded', async () => {
+  const urlParams = new URLSearchParams(window.location.search);
+  idPedidoGlobal = urlParams.get('idPedido');
+
+  if (!idPedidoGlobal) {
+    console.error('ID do pedido não fornecido na URL');
+    return;
+  }
+
+  try {
+    const res = await fetch(`/pedido-detalhes?id=${idPedidoGlobal}`);
+    const data = await res.json();
+
+    if (data.message) {
+      produtoInfo.innerHTML = `<p>${data.message}</p>`;
+      return;
+    }
+
+    tipoEntrega = data.enderecos[0]?.tipoEntrega;
+    nomeLoja = data.loja;
+
+    await renderProdutosPedido(data.produtos, data.nomeCliente);
+    renderEnderecos(data.enderecos, data.nomeCliente);
+
+    // Ajustar botões conforme status do pedido
+    const statusAtual = data.produtos[0].statusPed;
+    let novoStatus = '';
+    if (statusAtual === "Recebido") novoStatus = "Em produção";
+    else if (statusAtual === "Em produção") novoStatus = "Finalizado/Enviado para Transporte";
+    else if (statusAtual === "Finalizado/Enviado para Transporte") novoStatus = "Entregue";
+
+    if (statusAtual === "Finalizado/Enviado para Transporte") {
+      btnAceitarPedido.textContent = "Enviar Pedido";
+      btnCancelarPedido.style.display = 'none';
+    }
+    if (statusAtual === "Entregue") {
+      btnAceitarPedido.style.display = 'none';
+      btnCancelarPedido.style.display = 'none';
+      avisoEntregue.style.display = 'block';
+    }
+
+    // ---------------------------
+    // Aceitar / avançar status
+    // ---------------------------
+    btnAceitarPedido.addEventListener('click', async () => {
+      try {
+        const response = await fetch('/atualizar-status-pedido', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ pedidoId: idPedidoGlobal, novoStatus, tipoPed: tipoEntrega === "Múltiplos Enderecos" ? "Mult" : "Norm" }),
+        });
+        const result = await response.json();
+        if (result.success) window.location.href = '/graficas/painel';
+      } catch (err) {
+        console.error('Erro ao atualizar status', err);
+      }
+    });
+
+    // ---------------------------
+    // Cancelar pedido
+    // ---------------------------
+    btnCancelarPedido.addEventListener('click', async () => {
+      if (!confirm('Tem certeza que deseja cancelar o pedido?')) return;
+      try {
+        const graficaId = document.cookie.replace(/(?:(?:^|.*;\s*)graficaId\s*\=\s*([^;]*).*$)|^.*$/, "$1");
+        const response = await fetch(`/cancelar-pedido/${idPedidoGlobal}/${graficaId}`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ idPedido: idPedidoGlobal }),
+        });
+        const result = await response.json();
+        if (result.success) window.location.href = '/graficas/painel';
+      } catch (err) {
+        console.error('Erro ao cancelar pedido', err);
+      }
+    });
+
+  } catch (err) {
+    console.error('Erro ao carregar detalhes do pedido', err);
+    produtoInfo.innerHTML = `<p>Erro ao carregar detalhes do pedido.</p>`;
+  }
+});

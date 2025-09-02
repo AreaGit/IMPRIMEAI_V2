@@ -150,144 +150,51 @@ app.get('/pedidos-cadastrados', async (req, res) => {
     console.log('🔍 Iniciando rota /pedidos-cadastrados');
 
     const graficaId = req.cookies.graficaId;
-    console.log('🧾 ID da gráfica recebido:', graficaId);
-
     if (!graficaId) {
-      console.warn('⚠️ Usuário não autenticado. Cookie graficaId não encontrado.');
       return res.status(401).json({ message: "Usuário não autenticado" });
     }
 
     const grafica = await Graficas.findByPk(graficaId);
     if (!grafica) {
-      console.warn('⚠️ Gráfica não encontrada no banco de dados.');
       return res.status(404).json({ message: "Usuário não encontrado" });
     }
-    console.log('✅ Gráfica autenticada:', grafica.nomeFantasia || grafica.id);
 
-    const apiKey = 'Ao6IBGy_Nf0u4t9E88BYDytyK5mK3kObchF4R0NV5h--iZ6YgwXPMJEckhAEaKlH';
-
-    const pedidosCadastrados = await ItensPedido.findAll({
+    // Buscar itens dos pedidos
+    const itens = await ItensPedido.findAll({
       where: {
-        statusPed: ['Recebido', 'Em Produção', 'Finalizado/Enviado para Transporte', 'Entregue'],
-        statusPag: ['Pago', 'Aguardando']
+        statusPed: { [Op.in]: ['Recebido', 'Em Produção', 'Finalizado/Enviado para Transporte', 'Entregue'] },
+        statusPag: { [Op.in]: ['Pago', 'Aguardando'] }
       },
+      raw: true
     });
-    console.log(`📦 Pedidos cadastrados encontrados: ${pedidosCadastrados.length}`);
 
-    const graficas = await Graficas.findAll({ where: { status: 'Ativa' } });
-    console.log(`🏭 Gráficas ativas encontradas: ${graficas.length}`);
-
-    const pedidosProximos = await Promise.all(pedidosCadastrados.map(async (pedido, index) => {
-      console.log(`\n➡️ Processando pedido ${index + 1} - ID: ${pedido.id}, Produto: ${pedido.nomeProd}`);
-
-      const enderecosPedido = await Enderecos.findAll({
-        where: { id: pedido.id },
-      });
-      console.log(`📍 Endereços encontrados para o pedido: ${enderecosPedido.length}`);
-
-      const pedidosFiltrados = await Promise.all(enderecosPedido.map(async (enderecoPedido) => {
-        console.log('📌 Endereço atual:', enderecoPedido);
-
-        const enderecoEntregaInfo = {
-          endereco: enderecoPedido.rua,
-          cep: enderecoPedido.cep,
-          cidade: enderecoPedido.cidade,
-          estado: enderecoPedido.estado,
-        };
-
-        const coordinatesEnd = await getCoordinatesFromAddress(enderecoEntregaInfo, apiKey);
-        console.log('📍 Coordenadas do endereço de entrega:', coordinatesEnd);
-
-        if (coordinatesEnd.latitude && coordinatesEnd.longitude) {
-          let distanciaMinima = Infinity;
-          let graficaMaisProxima = null;
-
-          await Promise.all(graficas.map(async (graficaAtual) => {
-            const graficaCoordinates = await getCoordinatesFromAddress({
-              endereco: graficaAtual.enderecoCad,
-              cep: graficaAtual.cepCad,
-              cidade: graficaAtual.cidadeCad,
-              estado: graficaAtual.estadoCad,
-            }, apiKey);
-
-            const distanceToGrafica = haversineDistance(
-              graficaCoordinates.latitude,
-              graficaCoordinates.longitude,
-              coordinatesEnd.latitude,
-              coordinatesEnd.longitude
-            );
-
-            console.log(`📏 Distância até ${graficaAtual.nomeFantasia || graficaAtual.id}: ${distanceToGrafica.toFixed(2)} km`);
-
-            if (distanceToGrafica < distanciaMinima) {
-              distanciaMinima = distanceToGrafica;
-              graficaMaisProxima = graficaAtual;
-            }
-          }));
-
-          console.log(`✅ Gráfica mais próxima: ${graficaMaisProxima.nomeFantasia || graficaMaisProxima.id}, Distância: ${distanciaMinima.toFixed(2)} km`);
-
-          let produtosGrafica;
-          if (typeof graficaMaisProxima.produtos === 'string') {
-            const fixedJsonString = graficaMaisProxima.produtos.replace(/'/g, '"');
-            produtosGrafica = JSON.parse(fixedJsonString);
-          } else {
-            produtosGrafica = graficaMaisProxima.produtos;
-          }
-
-          const produtosExc = await ProdutosExc.findOne({ where: { nomeProd: pedido.nomeProd } });
-          console.log(`🎯 Produto "${pedido.nomeProd}" é exclusivo?`, !!produtosExc);
-
-          if (produtosExc) {
-            if (distanciaMinima <= (pedido.raio || 30)) {
-              console.log('📦 Produto exclusivo dentro do raio. Associando pedido.');
-              return {
-                ...pedido.dataValues,
-                enderecoId: enderecoPedido.id,
-                graficaId: graficaMaisProxima.id,
-              };
-            } else {
-              console.log('🚫 Produto exclusivo fora do raio.');
-            }
-          } else {
-            if (produtosGrafica && produtosGrafica[pedido.nomeProd]) {
-              console.log('📦 Produto encontrado nos produtos da gráfica. Associando pedido.');
-              return {
-                ...pedido.dataValues,
-                enderecoId: enderecoPedido.id,
-                graficaId: graficaMaisProxima.id,
-              };
-            } else {
-              console.log('🚫 Produto não está entre os produtos da gráfica.');
-            }
-          }
-        } else {
-          console.log('🚫 Endereço do pedido não retornou coordenadas.');
-        }
-
-        return null;
-      }));
-
-      return pedidosFiltrados.filter(p => p !== null);
-    }));
-
-    const todosPedidos = pedidosProximos.flat();
-    console.log(`🧮 Total de pedidos com gráfica associada: ${todosPedidos.length}`);
-
-    if (todosPedidos.length > 0) {
-      const pedidosParaGrafica = todosPedidos.filter((pedido) => pedido.graficaId === grafica.id);
-      console.log(`🎯 Pedidos atribuídos à gráfica atual: ${pedidosParaGrafica.length}`);
-
-      if (pedidosParaGrafica.length > 0) {
-        return res.json({ pedidos: pedidosParaGrafica });
-      } else {
-        console.log('🔕 Nenhum pedido próximo à gráfica atual encontrado.');
-        return res.json({ message: 'Nenhum pedido próximo à gráfica atual encontrado.' });
-      }
-    } else {
-      console.log('🔍 Nenhum pedido foi associado a uma gráfica.');
-      return res.json({ message: 'Nenhum pedido encontrado.' });
+    if (!itens.length) {
+      return res.json({ pedidos: [] });
     }
+
+    // Agrupar por idPed
+    const pedidosAgrupados = itens.reduce((acc, item) => {
+      if (!acc[item.idPed]) {
+        acc[item.idPed] = {
+          idPed: item.idPed,
+          statusPed: item.statusPed,
+          createdAt: item.createdAt,
+          produtos: []
+        };
+      }
+
+      acc[item.idPed].produtos.push({
+        idProduto: item.idProduto,
+        nomeProd: item.nomeProd,
+        quantidade: item.quantidade
+      });
+
+      return acc;
+    }, {});
+
+    const resultado = Object.values(pedidosAgrupados);
+
+    return res.json({ pedidos: resultado });
 
   } catch (error) {
     console.error('❌ Erro ao buscar pedidos cadastrados:', error);
@@ -372,63 +279,6 @@ app.get('/pedido-detalhes', async (req, res) => {
   }
 });
 
-  app.get('/detalhes-pedido/:idPedido/:idProduto', async (req, res) => {
-    try {
-      const { idPedido, idProduto } = req.params;
-  
-      // Buscar detalhes do pedido
-      const pedido = await Pedidos.findByPk(idPedido, {
-        include: [
-          {
-            model: ItensPedido,
-            where: { idPed: idPedido, idProduto: idProduto },
-            include: [
-              {
-                model: Produtos,
-                attributes: ['id', 'nomeProd', 'descProd', 'valorProd', 'categProd', 'raioProd', 'imgProd'],
-              },
-            ],
-          },
-          {
-            model: Enderecos,
-            where: { idPed: idPedido, idProduto: idProduto },
-            include: [
-              {
-                model: Produtos,
-                attributes: ['id'], // Adicione outros atributos do Produto conforme necessário
-              },
-            ],
-            distinct: true, // Garante endereços distintos
-          },
-          // ... outras associações necessárias
-        ],
-      });
-  
-      if (!pedido) {
-        return res.status(404).json({ error: 'Pedido não encontrado' });
-      }
-  
-      // Agora que temos o pedido, buscamos o usuário correspondente
-      const { idUserPed } = pedido;
-      let usuario;
-      if(pedido.itenspedidos[0].tipo == "Empresas") {
-        usuario = await UserEmpresas.findByPk(idUserPed);
-      } else {
-        usuario = await User.findByPk(idUserPed);
-      }
-      if (!usuario) {
-        return res.status(404).json({ error: 'Usuário não encontrado' });
-      }
-  
-      // Respondendo com os detalhes do pedido e informações do usuário
-      res.json({ pedido, usuario });
-  
-    } catch (error) {
-      console.error('Erro ao buscar detalhes do pedido:', error);
-      res.status(500).json({ error: 'Erro ao buscar detalhes do pedido' });
-    }
-  });
-  
   app.get('/imagem-produto/:id', async (req, res) => {
     try {
       const idProduto = req.params.id;
@@ -451,83 +301,103 @@ app.get('/pedido-detalhes', async (req, res) => {
     }
   });
 
-  app.post('/atualizar-status-pedido', async (req, res) => {
-    try {
-      const { pedidoId, novoStatus, tipoPed } = req.body;
+// ==========================
+// Detalhes do pedido
+// ==========================
+app.get('/detalhes-pedido/:idPedido/:idProduto', async (req, res) => {
+  try {
+    const { idPedido, idProduto } = req.params;
 
-      // Atualize o status do pedido na tabela Pedidos
-      const graficaId = req.cookies.graficaId; // Assuming the graphics company's ID is stored in a cookie
-      console.log(graficaId)
-      const pedido = await ItensPedido.findOne( { where: {idPed: pedidoId} } );
-      const tablePedidos = await Pedidos.findOne({ where: {id: pedidoId} });
-      const tableEnderecos = await Enderecos.findOne({ where: {idPed: pedidoId} });
-      if (!pedido) {
-        return res.json({ success: false, message: 'Pedido não encontrado.' });
-      }
-      // Procurar o usuário pelo idUser
-      const ped = await ItensPedidos.findOne( { where: {idPed: pedidoId} } );
-      const userId = ped.idUserPed; // Ou qualquer forma que você tenha o id do usuário
-      let user;
-      if(ped.tipo == "Empresas") {
-        user = await UserEmpresas.findByPk(userId);
-      } else {
-        user = await User.findByPk(userId)
-      }
+    // Buscar pedido com itens e endereços
+    const pedido = await Pedidos.findByPk(idPedido, {
+      include: [
+        {
+          model: ItensPedido,
+          where: { idPed: idPedido },
+          include: [
+            {
+              model: Produtos,
+              attributes: ['id', 'nomeProd', 'descProd', 'valorProd', 'categProd', 'raioProd', 'imgProd'],
+            },
+          ],
+        },
+        {
+          model: Enderecos,
+          where: { idPed: idPedido },
+          required: false, // Permite pedidos sem endereços
+        },
+      ],
+    });
 
-      // Verifica se o tipo de entrega é "Entrega a Retirar na Loja"
-    if (tableEnderecos.tipoEntrega === "Entrega a Retirar na Loja") {
+    if (!pedido) return res.status(404).json({ error: 'Pedido não encontrado' });
+
+    // Buscar usuário
+    const { idUserPed } = pedido;
+    let usuario;
+    const tipo = pedido.itenspedidos[0].tipo;
+    if (tipo === "Empresas") {
+      usuario = await UserEmpresas.findByPk(idUserPed);
+    } else {
+      usuario = await User.findByPk(idUserPed);
+    }
+
+    if (!usuario) return res.status(404).json({ error: 'Usuário não encontrado' });
+
+    res.json({ pedido, usuario });
+  } catch (error) {
+    console.error('Erro ao buscar detalhes do pedido:', error);
+    res.status(500).json({ error: 'Erro ao buscar detalhes do pedido' });
+  }
+});
+
+// ==========================
+// Atualizar status do pedido
+// ==========================
+app.post('/atualizar-status-pedido', async (req, res) => {
+  try {
+    const { pedidoId, novoStatus, tipoPed } = req.body;
+    const graficaId = req.cookies.graficaId;
+
+    // Buscar pedido e endereço
+    const pedido = await Pedidos.findByPk(pedidoId, { include: [ItensPedido, Enderecos] });
+    if (!pedido) return res.json({ success: false, message: 'Pedido não encontrado' });
+
+    const enderecos = pedido.enderecos;
+    const itensPedido = pedido.itenspedidos;
+
+    // Atualiza endereço se for "Retirar na Loja"
+    if (enderecos.length > 0 && enderecos[0].tipoEntrega === "Entrega a Retirar na Loja") {
       const grafica = await Graficas.findByPk(graficaId);
-      if (!grafica) {
-        return res.status(404).json({ message: 'Gráfica não encontrada' });
-      }
-
-      // Atualiza o endereço do pedido com os dados da gráfica
-      const enderecoPedido = await Enderecos.findOne( { where: {idPed: pedidoId} } );
-      if (enderecoPedido) {
-        enderecoPedido.rua = grafica.enderecoCad;
-        enderecoPedido.cidade = grafica.cidadeCad;
-        enderecoPedido.estado = grafica.estadoCad;
-        enderecoPedido.cep = grafica.cepCad;
-        enderecoPedido.tipoEntrega = 'Entrega a Retirar na Loja';
-        await enderecoPedido.save();
-        console.log('Endereço atualizado para os dados da gráfica.');
-      } else {
-        console.log('Endereço do pedido não encontrado.');
+      if (grafica) {
+        for (const endereco of enderecos) {
+          endereco.rua = grafica.enderecoCad;
+          endereco.cidade = grafica.cidadeCad;
+          endereco.estado = grafica.estadoCad;
+          endereco.cep = grafica.cepCad;
+          endereco.tipoEntrega = 'Entrega a Retirar na Loja';
+          await endereco.save();
+        }
       }
     }
 
-      if(tipoPed == "Mult") {
-        if (!pedido) {
-          return res.json({ success: false, message: 'Pedido não encontrado.' });
-        }
-        pedido.statusPed = novoStatus;
-        pedido.graficaAtend = graficaId; // Save the graphics company's ID
-        await pedido.save();
-      } else{
-        // Pega o ID da gráfica nos cookies
-        const graficaId = req.cookies.graficaId; // Assuming the graphics company's ID is stored in a cookie
-        console.log(graficaId);
+    // Atualiza status dos itens
+    for (const item of itensPedido) {
+      item.statusPed = novoStatus;
+      item.graficaAtend = graficaId;
+      await item.save();
+    }
 
-        // Procura o pedido com base no 'idPed' na tabela 'ItensPedido'
-        const pedido = await ItensPedido.findOne({ where: { idPed: pedidoId } });
+    // Buscar usuário
+    const userId = itensPedido[0].idUserPed;
+    let user;
+    if (itensPedido[0].tipo === "Empresas") {
+      user = await UserEmpresas.findByPk(userId);
+    } else {
+      user = await User.findByPk(userId);
+    }
 
-        // Também busca o pedido na tabela 'Pedidos' baseado em 'id'
-        const tablePedidos = await Pedidos.findOne({ where: { id: pedidoId } });
-
-        if (!pedido || !tablePedidos) {
-          return res.json({ success: false, message: 'Pedido não encontrado.' });
-        }
-
-        // Procura o usuário pelo 'idUserPed' do pedido
-        const userId = pedido.idUserPed;
-
-        // Atualiza o status do pedido
-        pedido.statusPed = novoStatus;
-        pedido.graficaAtend = graficaId; // Salva o ID da gráfica que está atendendo o pedido
-        await pedido.save();
-      }
-      
-      if(novoStatus === "Em produção") {
+    // Enviar notificação WhatsApp
+    if(novoStatus === "Em produção") {
         //mensagem whatsapp
         const corpoMensagem = `Olá, ${user.userCad}! 👋
 
@@ -601,94 +471,74 @@ Pri
         await pedido.save();
       }      
 
-      return res.json({ success: true, graficaAtend: graficaId, /*itensPedidos*/ });
-    } catch (error) {
-      console.error('Erro ao atualizar o status do pedido:', error);
-      return res.json({ success: false, message: 'Erro ao atualizar o status do pedido.' });
-    }
-  });
+    res.json({ success: true, graficaAtend: graficaId });
+  } catch (error) {
+    console.error('Erro ao atualizar o status do pedido:', error);
+    res.json({ success: false, message: 'Erro ao atualizar o status do pedido' });
+  }
+});
 
-  app.post('/cancelar-pedido/:idPedido/:idGrafica', async (req, res) => {
-    try {
-      const graficaId = req.params.idGrafica;
-      const idPedido = req.body.idPedido;
-  
-      console.log('Grafica ID', graficaId, 'Pedido ID', idPedido);
-  
-      // Atualize o pedido
-      const pedido = await ItensPedido.findByPk(idPedido);
-  
-      if (!pedido) {
-        return res.status(404).json({ message: 'Pedido não encontrado' });
-      }
-  
-      await pedido.update({
-        graficaCancl: graficaId,
-      });
-  
-      // Atualize os itens do pedido
-      const itensPedido = await ItensPedido.findAll({
-        where: {
-          id: idPedido,
-        },
-      });
-  
-      for (const itemPedido of itensPedido) {
-        await itemPedido.update({
-          graficaCancl: graficaId,
-        });
-      }
-  
-      res.json({ success: true, message: `Pedido ${idPedido} cancelado com sucesso` });
-    } catch (error) {
-      console.error('Erro ao cancelar pedido:', error);
-      res.status(500).json({ error: 'Erro ao cancelar pedido', message: error.message });
+// ==========================
+// Cancelar pedido
+// ==========================
+app.post('/cancelar-pedido/:idPedido/:idGrafica', async (req, res) => {
+  try {
+    const graficaId = req.params.idGrafica;
+    const idPedido = req.body.idPedido;
+
+    const itensPedido = await ItensPedido.findAll({ where: { idPed: idPedido } });
+    if (!itensPedido || itensPedido.length === 0) {
+      return res.status(404).json({ message: 'Pedido não encontrado' });
     }
-  });
-  
-  app.post('/atualizar-endereco-entrega', async (req, res) => {
-    const idPedido = req.body.pedidoId;
-    const idGrafica = req.cookies.graficaId;
-  
-    try {
-      // Verificar se o pedido existe
-      const pedido = await Pedidos.findByPk(idPedido);
-      const enderecoPedido = await Enderecos.findByPk(idPedido);
-  
-      if (!pedido || !enderecoPedido) {
-        return res.status(404).json({ error: 'Pedido não encontrado' });
-      }
-  
-      // Verificar se o endereço do pedido indica "Entrega a Retirar na Loja"
-      if (enderecoPedido.tipoEntrega === 'Entrega a Retirar na Loja') {
-        // Buscar a gráfica no banco de dados usando o idGrafica
-        const grafica = await Graficas.findByPk(idGrafica);
-  
-        if (!grafica) {
-          return res.status(404).json({ error: 'Gráfica não encontrada' });
-        }
-  
-        // Atualizar o endereço do pedido com os dados da gráfica
-        enderecoPedido.rua = grafica.endereçoCad;
-        enderecoPedido.cidade = grafica.cidadeCad;
-        enderecoPedido.estado = grafica.estadoCad;
-        enderecoPedido.cep = grafica.cepCad;
-        enderecoPedido.tipoEntrega = 'Entrega a Retirar na Loja';
-  
-        // Salvar as alterações no banco de dados
-        await enderecoPedido.save();
-  
-        // Retornar uma resposta de sucesso
-        res.json({ success: true, message: 'Endereço de entrega atualizado com sucesso' });
-      } else {
-        // Se o endereço não for "Entrega a Retirar na Loja", retornar uma mensagem indicando que não é necessário atualizar
-        res.json({ success: false, message: 'Endereço de entrega já está atualizado' });
-      }
-    } catch (error) {
-      console.error('Erro ao atualizar o endereço de entrega:', error);
-      res.status(500).json({ error: 'Erro interno do servidor' });
+
+    for (const item of itensPedido) {
+      item.graficaCancl = graficaId;
+      await item.save();
     }
-  });
+
+    res.json({ success: true, message: `Pedido ${idPedido} cancelado com sucesso` });
+  } catch (error) {
+    console.error('Erro ao cancelar pedido:', error);
+    res.status(500).json({ error: 'Erro ao cancelar pedido', message: error.message });
+  }
+});
+
+// ==========================
+// Atualizar endereço de entrega
+// ==========================
+app.post('/atualizar-endereco-entrega', async (req, res) => {
+  const idPedido = req.body.pedidoId;
+  const idGrafica = req.cookies.graficaId;
+
+  try {
+    const pedido = await Pedidos.findByPk(idPedido);
+    if (!pedido) return res.status(404).json({ error: 'Pedido não encontrado' });
+
+    const enderecosPedido = await Enderecos.findAll({ where: { idPed: idPedido } });
+    if (!enderecosPedido || enderecosPedido.length === 0) {
+      return res.status(404).json({ error: 'Endereços do pedido não encontrados' });
+    }
+
+    const grafica = await Graficas.findByPk(idGrafica);
+    if (!grafica) return res.status(404).json({ error: 'Gráfica não encontrada' });
+
+    for (const endereco of enderecosPedido) {
+      if (endereco.tipoEntrega === 'Entrega a Retirar na Loja') {
+        endereco.rua = grafica.enderecoCad;
+        endereco.cidade = grafica.cidadeCad;
+        endereco.estado = grafica.estadoCad;
+        endereco.cep = grafica.cepCad;
+        endereco.tipoEntrega = 'Entrega a Retirar na Loja';
+        await endereco.save();
+      }
+    }
+
+    res.json({ success: true, message: 'Endereços de entrega atualizados com sucesso' });
+  } catch (error) {
+    console.error('Erro ao atualizar o endereço de entrega:', error);
+    res.status(500).json({ error: 'Erro interno do servidor' });
+  }
+});
   app.post('/gerarProtocoloEntrega', async(req, res) => {
     const enderecoData = req.body;  // Dados recebidos no corpo da requisição
     
