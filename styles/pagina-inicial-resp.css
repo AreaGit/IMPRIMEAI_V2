@@ -469,7 +469,7 @@
         position: absolute;
         height: 460px;
         width: 100%;
-        z-index: -1;
+        z-index: 1;
     }
     div#banners {
         height: 165px;
@@ -665,7 +665,7 @@
         position: absolute;
         height: 460px;
         width: 100%;
-        z-index: -1;
+        z-index: 1;
     }
     div#banners {
         height: 165px;
@@ -779,8 +779,16 @@
         position: relative;
         left: 50%;
         transform: translate(-50%);
-        top: 435px;
+        top: 550px;
         cursor: pointer;
+    }
+
+    #progress {
+        display: flex;
+        justify-content: center;
+        margin-top: 50px;
+        position: relative;
+        top: 70px;
     }
     .contentFooter {
         height: 490px;
@@ -861,7 +869,7 @@
         position: absolute;
         height: 65vw;
         width: 100%;
-        z-index: -1;
+        z-index: 1;
     }
     div#suggestions-container {
         display: none;
@@ -1035,7 +1043,7 @@
         position: absolute;
         height: 28vw;
         width: 100%;
-        z-index: -1;
+        z-index: 1;
     }
 
     .linksHeader {
@@ -1220,6 +1228,9 @@
     }
 }
 @media screen and (min-width:1636px) and (max-width:1789px) {
+    .mainContentHeader {
+        z-index: 1;
+    }
     .messageHeader {
     position: absolute;
     left: 14%;
@@ -1334,6 +1345,13 @@
         height: 30vw;
     }
 }
+
+@media screen and (min-width:1790px) {
+    .mainContentHeader {
+        z-index: 1;
+    }
+}
+
 @media screen and (min-width:2100px) {
     
     div#banners {
