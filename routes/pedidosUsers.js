@@ -1500,7 +1500,7 @@ await enviarNotificacaoWhatsapp(telefone, mensagemWhatsapp);
     req.session.endereco = {};
 
     // Enviar resposta ao cliente
-    res.status(200).json({ message: 'Pedido criado com sucesso!' });
+    res.status(200).json({ message: 'Pedido criado com sucesso!', idPed: pedido.id });
 
   } catch (error) {
     console.error('Erro ao criar pedidos:', error);
@@ -2791,6 +2791,81 @@ app.get('/pedidos-usuario-empresa/:userId', async (req, res) => {
         .json({ error: 'Erro ao buscar detalhes do pedido', message: error.message });
     }
   });
+
+  app.get('/detalhes-pedidoAprovadoUser/:idPedido', async (req, res) => {
+  try {
+    const idPedido = req.params.idPedido;
+
+    const pedido = await Pedidos.findByPk(idPedido, {
+      include: [
+        {
+          model: ItensPedido, // cuidado: o nome certo do model deve bater
+          include: [
+            {
+              model: Produtos,
+              attributes: [
+                'id',
+                'nomeProd',
+                'valorProd',
+                'imgProd'
+              ],
+            },
+          ],
+        },
+        {
+          model: Enderecos
+        }
+      ],
+    });
+
+    if (!pedido) {
+      return res.status(404).json({ error: 'Pedido não encontrado' });
+    }
+
+    // Mapeando os itens com dados do produto
+    const itensDoPedido = pedido.itenspedidos.map(item => ({
+      id: item.id,
+      idProduto: item.idProduto,
+      nomeProd: item.nomeProd || item.produto?.nomeProd,
+      quantidade: item.quantidade,
+      valorProd: item.valorProd || item.produto?.valorProd,
+      marca: item.marca,
+      modelo: item.modelo,
+      acabamento: item.acabamento,
+      cor: item.cor,
+      enobrecimento: item.enobrecimento,
+      formato: item.formato,
+      material: item.material,
+      linkDownload: item.linkDownload,
+      nomeArquivo: item.nomeArquivo,
+      tipo: item.tipo,
+      arteEmpresas: item.arteEmpresas,
+      imgProd: item.produto?.imgProd || null
+    }));
+
+    const enderecosDoPedido = pedido.enderecos;
+
+    // Montando resposta organizada
+    res.json({
+      pedido: {
+        id: pedido.id,
+        status: pedido.statusPed,
+        total: pedido.total,
+        data: pedido.createdAt,
+        metodo: pedido.metodPag
+      },
+      itens: itensDoPedido,
+      enderecos: enderecosDoPedido
+    });
+
+  } catch (error) {
+    console.error('Erro ao buscar detalhes do pedido:', error);
+    res.status(500).json({
+      error: 'Erro ao buscar detalhes do pedido',
+      message: error.message
+    });
+  }
+});
 
 app.post('/processarPagamento-pix', async(req, res) => {
   const perfilData = req.body.perfilData;

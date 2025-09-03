@@ -27,7 +27,7 @@ const avisoAguardeCancelamento = document.getElementById('avisoAguardeCancelamen
 const avisoTransacaoErro = document.getElementById('avisoTransacaoErro');
 const avisoFalhaTransacao = document.getElementById('avisoFalhaTransacao');
 const criacaoBoleto = document.getElementById('criacaoBoleto');
-const carregamento = document.getElementById('carregamento');
+const carregamento = document.getElementById('popup-loading');
 const cartaoContainer = document.getElementById('cartaoContainer');
 let metodPag;
 let idTransacao;
@@ -38,6 +38,22 @@ function getCookie(name) {
   const parts = value.split(`; ${name}=`);
   if (parts.length === 2) return parts.pop().split(';').shift();
 };
+
+    // Exemplo de como abrir/fechar popups via JS
+    function showPopup(id) {
+      document.getElementById(id).classList.add('active');
+    }
+
+    function hidePopup(id) {
+      document.getElementById(id).classList.remove('active');
+    }
+
+    // Fechar ao clicar no overlay
+    document.querySelectorAll('.popup').forEach(p => {
+      p.addEventListener('click', e => {
+        if (e.target === p) hidePopup(p.id);
+      });
+    });
 
 // Função para fazer o fetch do endereço
 async function fetchEndereco() {
@@ -201,64 +217,56 @@ btnContPag.addEventListener('click', () => {
 
 async function criarPedido() {
   try {
-        const totalAPagar = valorAtualGlobal;  
+    const totalAPagar = valorAtualGlobal;
 
-        // Crie um objeto XMLHttpRequest
-        const xhr = new XMLHttpRequest();
+    const pedidoData = {
+      valorPed: totalAPagar,
+      metodPag,
+      idTransacao,
+      linkPagamento,
+      dataVencimento
+    };
 
-        // Configure a solicitação POST
-        xhr.open('POST', '/criar-pedidos', true);
-        xhr.setRequestHeader('Content-Type', 'application/json');
+    console.log('PEDIDO CRIADO');
 
-        // Defina o manipulador de eventos para a resposta da solicitação
-        xhr.onload = function () {
-          if (xhr.status === 200) {
-            // A solicitação foi bem-sucedida, você pode processar a resposta aqui
-            const response = JSON.parse(xhr.responseText);
-            carregamento.style.display = 'none';
-            cartaoContainer.style.display = 'none';
-            if(metodPag === 'BOLETO') {
-              carregamento.style.display = 'none';
-              criacaoBoleto.style.display = 'block';
-            } else {
-              carregamento.style.display = 'none';
-              pedidoCriado.style.display = 'block';
-            }
-            setTimeout(() => {
-              criacaoBoleto.style.display = 'none';
-              pedidoCriado.style.display = 'none';
-              window.location.href = 'perfil';
-            }, 10000);
-          } else {
-            // A solicitação não foi bem-sucedida, trate o erro aqui
-            console.error('Erro ao finalizar a compra:', xhr.statusText);
-            alert('Erro ao finalizar a compra');
-          }
-        };
+    carregamento.style.display = 'block';
 
-        // Trate erros de rede
-        xhr.onerror = function () {
-          console.error('Erro de rede ao finalizar a compra');
-          alert('Erro de rede ao finalizar a compra');
-        };
+    const response = await fetch('/criar-pedidos', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(pedidoData)
+    });
 
-        // Crie um objeto com os dados do pedido, incluindo o valor total do carrinho
-        const pedidoData = {
-          valorPed: totalAPagar, // Atualize valorPed com o valor total do carrinho
-          metodPag,
-          idTransacao,
-          linkPagamento,
-          dataVencimento
-        };
-        console.log('PEDIDO CRIADO')
-        carregamento.style.display = 'block';
-        // Envie os dados como JSON
-        const requestData = JSON.stringify(pedidoData);
-        xhr.send(requestData);
+    if (!response.ok) {
+      throw new Error(`Erro ao finalizar a compra: ${response.statusText}`);
+    }
+
+    const responseData = await response.json();
+
+    carregamento.style.display = 'none';
+    cartaoContainer.style.display = 'none';
+
+    if (metodPag === 'BOLETO') {
+      criacaoBoleto.style.display = 'block';
+
+      setTimeout(() => {
+        criacaoBoleto.style.display = 'none';
+        pedidoCriado.style.display = 'none';
+        window.location.href = `/perfil`;
+      }, 10000);
+
+    } else {
+      window.open = `/pedido-aprovado?idPed=${responseData.idPed}`;
+      window.location.href = `/perfil`;
+    }
+
   } catch (error) {
-    console.error('Erro ao monitorar o status do PIX:', error);
+    console.error('Erro ao finalizar a compra:', error);
+    alert('Erro ao finalizar a compra');
   }
-};
+}
 
 async function criarPedidoBoleto(metodoPag, chargeId) {
   try {

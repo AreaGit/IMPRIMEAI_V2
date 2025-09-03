@@ -1016,6 +1016,16 @@ app.get('/pagamento', (req, res) => {
     res.status(500).send("Erro interno do servidor");
   }
 });
+//Rota get para página de pedido aprovado
+app.get('/pedido-aprovado', (req, res) => {
+  try {
+    const pagamentoContentHtml = fs.readFileSync(path.join(__dirname, "html", "pedido-aprovado.html"), "utf-8");
+    res.send(pagamentoContentHtml);
+  } catch (err) {
+    console.log("Erro ao ler o arquivo pedido-aprovado.html: ", err);
+    res.status(500).send("Erro interno do servidor");
+  }
+});
 //Rota get para a página de retirada
 app.get('/retirada', (req, res) => {
   try {
