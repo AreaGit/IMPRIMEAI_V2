@@ -399,6 +399,22 @@ app.get('/aplicar-desconto-cupom/:cupom', (req, res) => {
           console.error('Erro ao aplicar desconto do cupom:', error);
           res.status(500).json({ error: 'Erro ao aplicar desconto do cupom' });
       }
+  }else if(cupomInserido === 'FRETE100') {
+    req.session.cupom = 'FRETE100';
+    req.session.frete = 0; // zera o valor do frete
+    // Atualiza o endereço na sessão, se existir
+    if (req.session.endereco) {
+      if (Array.isArray(req.session.endereco)) {
+        req.session.endereco = req.session.endereco.map(e => ({ ...e, frete: 0 }));
+      } else {
+        req.session.endereco.frete = 0;
+        }
+      }
+      res.json({
+        success: true,
+        mensagem: 'Cupom FRETE100 aplicado. Frete grátis ativado!',
+        frete: 0
+      });
   } else {
       res.status(400).json({ error: 'Cupom inválido' });
   }
@@ -446,9 +462,13 @@ app.post('/salvar-endereco-no-carrinho', async (req, res) => {
     console.log('Distância mínima:', distanciaMinima);
     console.log('Custo do Frete:', custoDoFrete);
 
-    // Defina o frete na sessão
-    req.session.frete = custoDoFrete;
-    enderecoBase.frete = custoDoFrete;
+    
+    // Aplica frete grátis se o cupom FRETE100 estiver na sessão
+    const freteFinal = req.session.cupom === 'FRETE100' ? 0 : custoDoFrete;
+    
+    // Define o frete na sessão
+    req.session.frete = freteFinal;
+    enderecoBase.frete = freteFinal;
 
     // Crie um array para armazenar endereços quebrados
     const enderecosQuebrados = [];
@@ -492,10 +512,12 @@ app.post('/salvar-endereco-no-carrinho', async (req, res) => {
 // Rota para obter o valor do frete da sessão
 app.get('/api/frete', (req, res) => {
   try {
-    // Obtenha o valor do frete da sessão
-    const frete = req.session.frete || null;
+    let frete = req.session.frete || null;
 
-    // Envie o valor do frete como resposta em JSON
+    if (req.session.cupom === 'FRETE100') {
+      frete = 0;
+    }
+
     res.json({ frete });
   } catch (error) {
     console.error('Erro ao obter o valor do frete da sessão:', error);

@@ -433,7 +433,7 @@ Pri
       }
 
       if (novoStatus === "Entregue") {
-        const valorTotalPedido = tablePedidos.valorPed;
+        const valorTotalPedido = pedido.valorPed;
         const valorAdm = valorTotalPedido * 0.20;
         const valorGrafica = valorTotalPedido * 0.80;
       

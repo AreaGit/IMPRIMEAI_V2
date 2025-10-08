@@ -180,47 +180,72 @@ document.addEventListener('DOMContentLoaded', function() {
   // Por exemplo, após adicionar ou remover um produto do carrinho
   atualizarTotalItens();
 
-  const btnEnviarCupom = document.getElementById('btnEnviarCupom');
+const btnEnviarCupom = document.getElementById('btnEnviarCupom');
+
+if (btnEnviarCupom) {
   btnEnviarCupom.addEventListener('click', async () => {
-    async function atualizarTotalAPagar() {
-      const inputCupom = document.getElementById('cupom');
-      const cupom = inputCupom.value.trim(); // Remove espaços em branco extras
-      const avisoGeral = document.getElementById('avisoGeral');
-      const erroCarrinho = document.getElementById('erroCarrinho');
-      
-      try {
-          // Faça uma solicitação AJAX para verificar e aplicar o cupom
-          const response = await fetch(`/aplicar-desconto-cupom/${cupom}`);
-          if (!response.ok) {
-              throw new Error('Erro ao aplicar o cupom');
-          }
-  
-          const data = await response.json();
-          const novoValorTotal = data.novoValorTotal;
-  
-          // Atualize a exibição do total a pagar com o novo valor total do carrinho
-          const totalAPagarElement = document.getElementById('totalComp');
-          const totalAPagarElement2 = document.getElementById('total');
-          const totalAPagarElement3 = document.getElementById('subTotal');
-          totalAPagarElement.textContent = "R$ " + novoValorTotal.toFixed(2);
-          totalAPagarElement2.textContent = novoValorTotal.toFixed(2);
-    
-          avisoGeral.style.display = 'block'
-          setTimeout(() => {
-            avisoGeral.style.display = 'none'
-            window.location.reload();
-          }, 5000);
-      } catch (error) {
-        erroCarrinho.style.display = 'block'
+    const inputCupom = document.getElementById('cupom');
+    const avisoGeral = document.getElementById('avisoGeral');
+    const erroCarrinho = document.getElementById('erroCarrinho');
+    const totalAPagarElement = document.getElementById('totalComp');
+    const totalAPagarElement2 = document.getElementById('total');
+    const totalAPagarElement3 = document.getElementById('subTotal');
+
+    if (!inputCupom) return console.error('Campo de cupom não encontrado.');
+
+    const cupom = inputCupom.value.trim().toUpperCase();
+
+    if (!cupom) {
+      erroCarrinho.textContent = 'Digite um cupom antes de aplicar.';
+      erroCarrinho.style.display = 'block';
+      setTimeout(() => (erroCarrinho.style.display = 'none'), 3000);
+      return;
+    }
+
+    try {
+      const response = await fetch(`/aplicar-desconto-cupom/${cupom}`);
+      const data = await response.json();
+
+      if (!response.ok) {
+        throw new Error(data.error || 'Falha ao aplicar o cupom');
+      }
+
+      // Cupom FRETE100 (frete grátis)
+      if (data.frete === 0 && data.mensagem) {
+        avisoGeral.textContent = data.mensagem;
+        avisoGeral.style.display = 'block';
         setTimeout(() => {
-          erroCarrinho.style.display = 'none'
+          avisoGeral.style.display = 'none';
           window.location.reload();
         }, 3000);
+        return;
       }
+
+      // Cupom de desconto comum (ex: JORGE RAMOS)
+      if (typeof data.novoValorTotal === 'number') {
+        const novoValor = data.novoValorTotal.toFixed(2);
+        if (totalAPagarElement) totalAPagarElement.textContent = 'R$ ' + novoValor;
+        if (totalAPagarElement2) totalAPagarElement2.textContent = novoValor;
+        if (totalAPagarElement3) totalAPagarElement3.textContent = novoValor;
+
+        avisoGeral.textContent = 'Cupom aplicado com sucesso!';
+        avisoGeral.style.display = 'block';
+        setTimeout(() => {
+          avisoGeral.style.display = 'none';
+          window.location.reload();
+        }, 3000);
+      } else {
+        throw new Error('Cupom inválido ou sem valor retornado.');
+      }
+
+    } catch (error) {
+      console.error('Erro ao aplicar cupom:', error);
+      erroCarrinho.textContent = 'Cupom inválido ou erro no servidor.';
+      erroCarrinho.style.display = 'block';
+      setTimeout(() => (erroCarrinho.style.display = 'none'), 3000);
     }
-  
-    atualizarTotalAPagar(); // Chamada imediata da função após a definição
-  });  
+  });
+} 
 
   const btnAvancar = document.getElementById('btnAvancar');
   function getCookie(name) {
@@ -344,7 +369,7 @@ document.addEventListener('DOMContentLoaded', () => {
       e.preventDefault();
   });
 });
-document.addEventListener('DOMContentLoaded', () => {
+/*document.addEventListener('DOMContentLoaded', () => {
 const categorias = document.getElementById('categorias');
 const categoriaContainer = document.getElementById('categoriaContainer');
 const categoriaDesp = document.getElementById('categoriaD-ESP');
@@ -368,7 +393,7 @@ document.addEventListener('click', (e) => {
         produtosContainer.style.display = 'none';
     }
 });
-});
+});*/
 
 document.getElementById('logo').addEventListener('click', () => {
 window.location.href = '/cpq/inicio'
