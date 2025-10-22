@@ -36,7 +36,7 @@ const LogsPagamentos = db.define("LogsPagamentos", {
   timestamps: false
 });
 
-LogsPagamentos.sync({force:true});
-//LogsPagamentos.sync();
+//LogsPagamentos.sync({force:true});
+LogsPagamentos.sync();
 
 module.exports = LogsPagamentos;
