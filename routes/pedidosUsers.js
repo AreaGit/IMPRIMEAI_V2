@@ -457,7 +457,7 @@ app.post('/salvar-endereco-no-carrinho', async (req, res) => {
     req.session.endereco = enderecoBase;
 
     // Calcule o frete e salve na sessão
-    const { graficaMaisProxima, distanciaMinima, custoDoFrete } = await encontrarGraficaMaisProxima(enderecoBase);
+    const { graficaMaisProxima, distanciaMinima, custoDoFrete } = await encontrarGraficaMaisProxima(enderecoBase, req.session.carrinho);
     console.log('Gráfica mais próxima:', graficaMaisProxima);
     console.log('Distância mínima:', distanciaMinima);
     console.log('Custo do Frete:', custoDoFrete);
@@ -861,7 +861,7 @@ function haversineDistance(lat1, lon1, lat2, lon2) {
   return distance;
 }
 
-async function encontrarGraficaMaisProxima(endereco) {
+async function encontrarGraficaMaisProxima(endereco, carrinho = []) {
   try {
     const enderecoDoFrete = {
       rua: endereco.rua,
@@ -875,50 +875,128 @@ async function encontrarGraficaMaisProxima(endereco) {
     const nominatimUrl = `https://nominatim.openstreetmap.org/search?q=${encodeURIComponent(formattedAddress)}&format=json&limit=1`;
 
     const response = await axios.get(nominatimUrl, {
-      headers: {
-        'User-Agent': 'imprimeai-backend/1.0'
-      },
+      headers: { 'User-Agent': 'imprimeai-backend/1.0' },
       timeout: 15000
     });
 
-    let coordinatesEnd = { latitude: null, longitude: null };
-
-    if (response.data.length > 0) {
-      coordinatesEnd = {
-        latitude: parseFloat(response.data[0].lat),
-        longitude: parseFloat(response.data[0].lon)
-      };
-    } else {
+    if (!response.data.length) {
       console.error('Nenhum resultado de geocodificação encontrado para o endereço:', formattedAddress);
-      return { latitude: null, longitude: null, errorMessage: 'Nenhum resultado encontrado' };
+      return { graficaMaisProxima: null, distanciaMinima: 0, custoDoFrete: 0 };
     }
 
-    if (coordinatesEnd.latitude !== null && coordinatesEnd.longitude !== null) {
-      console.log(`Latitude do Endereço de Entrega:`, coordinatesEnd.latitude);
-      console.log(`Longitude do Endereço de Entrega:`, coordinatesEnd.longitude);
+    const coordinatesEnd = {
+      latitude: parseFloat(response.data[0].lat),
+      longitude: parseFloat(response.data[0].lon)
+    };
+
+    const graficas = await Graficas.findAll();
+    let distanciaMinima = Infinity;
+    let graficaMaisProxima = null;
+
+    for (const graficaAtual of graficas) {
+      const graficaAddress = `${graficaAtual.enderecoCad}, ${graficaAtual.cepCad}, ${graficaAtual.cidadeCad}, ${graficaAtual.estadoCad}`;
+      const graficaUrl = `https://nominatim.openstreetmap.org/search?q=${encodeURIComponent(graficaAddress)}&format=json&limit=1`;
+
+      const graficaResp = await axios.get(graficaUrl, {
+        headers: { 'User-Agent': 'imprimeai-backend/1.0' },
+        timeout: 15000
+      });
+
+      if (!graficaResp.data.length) continue;
+
+      const graficaCoordinates = {
+        latitude: parseFloat(graficaResp.data[0].lat),
+        longitude: parseFloat(graficaResp.data[0].lon)
+      };
+
+      const distanceToGrafica = haversineDistance(
+        graficaCoordinates.latitude,
+        graficaCoordinates.longitude,
+        coordinatesEnd.latitude,
+        coordinatesEnd.longitude
+      );
+
+      if (distanceToGrafica < distanciaMinima) {
+        distanciaMinima = distanceToGrafica;
+        graficaMaisProxima = graficaAtual;
+      }
+    }
+
+    // === Cálculo do subtotal do carrinho ===
+    console.log(carrinho)
+    const subtotalCarrinho = carrinho.reduce((total, produto) => {
+      const preco = parseFloat(
+        produto.valorUnitario || produto.precoUnitario || produto.valor || 0
+      );
+      const qtd = parseInt(produto.quantidade || 1);
+      return total + preco * qtd;
+    }, 0);
+
+    console.log("Subtotal do carrinho:", subtotalCarrinho);
+
+    // === Cálculo do frete por distância ===
+    let custoPorKm = 2.15;
+    if (distanciaMinima <= 2) custoPorKm = 10.0;
+    else if (distanciaMinima <= 5) custoPorKm = 4.0;
+    else if (distanciaMinima <= 10) custoPorKm = 3.33;
+
+    let custoDoFrete = Math.min(distanciaMinima * custoPorKm, 45).toFixed(2);
+
+    // === Frete grátis acima de R$500 ===
+    if (subtotalCarrinho > 500) {
+      custoDoFrete = 0;
+      console.log("Frete grátis aplicado (subtotal > 500).");
+    }
+
+    return {
+      graficaMaisProxima,
+      distanciaMinima,
+      custoDoFrete: parseFloat(custoDoFrete)
+    };
+
+  } catch (err) {
+    console.error("Erro ao encontrar a gráfica mais próxima:", err.message);
+    return { graficaMaisProxima: null, distanciaMinima: 0, custoDoFrete: 0 };
+  }
+}
+async function encontrarGraficaMaisProxima2(enderecosSalvos, carrinho = []) {
+  try {
+    const apiKey = 'Ao6IBGy_Nf0u4t9E88BYDytyK5mK3kObchF4R0NV5h--iZ6YgwXPMJEckhAEaKlH';
+    const resultadosFrete = [];
+    let somaDosFretes = 0;
+
+    // Calcula subtotal total do carrinho
+    console.log(carrinho)
+    const subtotalCarrinho = carrinho.reduce((total, produto) => {
+      const preco = parseFloat(
+        produto.valorUnitario || produto.precoUnitario || produto.valor || 0
+      );
+      const qtd = parseInt(produto.quantidade || 1);
+      return total + preco * qtd;
+    }, 0);
+
+    for (const endereco of enderecosSalvos) {
+      const coordinatesEnd = await getCoordinatesFromAddress({
+        rua: endereco.rua,
+        bairro: endereco.bairro,
+        cep: endereco.cep,
+        cidade: endereco.cidade,
+        estado: endereco.estado,
+      }, apiKey);
+
+      if (!coordinatesEnd.latitude || !coordinatesEnd.longitude) continue;
 
       const graficas = await Graficas.findAll();
-
       let distanciaMinima = Infinity;
       let graficaMaisProxima = null;
 
-      for (let graficaAtual of graficas) {
-        const graficaAddress = `${graficaAtual.enderecoCad}, ${graficaAtual.cepCad}, ${graficaAtual.cidadeCad}, ${graficaAtual.estadoCad}`;
-        const graficaUrl = `https://nominatim.openstreetmap.org/search?q=${encodeURIComponent(graficaAddress)}&format=json&limit=1`;
-
-        const graficaResp = await axios.get(graficaUrl, {
-          headers: {
-            'User-Agent': 'imprimeai-backend/1.0'
-          },
-          timeout: 15000
-        });
-
-        if (graficaResp.data.length === 0) continue;
-
-        const graficaCoordinates = {
-          latitude: parseFloat(graficaResp.data[0].lat),
-          longitude: parseFloat(graficaResp.data[0].lon)
-        };
+      for (const graficaAtual of graficas) {
+        const graficaCoordinates = await getCoordinatesFromAddress({
+          endereco: graficaAtual.enderecoCad,
+          cep: graficaAtual.cepCad,
+          cidade: graficaAtual.cidadeCad,
+          estado: graficaAtual.estadoCad,
+        }, apiKey);
 
         const distanceToGrafica = haversineDistance(
           graficaCoordinates.latitude,
@@ -933,101 +1011,28 @@ async function encontrarGraficaMaisProxima(endereco) {
         }
       }
 
-      let custoPorKm;
-      let custoDoFrete;
-      if (distanciaMinima <= 2) {
-        custoPorKm = 10.00;
-      } else if (distanciaMinima <= 5) {
-        custoPorKm = 4.00;
-      } else if (distanciaMinima <= 10) {
-        custoPorKm = 3.33;
-      } else {
-        custoPorKm = 2.15;
+      // === Cálculo do frete ===
+      let custoPorKm = 2.76;
+      if (distanciaMinima <= 2) custoPorKm = 10.0;
+      else if (distanciaMinima <= 5) custoPorKm = 4.0;
+      else if (distanciaMinima <= 10) custoPorKm = 3.33;
+
+      let custoDoFrete = parseFloat((distanciaMinima * custoPorKm).toFixed(2));
+
+      // === Frete grátis se subtotal > 500 ===
+      if (subtotalCarrinho > 500.0) {
+        custoDoFrete = 0;
+        console.log("Frete grátis aplicado (subtotal > 500).");
       }
 
-      if (distanciaMinima * custoPorKm > 45) {
-        custoDoFrete = 45.00;
-      } else {
-        custoDoFrete = parseFloat((distanciaMinima * custoPorKm).toFixed(2));
-      }
+      somaDosFretes += custoDoFrete;
 
-      return {
+      resultadosFrete.push({
+        endereco,
         graficaMaisProxima,
         distanciaMinima,
         custoDoFrete
-      };
-    }
-  } catch (err) {
-    console.error('Erro ao encontrar a gráfica mais próxima:', err.message);
-  }
-}
-async function encontrarGraficaMaisProxima2(enderecosSalvos) {
-  try {
-    const apiKey = 'Ao6IBGy_Nf0u4t9E88BYDytyK5mK3kObchF4R0NV5h--iZ6YgwXPMJEckhAEaKlH';
-
-    const resultadosFrete = [];
-    let somaDosFretes = 0;
-
-    for (let endereco of enderecosSalvos) {
-      const enderecoDoFrete = {
-        rua: endereco.rua,
-        bairro: endereco.bairro,
-        cep: endereco.cep,
-        cidade: endereco.cidade,
-        estado: endereco.estado,
-      };
-
-      const coordinatesEnd = await getCoordinatesFromAddress(enderecoDoFrete, apiKey);
-      if (coordinatesEnd.latitude !== null && coordinatesEnd.longitude !== null) {
-        console.log(`Latitude do Endereço de Entrega:`, coordinatesEnd.latitude);
-        console.log(`Longitude do Endereço de Entrega:`, coordinatesEnd.longitude);
-
-        const graficas = await Graficas.findAll();
-
-        let distanciaMinima = Infinity;
-        let graficaMaisProxima = null;
-
-        for (let graficaAtual of graficas) {
-          const graficaCoordinates = await getCoordinatesFromAddress({
-            endereco: graficaAtual.enderecoCad,
-            cep: graficaAtual.cepCad,
-            cidade: graficaAtual.cidadeCad,
-            estado: graficaAtual.estadoCad,
-          }, apiKey);
-
-          const distanceToGrafica = haversineDistance(graficaCoordinates.latitude, graficaCoordinates.longitude, coordinatesEnd.latitude, coordinatesEnd.longitude);
-
-          if (distanceToGrafica < distanciaMinima) {
-            distanciaMinima = distanceToGrafica;
-            graficaMaisProxima = graficaAtual;
-          }
-        }
-
-        console.log('Gráfica mais próxima:', graficaMaisProxima);
-        console.log('Distância mínima:', distanciaMinima);
-        
-        // Lógica de escalonagem de frete por km
-        let custoPorKm;
-        if (distanciaMinima <= 2) {
-          custoPorKm = 10.00;
-        } else if (distanciaMinima <= 5) {
-          custoPorKm = 4.00;
-        } else if (distanciaMinima <= 10) {
-          custoPorKm = 3.33;
-        } else {
-          custoPorKm = 2.76;
-        }
-
-        const custoDoFrete = parseFloat((distanciaMinima * custoPorKm).toFixed(2));
-        somaDosFretes += custoDoFrete;
-
-        resultadosFrete.push({
-          endereco,
-          graficaMaisProxima,
-          distanciaMinima,
-          custoDoFrete
-        });
-      }
+      });
     }
 
     return {
@@ -1035,8 +1040,9 @@ async function encontrarGraficaMaisProxima2(enderecosSalvos) {
       somaDosFretes: parseFloat(somaDosFretes.toFixed(2))
     };
 
-    } catch (err) {
+  } catch (err) {
     console.error('Erro ao encontrar as gráficas mais próximas:', err);
+    return { resultadosFrete: [], somaDosFretes: 0 };
   }
 }
 app.post('/upload', upload.single('filePlanilha'), async (req, res) => {
@@ -1078,7 +1084,7 @@ app.post('/upload', upload.single('filePlanilha'), async (req, res) => {
       }
 
       // Encontrar os fretes para todos os endereços salvos e calcular a soma total dos fretes
-      const { resultadosFrete, somaDosFretes } = await encontrarGraficaMaisProxima2(enderecosSalvos);
+      const { resultadosFrete, somaDosFretes } = await encontrarGraficaMaisProxima2(enderecosSalvos, req.session.carrinho);
       
       // Quebrar produtos com base nos endereços salvos
       const carrinhoQuebrado = [];
