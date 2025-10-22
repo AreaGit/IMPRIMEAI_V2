@@ -11,6 +11,7 @@ const Enderecos = require('../models/Enderecos');
 const ProdutosExc = require('../models/ProdutosExc');
 const VariacoesProdutoExc = require('../models/VariacoesProdutoExc');
 const CarteiraEmpresas = require('../models/CarteiraEmpresas');
+const LogsPagamentos = require("../models/LogsPagamentos");
 const {Op} = require('sequelize');
 const multer = require('multer');
 const cookieParser = require('cookie-parser');
@@ -131,6 +132,28 @@ Object.keys(interfaces).forEach((iface) => {
         }
     });
 });
+
+async function registrarLogPagamento({
+  tipo,
+  referenciaId,
+  statusAnterior,
+  statusNovo,
+  mensagem
+}) {
+  try {
+    await LogsPagamentos.create({
+      tipo,
+      referenciaId: referenciaId?.toString(),
+      statusAnterior,
+      statusNovo,
+      mensagem,
+      dataHora: new Date()
+    });
+    console.log(`[LOG ${tipo}] ${mensagem}`);
+  } catch (err) {
+    console.error("❌ Erro ao registrar log de pagamento:", err.message);
+  }
+}
 
 app.get('/api/carrinho', (req, res) => {
   try {
@@ -2023,267 +2046,225 @@ async function verificarGraficaMaisProximaEAtualizar2(itensPedido, enderecos) {
   
 // Agendar a tarefa para ser executada a cada 5 segundos
 // Agendar a tarefa para ser executada a cada 5 segundos
+
+// Utilitário para logs padronizados
+function logInfo(context, message) {
+  console.log(`[${new Date().toLocaleString()}] [${context}] ${message}`);
+}
+
+// Delay simples para evitar flood
+function delay(ms) {
+  return new Promise(resolve => setTimeout(resolve, ms));
+}
+
+// === CRONS OTIMIZADOS ===
 cron.schedule('* * * * *', async () => {
-  console.log('Verificando pagamentos pendentes...');
+  logInfo("CRON", "⏳ Verificando pagamentos pendentes...");
   await verificarPagamentosPendentes();
-  console.log('Verificação de pagamentos concluída.');
-});
-    
-cron.schedule('* * * * *', async () => {
-  console.log('Verificação de pagamentos Carteira...');
-  verificarPagamentosPendentesCarteira();
-  console.log('Verificação de pagamentos Carteira concluída.');
+  logInfo("CRON", "✅ Verificação de pagamentos concluída.");
 });
 
-cron.schedule('* * * * *', async () => {
-  console.log('Verificação de pagamentos Carteira Empresas...');
-  verificarPagamentosPendentesCarteiraEmpresas();
-  console.log('Verificação de pagamentos Carteira Empresas concluída.');
+cron.schedule('*/2 * * * *', async () => {
+  logInfo("CRON", "💼 Verificação de pagamentos Carteira...");
+  await verificarPagamentosPendentesCarteira();
+  logInfo("CRON", "✅ Verificação de pagamentos Carteira concluída.");
 });
 
+cron.schedule('*/2 * * * *', async () => {
+  logInfo("CRON", "🏢 Verificação de pagamentos Carteira Empresas...");
+  await verificarPagamentosPendentesCarteiraEmpresas();
+  logInfo("CRON", "✅ Verificação de pagamentos Carteira Empresas concluída.");
+});
+
+// === FUNÇÃO PRINCIPAL: PEDIDOS ===
 async function verificarPagamentosPendentes() {
   try {
-    const pedidosAguardandoPagamento = await Pedidos.findAll({ where: { statusPed: 'Esperando Pagamento' } });
+    const pedidos = await Pedidos.findAll({ where: { statusPed: 'Esperando Pagamento' } });
+    if (!pedidos.length) {
+      logInfo("PEDIDOS", "Nenhum pedido pendente.");
+      return;
+    }
 
-    for (const pedido of pedidosAguardandoPagamento) {
-      const transacaoId = pedido.idTransacao;
-      const user = await User.findByPk(pedido.idUserPed);
-      const hoje = new Date();
-      const hojeUTC = new Date(hoje.toISOString().split('T')[0]);
-
-      const dataVencimento = new Date(pedido.dataVencimento);
-      const dataVencimentoUTC = new Date(dataVencimento.toISOString().split('T')[0]);
-
-      const diffMillis = dataVencimentoUTC.getTime() - hojeUTC.getTime();
-      const diffDias = Math.floor(diffMillis / (1000 * 60 * 60 * 24));
-
-      // 📢 Notificação 1 dia antes do vencimento
-      if (diffDias === 1 && !pedido.notificacaoVencimento1Dia) {
-        await enviarNotificacaoWhatsapp(
-          user.telefoneCad,
-          `⚠️ Atenção: sua cobrança vence amanhã (${dataVencimento.toLocaleDateString('pt-BR')}). Evite juros e complicações! Realize o pagamento agora e fique em dia.`
-        );
-        pedido.notificacaoVencimento1Dia = true;
-        await pedido.save();
-      }
-
-      // 📢 Notificação no dia do vencimento
-      if (diffDias === 0 && !pedido.notificacaoVencimentoHoje) {
-        await enviarNotificacaoWhatsapp(
-          user.telefoneCad,
-          `Oi,  ${user.userCad}! Tudo bem? 😊
-
-Parabéns pela sua escolha! 🎊
-Seu pedido ${pedido.id} já foi registrado com a gente , mas
-lembramos que ele será confirmado assim que o pagamento do boleto for identificado.
-Assim que isso acontecer, você receberá uma notificação automática e poderá acompanhar todas as etapas diretamente no portal.
-
-Qualquer dúvida, é só falar com a gente! 💬
-
-Obrigada,
-Pri ✨
-Tá com pressa? ImprimeAí!`
-        );
-        pedido.notificacaoVencimentoHoje = true;
-        await pedido.save();
-      }
-
+    for (const pedido of pedidos) {
       try {
-        const cobranca = await consultarCobranca(transacaoId);
+        const transacaoId = pedido.idTransacao;
+        const user = await User.findByPk(pedido.idUserPed);
 
-        // ✅ Pagamento confirmado
-        if ((cobranca.status === 'CONFIRMED' || cobranca.status === 'RECEIVED') && !pedido.notificacaoPagamentoRecebido) {
-          await enviarNotificacaoWhatsapp(
-            user.telefoneCad,
-            `✅ Pagamento confirmado com sucesso! Seu compromisso foi cumprido e o seu pedido já foi liberado. Ele está a caminho da gráfica mais próxima para ser processado. Agradecemos muito pela sua pontualidade e confiança!`
-          );
+        const hoje = new Date();
+        const hojeUTC = new Date(hoje.toISOString().split('T')[0]);
+        const dataVencimentoUTC = new Date(new Date(pedido.dataVencimento).toISOString().split('T')[0]);
+        const diffDias = Math.floor((dataVencimentoUTC - hojeUTC) / (1000 * 60 * 60 * 24));
 
-          const dadosNfse = {
-            payment: transacaoId,
-            customer: user.customer_asaas_id,
-            externalReference: Math.floor(Math.random() * 999) + 1,
-            value: user.saldo,
-            effectiveDate: hoje.toISOString().split('T')[0],
-          };
-
-          const nfse = await agendarNfsAsaas(dadosNfse);
-          const invoice = nfse.id;
-          const nfseEmitida = await emitirNfs(invoice);
-          const externalReference = nfseEmitida.externalReference;
-          const notaAutorizada = await consultarNf(externalReference);
-
-          pedido.nfseUrl = notaAutorizada.pdfUrl;
-          pedido.statusPed = 'Pago';
-          pedido.notificacaoPagamentoRecebido = true;
+        // Notificações de vencimento (com flags para evitar duplicações)
+        if (diffDias === 1 && !pedido.notificacaoVencimento1Dia) {
+          await enviarNotificacaoWhatsapp(user.telefoneCad, 
+            `⚠️ Atenção: sua cobrança vence amanhã (${dataVencimentoUTC.toLocaleDateString('pt-BR')}). Evite atrasos!`);
+          pedido.notificacaoVencimento1Dia = true;
           await pedido.save();
 
-          await ItensPedido.update({ statusPag: 'Pago' }, { where: { idPed: pedido.id } });
+          await registrarLogPagamento({
+            tipo: "Pedido",
+            referenciaId: pedido.id,
+            statusAnterior: pedido.statusPed,
+            statusNovo: pedido.statusPed,
+            mensagem: `Notificação de 1 dia antes enviada para o pedido ${pedido.id}.`
+          });
+        }
 
-          const itensPedido = await ItensPedido.findAll({ where: { idPed: pedido.id } });
-          const enderecos = await Enderecos.findAll({ where: { idPed: pedido.id } });
-          
-          const isMultipleAddresses = enderecos.length > 1; // Considera múltiplos endereços se houver mais de um
+        if (diffDias === 0 && !pedido.notificacaoVencimentoHoje) {
+          await enviarNotificacaoWhatsapp(user.telefoneCad,
+`Oi, ${user.userCad}! 😊
 
-          // Chama a função para verificar a gráfica mais próxima e atualizar os itens do pedido
-          if (isMultipleAddresses) {
-            await verificarGraficaMaisProximaEAtualizar2(itensPedido, enderecos);
-          } else {
-            await verificarGraficaMaisProximaEAtualizar(itensPedido[0], enderecos[0]);
-          }
-
-        // ❗ Pagamento vencido — notificar uma vez
-        } else if ((cobranca.status === 'OVERDUE' || diffDias < 0) && !pedido.notificacaoCobrancaVencida) {
-          await enviarNotificacaoWhatsapp(
-            user.telefoneCad,
-            `Oi, ${user.userCad} Tudo bem? ✨
-
-Notamos que o boleto do pedido ${pedido.id} venceu e não foi compensado.
-Por isso, o pedido não pôde ser confirmado em nossa produção.
-
-👉 Mas não se preocupe! Você pode:
-
-Refazer o pedido normalmente em nosso site; ou
-
-Usar a carteira digital ImprimeAí: basta carregar créditos e, a cada compra, o pagamento é confirmado automaticamente — sem precisar gerar um novo boleto a cada vez.
-
-🔗 Acesse sua conta e escolha a melhor opção para você:
-imprimeai.com.br/perfil
-
-Qualquer dúvida, estamos aqui para ajudar! 💬
+Seu pedido ${pedido.id} foi registrado, mas ainda aguardamos a confirmação do pagamento do boleto.
+Assim que o pagamento for confirmado, você receberá uma notificação automática.
 
 Obrigada,
 Pri ✨
-Tá com pressa? ImprimeAí!`
+Tá com pressa? ImprimeAí!`);
+          pedido.notificacaoVencimentoHoje = true;
+          await pedido.save();
+
+          await registrarLogPagamento({
+            tipo: "Pedido",
+            referenciaId: pedido.id,
+            statusAnterior: pedido.statusPed,
+            statusNovo: pedido.statusPed,
+            mensagem: `Notificação no dia do vencimento enviada para o pedido ${pedido.id}.`
+          });
+        }
+
+        // Consulta de pagamento protegida
+        let cobranca;
+        try {
+          cobranca = await consultarCobranca(transacaoId);
+        } catch (err) {
+          logInfo("PEDIDOS", `Erro ao consultar cobrança do pedido ${pedido.id}: ${err.message}`);
+          await registrarLogPagamento({
+            tipo: "Pedido",
+            referenciaId: pedido.id,
+            statusAnterior: pedido.statusPed,
+            statusNovo: pedido.statusPed,
+            mensagem: `Erro ao consultar cobrança: ${err.message}`
+          });
+          continue;
+        }
+
+        if (!cobranca || !cobranca.status) {
+          logInfo("PEDIDOS", `Cobrança inválida para pedido ${pedido.id}`);
+          await registrarLogPagamento({
+            tipo: "Pedido",
+            referenciaId: pedido.id,
+            statusAnterior: pedido.statusPed,
+            statusNovo: pedido.statusPed,
+            mensagem: "Cobrança inválida retornada pela API."
+          });
+          continue;
+        }
+
+        // PAGAMENTO CONFIRMADO
+        if (["CONFIRMED", "RECEIVED"].includes(cobranca.status) && !pedido.notificacaoPagamentoRecebido) {
+          logInfo("PEDIDOS", `💰 Pagamento confirmado para pedido ${pedido.id}`);
+          await registrarLogPagamento({
+            tipo: "Pedido",
+            referenciaId: pedido.id,
+            statusAnterior: "Esperando Pagamento",
+            statusNovo: "Pago",
+            mensagem: `Pagamento confirmado com sucesso para o pedido ${pedido.id}.`
+          });
+
+          try {
+            await enviarNotificacaoWhatsapp(user.telefoneCad,
+              `✅ Pagamento confirmado! Seu pedido foi liberado e encaminhado à gráfica mais próxima.`);
+          } catch (err) {
+            await registrarLogPagamento({
+              tipo: "Pedido",
+              referenciaId: pedido.id,
+              statusAnterior: pedido.statusPed,
+              statusNovo: pedido.statusPed,
+              mensagem: `Erro ao enviar notificação WhatsApp: ${err.message}`
+            });
+          }
+
+          try {
+            const dadosNfse = {
+              payment: transacaoId,
+              customer: user.customer_asaas_id,
+              externalReference: Math.floor(Math.random() * 999) + 1,
+              value: pedido.valorTotal || 0,
+              effectiveDate: hoje.toISOString().split('T')[0],
+            };
+
+            const nfse = await agendarNfsAsaas(dadosNfse);
+            const nfseEmitida = await emitirNfs(nfse.id);
+            const notaAutorizada = await consultarNf(nfseEmitida.externalReference);
+
+            pedido.nfseUrl = notaAutorizada.pdfUrl;
+            pedido.statusPed = "Pago";
+            pedido.notificacaoPagamentoRecebido = true;
+            await pedido.save();
+
+            await ItensPedido.update({ statusPag: 'Pago' }, { where: { idPed: pedido.id } });
+
+            const itens = await ItensPedido.findAll({ where: { idPed: pedido.id } });
+            const enderecos = await Enderecos.findAll({ where: { idPed: pedido.id } });
+
+            if (enderecos.length > 1)
+              await verificarGraficaMaisProximaEAtualizar2(itens, enderecos);
+            else
+              await verificarGraficaMaisProximaEAtualizar(itens[0], enderecos[0]);
+
+            await registrarLogPagamento({
+              tipo: "Pedido",
+              referenciaId: pedido.id,
+              statusAnterior: "Esperando Pagamento",
+              statusNovo: "Pago",
+              mensagem: `NFSe emitida com sucesso e pedido ${pedido.id} atualizado para 'Pago'.`
+            });
+
+          } catch (err) {
+            await registrarLogPagamento({
+              tipo: "Pedido",
+              referenciaId: pedido.id,
+              statusAnterior: pedido.statusPed,
+              statusNovo: pedido.statusPed,
+              mensagem: `Erro ao processar NFSe: ${err.message}`
+            });
+          }
+        }
+
+        // PAGAMENTO VENCIDO
+        else if ((["OVERDUE", "EXPIRED"].includes(cobranca.status) || diffDias < 0) && !pedido.notificacaoCobrancaVencida) {
+          logInfo("PEDIDOS", `🚨 Pedido ${pedido.id} vencido - notificando usuário.`);
+          await enviarNotificacaoWhatsapp(
+            user.telefoneCad,
+            `⚠️ O boleto do pedido ${pedido.id} venceu e não foi compensado. Refaça o pedido ou utilize sua carteira digital ImprimeAí.`
           );
           pedido.notificacaoCobrancaVencida = true;
           await pedido.save();
 
-        } else {
-          console.log(`Aguardando pagamento... Status atual: ${cobranca.status}`);
+          await registrarLogPagamento({
+            tipo: "Pedido",
+            referenciaId: pedido.id,
+            statusAnterior: pedido.statusPed,
+            statusNovo: "Vencido",
+            mensagem: `Pedido ${pedido.id} marcado como vencido e usuário notificado.`
+          });
         }
 
-      } catch (error) {
-        console.log('Erro ao consultar cobrança:', error);
+        await delay(500);
+      } catch (err) {
+        await registrarLogPagamento({
+          tipo: "Pedido",
+          referenciaId: pedido.id,
+          statusAnterior: pedido.statusPed,
+          statusNovo: pedido.statusPed,
+          mensagem: `Erro inesperado no loop de pedidos: ${err.message}`
+        });
       }
     }
-
   } catch (error) {
-    console.error('Erro ao verificar pagamentos pendentes:', error);
+    console.error("Erro global em verificarPagamentosPendentes:", error);
   }
-}
-  
-async function verificarPagamentosPendentesCarteiraEmpresas() {
-  try {
-    const transacoesPendentes = await CarteiraEmpresas.findAll({ where: { statusPag: 'ESPERANDO PAGAMENTO' } });
-    console.log('Transações pendentes:', transacoesPendentes); 
-    
-    // Iterar sobre as transações pendentes encontradas
-    for (const transacao of transacoesPendentes) {
-      // Verificar o status do pagamento no Pagarme usando o ID da transação
-      const transactionId = transacao.idTransacao;
-      const itemPedido = await ItensPedido.findOne({ where: { idPed: transacao.id } }); // Buscar o item do pedido
-      let user;
-
-      if (itemPedido.tipo === 'Empresas') {
-        // Se o tipo do item for 'Empresas', busca na tabela UsersEmpresas
-        user = await UserEmpresas.findOne({ where: { id: transacao.idUserPed } });
-      } else {
-        // Caso contrário, busca na tabela User
-        user = await User.findByPk(transacao.idUserPed);
-      }
-      const hojeComHifen = new Date().toISOString().split('T')[0];
-      console.log('Transaction ID:', transactionId); // Check if transactionId is defined
-      try {
-       const cobranca = await consultarCobranca(transactionId);
-       //console.log('Transaction found:', response); // Check if transaction is defined
-       // Verificar se a transação está paga
-       if (cobranca.status === 'CONFIRMED' || cobranca.status === 'RECEIVED') {
-         const dadosNfse = {
-           payment: transactionId,
-            customer: user.customer_asaas_id,
-            externalReference:  Math.floor(Math.random() * 999) + 1,
-            value: user.saldo,
-            effectiveDate: hojeComHifen
-          };
-
-          const nfse = await agendarNfsAsaas(dadosNfse);
-          const invoice = nfse.id;
-          
-          const nfseEmitida = await emitirNfs(invoice);
-          const externalReference = nfseEmitida.externalReference;
-          
-          const notaAutorizada = await consultarNf(externalReference);
-          console.log('Nota autorizada:', notaAutorizada);
-          const nfseUrl = notaAutorizada.pdfUrl;
-          
-          transacao.nfseUrl = nfseUrl
-          transacao.statusPag = 'PAGO'
-          transacao.save();
-        } else if (cobranca.status === 'OVERDUE') {
-          console.log('Pagamento não realizado dentro do prazo.');
-        } else {
-          console.log(`Aguardando pagamento... Status atual: ${cobranca.status}`);
-        }
-      } catch (error) {
-        // Verificar se o erro é de transação não encontrada
-        console.log(error)
-      }
-    }
-  } catch(error) {
-    console.error('Erro ao verificar pagamentos pendentes:', error);
-  }
-}
-
-async function verificarPagamentosPendentesCarteira() {
-  try {
-    const transacoesPendentes = await Carteira.findAll({ where: { statusPag: 'ESPERANDO PAGAMENTO' } });
-    console.log('Transações pendentes:', transacoesPendentes); 
-    
-    // Iterar sobre as transações pendentes encontradas
-    for (const transacao of transacoesPendentes) {
-      // Verificar o status do pagamento no Pagarme usando o ID da transação
-      const transactionId = transacao.idTransacao;
-      const user = await User.findByPk(transacao.userId);
-      const hojeComHifen = new Date().toISOString().split('T')[0];
-      console.log('Transaction ID:', transactionId); // Check if transactionId is defined
-      try {
-        const cobranca = await consultarCobranca(transactionId);
-       //console.log('Transaction found:', response); // Check if transaction is defined
-       // Verificar se a transação está paga
-       if (cobranca.status === 'CONFIRMED' || cobranca.status === 'RECEIVED' || cobranca.status === 'PENDING') {
-         const dadosNfse = {
-           payment: transactionId,
-            customer: user.customer_asaas_id,
-            externalReference:  Math.floor(Math.random() * 999) + 1,
-            value: user.saldo,
-            effectiveDate: hojeComHifen
-          };
-
-          const nfse = await agendarNfsAsaas(dadosNfse);
-          const invoice = nfse.id;
-          
-          const nfseEmitida = await emitirNfs(invoice);
-          const externalReference = nfseEmitida.externalReference;
-          
-          const notaAutorizada = await consultarNf(externalReference);
-          console.log('Nota autorizada:', notaAutorizada);
-          const nfseUrl = notaAutorizada.pdfUrl;
-          
-          transacao.nfseUrl = nfseUrl
-          transacao.statusPag = 'PAGO'
-          transacao.save();
-        } else if (cobranca.status === 'OVERDUE') {
-          console.log('Pagamento não realizado dentro do prazo.');
-        } else {
-          console.log(`Aguardando pagamento... Status atual: ${cobranca.status}`);
-        }
-        } catch (error) {
-          console.log(error)
-        }
-      }
-    } catch(error) {
-      console.error('Erro ao verificar pagamentos pendentes:', error);
-    }
 }
 
 app.post('/registrarPagamento', async (req, res) => {
