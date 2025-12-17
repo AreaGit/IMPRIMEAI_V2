@@ -578,14 +578,14 @@ app.get("/perfil/dados-adm", async (req, res) => {
   try {
     const userId = req.query.id;
     // Buscar o usuário
-    const user = await User.findByPk(userId);
+    const user = await UserEmpresas.findByPk(userId);
 
     if (!user) {
       return res.status(404).json({ message: "Usuário não encontrado" });
     }
 
     // Buscar saldo da carteira
-    const saldoDepositosPagos = await Carteira.sum('saldo', {
+    const saldoDepositosPagos = await CarteiraEmpresas.sum('saldo', {
       where: {
         userId: userId,
         statusPag: 'PAGO' // Apenas transações com status "PAGO"
@@ -593,7 +593,7 @@ app.get("/perfil/dados-adm", async (req, res) => {
     });
 
     // Consulte o banco de dados para obter a soma de todos os depósitos de saída associados ao usuário
-    const saldoSaidas = await Carteira.sum('saldo', {
+    const saldoSaidas = await CarteiraEmpresas.sum('saldo', {
       where: {
         userId: userId,
         statusPag: 'SAIDA' // Apenas transações com status "SAÍDA"
@@ -627,7 +627,7 @@ app.get("/perfil/dados-adm", async (req, res) => {
 });
 // Função para Gerar Comprovante PDF de Carteira
 async function gerarComprovante(user, valor, saldoAntes, saldoDepois, tipo) {
-  const usuario = await User.findByPk(user);
+  const usuario = await UserEmpresas.findByPk(user);
   if (!user) return res.status(404).json({ message: "Usuário não encontrado" });
   return new Promise((resolve, reject) => {
     try {
@@ -683,7 +683,7 @@ app.put("/usuarios/:id", async (req, res) => {
       cpf, telefone, tipo, email, senha, saldo
     } = req.body;
 
-    const user = await User.findByPk(id);
+    const user = await UserEmpresas.findByPk(id);
     if (!user) return res.status(404).json({ message: "Usuário não encontrado" });
 
     const dadosAtualizados = {
@@ -708,14 +708,14 @@ app.put("/usuarios/:id", async (req, res) => {
     await user.update(dadosAtualizados);
 
     // 🧮 Recalcular saldo baseado nos registros de entrada e saída
-    const saldoDepositosPagos = await Carteira.sum('saldo', {
+    const saldoDepositosPagos = await CarteiraEmpresas.sum('saldo', {
       where: {
         userId: id,
         statusPag: 'PAGO'
       }
     });
 
-    const saldoSaidas = await Carteira.sum('saldo', {
+    const saldoSaidas = await CarteiraEmpresas.sum('saldo', {
       where: {
         userId: id,
         statusPag: 'SAIDA'
@@ -737,7 +737,7 @@ app.put("/usuarios/:id", async (req, res) => {
 
       const tipoTransacao = novoSaldo > saldoAnterior ? 'crédito' : 'débito';
 
-      await Carteira.create({ userId: id, saldo: novoSaldo, statusPag: 'PAGO' });
+      await CarteiraEmpresas.create({ userId: id, saldo: novoSaldo, statusPag: 'PAGO' });
 
       await TransacoesCarteira.create({
         userId: id,
