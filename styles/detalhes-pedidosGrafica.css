@@ -30,6 +30,28 @@ body {
   flex-direction: column;
 }
 
+/* Botão de Voltar */
+.btn_voltar {
+    padding: 12px 20px;
+    border-radius: 30px;
+    font-weight: 600;
+    text-decoration: none;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    font-size: 1rem;
+    width: 10%;
+    position: fixed;
+    top: 5%;
+    left: 1%;
+    background-color: white;
+    color: var(--coral);
+    border: 2px dashed var(--coral);
+}
+
+.btn_voltar:hover {
+  transform: translate(-10px);
+}
+
 /* Cabeçalho */
 header {
   background-color: var(--branco);

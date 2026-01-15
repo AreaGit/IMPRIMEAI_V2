@@ -293,6 +293,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     const statusPedido = detalhesPedido.itenspedidos[0].statusPed;
     if (statusPedido === "Recebido") {
       novoStatusPedido = "Em produção";
+      btnAceitarPedido.textContent = "Em produção";
     } else if (statusPedido === "Em produção") {
       novoStatusPedido = "Finalizado/Enviado para Transporte";
       if (btnAceitarPedido) btnAceitarPedido.textContent = "Finalizar Pedido";
@@ -326,8 +327,7 @@ document.addEventListener('DOMContentLoaded', async () => {
           if (!response.ok) throw new Error(`Erro ao aceitar pedido: ${response.statusText}`);
           const respJson = await response.json();
           if (respJson.success) {
-            console.log('Pedido aceito com sucesso!');
-            setTimeout(() => { window.location.href = '/graficas/painel'; }, 3000);
+            setTimeout(() => { window.location.reload(); }, 2000);
           } else {
             console.error('Erro ao aceitar pedido:', respJson.message);
           }
@@ -348,8 +348,7 @@ document.addEventListener('DOMContentLoaded', async () => {
           if (!response.ok) throw new Error(`Erro ao aceitar pedido: ${response.statusText}`);
           const dataResp = await response.json();
           if (dataResp.success) {
-            console.log('Pedido aceito com sucesso!');
-            window.location.href = '/graficas/painel';
+            window.location.reload();
           } else {
             console.error('Erro ao aceitar pedido:', dataResp.message);
           }
@@ -377,8 +376,7 @@ document.addEventListener('DOMContentLoaded', async () => {
           if (!response.ok) throw new Error(`Erro ao aceitar pedido: ${response.statusText}`);
           const dataResp = await response.json();
           if (dataResp.success) {
-            console.log('Pedido aceito com sucesso!');
-            setTimeout(() => { window.location.href = '/graficas/painel'; }, 3000);
+            setTimeout(() => { window.location.reload(); }, 3000);
           } else {
             console.error('Erro ao aceitar pedido:', dataResp.message);
           }
@@ -399,8 +397,7 @@ document.addEventListener('DOMContentLoaded', async () => {
           if (!response.ok) throw new Error(`Erro ao aceitar pedido: ${response.statusText}`);
           const dataResp = await response.json();
           if (dataResp.success) {
-            console.log('Pedido aceito com sucesso!');
-            window.location.href = '/graficas/painel';
+            window.location.reload();
           } else {
             console.error('Erro ao aceitar pedido:', dataResp.message);
           }
@@ -426,7 +423,6 @@ document.addEventListener('DOMContentLoaded', async () => {
         if (!response.ok) throw new Error(`Erro ao cancelar pedido: ${response.statusText}`);
         const d = await response.json();
         if (d.success) {
-          console.log('Pedido cancelado com sucesso!');
           setTimeout(() => { window.location.href = '/graficas/painel'; }, 3000);
         } else {
           console.error('Erro ao cancelar pedido:', d.message);
@@ -480,7 +476,6 @@ document.getElementById('btnConfEnt').addEventListener('click', async () => {
               throw new Error(`Erro ao enviar dados: ${response.statusText}`);
             }
 
-          console.log('Dados enviados com sucesso!');
           // Faça qualquer ação necessária após o envio dos dados
           try {
             const idPedido = currentPedidoId;
@@ -504,7 +499,7 @@ document.getElementById('btnConfEnt').addEventListener('click', async () => {
           // Redirect to after updating the order status
           window.setTimeout(() => {
             carregamento.style.display = 'none';
-            window.location.href = '/graficas/painel';
+            window.location.reload();
           },5000)
           
           

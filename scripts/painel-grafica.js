@@ -248,6 +248,24 @@ function inicializarNavegacao() {
   });
 }
 
+// CLICAR NO CARD DE PEDIDOS E REDIRECIONA PARA PEDIDOS
+const btn_open_pedidos = document.getElementById("btn_open_pedidos");
+btn_open_pedidos.addEventListener("click", () => {
+    boasVindas.style.display = 'none';
+    secaoPedidos.style.display = 'block';
+    secaoSaldo.style.display = 'none';
+    secaoConta.style.display = 'none';
+});
+
+// CLICAR NO CARD DE SALDO E REDIRECIONA PARA SALDO
+const btn_open_saldo = document.getElementById("btn_open_saldo");
+btn_open_saldo.addEventListener("click",  () => {
+    boasVindas.style.display = 'none';
+    secaoPedidos.style.display = 'none';
+    secaoSaldo.style.display = 'block';
+    secaoConta.style.display = 'none';
+});
+
 // =======================
 // Inicialização
 // =======================
