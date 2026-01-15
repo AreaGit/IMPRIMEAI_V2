@@ -300,7 +300,7 @@ document.addEventListener('DOMContentLoaded', async () => {
       if (btnCancelarPedido) btnCancelarPedido.style.display = 'none';
     } else if (statusPedido === "Finalizado/Enviado para Transporte") {
       novoStatusPedido = "Entregue";
-      if (btnAceitarPedido) btnAceitarPedido.textContent = "Enviar Pedido";
+      if (btnAceitarPedido) btnAceitarPedido.textContent = "Concluir Pedido";
       if (btnCancelarPedido) btnCancelarPedido.style.display = 'none';
     } else if (statusPedido === "Entregue") {
       if (btnAceitarPedido) btnAceitarPedido.style.display = 'none';
