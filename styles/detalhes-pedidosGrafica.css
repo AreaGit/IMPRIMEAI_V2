@@ -30,6 +30,89 @@ body {
   flex-direction: column;
 }
 
+/* Tela de loading */
+#loading-screen {
+  position: fixed;
+  inset: 0;
+  background: var(--branco);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 9999;
+
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.4s ease;
+}
+
+#loading-screen.active {
+  opacity: 1;
+  pointer-events: all;
+}
+
+/* Container */
+.loader-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1rem;
+}
+
+/* Spinner moderno */
+.spinner {
+  width: 64px;
+  height: 64px;
+  border: 6px solid var(--concreto);
+  border-top: 6px solid var(--coral);
+  border-right: 6px solid var(--vermelho);
+  border-radius: 50%;
+  animation: spin 0.9s linear infinite;
+}
+
+/* Texto */
+.loading-text {
+  font-size: 1rem;
+  color: var(--preto);
+  letter-spacing: 0.08em;
+}
+
+.loading-text span {
+  animation: dots 1.5s infinite;
+}
+
+.loading-text span:nth-child(2) {
+  animation-delay: 0.2s;
+}
+
+.loading-text span:nth-child(3) {
+  animation-delay: 0.4s;
+}
+
+/* Animações */
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes dots {
+  0% { opacity: 0; }
+  50% { opacity: 1; }
+  100% { opacity: 0; }
+}
+
+/* Responsividade */
+@media (min-width: 768px) {
+  .spinner {
+    width: 80px;
+    height: 80px;
+  }
+
+  .loading-text {
+    font-size: 1.1rem;
+  }
+}
+
 /* Botão de Voltar */
 .btn_voltar {
     padding: 12px 20px;

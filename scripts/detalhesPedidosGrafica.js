@@ -2,6 +2,29 @@
 // Versão reorganizada — mantém todas as condições e textos do seu código,
 // mas corrige bugs, evita listeners duplicados e renderiza TODOS os itens do pedido.
 
+window.addEventListener("load", () => {
+  const loading = document.getElementById("loading-screen");
+  loading.style.opacity = "0";
+  loading.style.transition = "opacity 0.4s ease";
+
+  setTimeout(() => {
+    loading.style.display = "none";
+  }, 400);
+});
+
+// ====================================
+// FUNÇÃO PARA ATIVAR/DESATIVAR LOADING
+// ====================================
+const loading = document.getElementById("loading-screen");
+
+function showLoading() {
+  loading.classList.add("active");
+}
+
+function hideLoading() {
+  loading.classList.remove("active");
+}
+
 let tipoEntrega;
 let pId;
 let novoStatusPedido;
@@ -21,7 +44,9 @@ const carregamento = document.getElementById('carregamento');
 const produtoInfo = document.getElementById('produto-info'); // container onde vamos injetar os cards
 const detalhesContainer = produtoInfo; // alias
 
+// =======================================
 // Carrega info da gráfica/usuario (nome)
+// =======================================
 async function carregarInfoUsers() {
   try {
     const response = await fetch('/perfilGrafica/dados');
@@ -33,8 +58,9 @@ async function carregarInfoUsers() {
   }
 }
 carregarInfoUsers();
-
+// ================================
 // Util: pega graficaId de cookies
+// ================================
 function getGraficaIdFromCookies() {
   const raw = document.cookie || '';
   const cookies = raw.split(';').map(c => c.trim());
@@ -50,8 +76,9 @@ function setDisplay(el, show) {
   if (!el) return;
   el.style.display = show ? '' : 'none';
 }
-
+// =========================================================
 // Faz fetch da imagem do item (mantive sua lógica de rotas)
+// =========================================================
 async function pegarImagemProdutoPorItem(item) {
   // item pode ter idProduto ou id
   const idProduto = item.idProduto || item.id || item.ProdutosId || item.produtosId;
@@ -72,8 +99,9 @@ async function pegarImagemProdutoPorItem(item) {
     return null;
   }
 }
-
+// =======================================================
 // Função para renderizar todos os itens do pedido (cards)
+// =======================================================
 async function renderTodosItens(detalhesPedido, detalhesUsuario) {
   // limpeza
   produtoInfo.innerHTML = '';
@@ -123,8 +151,9 @@ async function renderTodosItens(detalhesPedido, detalhesUsuario) {
     produtoInfo.appendChild(card);
   });
 }
-
+// =======================================================================
 // Mantém comportamento original de montar detalhes de entrega e protocolo
+// =======================================================================
 function montarDetalhesEntrega(detalhesPedido, detalhesUsuario) {
   const detalhesEntrega = document.createElement('div');
   detalhesEntrega.className = 'detalhesEntrega';
@@ -241,22 +270,25 @@ function montarDetalhesEntrega(detalhesPedido, detalhesUsuario) {
 
   return detalhesEntrega;
 }
-
+// ===============================================================
 // Função que atualiza os listeners do botão Aceitar sem duplicar
+// ===============================================================
 function setAceitarListener(callback) {
   if (!btnAceitarPedido) return;
   btnAceitarPedido.onclick = null; // remove handler anterior
   btnAceitarPedido.addEventListener('click', callback);
 }
-
+// =======================================================
 // Função que atualiza o listener do cancelar sem duplicar
+// =======================================================
 function setCancelarListener(callback) {
   if (!btnCancelarPedido) return;
   btnCancelarPedido.onclick = null;
   btnCancelarPedido.addEventListener('click', callback);
 }
-
+// ===========================================
 // MAIN: carrega detalhes do pedido e monta UI
+// ===========================================
 document.addEventListener('DOMContentLoaded', async () => {
   // Pegar params
   const urlParams = new URLSearchParams(window.location.search);
@@ -318,6 +350,7 @@ document.addEventListener('DOMContentLoaded', async () => {
       // Manter comportamento: quando múltiplos endereços, envia tipoPed "Mult"
       setAceitarListener(async () => {
         try {
+          showLoading();
           const idPedidoParaEnviar = detalhesPedido.itenspedidos[0].id; // mantive como estava
           const response = await fetch('/atualizar-status-pedido', {
             method: 'POST',
@@ -327,11 +360,16 @@ document.addEventListener('DOMContentLoaded', async () => {
           if (!response.ok) throw new Error(`Erro ao aceitar pedido: ${response.statusText}`);
           const respJson = await response.json();
           if (respJson.success) {
-            setTimeout(() => { window.location.reload(); }, 2000);
+            setTimeout(() => { 
+              hideLoading();
+              window.location.reload();
+             }, 2000);
           } else {
+            hideLoading();
             console.error('Erro ao aceitar pedido:', respJson.message);
           }
         } catch (err) {
+          hideLoading();
           console.error('Erro ao aceitar pedido (Mult):', err);
         }
       });
@@ -339,6 +377,7 @@ document.addEventListener('DOMContentLoaded', async () => {
       // caso específico que você tinha
       setAceitarListener(async () => {
         try {
+          showLoading();
           const idPedido = idPedidoURL;
           const response = await fetch('/atualizar-status-pedido', {
             method: 'POST',
@@ -348,11 +387,14 @@ document.addEventListener('DOMContentLoaded', async () => {
           if (!response.ok) throw new Error(`Erro ao aceitar pedido: ${response.statusText}`);
           const dataResp = await response.json();
           if (dataResp.success) {
+            hideLoading();
             window.location.reload();
           } else {
+            hideLoading();
             console.error('Erro ao aceitar pedido:', dataResp.message);
           }
         } catch (err) {
+          hideLoading();
           console.error('Erro ao aceitar pedido (Retirar na Loja):', err);
         }
       });
@@ -360,6 +402,7 @@ document.addEventListener('DOMContentLoaded', async () => {
       // branch com atualizar-endereco-entrega antes de atualizar status
       setAceitarListener(async () => {
         try {
+          showLoading();
           // atualizar endereço
           const responseEndereco = await fetch('/atualizar-endereco-entrega', {
             method: 'POST',
@@ -376,11 +419,16 @@ document.addEventListener('DOMContentLoaded', async () => {
           if (!response.ok) throw new Error(`Erro ao aceitar pedido: ${response.statusText}`);
           const dataResp = await response.json();
           if (dataResp.success) {
-            setTimeout(() => { window.location.reload(); }, 3000);
+            setTimeout(() => { 
+              hideLoading();
+              window.location.reload(); 
+            }, 3000);
           } else {
+            hideLoading();
             console.error('Erro ao aceitar pedido:', dataResp.message);
           }
         } catch (err) {
+          hideLoading();
           console.error('Erro no fluxo Retirar na Loja:', err);
         }
       });
@@ -388,6 +436,7 @@ document.addEventListener('DOMContentLoaded', async () => {
       // branch padrão (caso nenhum dos anteriores)
       setAceitarListener(async () => {
         try {
+          showLoading();
           const idPedido = idPedidoURL;
           const response = await fetch('/atualizar-status-pedido', {
             method: 'POST',
@@ -397,11 +446,14 @@ document.addEventListener('DOMContentLoaded', async () => {
           if (!response.ok) throw new Error(`Erro ao aceitar pedido: ${response.statusText}`);
           const dataResp = await response.json();
           if (dataResp.success) {
+            hideLoading();
             window.location.reload();
           } else {
+            hideLoading();
             console.error('Erro ao aceitar pedido:', dataResp.message);
           }
         } catch (err) {
+          hideLoading();
           console.error('Erro ao aceitar pedido (padrão):', err);
         }
       });
@@ -444,69 +496,72 @@ document.addEventListener('DOMContentLoaded', async () => {
   }
 });
 
-// Form de confirmação de entrega (btnConfEnt) - mantive seu fluxo original
-
+// ==============================
+// FORM DE CONFIRMAÇÃO DE ENTREGA
+// ==============================
 document.getElementById('btnConfEnt').addEventListener('click', async () => {
-  carregamento.style.display = 'block';
   const urlParams = new URLSearchParams(window.location.search);
   const recEnt = document.getElementById('recEnt').value;
   const horEnt = document.getElementById('horEnt').value;
-      const fotoEnt = document.getElementById('fotoEnt').files[0];
-      const produtoEnt = document.getElementById('produtoEnt').files[0];
-      const protocoloEnt = document.getElementById('protocoloEnt').files[0];
-      const currentPedidoId = urlParams.get('idPedido');
-      const obsEnt = document.getElementById('obsEnt').value;
-      const formData = new FormData();
-      formData.append('recEnt', recEnt);
-      formData.append('horEnt', horEnt);
-      formData.append('fotoEnt', fotoEnt);
-      formData.append('produtoEnt', produtoEnt);
-      formData.append('protocoloEnt', protocoloEnt);
-      formData.append('pedidoId', currentPedidoId);
-      formData.append('tipo', tipo);
-      formData.append('obsEnt', obsEnt);
+  const fotoEnt = document.getElementById('fotoEnt').files[0];
+  const produtoEnt = document.getElementById('produtoEnt').files[0];
+  const protocoloEnt = document.getElementById('protocoloEnt').files[0];
+  const currentPedidoId = urlParams.get('idPedido');
+  const obsEnt = document.getElementById('obsEnt').value;
+  const formData = new FormData();
+  formData.append('recEnt', recEnt);
+  formData.append('horEnt', horEnt);
+  formData.append('fotoEnt', fotoEnt);
+  formData.append('produtoEnt', produtoEnt);
+  formData.append('protocoloEnt', protocoloEnt);
+  formData.append('pedidoId', currentPedidoId);
+  formData.append('tipo', tipo);
+  formData.append('obsEnt', obsEnt);
       
-      try {
-          const response = await fetch('/dadosEntrega', {
-              method: 'POST',
-              body: formData
-          });
-
-          if (!response.ok) {
-              throw new Error(`Erro ao enviar dados: ${response.statusText}`);
-            }
-
-          // Faça qualquer ação necessária após o envio dos dados
-          try {
-            const idPedido = currentPedidoId;
-          const novoStatus = 'Entregue';
-
-          const response = await fetch('/atualizar-status-pedido', {
-            method: 'POST',
-            headers: {
-              'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({
-              pedidoId: idPedido,
-              novoStatus: novoStatus,
-            }),
-          });
-
-          if (!response.ok) {
-            throw new Error(`Erro ao enviar pedido: ${response.statusText}`);
-          }
-
-          // Redirect to after updating the order status
-          window.setTimeout(() => {
-            carregamento.style.display = 'none';
-            window.location.reload();
-          },5000)
-          
-          
-        } catch (error) {
-          console.error('Erro ao enviar pedido:', error);
-        }
-      } catch (error) {
-        console.error('Erro ao enviar dados:', error);
-        }
+    try {
+      const response = await fetch('/dadosEntrega', {
+        method: 'POST',
+        body: formData
       });
+
+      if (!response.ok) {
+        throw new Error(`Erro ao enviar dados: ${response.statusText}`);
+      }
+
+    // Faça qualquer ação necessária após o envio dos dados
+    try {
+      showLoading();
+      const idPedido = currentPedidoId;
+      const novoStatus = 'Entregue';
+
+      const response = await fetch('/atualizar-status-pedido', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          pedidoId: idPedido,
+          novoStatus: novoStatus,
+        }),
+      });
+
+      if (!response.ok) {
+        throw new Error(`Erro ao enviar pedido: ${response.statusText}`);
+      }
+
+      // Redirect to after updating the order status
+      window.setTimeout(() => {
+        hideLoading();
+        window.location.reload();
+      },5000)
+          
+          
+      } catch (error) {
+        hideLoading();
+        console.error('Erro ao enviar pedido:', error);
+      }
+  } catch (error) {
+    hideLoading();
+    console.error('Erro ao enviar dados:', error);
+  }
+});
