@@ -33,6 +33,14 @@ let metodPag;
 let idTransacao;
 let linkPagamento;
 let dataVencimento;
+
+  function fecharPix() {
+    const modal = document.getElementById("pixModal");
+    if (modal) modal.remove();
+
+    qrCodeContainer.style.display = 'none';
+  }
+
 function getCookie(name) {
   const value = `; ${document.cookie}`;
   const parts = value.split(`; ${name}=`);
@@ -54,6 +62,19 @@ function getCookie(name) {
         if (e.target === p) hidePopup(p.id);
       });
     });
+
+document.getElementById('fecharFormaPagamento2').addEventListener('click', () => {
+  document.getElementById('boletoContainer').style.display = 'none';
+});
+
+function mostrarCartaoProcessando() {
+  document.getElementById('formCartao').style.display = 'none';
+  document.getElementById('cartaoContainer').style.display = 'block';
+}
+
+document.getElementById('btnCartaoCredito').addEventListener('click', () => {
+  mostrarCartaoProcessando();
+});
 
 // Função para fazer o fetch do endereço
 async function fetchEndereco() {
@@ -203,7 +224,7 @@ btnContPag.addEventListener('click', () => {
         pagamentoBoleto();
     } else if (divAtiva === "cartaoCredito") {
         carregamento.style.display = 'none'
-        formCartao.style.display = 'block'
+        formCartao.style.display = 'flex'
     } else if (divAtiva === "carteiraUser") {
         pagamentoCarteira();
     } else {
@@ -230,6 +251,7 @@ async function criarPedido() {
     console.log('PEDIDO CRIADO');
 
     carregamento.style.display = 'block';
+    cartaoContainer.style.display = "none";
 
     const response = await fetch('/criar-pedidos', {
       method: 'POST',
@@ -258,8 +280,8 @@ async function criarPedido() {
       }, 10000);
 
     } else {
-      window.open = `/pedido-aprovado?idPed=${responseData.idPed}`;
-      window.location.href = `/perfil`;
+      window.location.href = `/pedido-aprovado?idPed=${responseData.idPed}`;
+      // window.location.href = `/perfil`;
     }
 
   } catch (error) {
@@ -403,12 +425,31 @@ const cpfCliente = cpf;
 
   // Extrair o idTransacao da resposta
   const responseData = await response2.json();
-  qrCodeContainer.innerHTML = `
-  <h2>Clique aqui para efetuar o pagamento</h2>
-  <a href="${responseData.data.urlPix}" target="_blank">Acesse Aqui</a>
-  `
-  carregamento.style.display = 'none'
   qrCodeContainer.style.display = 'block';
+  qrCodeContainer.innerHTML = `
+    <div class="modal-overlay" id="pixModal">
+      <div class="pix-modal">
+        <button class="modal-close" onclick="fecharPix()">×</button>
+
+        <div class="pix-header">
+          <div class="pix-icon">💸</div>
+          <div>
+            <div class="pix-title">Pagamento via PIX</div>
+            <div class="pix-subtitle">Rápido, seguro e instantâneo</div>
+          </div>
+        </div>
+
+        <div class="pix-body">
+          <p>Clique no botão abaixo para efetuar o pagamento.</p>
+          <a href="${responseData.data.urlPix}" class="btn-pix" target="_blank">
+            Pagar com PIX
+          </a>
+        </div>
+      </div>
+    </div>
+  `;
+
+  carregamento.style.display = 'none'
   const urlTransacao = responseData.data.urlPix;
   metodPag = "PIX";
   idTransacao = responseData.data.payment_id;
@@ -480,6 +521,26 @@ async function pagamentoBoleto() {
         throw new Error('Erro ao obter dados do perfil');
     }
     const perfilData = await response.json();
+
+      function formatarTelefone(numero) {
+    // Remove todos os caracteres não numéricos
+    const numeroLimpo = numero.replace(/\D/g, '');
+
+    // Extrai o DDD (dois primeiros dígitos) e o número do telefone
+    const ddd = numeroLimpo.substring(0, 2);
+    const numeroTelefone = numeroLimpo.substring(2);
+
+    // Retorna um objeto com as partes do número formatado
+    return {
+        ddd: ddd,
+        numeroTelefone: numeroTelefone
+    };
+}
+
+  const telefoneFormatado = formatarTelefone(perfilData.user.telefoneCad);
+
+  const dddCliente = telefoneFormatado.ddd;
+  const numeroTelefoneCliente = telefoneFormatado.numeroTelefone;
   
     // Agora você pode acessar as partes formatadas do número de telefone
     const codPaisCliente = "55";
@@ -519,6 +580,8 @@ async function pagamentoBoleto() {
       nomeCliente: nomeCliente,
       paisCliente: paisCliente,
       codPaisCliente: codPaisCliente,
+      dddCliente: dddCliente,
+      numeroTelefoneCliente: numeroTelefoneCliente,
       userId: idCliente,
       totalCompra:  valorAtualGlobal,
     };
@@ -539,8 +602,35 @@ async function pagamentoBoleto() {
     // Extrair o idTransacao da resposta
     const responseData = await response2.json();
     divBoletoContainer.innerHTML = `
-    <h2>Clique aqui para efetuar o pagamento</h2>
-    <a href="${responseData.data.pdfBoleto}" target="_blank">Acesse Aqui</a>
+    <span class="material-symbols-outlined close-btn" id="fecharFormaPagamento2">
+    close
+  </span>
+
+  <div class="boleto-content">
+    <div class="boleto-icon">📄</div>
+
+    <h2>Boleto bancário gerado com sucesso</h2>
+
+    <p class="boleto-text">
+      Seu boleto foi gerado e já está disponível para pagamento.
+      Após a confirmação, seu pedido será processado automaticamente.
+    </p>
+
+    <div class="boleto-actions">
+      <a id="linkBoleto" href="${responseData.data.urlTransacao}" target="_blank" rel="noopener">
+        Acessar boleto para pagamento
+      </a>
+    </div>
+
+    <div class="boleto-info">
+      <p>
+        ⏳ O prazo de compensação pode levar até <strong>2 dias úteis</strong>.
+      </p>
+      <p>
+        🔒 Ambiente seguro e monitorado.
+      </p>
+    </div>
+  </div>
     `;
     carregamento.style.display = 'none'
     divBoletoContainer.style.display = 'block';
@@ -572,6 +662,7 @@ async function pagamentoBoleto() {
   });
   
 btnCartaoCredito.addEventListener('click', async() => {
+    cartaoContainer.style.display = "flex";
     const nomeTitular = document.getElementById('name_field').value;
     const numCarElement = document.getElementById('card_number_field');
     let numCar = numCarElement.value.replace(/\s/g, ''); // Remove all spaces
@@ -674,13 +765,9 @@ btnCartaoCredito.addEventListener('click', async() => {
     
       // Extrair o idTransacao da resposta
       const responseData = await response2.json();
-      cartaoContainer.innerHTML = `
-      <h2>Clique para visualizar o comprovante</h2>
-      <a href="${responseData.data.comprovanteCobranca}" target="_blank">Acesse Aqui</a>
-      `
       formCartao.style.display = 'none';
       carregamento.style.display = 'none'
-      cartaoContainer.style.display = 'block';
+      cartaoContainer.style.display = 'flex';
       const urlTransacao = responseData.data.urlTransacao;
       metodPag = "CARTÃO";
       idTransacao = responseData.data.payment_id;
@@ -820,11 +907,11 @@ async function obterQuantidadeCarrinho() {
       // Exibir a quantidade total no elemento com id 'quantidadeCarrinho'
       document.getElementById('quantidadeCarrinho').textContent = quantidadeTotal;
   } catch (error) {
-      console.error('Erro ao obter a quantidade de produtos no carrinho:', error);
+      //console.error('Erro ao obter a quantidade de produtos no carrinho:', error);
   }
 }
-document.getElementById('quantidadeCarrinho').addEventListener('click', () => {
-  window.location.href = '/carrinho'
-});
+// document.getElementById('quantidadeCarrinho').addEventListener('click', () => {
+//   window.location.href = '/carrinho'
+// });
 // Chamar a função ao carregar a página
 document.addEventListener('DOMContentLoaded', obterQuantidadeCarrinho);

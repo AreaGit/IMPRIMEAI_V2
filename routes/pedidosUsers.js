@@ -28,7 +28,6 @@ const ultramsg = require('ultramsg-whatsapp-api');
 const instance_id = "instance93146";
 const ultramsg_token = "5oc4vmkit6fcyxym";
 const api = new ultramsg(instance_id, ultramsg_token);
-const pagarme = require('pagarme');
 const qr = require('qrcode');
 const cron = require('node-cron');
 const request = require('request');
@@ -78,9 +77,6 @@ const { cobrancaPixAsaas, cobrancaBoletoAsaas, cobrancaCartaoAsaas, consultarCob
 const QRcode = require('qrcode')
 
 // Use o cliente conforme necessário
-client.on('ready', () => {
-    console.log('Cliente WhatsApp pronto para uso no pedidosUsers.js');
-});
 
 /*async function sendMessage(rawNumber, message) {
   if (!rawNumber || !message) {
@@ -117,8 +113,6 @@ app.use(session({
 const os = require('os');
 const ItensPedidos = require('../models/ItensPedido');
 const UserEmpresas = require('../models/Users-Empresas');
-const pagarmeKeyProd = "sk_KVlgJBsKOTQagkmR";
-const pagarmeKeyTest = "sk_test_05ddc95c6ce442a796c7ebbe2376185d";
 
 // Obtém os detalhes da rede da máquina
 const interfaces = os.networkInterfaces();
@@ -1981,7 +1975,18 @@ async function verificarGraficaMaisProximaEAtualizar2(itensPedido, enderecos) {
                       `Suporte imprimeai.com.br`;
                     }
       
-                    await enviarEmailNotificacao(graficaMaisProxima.emailCad, `Novo Pedido - ID ${pedidoCadastrado.id}`, mensagemStatus);
+                    const htmlEmail = templateEmailPedidoParceiro({
+                      nomeParceiro: graficaMaisProxima.userCad,
+                      pedidoId: itensPedido[0].idPed,
+                      status: pedidoCadastrado.statusPed,
+                      linkPainel: 'https://imprimeai.com.br/login-graficas'
+                    });
+
+                    await enviarEmailNotificacao(
+                      graficaMaisProxima.emailCad,
+                      `Novo pedido disponível • ID ${pedidoCadastrado.id}`,
+                      htmlEmail
+                    );
                     await enviarNotificacaoWhatsapp(graficaMaisProxima.telefoneCad, `Novo Pedido - ${mensagemStatus}`);
       
                     // Adicionar o ID da gráfica notificada ao array
@@ -2002,37 +2007,221 @@ async function verificarGraficaMaisProximaEAtualizar2(itensPedido, enderecos) {
         // Tratamento de erros
       }
 }
-    async function enviarEmailNotificacao(destinatario, assunto, corpo) {
-      const transporter = nodemailer.createTransport({
-        host: 'email-ssl.com.br',  // Servidor SMTP da LocalWeb
-        port: 465,                 // Porta para SSL (465)
-        secure: true,              // Usar conexão segura (SSL)
-        auth: {
-          user: 'no-reply@imprimeai.com.br',  // E-mail que você vai usar para enviar
-          pass: 'H0ndur@s',                    // Senha do e-mail
-        },
-      })
+async function enviarEmailNotificacao(destinatario, assunto, corpoHtml, corpoTexto = null) {
+  const transporter = nodemailer.createTransport({
+    host: 'email-ssl.com.br',
+    port: 465,
+    secure: true,
+    auth: {
+      user: 'contato@imprimeai.com.br',
+      pass: 'Z1mb@bue',
+    },
+  });
 
-      const info = await transporter.sendMail({
-        from: 'no-reply@imprimeai.com.br',
-        to: destinatario,
-        subject: assunto,
-        text: corpo,
-      });
-    
-      console.log('E-mail enviado:', info);
-    }
+  const info = await transporter.sendMail({
+    from: '"ImprimeAi" <contato@imprimeai.com.br>',
+    to: destinatario,
+    subject: assunto,
 
-    async function enviarNotificacaoWhatsapp(destinatario, corpo) {
-      try {
-          const response = await sendMessage(destinatario, corpo);
-          console.log(`Mensagem enviada com sucesso para a gráfica ${destinatario}:`, response);
-          return response;
-      } catch (error) {
-          console.error(`Erro ao enviar mensagem para a gráfica ${destinatario}:`, error);
-          throw error;
-      }
-  }  
+    // Fallback (boa prática)
+    text: corpoTexto || 'Este email contém conteúdo em HTML. Caso não visualize corretamente, utilize um cliente compatível.',
+
+    // HTML premium
+    html: corpoHtml,
+  });
+
+  console.log('E-mail enviado:', info.messageId);
+}
+
+function templateEmailPedidoParceiro({
+  nomeParceiro,
+  pedidoId,
+  status,
+  linkPainel
+}) {
+  const titulo =
+    status === 'Recebido'
+      ? 'Novo pedido aguardando aceite'
+      : 'Pedido em aberto para atendimento';
+
+  const descricao =
+    status === 'Recebido'
+      ? 'Identificamos um novo pedido aguardando seu aceite para dar continuidade ao processo.'
+      : 'Há um pedido em aberto disponível para atendimento em seu painel.';
+
+  return `
+<div style="margin:0; padding:0; background:linear-gradient(180deg,#F69896 0%, #ffffff 60%); font-family:Arial, Helvetica, sans-serif;">
+  <table width="100%" cellpadding="0" cellspacing="0" style="padding:48px 16px;">
+    <tr>
+      <td align="center">
+
+        <table width="100%" cellpadding="0" cellspacing="0"
+          style="max-width:600px; background:#ffffff; border-radius:12px; box-shadow:0 10px 30px rgba(0,0,0,0.08); padding:40px;">
+
+          <!-- Cabeçalho -->
+          <tr>
+            <td style="padding-bottom:28px;">
+              <h1 style="margin:0; font-size:22px; font-weight:600; color:#000000;">
+                ${titulo}
+              </h1>
+              <p style="margin:10px 0 0; font-size:14px; color:#A7A9AC;">
+                ${descricao}
+              </p>
+            </td>
+          </tr>
+
+          <!-- Conteúdo -->
+          <tr>
+            <td style="font-size:15px; line-height:1.8; color:#000000;">
+              <p style="margin:0 0 16px;">
+                Olá <strong>${nomeParceiro}</strong>,
+              </p>
+
+              <p style="margin:0 0 16px;">
+                Informamos que o pedido de número
+                <strong>#${pedidoId}</strong> está disponível para processamento.
+              </p>
+
+              <p style="margin:0;">
+                Para visualizar os detalhes e dar continuidade, acesse seu painel:
+              </p>
+            </td>
+          </tr>
+
+          <!-- Botão -->
+          <tr>
+            <td align="center" style="padding:32px 0;">
+              <a href="${linkPainel}"
+                 style="
+                  background-color:#F37160;
+                  color:#ffffff;
+                  text-decoration:none;
+                  padding:14px 32px;
+                  border-radius:8px;
+                  font-size:15px;
+                  font-weight:600;
+                  display:inline-block;
+                 ">
+                Acessar painel de pedidos
+              </a>
+            </td>
+          </tr>
+
+          <!-- Rodapé -->
+          <tr>
+            <td style="padding-top:32px; border-top:1px solid #A7A9AC; text-align:center;">
+              <p style="margin:0 0 8px; font-size:12px; color:#A7A9AC;">
+                Agradecemos a parceria e ficamos à disposição para qualquer necessidade.
+              </p>
+              <p style="margin:0; font-size:12px; color:#A7A9AC;">
+                © ${new Date().getFullYear()} ImprimeAi • Este é um e-mail automático
+              </p>
+            </td>
+          </tr>
+
+        </table>
+
+      </td>
+    </tr>
+  </table>
+</div>
+`;
+}
+
+function gerarEmailTemplate({
+  titulo,
+  mensagem,
+  destaque,
+  textoBotao,
+  linkBotao
+}) {
+  return `
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>${titulo}</title>
+</head>
+<body style="margin:0;padding:0;background-color:#f4f5f7;font-family:Arial,Helvetica,sans-serif;">
+
+  <table width="100%" cellpadding="0" cellspacing="0" style="padding:24px;">
+    <tr>
+      <td align="center">
+
+        <table width="100%" cellpadding="0" cellspacing="0" style="max-width:600px;background:#ffffff;border-radius:10px;overflow:hidden;box-shadow:0 8px 24px rgba(0,0,0,0.06);">
+
+          <!-- Header -->
+          <tr>
+            <td style="background:#F37160;padding:24px;text-align:center;">
+              <h1 style="margin:0;color:#ffffff;font-size:22px;font-weight:600;">
+                ImprimeAi
+              </h1>
+            </td>
+          </tr>
+
+          <!-- Conteúdo -->
+          <tr>
+            <td style="padding:32px;color:#000000;">
+              <h2 style="margin-top:0;font-size:20px;">
+                ${titulo}
+              </h2>
+
+              <p style="font-size:15px;line-height:1.6;color:#333333;">
+                ${mensagem}
+              </p>
+
+              ${
+                destaque
+                  ? `<div style="margin:24px 0;padding:16px;background:#fff3f1;border-left:4px solid #EF4126;border-radius:6px;font-size:18px;font-weight:bold;color:#EF4126;text-align:center;">
+                      ${destaque}
+                    </div>`
+                  : ''
+              }
+
+              ${
+                linkBotao
+                  ? `<div style="text-align:center;margin-top:32px;">
+                      <a href="${linkBotao}" target="_blank"
+                         style="background:#EF4126;color:#ffffff;text-decoration:none;padding:14px 28px;border-radius:6px;font-size:15px;font-weight:600;display:inline-block;">
+                        ${textoBotao}
+                      </a>
+                    </div>`
+                  : ''
+              }
+
+              <p style="margin-top:32px;font-size:14px;color:#555555;">
+                Caso não reconheça esta solicitação, por favor desconsidere este e-mail.
+              </p>
+
+              <p style="margin-top:24px;font-size:14px;color:#555555;">
+                Atenciosamente,<br/>
+                <strong>Equipe ImprimeAi</strong>
+              </p>
+            </td>
+          </tr>
+
+          <!-- Rodapé -->
+          <tr>
+            <td style="background:#f1f1f1;padding:16px;text-align:center;font-size:12px;color:#777777;">
+              © ${new Date().getFullYear()} ImprimeAi · Todos os direitos reservados
+            </td>
+          </tr>
+
+        </table>
+
+      </td>
+    </tr>
+  </table>
+
+</body>
+</html>
+`;
+}
+
+   async function enviarNotificacaoWhatsapp(destinatario, corpo) {
+     return await sendMessage(destinatario, corpo);
+   }  
 
   const transport = nodemailer.createTransport({
     host: 'smtp.gmail.com',
@@ -2058,19 +2247,19 @@ function delay(ms) {
 }
 
 // === CRONS OTIMIZADOS ===
-cron.schedule('* * * * *', async () => {
+cron.schedule('*/5 * * * *', async () => {
   logInfo("CRON", "⏳ Verificando pagamentos pendentes...");
   await verificarPagamentosPendentes();
   logInfo("CRON", "✅ Verificação de pagamentos concluída.");
 });
 
-cron.schedule('*/2 * * * *', async () => {
+cron.schedule('*/5 * * * *', async () => {
   logInfo("CRON", "💼 Verificação de pagamentos Carteira...");
   await verificarPagamentosPendentesCarteira();
   logInfo("CRON", "✅ Verificação de pagamentos Carteira concluída.");
 });
 
-cron.schedule('*/2 * * * *', async () => {
+cron.schedule('*/5 * * * *', async () => {
   logInfo("CRON", "🏢 Verificação de pagamentos Carteira Empresas...");
   await verificarPagamentosPendentesCarteiraEmpresas();
   logInfo("CRON", "✅ Verificação de pagamentos Carteira Empresas concluída.");
@@ -2266,6 +2455,176 @@ Tá com pressa? ImprimeAí!`);
     console.error("Erro global em verificarPagamentosPendentes:", error);
   }
 }
+
+function mensagemCarteiraConfirmadaUsuario({ nome, valor }) {
+  return `
+💳 *Recarga confirmada — ImprimeAi*
+
+Olá, ${nome}! 😊  
+Sua recarga no valor de *R$ ${Number(valor).toFixed(2)}* foi confirmada com sucesso.
+
+O saldo já está disponível para utilização imediata em seus pedidos.
+
+Conte com a ImprimeAi sempre que precisar.
+`.trim();
+}
+
+
+function mensagemCarteiraConfirmadaEmpresa({ nome, valor }) {
+  return `
+🏢 *Crédito confirmado — ImprimeAi*
+
+Olá, ${nome}.  
+Confirmamos a entrada de crédito no valor de *R$ ${Number(valor).toFixed(2)}* em sua carteira empresarial.
+
+O saldo já está liberado para uso.
+
+Seguimos à disposição.
+— Equipe ImprimeAi
+`.trim();
+}
+
+
+async function verificarPagamentosPendentesCarteira() {
+  try {
+    const recargas = await Carteira.findAll({
+      where: { statusPag: 'ESPERANDO PAGAMENTO' }
+    });
+
+    if (!recargas.length) {
+      logInfo("CARTEIRA", "Nenhuma recarga pendente (usuários).");
+      return;
+    }
+
+    for (const recarga of recargas) {
+      try {
+        const cobranca = await consultarCobranca(recarga.idTransacao);
+
+        if (!cobranca || !cobranca.status) continue;
+
+        if (["CONFIRMED", "RECEIVED"].includes(cobranca.status)) {
+          const user = await User.findByPk(recarga.userId);
+
+          recarga.statusPag = "PAGO";
+
+          // NFSe (emitida na hora da recarga)
+          if (!recarga.nfseUrl) {
+            const nfse = await agendarNfsAsaas({
+              payment: recarga.idTransacao,
+              customer: user.customer_asaas_id,
+              value: cobranca.value,
+              effectiveDate: new Date().toISOString().split('T')[0],
+            });
+
+            const emitida = await emitirNfs(nfse.id);
+            const autorizada = await consultarNf(emitida.externalReference);
+            recarga.nfseUrl = autorizada.pdfUrl;
+          }
+
+          await recarga.save();
+
+          await enviarNotificacaoWhatsapp(
+            user.telefoneCad,
+            mensagemCarteiraConfirmadaUsuario({
+              nome: user.userCad,
+              valor: cobranca.value
+            })
+          );
+
+          await registrarLogPagamento({
+            tipo: "Carteira",
+            referenciaId: recarga.id,
+            statusAnterior: "ESPERANDO PAGAMENTO",
+            statusNovo: "PAGO",
+            mensagem: `Recarga de carteira confirmada para o usuário ${user.id}.`
+          });
+        }
+
+        await delay(400);
+      } catch (err) {
+        await registrarLogPagamento({
+          tipo: "Carteira",
+          referenciaId: recarga.id,
+          statusAnterior: recarga.statusPag,
+          statusNovo: recarga.statusPag,
+          mensagem: `Erro ao verificar recarga: ${err.message}`
+        });
+      }
+    }
+  } catch (error) {
+    console.error("Erro em verificarPagamentosPendentesCarteira:", error);
+  }
+}
+
+async function verificarPagamentosPendentesCarteiraEmpresas() {
+  try {
+    const recargas = await CarteiraEmpresas.findAll({
+      where: { statusPag: 'ESPERANDO PAGAMENTO' }
+    });
+
+    if (!recargas.length) {
+      logInfo("CARTEIRA_EMPRESAS", "Nenhuma recarga pendente.");
+      return;
+    }
+
+    for (const recarga of recargas) {
+      try {
+        const cobranca = await consultarCobranca(recarga.idTransacao);
+        if (!cobranca || !cobranca.status) continue;
+
+        if (["CONFIRMED", "RECEIVED"].includes(cobranca.status)) {
+          const empresa = await UserEmpresas.findByPk(recarga.userId);
+
+          recarga.statusPag = "PAGO";
+
+          if (!recarga.nfseUrl) {
+            const nfse = await agendarNfsAsaas({
+              payment: recarga.idTransacao,
+              customer: empresa.customer_asaas_id,
+              value: cobranca.value,
+              effectiveDate: new Date().toISOString().split('T')[0],
+            });
+
+            const emitida = await emitirNfs(nfse.id);
+            const autorizada = await consultarNf(emitida.externalReference);
+            recarga.nfseUrl = autorizada.pdfUrl;
+          }
+
+          await recarga.save();
+
+          await enviarNotificacaoWhatsapp(
+            empresa.telefoneCad,
+            mensagemCarteiraConfirmadaEmpresa({
+              nome: empresa.nome || empresa.userCad,
+              valor: cobranca.value
+            })
+          );
+
+          await registrarLogPagamento({
+            tipo: "Carteira Empresa",
+            referenciaId: recarga.id,
+            statusAnterior: "ESPERANDO PAGAMENTO",
+            statusNovo: "PAGO",
+            mensagem: `Recarga de carteira confirmada para empresa ${empresa.id}.`
+          });
+        }
+
+        await delay(400);
+      } catch (err) {
+        await registrarLogPagamento({
+          tipo: "Carteira Empresa",
+          referenciaId: recarga.id,
+          statusAnterior: recarga.statusPag,
+          statusNovo: recarga.statusPag,
+          mensagem: `Erro ao verificar recarga empresa: ${err.message}`
+        });
+      }
+    }
+  } catch (error) {
+    console.error("Erro em verificarPagamentosPendentesCarteiraEmpresas:", error);
+  }
+}
+
 
 app.post('/registrarPagamento', async (req, res) => {
   let { userId, valor, metodoPagamento, status, idTransacao, urlTransacao } = req.body;
@@ -2561,74 +2920,6 @@ IMPRIMEAI`;
     }
   }
 
-  async function conectarPagarme(apiKey) {
-    return new Promise((resolve, reject) => {
-        const options = {
-            method: 'POST',
-            uri: 'https://api.pagar.me/core/v5/orders',
-            headers: {
-                'Authorization': 'Basic ' + Buffer.from(`${pagarmeKeyProd}:`).toString('base64'),
-                'Content-Type': 'application/json'
-            }
-        };
-  
-        request(options, function(error, response, body) {
-            if (error) {
-                reject(error);
-                return;
-            }
-  
-            if (response.statusCode >= 200 && response.statusCode < 300) {
-                resolve(true); // Conexão bem-sucedida
-            } else {
-                resolve(false); // Conexão falhou
-            }
-        });
-    });
-  }
-  
-  // Exemplo de uso:
-  const apiKey = 'sk_34a31b18f0db49cd82be2a285152e1b2';
-  conectarPagarme(apiKey)
-    .then(conexaoBemSucedida => {
-        if (conexaoBemSucedida) {
-            console.log('Conexão bem-sucedida com o Pagar.me');
-        } else {
-            console.log('Falha na conexão com o Pagar.me');
-        }
-    })
-    .catch(error => {
-        console.error('Erro ao conectar ao Pagar.me:', error);
-    });
-  
-    // Defina a rota para verificar o status da transação do cartão de crédito no Pagarme
-  app.get('/verificarStatusTransacao', async (req, res) => {
-    try {
-        const chargeId = req.query.chargeId; // Obtenha o ID da transação do cliente
-        const apiKey = 'sk_KVlgJBsKOTQagkmR'; // Substitua pelo sua chave de API do Pagarme
-        
-        // Faça uma solicitação GET para a API do Pagarme para obter o status da transação
-        const response = await axios.get(`https://api.pagar.me/core/v5/charges/${chargeId}`, {
-            headers: {
-                'Authorization': `Basic ${Buffer.from(apiKey + ':').toString('base64')}`
-            }
-        });
-  
-        // Verifique se a solicitação foi bem-sucedida
-        if (response.status === 200) {
-            const statusTransacao = response.data.status; // Obtenha o status da transação da resposta
-            res.json({ status: statusTransacao }); // Envie o status da transação de volta para o cliente
-        } else {
-            // Se a solicitação não foi bem-sucedida, envie uma mensagem de erro para o cliente
-            res.status(500).send('Erro ao verificar o status da transação');
-        }
-    } catch (error) {
-        // Em caso de erro, envie uma mensagem de erro para o cliente
-        console.error('Erro ao verificar o status da transação:', error);
-        res.status(500).send('Erro ao verificar o status da transação');
-    }
-  });
-
   app.get('/pedidos-usuario/:userId', async (req, res) => {
     const userId = req.cookies.userId;
   
@@ -2876,6 +3167,56 @@ app.get('/pedidos-usuario-empresa/:userId', async (req, res) => {
   }
 });
 
+function mensagemCobrancaPixCriada({ nome, valor, link, codigoPix }) {
+  return `
+💠 *Cobrança PIX criada — ImprimeAi*
+
+Olá, ${nome}! 😊  
+Sua cobrança no valor de *R$ ${Number(valor).toFixed(2)}* foi gerada com sucesso.
+
+🔗 *Link para pagamento:*  
+${link}
+
+📋 *PIX Copia e Cola:*  
+${codigoPix}
+
+Assim que o pagamento for confirmado, seguimos automaticamente com seu pedido.
+
+Conte com a ImprimeAi 💙
+`.trim();
+}
+
+function mensagemCobrancaBoletoCriada({ nome, valor, vencimento, link }) {
+  return `
+📄 *Boleto gerado — ImprimeAi*
+
+Olá, ${nome}!  
+Seu boleto no valor de *R$ ${Number(valor).toFixed(2)}* já está disponível.
+
+📆 *Vencimento:* ${vencimento}
+
+🔗 *Acessar boleto:*  
+${link}
+
+Após a compensação, seu pedido será liberado automaticamente.
+
+Estamos à disposição.
+`.trim();
+}
+
+function mensagemCobrancaCartaoCriada({ nome, valor }) {
+  return `
+💳 *Pagamento em processamento — ImprimeAi*
+
+Olá, ${nome}!  
+Seu pagamento no valor de *R$ ${Number(valor).toFixed(2)}* foi enviado para processamento no cartão.
+
+Caso seja aprovado, você receberá a confirmação automaticamente.
+
+Obrigado por confiar na ImprimeAi 😊
+`.trim();
+}
+
 app.post('/processarPagamento-pix', async(req, res) => {
   const perfilData = req.body.perfilData;
   const carrinho = req.session.carrinho;
@@ -2916,6 +3257,19 @@ app.post('/processarPagamento-pix', async(req, res) => {
   console.log(cobrancaPix);
   const url = cobrancaPix.invoiceUrl;
   const idCobranca = cobrancaPix.id;
+
+
+  const telefone = perfilData.dddCliente + perfilData.numeroTelefoneCliente;
+
+  await enviarNotificacaoWhatsapp(
+    telefone,
+    mensagemCobrancaPixCriada({
+      nome: perfilData.nomeCliente,
+      valor: totalAmount,
+      link: cobrancaPix.invoiceUrl,
+      codigoPix: cobrancaPix.pixTransaction?.payload || 'Disponível no link'
+    })
+  );
 
   res.json({
     status: 'success',
@@ -2984,6 +3338,18 @@ app.post('/processarPagamento-boleto', async(req, res) => {
   const pdfBoleto = cobrancaBoleto.bankSlipUrl;
   const urlTransacao = cobrancaBoleto.invoiceUrl;
   const dueDate = cobrancaBoleto.dueDate;
+  
+  const telefone = perfilData.dddCliente + perfilData.numeroTelefoneCliente;
+
+  await enviarNotificacaoWhatsapp(
+    telefone,
+    mensagemCobrancaBoletoCriada({
+      nome: perfilData.nomeCliente,
+      valor: totalAmount,
+      vencimento: cobrancaBoleto.dueDate,
+      link: cobrancaBoleto.invoiceUrl
+    })
+  );
 
   res.json({
     status: 'success',
@@ -3054,6 +3420,16 @@ app.post('/processarPagamento-cartao', async(req ,res) => {
   console.log(cobrancaCartao);
   const idCobranca = cobrancaCartao.id;
   const comprovanteCobranca =  cobrancaCartao.invoiceUrl;
+  
+  const telefoneCliente = perfilData.dddCliente + perfilData.numeroTelefoneCliente;
+
+  await enviarNotificacaoWhatsapp(
+    telefoneCliente,
+    mensagemCobrancaCartaoCriada({
+      nome: perfilData.nomeCliente,
+      valor: totalAmount
+    })
+  );
 
   res.json({
     status: 'success',
@@ -3300,7 +3676,21 @@ async function notificarGrafica(pedidoId) {
           const destinatarioWhatsapp = grafica.telefoneCad;
 
           // Exemplo de notificação por e-mail
-          await enviarEmailNotificacao(destinatarioEmail, 'Novo Pedido a ser Atendido', 'Novo Pedido a ser Atendido - Um pedido acabou de ser liberado, abra seu painel da gráfica.');
+         const htmlPedido = gerarEmailTemplate({
+            titulo: 'Novo pedido disponível',
+            mensagem: `
+              Um novo pedido foi atribuído à sua gráfica e já está disponível para atendimento em seu painel.
+              Recomendamos acessar o sistema o quanto antes para realizar o aceite e dar continuidade ao processo.
+            `,
+            textoBotao: 'Acessar painel da gráfica',
+            linkBotao: 'https://imprimeai.com.br/login-graficas'
+          });
+
+          await enviarEmailNotificacao(
+            graficaMaisProxima.emailCad,
+            `Novo Pedido • ID ${pedidoCadastrado.id}`,
+            htmlPedido
+          );
 
           // Exemplo de notificação por WhatsApp
           await enviarNotificacaoWhatsapp(destinatarioWhatsapp, 'Novo Pedido a ser Atendido - Um pedido acabou de ser liberado, abra seu painel da gráfica.');

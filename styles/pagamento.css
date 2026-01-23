@@ -349,33 +349,631 @@ p.prgPagto {
 /* ==============================
    Containers de Pagamento (Pix, Boleto, Cartão)
 ============================== */
-#criacaoBoleto, #pedidoCriado,
-#qrCodeContainer, #cartaoContainer,
-#boletoContainer {
+#criacaoBoleto, #pedidoCriado {
   display: none;
   width: 590px; height: 500px;
   background-color: #fff; border-radius: 0.5rem;
   box-shadow: 0 20px 25px -5px rgba(0,0,0,0.1),
               0 10px 10px -5px rgba(0,0,0,0.04);
-  position: absolute; left: -40%;
-  transform: translate(-50%);
+  margin: auto;
 }
 /* ... (mantém botões, imagens e estilos internos iguais) */
 
-/* ==============================
-   Modal do Cartão
-============================== */
-.modal {
-  display: none; max-width: 450px;
-  background: #fff; border-radius: 26px;
-  box-shadow: 0px 187px 75px rgba(0,0,0,0.01),
-              0px 105px 63px rgba(0,0,0,0.05),
-              0px 47px 47px rgba(0,0,0,0.09),
-              0px 12px 26px rgba(0,0,0,0.1);
-  position: absolute; top: -90px; left: -60%;
-  transform: translate(-7%);
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.55);
+  backdrop-filter: blur(6px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 9999;
 }
-/* ... (mantém form, .input_field, .purchase--btn, etc.) */
+
+#qrCodeContainer {
+  display: none;
+  width: 100%;
+  max-width: 520px;
+  background: var(--branco);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  padding: 32px;
+  animation: modalFadeUp .35s ease;
+  position: relative;
+}
+
+.pix-modal {
+  width: 100%;
+  max-width: 520px;
+  background: var(--branco);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  padding: 32px;
+  position: relative;
+  animation: modalFadeUp .35s ease;
+}
+
+@keyframes modalFadeUp {
+  from {
+    opacity: 0;
+    transform: translateY(25px) scale(.97);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+.pix-header {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  margin-bottom: 24px;
+}
+
+.pix-icon {
+  width: 48px;
+  height: 48px;
+  background: linear-gradient(135deg, var(--coral), var(--flamingo));
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  color: #fff;
+  font-size: 22px;
+  box-shadow: 0 6px 16px rgba(243,113,96,.45);
+}
+
+.pix-title {
+  font-size: 1.3rem;
+  font-weight: 700;
+  color: var(--text);
+}
+
+.pix-subtitle {
+  font-size: .95rem;
+  color: var(--muted);
+}
+
+
+.pix-body {
+  text-align: center;
+}
+
+.pix-body p {
+  color: var(--muted);
+  margin-bottom: 18px;
+}
+
+.btn-pix {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  padding: 14px 22px;
+  background: linear-gradient(135deg, var(--accent), var(--vermelho));
+  color: #fff;
+  text-decoration: none;
+  font-weight: 600;
+  border-radius: 10px;
+  box-shadow: 0 10px 20px rgba(239,65,38,.4);
+  transition: transform .2s ease, box-shadow .2s ease;
+}
+
+.btn-pix:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 14px 28px rgba(239,65,38,.55);
+}
+
+.modal-close {
+  position: absolute;
+  top: 14px;
+  right: 14px;
+  background: transparent;
+  border: none;
+  font-size: 22px;
+  color: var(--muted);
+  cursor: pointer;
+  transition: color .2s ease;
+}
+
+.modal-close:hover {
+  color: var(--accent);
+}
+
+@media (max-width: 480px) {
+  #qrCodeContainer {
+    padding: 22px;
+    margin: 0 14px;
+  }
+
+  .pix-title {
+    font-size: 1.15rem;
+  }
+}
+
+#boletoContainer {
+  display: none;
+  width: 590px;
+  max-height: 400px;
+  background-color: #fff;
+  border-radius: 12px;
+  box-shadow: 0 20px 25px -5px rgba(0,0,0,0.1),
+              0 10px 10px -5px rgba(0,0,0,0.04);
+  margin: auto;
+  padding: 32px;
+  position: fixed;
+  inset: 0;
+  animation: fadeUp 0.4s ease;
+}
+
+/* Conteúdo */
+.boleto-content {
+  text-align: center;
+}
+
+/* Ícone */
+.boleto-icon {
+  font-size: 48px;
+  margin-bottom: 16px;
+}
+
+/* Título */
+#boletoContainer h2 {
+  font-size: 22px;
+  font-weight: 600;
+  color: #111827;
+  margin-bottom: 12px;
+}
+
+/* Texto */
+.boleto-text {
+  font-size: 15px;
+  color: #4b5563;
+  margin-bottom: 24px;
+  line-height: 1.6;
+}
+
+/* Botão */
+.boleto-actions a {
+  display: inline-block;
+  background: linear-gradient(135deg, var(--accent), var(--vermelho));
+  color: #fff;
+  text-decoration: none;
+  font-weight: 600;
+  border-radius: 10px;
+  box-shadow: 0 10px 20px rgba(239,65,38,.4);
+  transition: transform .2s ease, box-shadow .2s ease;
+  padding: 14px 26px;
+}
+
+.boleto-actions a:hover {
+  transform: translateY(-2px);
+}
+
+/* Informações */
+.boleto-info {
+  margin-top: 24px;
+  font-size: 13px;
+  color: #6b7280;
+}
+
+/* Botão fechar */
+.close-btn {
+  position: absolute;
+  top: 16px;
+  right: 16px;
+  cursor: pointer;
+  color: #9ca3af;
+  transition: color 0.2s;
+}
+
+.close-btn:hover {
+  color: #111827;
+}
+
+/* Animação */
+@keyframes fadeUp {
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+
+/* =========================
+   MODAL CARTÃO DE CRÉDITO
+========================= */
+
+#formCartao {
+  display: none;
+  position: fixed;
+  inset: 0;
+  z-index: 1000;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  background: rgba(0, 0, 0, 0.45);
+  backdrop-filter: blur(4px);
+
+  margin: auto;
+}
+
+#formCartao {display: none;}
+#cartaoContainer {display: none;}
+
+/* =========================
+   CARD / CONTAINER
+========================= */
+
+#formCartao .form {
+  width: 100%;
+  max-width: 420px;
+
+  background: #ffffff;
+  border-radius: 24px;
+  padding: 28px 26px 30px;
+
+  box-shadow:
+    0 25px 50px rgba(0, 0, 0, 0.15),
+    0 10px 20px rgba(0, 0, 0, 0.08);
+
+  position: relative;
+
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+
+  animation: modalFadeIn 0.35s ease forwards;
+}
+
+/* =========================
+   BOTÃO FECHAR
+========================= */
+
+#fecharFormaPagamento3 {
+  position: absolute;
+  top: 16px;
+  right: 18px;
+
+  font-size: 26px;
+  cursor: pointer;
+  color: #9ca3af;
+
+  transition: all 0.25s ease;
+}
+
+#fecharFormaPagamento3:hover {
+  color: #111827;
+  transform: rotate(90deg);
+}
+
+/* =========================
+   SEPARADOR / TÍTULO
+========================= */
+
+.separator {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.separator .line {
+  flex: 1;
+  height: 1px;
+  border: none;
+  background: #e5e7eb;
+}
+
+.separator p {
+  font-size: 14px;
+  font-weight: 600;
+  color: #111827;
+  white-space: nowrap;
+}
+
+/* =========================
+   SUBTÍTULO
+========================= */
+
+.form-subtitle {
+  font-size: 14px;
+  line-height: 1.5;
+  color: #6b7280;
+}
+
+/* =========================
+   FORMULÁRIO CARTÃO
+========================= */
+
+.credit-card-info--form {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.input_container {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.input_label {
+  font-size: 12px;
+  font-weight: 500;
+  color: #6b7280;
+}
+
+/* =========================
+   INPUTS
+========================= */
+
+.input_field {
+  width: 100%;
+  padding: 13px 14px;
+
+  font-size: 14px;
+  color: #111827;
+
+  border-radius: 12px;
+  border: 1.5px solid #e5e7eb;
+  background: #f9fafb;
+
+  transition: all 0.25s ease;
+}
+
+.input_field::placeholder {
+  color: #9ca3af;
+}
+
+.input_field:focus {
+  outline: none;
+  background: #ffffff;
+  border-color: rgba(239,65,38,.4);
+  box-shadow: 0 0 0 3px rgba(239,65,38,.4);
+}
+
+/* =========================
+   CAMPOS LADO A LADO
+========================= */
+
+.split {
+  display: flex;
+  gap: 12px;
+}
+
+.split .input_field {
+  flex: 1;
+}
+
+/* =========================
+   BOTÃO CONFIRMAR
+========================= */
+
+.purchase--btn {
+  margin-top: 8px;
+
+  width: 100%;
+  padding: 14px;
+
+  border-radius: 14px;
+  border: none;
+
+  background: linear-gradient(135deg, var(--accent), var(--vermelho));
+  color: #fff;
+  text-decoration: none;
+  font-weight: 600;
+  box-shadow: 0 10px 20px rgba(239,65,38,.4);
+
+  cursor: pointer;
+  transition: all 0.25s ease;
+}
+
+.purchase--btn:hover {
+  transform: translateY(-2px);
+}
+
+.purchase--btn:active {
+  transform: translateY(0);
+}
+
+/* =========================
+   TEXTO DE SEGURANÇA
+========================= */
+
+.form-footer {
+  margin-top: 4px;
+  font-size: 12px;
+  color: #9ca3af;
+  text-align: center;
+}
+
+/* =========================
+   ANIMAÇÃO
+========================= */
+
+@keyframes modalFadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(20px) scale(0.96);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+/* =========================
+   RESPONSIVO
+========================= */
+
+@media (max-width: 480px) {
+  #formCartao .form {
+    border-radius: 18px;
+    padding: 24px 20px 26px;
+  }
+}
+
+/* =========================
+   CARTÃO - PROCESSAMENTO
+========================= */
+
+#cartaoContainer {
+  display: none;
+  position: fixed;
+  inset: 0;
+  z-index: 1000;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  background: rgba(0, 0, 0, 0.45);
+  backdrop-filter: blur(4px);
+}
+
+/* =========================
+   CARD CONTEÚDO
+========================= */
+
+#cartaoContainer .cartao-content {
+  width: 100%;
+  max-width: 420px;
+
+  background: #ffffff;
+  border-radius: 24px;
+  padding: 32px 28px;
+
+  box-shadow:
+    0 25px 50px rgba(0, 0, 0, 0.15),
+    0 10px 20px rgba(0, 0, 0, 0.08);
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 18px;
+
+  text-align: center;
+
+  animation: cartaoFadeIn 0.35s ease forwards;
+}
+
+#cartaoContainer {display: none;}
+
+/* =========================
+   BOTÃO FECHAR
+========================= */
+
+#cartaoContainer .close-btn {
+  position: absolute;
+  top: 18px;
+  right: 22px;
+
+  font-size: 26px;
+  cursor: pointer;
+  color: #9ca3af;
+
+  transition: all 0.25s ease;
+}
+
+#cartaoContainer .close-btn:hover {
+  color: #111827;
+  transform: rotate(90deg);
+}
+
+/* =========================
+   ÍCONE
+========================= */
+
+.cartao-icon {
+  width: 64px;
+  height: 64px;
+
+  border-radius: 50%;
+  background: linear-gradient(135deg, var(--accent), var(--coral));
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  font-size: 30px;
+  color: #ffffff;
+
+  box-shadow: 0 12px 25px rgba(239,65,38,.4);
+}
+
+/* =========================
+   TÍTULO
+========================= */
+
+#cartaoContainer h2 {
+  font-size: 20px;
+  font-weight: 600;
+  color: #111827;
+}
+
+/* =========================
+   TEXTO PRINCIPAL
+========================= */
+
+.cartao-text {
+  font-size: 14px;
+  line-height: 1.6;
+  color: #6b7280;
+  max-width: 320px;
+}
+
+/* =========================
+   INFORMAÇÕES
+========================= */
+
+.cartao-info {
+  margin-top: 6px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.cartao-info p {
+  font-size: 13px;
+  color: #374151;
+}
+
+/* =========================
+   ANIMAÇÃO
+========================= */
+
+@keyframes cartaoFadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(20px) scale(0.96);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+/* =========================
+   RESPONSIVO
+========================= */
+
+@media (max-width: 480px) {
+  #cartaoContainer .cartao-content {
+    border-radius: 18px;
+    padding: 26px 22px;
+  }
+
+  #cartaoContainer h2 {
+    font-size: 18px;
+  }
+}
+
 
 /* ==============================
    Loaders e Spinners

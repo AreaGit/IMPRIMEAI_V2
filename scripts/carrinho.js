@@ -340,9 +340,10 @@ document.addEventListener("DOMContentLoaded", async () => {
           userLog.style.display = 'none';
       } else {
           // Esconde o convite e mostra o nome do usuário
+          const limitedUsername = username.length > 20 ? `${username.slice(0, 20)}...` : username;
           conviteCad.style.display = 'none';
           userLog.style.display = 'block';
-          nameUserLog.textContent = username;
+          nameUserLog.textContent = limitedUsername;
       }
 });
 

@@ -8,7 +8,7 @@ function getCookie(name) {
 function deleteCookie(name) {
     document.cookie = name + '=; expires=Thu, 01 Jan 1970 00:00:01 GMT; path=/';
 }
-document.getElementById('verificationForm').addEventListener('submit', function(event) {
+document.getElementById('btn_verificar').addEventListener('click', function(event) {
     event.preventDefault();
 
     const emailCad = getCookie('email');
@@ -19,6 +19,9 @@ document.getElementById('verificationForm').addEventListener('submit', function(
 
     // Combine the input values to form the verification code
     const verificationCode = input1 + input2 + input3 + input4;
+
+
+    console.log(emailCad, verificationCode)
 
     fetch('/verificar-codigo', {
         method: 'POST',

@@ -20,49 +20,44 @@ const axios = require('axios');
 const request = require('request-promise');
 const xlsx = require('xlsx');
 const upload2 = multer({ storage: multer.memoryStorage() });
-const { client, sendMessage } = require('./api/whatsapp-web');
+const { sendMessage } = require('./api/whatsapp-web');
 const EnderecosEmpresas = require('../models/Enderecos-Empresas');
 const { criarClienteAsaas } = require('./api/asaas')
 const path = require('path');
 const UsersAdm = require('../models/UsersAdm');
-client.on('ready', () => {
-  console.log('Cliente WhatsApp pronto para uso no cadastros.js');
-})
 require('dotenv').config();
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-async function enviarEmailNotificacao(destinatario, assunto, corpo) {
+async function enviarEmailNotificacao(destinatario, assunto, corpoHtml, corpoTexto = null) {
   const transporter = nodemailer.createTransport({
-    host: 'email-ssl.com.br',  // Servidor SMTP da LocalWeb
-    port: 465,                 // Porta para SSL (465)
-    secure: true,              // Usar conexão segura (SSL)
+    host: 'email-ssl.com.br',
+    port: 465,
+    secure: true,
     auth: {
-      user: 'atendimento@imprimeai.com.br',  // E-mail que você vai usar para enviar
-      pass: 'Z1mb@bue',                    // Senha do e-mail
+      user: 'contato@imprimeai.com.br',
+      pass: 'Z1mb@bue',
     },
-  })
-
-  const info = await transporter.sendMail({
-    from: 'atendimento@imprimeai.com.br',
-    to: destinatario,
-    subject: assunto,
-    text: corpo,
   });
 
-  console.log('E-mail enviado:', info);
+  const info = await transporter.sendMail({
+    from: '"ImprimeAi" <contato@imprimeai.com.br>',
+    to: destinatario,
+    subject: assunto,
+
+    // Fallback (boa prática)
+    text: corpoTexto || 'Este email contém conteúdo em HTML. Caso não visualize corretamente, utilize um cliente compatível.',
+
+    // HTML premium
+    html: corpoHtml,
+  });
+
+  console.log('E-mail enviado:', info.messageId);
 }
 
 async function enviarNotificacaoWhatsapp(destinatario, corpo) {
-  try {
-      const response = await sendMessage(destinatario, corpo);
-      console.log(`Mensagem de código de verificação enviada com sucesso para o cliente ${destinatario}:`, response);
-      return response;
-  } catch (error) {
-      console.error(`Erro ao enviar mensagem para o cliente ${destinatario}:`, error);
-      throw error;
-  }
-} 
+  return await sendMessage(destinatario, corpo);
+}
 
 function gerarVerificationCode() {
   return Math.floor(1000 + Math.random() * 9000).toString();
@@ -177,6 +172,40 @@ async function hashSenhasUsuarios() {
 
 //hashSenhasUsuarios();
 
+function mensagemCodigoWhatsapp({ nome, codigo }) {
+  return `
+🔐 *Confirmação de cadastro — ImprimeAi*
+
+Olá${nome ? `, ${nome}` : ''}!  
+Para concluir seu cadastro com segurança, utilize o código abaixo:
+
+➡️ *${codigo}*
+
+Este código é pessoal e válido por tempo limitado.  
+Caso você não tenha solicitado este cadastro, basta ignorar esta mensagem.
+
+Estamos à disposição.  
+— *Equipe ImprimeAi*
+`.trim();
+}
+
+function mensagemCodigoCnpjWhatsapp({ codigo }) {
+  return `
+🔐 *Recuperação de acesso — ImprimeAi*
+
+Recebemos uma solicitação para recuperação de acesso vinculada a este WhatsApp.
+
+Para continuar com segurança, utilize o código abaixo:
+
+➡️ *${codigo}*
+
+Este código é pessoal e válido por tempo limitado.  
+Caso você não tenha solicitado esta ação, ignore esta mensagem.
+
+— *Equipe ImprimeAi*
+`.trim();
+}
+
 app.post("/cadastrar", async (req, res) => { 
     try {
         const { userCad, cpfCad, endereçoCad, numCad, compCad, bairroCad, cepCad, cidadeCad, estadoCad, inscricaoEstadualCad, telefoneCad, emailCad, passCad } = req.body;
@@ -241,7 +270,16 @@ app.post("/cadastrar", async (req, res) => {
       const clienteAsaas = await criarClienteAsaas(dadosCliente);
       const customer_asaas_id = clienteAsaas.id;
 
-        const newUser = await User.create({
+        const mensagemStatus = `Seu código de verificação é: ${verificationCode}`
+        //await enviarEmailNotificacao(emailCad, `Código de Verificação do usuário ${userCad}`, mensagemStatus);
+        const mensagemWhatsapp = mensagemCodigoWhatsapp({
+          nome: userCad,
+          codigo: verificationCode
+        });
+
+        await enviarNotificacaoWhatsapp(telefoneCad, mensagemWhatsapp);
+
+                const newUser = await User.create({
             userCad: userCad,
             customer_asaas_id: customer_asaas_id,
             cpfCad: cpfCad,
@@ -258,9 +296,7 @@ app.post("/cadastrar", async (req, res) => {
             passCad: hashedPassword,
             verificationCode: verificationCode // Salve o código de verificação
         });
-        const mensagemStatus = `Seu código de verificação é: ${verificationCode}`
-        //await enviarEmailNotificacao(emailCad, `Código de Verificação do usuário ${userCad}`, mensagemStatus);
-        await enviarNotificacaoWhatsapp(telefoneCad, `Seu código de verificação é: ${verificationCode}`);
+
         res.json({ message: 'Usuário cadastrado com sucesso!', user: newUser });
         
     } catch (error) {
@@ -388,6 +424,8 @@ app.post("/cadastrarUser-empresas", async (req, res) => {
 app.post('/verificar-codigo', async (req, res) => {
   try {
       const { emailCad, verificationCode } = req.body;
+
+      console.log(emailCad, verificationCode);
 
       const user = await User.findOne({ where: { emailCad: emailCad } });
 
@@ -540,33 +578,129 @@ app.get("/logout", (req, res) => {
   res.redirect("/login");
 });
 
-app.post('/enviar-email-redefinir', async(req, res) => {
+app.post('/enviar-email-redefinir', async (req, res) => {
   try {
-    const email = req.body.email;
-    console.log("Email recebido para redefinir", email);
+    const { email } = req.body;
+    console.log("Email recebido para redefinir:", email);
 
     const transporter = nodemailer.createTransport({
-      host: 'email-ssl.com.br',  // Servidor SMTP da LocalWeb
-      port: 465,                 // Porta para SSL (465)
-      secure: true,              // Usar conexão segura (SSL)
+      host: 'email-ssl.com.br',
+      port: 465,
+      secure: true,
       auth: {
-        user: 'atendimento@imprimeai.com.br',  // E-mail que você vai usar para enviar
-        pass: 'Z1mb@bue',                    // Senha do e-mail
+        user: 'contato@imprimeai.com.br',
+        pass: 'Z1mb@bue',
       },
-    })
-  
-    const info = await transporter.sendMail({
-      from: 'atendimento@imprimeai.com.br',
-      to: email,
-      subject: "Redefinição de senha",
-      text: "Olá vimos que você esqueceu sua senha! acesse esse link para redefini-lá: https://imprimeai.com.br/redefinir-senha",
     });
-  
-    console.log('E-mail enviado:', info);
 
-    res.json({message: "Email enviado!"});
-  } catch(err) {
+    const resetLink = "https://imprimeai.com.br/redefinir-senha";
 
+    const html = `
+    <div style="margin:0; padding:0; background:linear-gradient(180deg,#F69896 0%, #ffffff 60%); font-family:Arial, Helvetica, sans-serif;">
+      <table width="100%" cellpadding="0" cellspacing="0" style="padding:48px 16px;">
+        <tr>
+          <td align="center">
+
+            <!-- Card -->
+            <table width="100%" cellpadding="0" cellspacing="0" style="max-width:600px; background:#ffffff; border-radius:12px; box-shadow:0 3px 3px rgba(0,0,0,0.08); padding:40px;">
+
+              <!-- Cabeçalho -->
+              <tr>
+                <td align="center" style="padding-bottom:32px;">
+                  <h1 style="margin:0; font-size:24px; font-weight:600; color:#000000;">
+                    Redefinição de senha
+                  </h1>
+                  <p style="margin:12px 0 0; font-size:15px; color:#A7A9AC;">
+                    Segurança e tranquilidade para sua conta
+                  </p>
+                </td>
+              </tr>
+
+              <!-- Corpo -->
+              <tr>
+                <td style="font-size:15px; line-height:1.8; color:#000000;">
+                  <p style="margin:0 0 16px;">
+                    Olá,
+                  </p>
+
+                  <p style="margin:0 0 16px;">
+                    Recebemos uma solicitação para redefinir a senha associada à sua conta.
+                    Pensando na sua segurança, criamos um acesso exclusivo para que você
+                    possa definir uma nova senha de forma simples e protegida.
+                  </p>
+
+                  <p style="margin:0;">
+                    Para continuar, basta clicar no botão abaixo:
+                  </p>
+                </td>
+              </tr>
+
+              <!-- Botão -->
+              <tr>
+                <td align="center" style="padding:36px 0;">
+                  <a href="${resetLink}"
+                    style="
+                      background-color:#F37160;
+                      color:#ffffff;
+                      text-decoration:none;
+                      padding:16px 36px;
+                      border-radius:8px;
+                      font-size:16px;
+                      font-weight:600;
+                      display:inline-block;
+                    ">
+                    Redefinir minha senha
+                  </a>
+                </td>
+              </tr>
+
+              <!-- Aviso -->
+              <tr>
+                <td style="font-size:14px; line-height:1.6; color:#A7A9AC;">
+                  <p style="margin:0 0 12px;">
+                    Caso você não tenha solicitado esta redefinição, nenhuma ação é necessária.
+                    Sua conta permanecerá segura.
+                  </p>
+
+                  <p style="margin:0;">
+                    Este link é pessoal e válido por tempo limitado.
+                  </p>
+                </td>
+              </tr>
+
+              <!-- Rodapé -->
+              <tr>
+                <td style="padding-top:40px; border-top:1px solid #A7A9AC; text-align:center;">
+                  <p style="margin:0 0 8px; font-size:12px; color:#A7A9AC;">
+                    © ${new Date().getFullYear()} ImprimeAi
+                  </p>
+                  <p style="margin:0; font-size:12px; color:#A7A9AC;">
+                    Este é um e-mail automático. Por favor, não responda.
+                  </p>
+                </td>
+              </tr>
+
+            </table>
+            <!-- /Card -->
+    
+          </td>
+        </tr>
+      </table>
+    </div>
+    `;
+
+    await transporter.sendMail({
+      from: '"ImprimeAi" <contato@imprimeai.com.br>',
+      to: email,
+      subject: "Redefina sua senha com segurança",
+      html,
+    });
+
+    res.json({ message: "Email de redefinição enviado com sucesso!" });
+
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: "Erro ao enviar e-mail." });
   }
 });
 
@@ -614,17 +748,100 @@ app.post('/solicitar-parceiro', async (req, res) => {
 
     // Configurar o corpo do e-mail
     const corpoEmail = `
-      Nova Solicitação de Parceria\n
-      Nome: ${nome}\n
-      Localidade: ${localidade}\n
-      Telefone: ${telefone}\n
-      Email: ${email}\n
-      Mensagem: ${mensagem}\n
-      Produtos Selecionados: ${produtosSelecionados}
+    <div style="margin:0; padding:0; background:linear-gradient(180deg,#F69896 0%, #ffffff 60%); font-family:Arial, Helvetica, sans-serif;">
+      <table width="100%" cellpadding="0" cellspacing="0" style="padding:48px 16px;">
+        <tr>
+          <td align="center">
+
+            <!-- Card -->
+            <table width="100%" cellpadding="0" cellspacing="0"
+              style="max-width:600px; background:#ffffff; border-radius:12px; box-shadow:0 10px 30px rgba(0,0,0,0.08); padding:40px;">
+
+              <!-- Cabeçalho -->
+              <tr>
+                <td style="padding-bottom:32px;">
+                  <h1 style="margin:0; font-size:22px; font-weight:600; color:#000000;">
+                    Nova solicitação de parceria
+                  </h1>
+                  <p style="margin:8px 0 0; font-size:14px; color:#A7A9AC;">
+                    Um novo parceiro demonstrou interesse em colaborar com a ImprimeAi
+                  </p>
+                </td>
+              </tr>
+
+              <!-- Dados do solicitante -->
+              <tr>
+                <td style="padding-bottom:24px;">
+                  <h2 style="margin:0 0 16px; font-size:16px; color:#F37160;">
+                    Dados do solicitante
+                  </h2>
+
+                  <p style="margin:0 0 8px; font-size:15px; color:#000000;">
+                    <strong>Nome:</strong> ${nome}
+                  </p>
+                  <p style="margin:0 0 8px; font-size:15px; color:#000000;">
+                    <strong>Localidade:</strong> ${localidade}
+                  </p>
+                  <p style="margin:0 0 8px; font-size:15px; color:#000000;">
+                    <strong>Telefone:</strong> ${telefone}
+                  </p>
+                  <p style="margin:0; font-size:15px; color:#000000;">
+                    <strong>E-mail:</strong> ${email}
+                  </p>
+                </td>
+              </tr>
+
+              <!-- Produtos -->
+              <tr>
+                <td style="padding-bottom:24px;">
+                  <h2 style="margin:0 0 16px; font-size:16px; color:#F37160;">
+                    Produtos de interesse
+                  </h2>
+
+                  <p style="margin:0; font-size:15px; line-height:1.6; color:#000000;">
+                    ${produtosSelecionados || 'Não informado'}
+                  </p>
+                </td>
+              </tr>
+
+              <!-- Mensagem -->
+              <tr>
+                <td style="padding-bottom:32px;">
+                  <h2 style="margin:0 0 16px; font-size:16px; color:#F37160;">
+                    Mensagem do solicitante
+                  </h2>
+
+                  <div style="background:#f9f9f9; border-left:4px solid #EF4126; padding:16px; border-radius:6px;">
+                    <p style="margin:0; font-size:15px; line-height:1.7; color:#000000;">
+                      ${mensagem}
+                    </p>
+                  </div>
+                </td>
+              </tr>
+
+              <!-- Rodapé -->
+              <tr>
+                <td style="padding-top:24px; border-top:1px solid #A7A9AC; text-align:center;">
+                  <p style="margin:0 0 8px; font-size:12px; color:#A7A9AC;">
+                    © ${new Date().getFullYear()} ImprimeAi
+                  </p>
+                  <p style="margin:0; font-size:12px; color:#A7A9AC;">
+                    Solicitação enviada através do site institucional
+                  </p>
+                </td>
+              </tr>
+
+            </table>
+            <!-- /Card -->
+
+          </td>
+        </tr>
+      </table>
+    </div>
     `;
 
     // Enviar o e-mail usando a função enviarEmailNotificacao
-    await enviarEmailNotificacao('atendimento@imprimeai.com.br', 'Nova Solicitação de Parceria', corpoEmail);
+    await enviarEmailNotificacao('contato@imprimeai.com.br', 'Nova Solicitação de Parceria', corpoEmail);
 
     // Responder com sucesso
     res.status(200).json({ message: "Solicitação de parceria enviada com sucesso!" });
@@ -1197,8 +1414,105 @@ app.post("/enviar-codigo-cpq", async (req, res) => {
     user.verificationCode = codigo;
     await user.save();
 
+    const htmlCodigo = `
+    <div style="margin:0; padding:0; background:linear-gradient(180deg,#F69896 0%, #ffffff 60%); font-family:Arial, Helvetica, sans-serif;">
+      <table width="100%" cellpadding="0" cellspacing="0" style="padding:48px 16px;">
+        <tr>
+          <td align="center">
+
+            <!-- Card -->
+            <table width="100%" cellpadding="0" cellspacing="0"
+              style="max-width:560px; background:#ffffff; border-radius:12px; box-shadow:0 10px 30px rgba(0,0,0,0.08); padding:40px;">
+
+              <!-- Cabeçalho -->
+              <tr>
+                <td align="center" style="padding-bottom:32px;">
+                  <h1 style="margin:0; font-size:22px; font-weight:600; color:#000000;">
+                    Código de recuperação de senha
+                  </h1>
+                  <p style="margin:12px 0 0; font-size:14px; color:#A7A9AC;">
+                    Confirmação segura para acesso à sua conta
+                  </p>
+                </td>
+              </tr>
+
+              <!-- Texto -->
+              <tr>
+                <td style="font-size:15px; line-height:1.8; color:#000000;">
+                  <p style="margin:0 0 16px;">
+                    Olá,
+                  </p>
+
+                  <p style="margin:0 0 16px;">
+                    Recebemos uma solicitação para redefinir a senha da sua conta.
+                    Para garantir a sua segurança, utilize o código abaixo para
+                    prosseguir com a recuperação.
+                  </p>
+                </td>
+              </tr>
+
+              <!-- Código -->
+              <tr>
+                <td align="center" style="padding:32px 0;">
+                  <div
+                    style="
+                      display:inline-block;
+                      background:#f9f9f9;
+                      border:1px dashed #F37160;
+                      padding:16px 32px;
+                      border-radius:8px;
+                      font-size:24px;
+                      font-weight:700;
+                      letter-spacing:4px;
+                      color:#EF4126;
+                    ">
+                    ${codigo}
+                  </div>
+                </td>
+              </tr>
+
+              <!-- Aviso -->
+              <tr>
+                <td style="font-size:14px; line-height:1.6; color:#A7A9AC;">
+                  <p style="margin:0 0 12px;">
+                    Este código é pessoal, temporário e válido por um curto período.
+                  </p>
+
+                  <p style="margin:0;">
+                    Caso você não tenha solicitado esta ação, ignore este e-mail.
+                    Sua conta permanecerá segura.
+                  </p>
+                </td>
+              </tr>
+
+              <!-- Rodapé -->
+              <tr>
+                <td style="padding-top:36px; border-top:1px solid #A7A9AC; text-align:center;">
+                  <p style="margin:0 0 8px; font-size:12px; color:#A7A9AC;">
+                    © ${new Date().getFullYear()} ImprimeAi
+                  </p>
+                  <p style="margin:0; font-size:12px; color:#A7A9AC;">
+                    Este é um e-mail automático. Por favor, não responda.
+                  </p>
+                </td>
+              </tr>
+
+            </table>
+            <!-- /Card -->
+
+          </td>
+        </tr>
+      </table>
+    </div>
+    `;
+
     // Enviar e-mail com o código
-    await enviarEmailNotificacao(email, "Código de recuperação de senha", `Seu código de recuperação é: ${codigo}`);
+    await enviarEmailNotificacao(
+      email,
+      "Código de recuperação de senha",
+      htmlCodigo,
+      `Seu código de recuperação é: ${codigo}`
+    );
 
     res.cookie("email", email, { httpOnly: true });
     return res.json({ success: true, message: "Código enviado para o e-mail." });
@@ -1299,7 +1613,11 @@ app.post("/enviar-codigo-cnpj-cpq", async (req, res) => {
     await user.save();
 
     // Enviar whatsapp com o código
-    await enviarNotificacaoWhatsapp(user.telefoneCad, `Seu código de verificação é: ${codigo}`);
+    const mensagemWhatsapp = mensagemCodigoCnpjWhatsapp({
+      codigo
+    });
+
+    await enviarNotificacaoWhatsapp(user.telefoneCad, mensagemWhatsapp);
 
     res.cookie("whatsapp", user.telefoneCad, { httpOnly: true });
     return res.json({ success: true, message: "Código enviado para o whatsapp." });
