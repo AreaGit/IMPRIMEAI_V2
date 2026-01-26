@@ -167,6 +167,6 @@ Alterações estruturais relevantes devem considerar o impacto na arquitetura ex
 ---
 
 ## 🔗 Link para Documentação Técnica
-➡️ https://docs.google.com/document/d/1gEKOpnbnXxOprg8_wion-ziGKmEGrsa7LDeBPpJk5FI/edit?usp=sharing
+➡️ https://docs.google.com/document/d/1yAKj5q41T-o_6cQFQYIZHHj9zcZuyGi_7UbrIac4yOc/edit?usp=sharing
 
 ---
