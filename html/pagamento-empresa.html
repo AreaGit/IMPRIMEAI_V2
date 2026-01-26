@@ -331,8 +331,28 @@
             </div> 
         </div>
         <div id="qrCodeContainer"></div>
-        <div id="boletoContainer"><span class="material-symbols-outlined" id="fecharFormaPagamento2">close</span></div>
-        <div id="cartaoContainer"></div>
+        <div id="boletoContainer" role="dialog" aria-modal="true"><span class="material-symbols-outlined" id="fecharFormaPagamento2">close</span></div>
+        <div id="cartaoContainer" role="dialog" aria-modal="true">
+          <span class="material-symbols-outlined close-btn" id="fecharCartaoContainer">
+            close
+          </span>
+
+          <div class="cartao-content">
+            <div class="cartao-icon">💳</div>
+
+            <h2>Pagamento em processamento</h2>
+
+            <p class="cartao-text">
+              Estamos processando seu pagamento com cartão de crédito.
+              Em instantes você receberá a confirmação.
+            </p>
+
+            <div class="cartao-info">
+              <p>🔐 Transação protegida com criptografia</p>
+              <p>⚡ Aprovação normalmente imediata</p>
+            </div>
+          </div>
+        </div>
         <div class="modal" id="formCartao">
           <div class="form">
             <span class="material-symbols-outlined" id="fecharFormaPagamento3" onclick="recarregarPagina()">close</span>
@@ -359,8 +379,9 @@
               </div>
             </div>
             <button class="purchase--btn" id="btnCartaoCredito">Avançar Pagamento</button>
+            <p class="form-footer"> 🔒 Seus dados não são armazenados em nossos servidores </p>
           </div>
-        </div>   
+        </div>
                 <div id="criacaoBoleto">
                   <div id="faixa">
                       <div class="image">

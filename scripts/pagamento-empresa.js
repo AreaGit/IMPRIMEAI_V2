@@ -200,7 +200,7 @@ btnContPag.addEventListener('click', () => {
         pagamentoBoleto();
     } else if (divAtiva === "cartaoCredito") {
         carregamento.style.display = 'none'
-        formCartao.style.display = 'block'
+        formCartao.style.display = 'flex'
     } else if (divAtiva === "carteiraUser") {
         pagamentoCarteira();
     } else {
@@ -215,6 +215,7 @@ btnContPag.addEventListener('click', () => {
 async function criarPedido() {
   try {
         carregamento.style.display = 'block';
+        cartaoContainer.style.display = "none";
         const totalAPagar = valorAtualGlobal;  
         // Crie um objeto XMLHttpRequest
         const xhr = new XMLHttpRequest();
@@ -409,10 +410,29 @@ const cpfCliente = cpf;
 
   // Extrair o idTransacao da resposta
   const responseData = await response2.json();
+  qrCodeContainer.style.display = 'block';
   qrCodeContainer.innerHTML = `
-  <h2>Clique aqui para efetuar o pagamento</h2>
-  <a href="${responseData.data.urlPix}" target="_blank">Acesse Aqui</a>
-  `
+    <div class="modal-overlay" id="pixModal">
+      <div class="pix-modal">
+        <button class="modal-close" onclick="fecharPix()">×</button>
+
+        <div class="pix-header">
+          <div class="pix-icon">💸</div>
+          <div>
+            <div class="pix-title">Pagamento via PIX</div>
+            <div class="pix-subtitle">Rápido, seguro e instantâneo</div>
+          </div>
+        </div>
+
+        <div class="pix-body">
+          <p>Clique no botão abaixo para efetuar o pagamento.</p>
+          <a href="${responseData.data.urlPix}" class="btn-pix" target="_blank">
+            Pagar com PIX
+          </a>
+        </div>
+      </div>
+    </div>
+  `;
   carregamento.style.display = 'none'
   qrCodeContainer.style.display = 'block';
   const urlTransacao = responseData.data.urlPix;
@@ -560,11 +580,38 @@ async function pagamentoBoleto() {
         throw new Error('Erro ao processar pagamento');
     }
   
-    // Extrair o idTransacao da resposta
+        // Extrair o idTransacao da resposta
     const responseData = await response2.json();
     divBoletoContainer.innerHTML = `
-    <h2>Clique aqui para efetuar o pagamento</h2>
-    <a href="${responseData.data.pdfBoleto}" target="_blank">Acesse Aqui</a>
+    <span class="material-symbols-outlined close-btn" id="fecharFormaPagamento2">
+    close
+  </span>
+
+  <div class="boleto-content">
+    <div class="boleto-icon">📄</div>
+
+    <h2>Boleto bancário gerado com sucesso</h2>
+
+    <p class="boleto-text">
+      Seu boleto foi gerado e já está disponível para pagamento.
+      Após a confirmação, seu pedido será processado automaticamente.
+    </p>
+
+    <div class="boleto-actions">
+      <a id="linkBoleto" href="${responseData.data.urlTransacao}" target="_blank" rel="noopener">
+        Acessar boleto para pagamento
+      </a>
+    </div>
+
+    <div class="boleto-info">
+      <p>
+        ⏳ O prazo de compensação pode levar até <strong>2 dias úteis</strong>.
+      </p>
+      <p>
+        🔒 Ambiente seguro e monitorado.
+      </p>
+    </div>
+  </div>
     `;
     carregamento.style.display = 'none'
     divBoletoContainer.style.display = 'block';
@@ -595,6 +642,7 @@ async function pagamentoBoleto() {
   });
   
 btnCartaoCredito.addEventListener('click', async() => {
+    cartaoContainer.style.display = "flex";
     const nomeTitular = document.getElementById('name_field').value;
     const numCarElement = document.getElementById('card_number_field');
     let numCar = numCarElement.value.replace(/\s/g, ''); // Remove all spaces
@@ -698,13 +746,9 @@ btnCartaoCredito.addEventListener('click', async() => {
     
       // Extrair o idTransacao da resposta
       const responseData = await response2.json();
-      cartaoContainer.innerHTML = `
-      <h2>Clique para visualizar o comprovante</h2>
-      <a href="${responseData.data.comprovanteCobranca}" target="_blank">Acesse Aqui</a>
-      `
       formCartao.style.display = 'none';
       carregamento.style.display = 'none'
-      cartaoContainer.style.display = 'block';
+      cartaoContainer.style.display = 'flex';
       const urlTransacao = responseData.data.urlTransacao;
       metodPag = "CARTÃO";
       idTransacao = responseData.data.payment_id;

@@ -2767,35 +2767,128 @@ IMPRIMEAI`;
     }
   });
 
+async function emitirNFSeEmpresa({ user, valor, idTransacao }) {
+  try {
+    const hojeComHifen = new Date().toISOString().split('T')[0];
 
-  app.post('/registrarPagamento-empresas', async (req, res) => {
-    const { userId, valor, metodoPagamento, status, idTransacao } = req.body;
-    console.log("REGISTRANDO NA CARTEIRA", userId, valor, metodoPagamento, status)
-    try {
-      // Encontre a carteira do usuário pelo userId
-      let carteira = await CarteiraEmpresas.findOne({ where: { userId } });
-  
-      // Se a carteira não existir, crie uma nova
-      if (!carteira) {
-        //carteira = await Carteira.create({ userId, saldo: 0 }); // Saldo inicial 0
-      }
-  
-      // Crie uma entrada na tabela Carteira para registrar o pagamento
-      const pagamento = await CarteiraEmpresas.create({
-        saldo: valor,
-        statusPag: status,
-        userId: userId,
-        idTransacao: idTransacao
-      });
-  
-      console.log('Pagamento registrado com sucesso:', { userId, valor, metodoPagamento, status });
-  
-      res.status(200).send('Pagamento registrado com sucesso!');
-    } catch (error) {
-      console.error('Erro ao registrar o pagamento:', error);
-      res.status(500).send('Erro ao registrar o pagamento');
+    const dadosNfse = {
+      payment: idTransacao,
+      customer: user.customer_asaas_id,
+      externalReference: Math.floor(Math.random() * 999) + 1,
+      value: valor,
+      effectiveDate: hojeComHifen
+    };
+
+    // 1️⃣ Agenda NFSe
+    const nfse = await agendarNfsAsaas(dadosNfse);
+    const invoice = nfse.id;
+
+    // 2️⃣ Emite NFSe
+    const nfseEmitida = await emitirNfs(invoice);
+    const externalReference = nfseEmitida.externalReference;
+
+    // 3️⃣ Consulta até autorização
+    const notaAutorizada = await consultarNf(externalReference);
+
+    console.log('🧾 NFSe autorizada:', notaAutorizada);
+
+    return {
+      numero: notaAutorizada.invoiceNumber,
+      pdfUrl: notaAutorizada.pdfUrl
+    };
+
+  } catch (error) {
+    console.error('❌ Erro na emissão da NFSe:', error);
+    throw error;
+  }
+}
+
+async function processarPosPagamentoEmpresa({ user, valor, idTransacao }) {
+  try {
+    // 1️⃣ Emitir NFSe
+    const nfse = await emitirNFSeEmpresa({
+      user,
+      valor,
+      idTransacao
+    });
+
+    // 2️⃣ Atualizar carteira com URL da NFSe
+    await CarteiraEmpresas.update(
+      { nfseUrl: nfse.pdfUrl },
+      { where: { idTransacao } }
+    );
+
+    // 3️⃣ Enviar WhatsApp
+    enviarNotificacaoWhatsapp(
+      user.telefoneCad,
+      `
+🏢 *Crédito confirmado — ImprimeAi*
+
+Olá, ${user.userCad}.  
+Seu pagamento foi confirmado com sucesso.
+
+🧾 *Nota Fiscal emitida*  
+📄 Acesse: ${nfse.pdfUrl}
+
+O saldo já está disponível para uso imediato.
+
+— Equipe ImprimeAi
+`.trim()
+    );
+
+    console.log('✅ Pós-processamento finalizado');
+
+  } catch (error) {
+    console.error('❌ Erro no pós-processamento do pagamento:', error);
+
+    // 👉 Aqui você pode:
+    // - salvar log
+    // - marcar status NFSe = ERRO
+    // - criar rotina de retry
+  }
+}
+
+
+app.post('/registrarPagamento-empresas', async (req, res) => {
+  const { userId, valor, metodoPagamento, status, idTransacao } = req.body;
+
+  try {
+    const user = await UserEmpresas.findByPk(userId);
+    if (!user) {
+      return res.status(404).json({ error: 'Usuário não encontrado' });
     }
-  });
+
+    // 1️⃣ Registrar pagamento
+    await CarteiraEmpresas.create({
+      userId,
+      saldo: valor,
+      statusPag: status,
+      idTransacao
+    });
+
+    const new_value = Number(valor);
+
+    console.log('✅ Pagamento registrado:', { userId, valor, metodoPagamento });
+
+    // 2️⃣ Responde imediatamente
+    res.status(200).json({
+      message: 'Pagamento registrado com sucesso'
+    });
+
+    // 3️⃣ Executa NFSe + WhatsApp em background
+    setImmediate(() => {
+      processarPosPagamentoEmpresa({
+        user,
+        new_value,
+        idTransacao
+      });
+    });
+
+  } catch (error) {
+    console.error('❌ Erro ao registrar pagamento:', error);
+    res.status(500).json({ error: 'Erro ao registrar pagamento' });
+  }
+});
   
   // Rota para buscar o saldo do usuário e exibi-lo na página HTML
   // Rota para buscar o saldo do usuário
@@ -3182,7 +3275,7 @@ ${codigoPix}
 
 Assim que o pagamento for confirmado, seguimos automaticamente com seu pedido.
 
-Conte com a ImprimeAi 💙
+Conte com a ImprimeAi 🧡
 `.trim();
 }
 
@@ -3466,6 +3559,19 @@ app.post('/processarPagamento-pix-carteira', async(req, res) => {
   const url = cobrancaPix.invoiceUrl;
   const idCobranca = cobrancaPix.id;
 
+  /*NOTIFICAÇÃO DE COBRANÇA CRIADA*/
+  const telefone = perfilData.telefoneCad;
+
+  await enviarNotificacaoWhatsapp(
+    telefone,
+    mensagemCobrancaPixCriada({
+      nome: perfilData.nomeCliente,
+      valor: parseFloat(perfilData.totalCompra),
+      link: cobrancaPix.invoiceUrl,
+      codigoPix: cobrancaPix.pixTransaction?.payload || 'Disponível no link'
+    })
+  );
+
   res.json({
     status: 'success',
     message: 'Transação feita com sucesso!',
@@ -3502,6 +3608,18 @@ app.post('/processarPagamento-boleto-carteira', async(req, res) => {
   const idCobranca = cobrancaBoleto.id;
   const pdfBoleto = cobrancaBoleto.bankSlipUrl;
   const urlTransacao = cobrancaBoleto.invoiceUrl;
+
+  const telefone = perfilData.telefoneCad;
+
+  await enviarNotificacaoWhatsapp(
+    telefone,
+    mensagemCobrancaBoletoCriada({
+      nome: perfilData.nomeCliente,
+      valor: parseFloat(value),
+      vencimento: cobrancaBoleto.dueDate,
+      link: cobrancaBoleto.invoiceUrl
+    })
+  );
 
   res.json({
     status: 'success',
@@ -3553,6 +3671,16 @@ app.post('/processarPagamento-cartao-carteira', async(req ,res) => {
   const cobrancaCartao = await cobrancaCartaoAsaas(dadosCliente);
   const idCobranca = cobrancaCartao.id;
   const comprovanteCobranca =  cobrancaCartao.invoiceUrl;
+
+  const telefoneCliente = perfilData.telefoneCad;
+  
+  await enviarNotificacaoWhatsapp(
+    telefoneCliente,
+    mensagemCobrancaCartaoCriada({
+      nome: perfilData.nomeCliente,
+      valor: parseFloat(totalCompra)
+    })
+  );
 
   res.json({
     status: 'success',
@@ -3607,6 +3735,16 @@ app.post('/processarPagamento-cartao-carteira-cnpj', async(req ,res) => {
   const idCobranca = cobrancaCartao.id;
   const comprovanteCobranca =  cobrancaCartao.invoiceUrl;
 
+  const telefoneCliente = perfilData.telefoneCad;
+  
+  await enviarNotificacaoWhatsapp(
+    telefoneCliente,
+    mensagemCobrancaCartaoCriada({
+      nome: perfilData.nomeCliente,
+      valor: parseFloat(totalCompra)
+    })
+  );
+      
   res.json({
     status: 'success',
     message: 'Transação feita com sucesso!',
