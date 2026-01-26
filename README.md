@@ -12,7 +12,7 @@ todo o território nacional.
 
 ## 🧠 Autoria e Histórico do Projeto
 
-A plataforma **IMPRIMEAI** foi **arquitetada e desenvolvida originalmente por Gabriel**, responsável pela concepção técnica, definição da arquitetura,
+A plataforma **IMPRIMEAI** foi **arquitetada e desenvolvida originalmente por Gabriel Trindade**, responsável pela concepção técnica, definição da arquitetura,
 modelagem de dados e implementação das principais regras de negócio do sistema.
 
 O projeto encontra-se em evolução contínua e pode receber manutenções, melhorias e novas funcionalidades por outros desenvolvedores da equipe,
