@@ -109,12 +109,12 @@ cx1.addEventListener('click', () => {
 });
 const cx2 = document.getElementById('cx2');
 cx2.addEventListener('click', () => {
-    window.location.href = '/categorias?categoria=adesivos'
+    window.location.href = '/categorias?categoria=banners'
 });
 
 const cx3 = document.getElementById('cx3');
 cx3.addEventListener('click', () => {
-    window.location.href = '/categorias?categoria=cartoes'
+    window.location.href = '/detalhes-produtos?id=100'
 });
 
 const cx4 = document.getElementById('cx4');
@@ -124,12 +124,12 @@ cx4.addEventListener('click', () => {
 
 const cx5 = document.getElementById('cx5');
 cx5.addEventListener('click', () => {
-    window.location.href = '/categorias?categoria=folders'
+    window.location.href = '/detalhes-produtos?id=108'
 });
 
 const cx6 = document.getElementById('cx6');
 cx6.addEventListener('click', () => {
-    window.location.href = '/categorias?categoria=banners'
+    window.location.href = '/categorias?categoria=folders'
 });
 
 document.addEventListener("DOMContentLoaded", function() {
@@ -473,7 +473,7 @@ document.getElementById('bannerCalendarios').addEventListener('click', () => {
     window.location.href = "/categorias?categoria=calendarios"
 });
 document.getElementById('bannerCanetas').addEventListener('click', () => {
-    window.location.href = "/detalhes-produtos?id=96"
+    window.location.href = "/detalhes-produtos?id=97"
 });
 document.getElementById('bannerAdesivos').addEventListener('click', () => {
     window.location.href = "/categorias?categoria=adesivos"
@@ -486,6 +486,10 @@ document.getElementById('bannerSacolas').addEventListener('click', () => {
 });
 document.getElementById('bannerFolhetos').addEventListener('click', () => {
     window.location.href = "/categorias?categoria=folders"
+});
+
+document.getElementById('bannerRollup').addEventListener('click', () => {
+    window.location.href = "/categorias?categoria=banners"
 });
 
         // Seletor para categorias e subcategorias
