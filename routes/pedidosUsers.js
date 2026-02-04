@@ -2277,7 +2277,12 @@ async function verificarPagamentosPendentes() {
     for (const pedido of pedidos) {
       try {
         const transacaoId = pedido.idTransacao;
-        const user = await User.findByPk(pedido.idUserPed);
+        let user;
+        user = await User.findByPk(pedido.idUserPed);
+
+        if(!user) {
+          user = await UserEmpresas.findByPk(pedido.idUserPed)
+        }
 
         const hoje = new Date();
         const hojeUTC = new Date(hoje.toISOString().split('T')[0]);
